@@ -1,0 +1,10 @@
+# ninja log v5
+27	672	1604540023727319900	CMakeFiles/AuroraC.dir/src/AuroraC.cpp.obj	a632a2cdd250d4c4
+1	73	0	C:/Users/exuvo/workspace-cpp/Aurora-C/build/Debug/CMakeFiles/cmake.verify_globs	731329c82654c63f
+3303	6810	1604540029849680100	AuroraC.exe	abc2b350e908b8f4
+40	3302	1604540026339476500	CMakeFiles/AuroraC.dir/lib/tracy/TracyClient.cpp.obj	139a5b1215155551
+2	81	0	C:/Users/exuvo/workspace-cpp/Aurora-C/build/Debug/CMakeFiles/cmake.verify_globs	731329c82654c63f
+18	850	1604540038973218800	CMakeFiles/AuroraC.dir/src/AuroraC.cpp.obj	b6246c8509e90154
+31	3754	1604540041876409700	CMakeFiles/AuroraC.dir/lib/tracy/TracyClient.cpp.obj	d815bb40dad2c3f0
+3755	7842	1604540045956648100	AuroraC.exe	abc2b350e908b8f4
+2	71	0	C:/Users/exuvo/workspace-cpp/Aurora-C/build/Debug/CMakeFiles/cmake.verify_globs	731329c82654c63f
