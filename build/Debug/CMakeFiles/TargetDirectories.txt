@@ -1,3 +1,0 @@
-C:/Users/exuvo/workspace-cpp/Aurora-C/build/Debug/CMakeFiles/edit_cache.dir
-C:/Users/exuvo/workspace-cpp/Aurora-C/build/Debug/CMakeFiles/rebuild_cache.dir
-C:/Users/exuvo/workspace-cpp/Aurora-C/build/Debug/CMakeFiles/AuroraC.dir
