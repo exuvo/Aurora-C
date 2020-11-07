@@ -43,7 +43,7 @@
             			
             <storageModule moduleId="cdtBuildSystem" version="4.0.0">
                 				
-                <configuration artifactName="${ProjName}" buildArtefactType="de.marw.cmake.cdt.lsp.buildArtefactType.cmake" buildProperties="org.eclipse.cdt.build.core.buildArtefactType=de.marw.cmake.cdt.lsp.buildArtefactType.cmake,org.eclipse.cdt.build.core.buildType=org.eclipse.cdt.build.core.buildType.debug" description="" id="de.marw.cmake.cdt.lsp.config.debug.1386938686" name="Debug" optionalBuildProperties="org.eclipse.cdt.docker.launcher.containerbuild.property.volumes=,org.eclipse.cdt.docker.launcher.containerbuild.property.selectedvolumes=" parent="de.marw.cmake.cdt.lsp.config.debug">
+                <configuration artifactName="${ProjName}" buildArtefactType="de.marw.cmake.cdt.lsp.buildArtefactType.cmake" buildProperties="org.eclipse.cdt.build.core.buildArtefactType=de.marw.cmake.cdt.lsp.buildArtefactType.cmake,org.eclipse.cdt.build.core.buildType=org.eclipse.cdt.build.core.buildType.debug" description="" id="de.marw.cmake.cdt.lsp.config.debug.1386938686" name="Debug" optionalBuildProperties="org.eclipse.cdt.docker.launcher.containerbuild.property.selectedvolumes=,org.eclipse.cdt.docker.launcher.containerbuild.property.volumes=" parent="de.marw.cmake.cdt.lsp.config.debug">
                     					
                     <folderInfo id="de.marw.cmake.cdt.lsp.config.debug.1386938686." name="/" resourcePath="">
                         						
@@ -78,22 +78,19 @@
                 <options/>
                 				
                 <linux command="cmake" generator="Ninja" use-default="true">
-                    					
-                    <defs/>
-                    					
-                    <undefs/>
-                    				
-                </linux>
+				</linux>
                 				
                 <win32 command="C:\Program Files\CMake\bin\cmake.exe" generator="Ninja" use-default="true">
                     					
                     <defs>
                         						
-                        <def name="CMAKE_TOOLCHAIN_FILE" type="FILEPATH" val="cmake/Toolchain-cygwin.cmake"/>
+                        <def name="CMAKE_TOOLCHAIN_FILE" type="FILEPATH" val="cmake/Toolchain-mingw32.cmake"/>
                         						
                         <def name="CMAKE_VERBOSE_MAKEFILE" type="BOOL" val="on"/>
                         					
                     </defs>
+                    					
+                    <undefs/>
                     				
                 </win32>
                 			
