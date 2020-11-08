@@ -1,14 +1,23 @@
 #include <iostream>
 #include <thread>
 #include "Tracy.hpp"
+#include "log4cxx/logger.h"
+#include "log4cxx/xml/domconfigurator.h"
+#include "log4cxx/helpers/exception.h"
 
 using namespace std;
+using namespace log4cxx;
 
-// Port simulation, test performance via console
+//TODO Port simulation, test performance via console
+LoggerPtr log;
 
 int main(int argc, char **argv) {
 	tracy::StartupProfiler();
 	tracy::SetThreadName("startup");
+
+	log4cxx::xml::DOMConfigurator::configure("log4j.xml");
+	log = Logger::getLogger("aurora");
+	LOG4CXX_INFO(log, "### Starting ###");
 
 	cout <<  "Hello world" << flush;
 	while(true){

@@ -84,7 +84,7 @@
                     					
                     <defs>
                         						
-                        <def name="CMAKE_TOOLCHAIN_FILE" type="FILEPATH" val="cmake/Toolchain-mingw32.cmake"/>
+                        <def name="CMAKE_TOOLCHAIN_FILE" type="FILEPATH" val="cmake/Toolchain-cygwin.cmake"/>
                         						
                         <def name="CMAKE_VERBOSE_MAKEFILE" type="BOOL" val="on"/>
                         					
