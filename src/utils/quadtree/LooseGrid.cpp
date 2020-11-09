@@ -6,6 +6,7 @@
 #include <cstdlib>
 #include <cfloat>
 #include <utility>
+#include <algorithm>
 
 #include <intrin.h>
 
@@ -43,21 +44,54 @@ static float max_flt(float a, float b)
     return std::max(a, b);
 }
 
+static __m128i simd_clamp4i(__m128i val, __m128i min, __m128i max) {
+	return _mm_min_epi32(_mm_max_epi32(val, min), max);
+}
+
+static __m128i simd_ftoi4(__m128 val) {
+	return _mm_cvtps_epi32(val);
+}
+
+// x-, y-, x+, y+
+static bool simd_rect_intersect4f(__m128 rectA, __m128 rectB) {
+	// [x1-, y1-, x1+, y1+] [x2-, y2-, x2+, y2+]
+	__m128 b_reordered = _mm_shuffle_ps(rectB, rectB, _MM_SHUFFLE(2, 3, 0 ,1));
+	// [x1-, y1-, x1+, y1+] [x2+, y2+, x2-, y2-]
+	__m128 a_negated = _mm_xor_ps(rectA, _mm_set_ps(0.0f, 0.0f, -0.0f, -0.0f));
+	__m128 b_negated = _mm_xor_ps(b_reordered, _mm_set_ps(0.0f, 0.0f, -0.0f, -0.0f));
+	// [x1-, y1-, -x1+, -y1+] [x2-, y2-, -x2+, -y2+]
+	__m128 compared = _mm_cmple_ps(a_negated, b_negated);
+	// [x1- <= x2+, y1- <= y2+, x1+ <= -x2-, y1+ <= -y2-]
+	return _mm_movemask_ps(compared) == 0;
+
+	// https://gamedev.stackexchange.com/a/167846/142645
+	// if stored as x-, y-, -x+, -y+
+	// https://gamedev.stackexchange.com/a/167846/142645
+	// [x1-, y1-, -x1+, -y1+] [x2-, y2-, -x2+, -y2+]
+//	__m128 b_reordered = _mm_shuffle_ps(b_negated, b_negated, _MM_SHUFFLE(2, 3, 0 ,1));
+	// [x1-, y1-, -x1+, -y1+] [-x2+, -y2+, x2-, y2-]
+//	__m128 b_negated = _mm_xor_ps(rectB, _mm_set_ps1(-0.0f));
+	// [x1-, y1-, -x1+, -y1+] [x2+, y2+, -x2-, -y2-]
+//	__m128 compared = _mm_cmple_ps(rectA, b_reordered);
+	// [x1- <= x2+, y1- <= y2+, -x1+ <= -x2-, -y1+ <= -y2-]
+//	return _mm_movemask_ps(compared) == 0;
+}
+
 static int to_cell_idx(float val, float inv_cell_size, int num_cells)
 {
     const int cell_pos = (int)(val * inv_cell_size);
     return min_int(max_int(cell_pos, 0), num_cells - 1);
 }
 
-static SimdVec4i to_tcell_idx4(const LGrid* grid, __m128 rect)
+static __m128i to_tcell_idx4(const LGrid* grid, __m128 rect)
 {
-    __m128 inv_cell_size_vec = simd_create4f(grid->tight.inv_cell_w, grid->tight.inv_cell_h,
-                                             grid->tight.inv_cell_w, grid->tight.inv_cell_h);
-    __m128 cell_xyf_vec = simd_mul4f(rect, inv_cell_size_vec);
-    __m128i clamp_vec = simd_create4i(grid->tight.num_cols-1, grid->tight.num_rows-1,
+    __m128 inv_cell_size_vec = _mm_set_ps(grid->tight.inv_cell_w, grid->tight.inv_cell_h,
+                                          grid->tight.inv_cell_w, grid->tight.inv_cell_h);
+    __m128 cell_xyf_vec = _mm_mul_ps(rect, inv_cell_size_vec);
+    __m128i clamp_vec = _mm_set_epi32(grid->tight.num_cols-1, grid->tight.num_rows-1,
                                       grid->tight.num_cols-1, grid->tight.num_rows-1);
-    __m128i cell_xy_vec = simd_clamp4i(simd_ftoi4f(cell_xyf_vec), simd_zero4i(), clamp_vec);
-    return simd_store4i(cell_xy_vec);
+    __m128i cell_xy_vec =  simd_clamp4i(simd_ftoi4(cell_xyf_vec), _mm_setzero_si128(), clamp_vec);
+    return cell_xy_vec;
 }
 
 static void grid_optimize(LGrid* grid)
@@ -98,7 +132,7 @@ static void expand_aabb(LGrid* grid, int cell_idx, float mx, float my, float hx,
 
     // Determine the cells occupied by the loose cell in the tight grid.
     const SimdVec4f elt_rect = {mx-hx, my-hy, mx+hx, my+hy};
-    const SimdVec4i trect = to_tcell_idx4(grid, simd_load4f(&elt_rect));
+    const SimdVec4i trect = to_tcell_idx4(grid, elt_rect.m);
 
     if (prev_rect.data[0] > prev_rect.data[2])
     {
@@ -118,7 +152,7 @@ static void expand_aabb(LGrid* grid, int cell_idx, float mx, float my, float hx,
     else
     {
         // Only perform the insertion if the loose cell overlaps new tight cells.
-        const SimdVec4i prev_trect = to_tcell_idx4(grid, simd_load4f(&prev_rect));
+        const SimdVec4i prev_trect = to_tcell_idx4(grid, prev_rect.m);
         if (trect.data[0] != prev_trect.data[0] || trect.data[1] != prev_trect.data[1] ||
             trect.data[2] != prev_trect.data[2] || trect.data[3] != prev_trect.data[3])
         {
@@ -139,10 +173,9 @@ static void expand_aabb(LGrid* grid, int cell_idx, float mx, float my, float hx,
     }
 }
 
-static __m128 element_rect(const LGridElt* elt)
-{
-    return simd_create4f(elt->mx-elt->hx, elt->my-elt->hy,
-                         elt->mx+elt->hx, elt->my+elt->hy);
+static __m128 element_rect(const LGridElt* elt){
+	return _mm_set_ps(elt->mx - elt->hx, elt->my - elt->hy,
+                    elt->mx + elt->hx, elt->my + elt->hy);
 }
 
 LGrid* lgrid_create(float lcell_w, float lcell_h, float tcell_w, float tcell_h,
@@ -281,8 +314,8 @@ SmallList<int> lgrid_query(const LGrid* grid, float mx, float my, float hx, floa
     my -= grid->y;
 
     // Compute the tight cell extents [min_tx, min_ty, max_tx, max_ty].
-    const SimdVec4f qrect = {mx-hx, my-hy, mx+hx, my+hy};
-    __m128 qrect_vec = simd_load4f(&qrect);
+    const SimdVec4f qrect = {mx - hx, my - hy, mx + hx, my + hy};
+    __m128 qrect_vec = qrect.m;
     const SimdVec4i trect = to_tcell_idx4(grid, qrect_vec);
 
     // Gather the intersecting loose cells in the tight cells that intersect.
@@ -298,8 +331,9 @@ SmallList<int> lgrid_query(const LGrid* grid, float mx, float my, float hx, floa
             {
                 const LGridTightCell* tcell = &grid->tight.cells[tcell_idx];
                 const LGridLooseCell* lcell = &grid->loose.cells[tcell->lcell];
-                if (lcell_idxs.find_index(tcell->lcell) == -1 && simd_rect_intersect4f(qrect_vec, simd_loadu4f(lcell->rect)))
+                if (lcell_idxs.find_index(tcell->lcell) == -1 && simd_rect_intersect4f(qrect_vec, _mm_load_ps(lcell->rect))) {
                     lcell_idxs.push_back(tcell->lcell);
+                }
                 tcell_idx = tcell->next;
             }
         }
@@ -327,23 +361,24 @@ SmallList<int> lgrid_query(const LGrid* grid, float mx, float my, float hx, floa
 LGridQuery4 lgrid_query4(const LGrid* grid, const SimdVec4f* mx4, const SimdVec4f* my4,
                          const SimdVec4f* hx4, const SimdVec4f* hy4, const SimdVec4i* omit_id4)
 {
-    __m128 hx_vec = simd_load4f(hx4), hy_vec = simd_load4f(hy4);
-    __m128 mx_vec = simd_sub4f(simd_load4f(mx4), simd_scalar4f(grid->x));
-    __m128 my_vec = simd_sub4f(simd_load4f(my4), simd_scalar4f(grid->y));
-    __m128 ql_vec = simd_sub4f(mx_vec, hx_vec), qt_vec = simd_sub4f(my_vec, hy_vec);
-    __m128 qr_vec = simd_add4f(mx_vec, hx_vec), qb_vec = simd_add4f(my_vec, hy_vec);
 
-    __m128 inv_cell_w_vec = simd_scalar4f(grid->tight.inv_cell_w), inv_cell_h_vec = simd_scalar4f(grid->tight.inv_cell_h);
-    __m128i max_x_vec = simd_scalar4i(grid->tight.num_cols-1), max_y_vec = simd_scalar4i(grid->tight.num_rows-1);
-    __m128i tmin_x_vec = simd_clamp4i(simd_ftoi4f(simd_mul4f(ql_vec, inv_cell_w_vec)), simd_zero4i(), max_x_vec);
-    __m128i tmin_y_vec = simd_clamp4i(simd_ftoi4f(simd_mul4f(qt_vec, inv_cell_h_vec)), simd_zero4i(), max_y_vec);
-    __m128i tmax_x_vec = simd_clamp4i(simd_ftoi4f(simd_mul4f(qr_vec, inv_cell_w_vec)), simd_zero4i(), max_x_vec);
-    __m128i tmax_y_vec = simd_clamp4i(simd_ftoi4f(simd_mul4f(qb_vec, inv_cell_h_vec)), simd_zero4i(), max_y_vec);
+    __m128 hx_vec = hx4->m, hy_vec = hy4->m;
+    __m128 mx_vec = _mm_sub_ps(mx4->m, _mm_set_ps1 (grid->x));
+    __m128 my_vec = _mm_sub_ps(my4->m, _mm_set_ps1 (grid->y));
+    __m128 ql_vec = _mm_sub_ps(mx_vec, hx_vec), qt_vec = _mm_sub_ps(my_vec, hy_vec);
+    __m128 qr_vec = _mm_add_ps(mx_vec, hx_vec), qb_vec = _mm_add_ps(my_vec, hy_vec);
 
-    const SimdVec4i tmin_x4 = simd_store4i(tmin_x_vec), tmin_y4 = simd_store4i(tmin_y_vec);
-    const SimdVec4i tmax_x4 = simd_store4i(tmax_x_vec), tmax_y4 = simd_store4i(tmax_y_vec);
-    const SimdVec4f ql4 = simd_store4f(ql_vec), qt4 = simd_store4f(qt_vec);
-    const SimdVec4f qr4 = simd_store4f(qr_vec), qb4 = simd_store4f(qb_vec);
+    __m128 inv_cell_w_vec = _mm_set_ps1 (grid->tight.inv_cell_w), inv_cell_h_vec = _mm_set_ps1 (grid->tight.inv_cell_h);
+    __m128i max_x_vec = _mm_set1_epi32(grid->tight.num_cols-1), max_y_vec = _mm_set1_epi32(grid->tight.num_rows-1);
+    __m128i tmin_x_vec = simd_clamp4i(simd_ftoi4(_mm_mul_ps(ql_vec, inv_cell_w_vec)), _mm_setzero_si128(), max_x_vec);
+    __m128i tmin_y_vec = simd_clamp4i(simd_ftoi4(_mm_mul_ps(qt_vec, inv_cell_h_vec)), _mm_setzero_si128(), max_y_vec);
+    __m128i tmax_x_vec = simd_clamp4i(simd_ftoi4(_mm_mul_ps(qr_vec, inv_cell_w_vec)), _mm_setzero_si128(), max_x_vec);
+    __m128i tmax_y_vec = simd_clamp4i(simd_ftoi4(_mm_mul_ps(qb_vec, inv_cell_h_vec)), _mm_setzero_si128(), max_y_vec);
+
+    const SimdVec4i tmin_x4 = tmin_x_vec, tmin_y4 = tmin_y_vec;
+    const SimdVec4i tmax_x4 = tmax_x_vec, tmax_y4 = tmax_y_vec;
+    const SimdVec4f ql4 = ql_vec, qt4 = qt_vec;
+    const SimdVec4f qr4 = qr_vec, qb4 = qb_vec;
 
     LGridQuery4 res4;
     for (int k=0; k < 4; ++k)
@@ -353,7 +388,7 @@ LGridQuery4 lgrid_query4(const LGrid* grid, const SimdVec4f* mx4, const SimdVec4
 
         // Gather the intersecting loose cells in the tight cells that intersect.
         SmallList<int> lcell_idxs;
-        __m128 qrect_vec = simd_create4f(ql4.data[k], qt4.data[k], qr4.data[k], qb4.data[k]);
+        __m128 qrect_vec = _mm_set_ps(ql4.data[k], qt4.data[k], qr4.data[k], qb4.data[k]);
         for (int ty = trect[1]; ty <= trect[3]; ++ty)
         {
             const int* tight_row = grid->tight.heads + ty*grid->tight.num_cols;
@@ -364,8 +399,9 @@ LGridQuery4 lgrid_query4(const LGrid* grid, const SimdVec4f* mx4, const SimdVec4
                 while (tcell_idx != -1)
                 {
                     const LGridTightCell* tcell = &grid->tight.cells[tcell_idx];
-                    if (lcell_idxs.find_index(tcell->lcell) && simd_rect_intersect4f(qrect_vec, simd_loadu4f(grid->loose.cells[tcell->lcell].rect)))
+                    if (lcell_idxs.find_index(tcell->lcell) && simd_rect_intersect4f(qrect_vec, _mm_load_ps(grid->loose.cells[tcell->lcell].rect))) {
                         lcell_idxs.push_back(tcell->lcell);
+                    }
                     tcell_idx = tcell->next;
                 }
             }
@@ -381,8 +417,9 @@ LGridQuery4 lgrid_query4(const LGrid* grid, const SimdVec4f* mx4, const SimdVec4
                 // If the element intersects the search rectangle, add it to the
                 // resulting elements unless it has an ID that should be omitted.
                 const LGridElt* elt = &grid->elts[elt_idx];
-                if (elt->id != omit_id && simd_rect_intersect4f(qrect_vec, element_rect(elt)))
+                if (elt->id != omit_id && simd_rect_intersect4f(qrect_vec, element_rect(elt))) {
                     res4.elements[k].push_back(elt->id);
+                }
                 elt_idx = elt->next;
             }
         }
@@ -437,7 +474,7 @@ void lgrid_optimize(LGrid* grid)
         // Insert the loose cell to all the tight cells in which
         // it now belongs.
         LGridLooseCell* lcell = &grid->loose.cells[c];
-        const SimdVec4i trect = to_tcell_idx4(grid, simd_loadu4f(lcell->rect));
+        const SimdVec4i trect = to_tcell_idx4(grid, _mm_load_ps(lcell->rect));
         for (int ty = trect.data[1]; ty <= trect.data[3]; ++ty)
         {
             int* tight_row = grid->tight.heads + ty*grid->tight.num_cols;

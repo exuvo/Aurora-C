@@ -4,9 +4,9 @@ project (AuroraC VERSION 0.1 LANGUAGES CXX)
 
 #TODO speedups https://cmake.org/cmake/help/v3.16/prop_tgt/UNITY_BUILD.html https://cmake.org/cmake/help/latest/command/target_precompile_headers.html
 # c++ reflection https://github.com/jsoysouvanh/Refureku
+# c++ SIMD https://github.com/VcDevel/Vc
 
-# builds with cygwin but then tracy is unable to open port. log4cxx works.
-# log4cxx does not build with mingw but tracy works. 
+# log4cxx does not build with mingw (due to we allowed linking to libs built for cygwin, that use different std lib?) but tracy works. 
 
 set(CMAKE_VERBOSE_MAKEFILE ON CACHE BOOL "" FORCE)
 
@@ -20,6 +20,10 @@ if (${FORCE_COLORED_OUTPUT})
 endif ()
 
 add_subdirectory(lib/Artemis-Cpp)
+
+#if(NOT CYGWIN)
+#	set(GIT_SUBMODULE OFF)
+#endif()
 #add_subdirectory(lib/Vulkan2DRenderer)
 
 set(TRACY_ENABLE ON)
@@ -46,11 +50,11 @@ add_subdirectory(lib/tracy)
 # Prevents cmake from following symbolic links using GLOB
 cmake_policy(SET CMP0009 NEW)
 
-#file(GLOB_RECURSE SOURCE_FILES CONFIGURE_DEPENDS src/*.cpp)
+file(GLOB_RECURSE SOURCE_FILES CONFIGURE_DEPENDS src/*.cpp)
 #file(GLOB_RECURSE HEADER_FILES "${CMAKE_CURRENT_SOURCE_DIR}/src/*.h")
 
-#add_executable(AuroraC ${SOURCE_FILES} lib/tracy/TracyClient.cpp)
-add_executable(AuroraC src/AuroraC.cpp)
+add_executable(AuroraC ${SOURCE_FILES})
+#add_executable(AuroraC src/AuroraC.cpp)
 #add_executable(AuroraC src/AuroraC.cpp lib/tracy/TracyClient.cpp)
 target_include_directories(AuroraC PUBLIC src)
 
@@ -76,6 +80,7 @@ set_target_properties(AuroraC PROPERTIES CXX_EXTENSIONS OFF)
 set_target_properties(AuroraC PROPERTIES INTERPROCEDURAL_OPTIMIZATION off) #link time optimization
 
 if (CMAKE_CXX_COMPILER_ID MATCHES "Clang|GNU")
+	target_compile_options(AuroraC PRIVATE -msse4.1)
 endif()
 if (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
 	target_compile_options(AuroraC PRIVATE -Wall -Wextra)
@@ -86,6 +91,7 @@ if (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
 	endif()
 elseif (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
 elseif (CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
+	target_compile_options(AuroraC PRIVATE /arch:SSE4.1)
 endif()
 
 #target_link_options(AuroraC PRIVATE -)

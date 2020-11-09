@@ -8,7 +8,7 @@
 using namespace std;
 using namespace log4cxx;
 
-//TODO Port simulation, test performance via console
+//TODO Port simulation, test performance via console/tracy
 LoggerPtr log;
 
 int main(int argc, char **argv) {

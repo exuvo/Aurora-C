@@ -6,6 +6,43 @@
 #define LGRID_HPP
 
 #include "SmallList.hpp"
+#include <intrin.h>
+
+union SimdVec4f {
+	float data[4];
+	__m128 m;
+
+	SimdVec4f(float a, float b, float c, float d) {
+		data[0] = a;
+		data[1] = b;
+		data[2] = c;
+		data[3] = d;
+	}
+	SimdVec4f(float param[4]) {
+		memcpy(param, data, sizeof(data) * sizeof(data[0]));
+	}
+	SimdVec4f(__m128 m2) {
+		m = m2;
+	}
+};
+
+union SimdVec4i {
+	int data[4];
+	__m128i m;
+
+	SimdVec4i(int a, int b, int c, int d) {
+		data[0] = a;
+		data[1] = b;
+		data[2] = c;
+		data[3] = d;
+	}
+	SimdVec4i(int param[4]) {
+		memcpy(param, data, sizeof(data) * sizeof(data[0]));
+	}
+	SimdVec4i(__m128i m2) {
+		m = m2;
+	}
+};
 
 struct LGridQuery4
 {
