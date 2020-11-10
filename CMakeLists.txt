@@ -19,6 +19,9 @@ if (${FORCE_COLORED_OUTPUT})
 	endif ()
 endif ()
 
+# Prevents cmake from following symbolic links using GLOB
+cmake_policy(SET CMP0009 NEW)
+
 add_subdirectory(lib/Artemis-Cpp)
 
 #if(NOT CYGWIN)
@@ -32,23 +35,7 @@ set(TRACY_NO_EXIT OFF)
 set(TRACY_NO_BROADCAST OFF)
 add_subdirectory(lib/tracy)
 
-#set(GdxCpp_USE_BOX2D FALSE)
-#add_subdirectory(lib/libgdx-cpp)
-
-#set(GDX_SOURCE ../libgdx-cpp)
-#set(GDX_SOURCE C:/Users/exuvo/git/libgdx-cpp)
-#find_package(GdxCpp REQUIRED TRUE)
-#include_directories(${GDXCPP_INCLUDE_DIR})
-
-#set(Boost_USE_STATIC_LIBS ON)
-#set(Boost_USE_MULTITHREADED ON)
-#set(Boost_USE_STATIC_RUNTIME ON)
-#set(Boost_DEBUG ON)
-#find_package(Boost 1.50 REQUIRED COMPONENTS filesystem)
-#message(STATUS "Boost version: ${Boost_VERSION}")
-
-# Prevents cmake from following symbolic links using GLOB
-cmake_policy(SET CMP0009 NEW)
+add_subdirectory(lib/entt)
 
 file(GLOB_RECURSE SOURCE_FILES CONFIGURE_DEPENDS src/*.cpp)
 #file(GLOB_RECURSE HEADER_FILES "${CMAKE_CURRENT_SOURCE_DIR}/src/*.h")
@@ -69,11 +56,13 @@ target_include_directories(AuroraC PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/lib/asmli
 
 target_link_libraries(AuroraC PUBLIC tracy_client)
 target_link_libraries(AuroraC PUBLIC ArtemisCpp)
+target_link_libraries(AuroraC PUBLIC EnTT)
 #target_link_libraries(AuroraC PUBLIC gdx-cpp)
 #target_link_libraries(AuroraC PUBLIC Vulkan2DRenderer)
-#target_link_libraries(AuroraC PUBLIC Boost:filesystem)
 
-#target_precompile_headers(AuroraC PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/src/PreCompileHeader.h")
+# broken shit
+#target_precompile_headers(AuroraC PRIVATE <string>)
+#target_precompile_headers(AuroraC PRIVATE "src/PreCompileHeader.h")
 
 target_compile_features(AuroraC PUBLIC cxx_std_20)
 set_target_properties(AuroraC PROPERTIES CXX_EXTENSIONS OFF)
@@ -126,6 +115,17 @@ endif()
 
 LIST (APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
+#macro(WinToCygwinPath in_path out_var)
+#	if(CMAKE_HOST_SYSTEM_NAME MATCHES "CYGWIN" AND MINGW)
+#    string(SUBSTRING ${in_path} 0 1 CYG_DRIVE)
+#    string(TOLOWER ${CYG_DRIVE} CYG_DRIVE)
+#    string(SUBSTRING ${in_path} 2 -1 TMP_END_OF_PATH)
+#    set(${out_var} "/cygdrive/${CYG_DRIVE}${TMP_END_OF_PATH}")
+#		message("in " ${in_path} " out " ${${out_var}})
+#	endif()
+#endmacro()
+
+
 FIND_PACKAGE (APR)
 IF (APR_FOUND)
 #  message("Found Apache Runtime Environment")
@@ -133,13 +133,27 @@ IF (APR_FOUND)
   SET (APR_WITH --with-apr=/usr/)
 ELSE()
   message("APR not found locally, you should install it or let me download and compile during build (slow)")
-  message("dir ${APR_PREFIX}")
   include(ExternalProject)
+  
+  string(LENGTH ${CMAKE_C_COMPILER} LEN)
+  MATH(EXPR LEN "${LEN}-4")
+  string(SUBSTRING ${CMAKE_C_COMPILER} 0 ${LEN} AUTOTOOLS_TARGET)
+  
+  if(CMAKE_HOST_SYSTEM_NAME MATCHES "CYGWIN" AND MINGW)
+  	message(FATAL "can not build APR with mingw")
+  	SET(configure bash -c <SOURCE_DIR>/configure CC=${CMAKE_C_COMPILER} CCX=${CMAKE_CXX_COMPILER} --prefix=<INSTALL_DIR> --build=${AUTOTOOLS_TARGET} --host=${AUTOTOOLS_TARGET} --target=${AUTOTOOLS_TARGET})
+#  	SET(configure bash -c <SOURCE_DIR>/configure CC=${CMAKE_C_COMPILER} CCX=${CMAKE_CXX_COMPILER} --prefix=<INSTALL_DIR>)
+  else()
+  	SET(configure <SOURCE_DIR>/configure --prefix=<INSTALL_DIR>)
+  endif()
+  
   ExternalProject_Add(
     APR
     URL https://ftp.acc.umu.se/mirror/apache.org//apr/apr-1.7.0.tar.gz
     URL_HASH SHA256=48e9dbf45ae3fdc7b491259ffb6ccf7d63049ffacbc1c0977cced095e4c2d5a2
-    CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=<INSTALL_DIR> -DMIN_WINDOWS_VER=Windows7 -DCMAKE_BUILD_TYPE=Release
+    CONFIGURE_COMMAND ${configure}
+    BUILD_COMMAND make -j${cores}
+    BUILD_BYPRODUCTS <INSTALL_DIR>/lib/libapr-1.a
   )
   ExternalProject_Get_Property(APR install_dir)
   SET (APR_DEPEND APR)
@@ -158,7 +172,10 @@ ELSE()
     APRUTIL
     URL https://ftp.acc.umu.se/mirror/apache.org//apr/apr-util-1.6.1.tar.gz
     URL_HASH SHA256=b65e40713da57d004123b6319828be7f1273fbc6490e145874ee1177e112c459
-    CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=<INSTALL_DIR> -DCMAKE_BUILD_TYPE=Release
+#    CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=<INSTALL_DIR> -DCMAKE_BUILD_TYPE=Release
+    <SOURCE_DIR>/configure --prefix=<INSTALL_DIR>
+    BUILD_COMMAND make -j${cores}
+    BUILD_BYPRODUCTS <INSTALL_DIR>/lib/libaprutil-1.a
     DEPENDS ${APR_DEPEND}
   )
   ExternalProject_Get_Property(APRUTIL install_dir)

@@ -64,6 +64,12 @@ static bool simd_rect_intersect4f(__m128 rectA, __m128 rectB) {
 	// [x1- <= x2+, y1- <= y2+, x1+ <= -x2-, y1+ <= -y2-]
 	return _mm_movemask_ps(compared) == 0;
 
+	// alternative
+//	__m128 min = _mm_set_ps(a.min.x, b.min.x, a.min.y, b.min.y);
+//	__m128 max = _mm_set_ps(b.max.x, a.max.x, b.max.y, a.max.y);
+//	__m128 cmp = _mm_cmple_ps(min, max);
+//	return _mm_movemask_ps(cmp) == 0xf;
+
 	// https://gamedev.stackexchange.com/a/167846/142645
 	// if stored as x-, y-, -x+, -y+
 	// https://gamedev.stackexchange.com/a/167846/142645

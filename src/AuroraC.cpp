@@ -5,6 +5,8 @@
 #include "log4cxx/xml/domconfigurator.h"
 #include "log4cxx/helpers/exception.h"
 
+#include "galaxy/Galaxy.hpp"
+
 using namespace std;
 using namespace log4cxx;
 
@@ -19,7 +21,13 @@ int main(int argc, char **argv) {
 	log = Logger::getLogger("aurora");
 	LOG4CXX_INFO(log, "### Starting ###");
 
-	cout <<  "Hello world" << flush;
+	cout <<  "starting" << flush;
+
+	vector<StarSystem> starSystems { StarSystem(), StarSystem(), StarSystem() };
+	Galaxy galaxy(starSystems);
+
+	galaxy.init();
+
 	while(true){
 		std::this_thread::sleep_for(50s);
 	}
