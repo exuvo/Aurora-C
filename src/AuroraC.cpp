@@ -19,19 +19,20 @@ int main(int argc, char **argv) {
 
 	log4cxx::xml::DOMConfigurator::configure("log4j.xml");
 	log = Logger::getLogger("aurora");
-	LOG4CXX_INFO(log, "### Starting ###");
+	LOG4CXX_FATAL(log, "### Starting ###");
 
 	cout <<  "starting" << flush;
 
-	vector<StarSystem> starSystems { StarSystem(), StarSystem(), StarSystem() };
-	Galaxy galaxy(starSystems);
+	vector<StarSystem*> starSystems { new StarSystem("a"), new StarSystem("b"), new StarSystem("c"), new StarSystem("d"), new StarSystem("e") };
+	vector<Empire> empires { Empire() };
+	Galaxy galaxy(empires, starSystems);
 
 	galaxy.init();
 
 	while(true){
 		std::this_thread::sleep_for(50s);
 	}
-	cout <<  endl << "end" << flush;
+	cout << endl << "end" << flush;
 
 	tracy::ShutdownProfiler();
 	return 0;

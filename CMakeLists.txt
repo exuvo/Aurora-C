@@ -3,8 +3,11 @@ cmake_minimum_required (VERSION 3.17)
 project (AuroraC VERSION 0.1 LANGUAGES CXX)
 
 #TODO speedups https://cmake.org/cmake/help/v3.16/prop_tgt/UNITY_BUILD.html https://cmake.org/cmake/help/latest/command/target_precompile_headers.html
-# c++ reflection https://github.com/jsoysouvanh/Refureku
-# c++ SIMD https://github.com/VcDevel/Vc
+# reflection https://github.com/jsoysouvanh/Refureku
+# SIMD https://github.com/VcDevel/Vc
+# custom allocators https://github.com/mtrebi/memory-allocators
+# stack vectors, strings, allocator https://chromium.googlesource.com/chromium/chromium/+/master/base/stack_container.h
+# print stack trace https://stackoverflow.com/questions/38433701/print-log4cxx-exception-stacktrace
 
 # log4cxx does not build with mingw (due to we allowed linking to libs built for cygwin, that use different std lib?) but tracy works. 
 
@@ -37,6 +40,8 @@ add_subdirectory(lib/tracy)
 
 add_subdirectory(lib/entt)
 
+find_package(Boost 1.66 REQUIRED) # COMPONENTS
+
 file(GLOB_RECURSE SOURCE_FILES CONFIGURE_DEPENDS src/*.cpp)
 #file(GLOB_RECURSE HEADER_FILES "${CMAKE_CURRENT_SOURCE_DIR}/src/*.h")
 
@@ -59,12 +64,15 @@ target_link_libraries(AuroraC PUBLIC ArtemisCpp)
 target_link_libraries(AuroraC PUBLIC EnTT)
 #target_link_libraries(AuroraC PUBLIC gdx-cpp)
 #target_link_libraries(AuroraC PUBLIC Vulkan2DRenderer)
+target_link_libraries(AuroraC PUBLIC ${Boost_LIBRARIES})
+target_include_directories(AuroraC PUBLIC ${Boost_INCLUDE_DIRS})
 
 # broken shit
 #target_precompile_headers(AuroraC PRIVATE <string>)
 #target_precompile_headers(AuroraC PRIVATE "src/PreCompileHeader.h")
 
-target_compile_features(AuroraC PUBLIC cxx_std_20)
+set_target_properties(AuroraC PROPERTIES CXX_STANDARD 20)
+set_target_properties(AuroraC PROPERTIES CXX_STANDARD_REQUIRED ON)
 set_target_properties(AuroraC PROPERTIES CXX_EXTENSIONS OFF)
 set_target_properties(AuroraC PROPERTIES INTERPROCEDURAL_OPTIMIZATION off) #link time optimization
 
@@ -72,7 +80,7 @@ if (CMAKE_CXX_COMPILER_ID MATCHES "Clang|GNU")
 	target_compile_options(AuroraC PRIVATE -msse4.1)
 endif()
 if (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
-	target_compile_options(AuroraC PRIVATE -Wall -Wextra)
+	target_compile_options(AuroraC PRIVATE -Wall -Wextra -Wno-unused-parameter)
 	if (MINGW)
 		target_compile_options(AuroraC PRIVATE --warn-no-builtin-declaration-mismatch)
 	else()
@@ -124,7 +132,6 @@ LIST (APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 #		message("in " ${in_path} " out " ${${out_var}})
 #	endif()
 #endmacro()
-
 
 FIND_PACKAGE (APR)
 IF (APR_FOUND)

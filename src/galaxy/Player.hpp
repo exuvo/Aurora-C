@@ -8,7 +8,9 @@
 #ifndef SRC_GALAXY_PLAYER_HPP_
 #define SRC_GALAXY_PLAYER_HPP_
 
-
+class Player {
+		
+};
 
 
 
