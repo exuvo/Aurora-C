@@ -19,6 +19,7 @@
 
 #include "galaxy/Empire.hpp"
 #include "galaxy/Player.hpp"
+#include "starsystems/systems/scheduler.hpp"
 #include "utils/Profiling.hpp"
 
 using namespace std::chrono;
@@ -86,7 +87,7 @@ class Galaxy {
 		ShadowGalaxy* workingShadow = new ShadowGalaxy(this);
 		
 		entt::registry registry;
-		entt::scheduler<std::uint32_t> scheduler;
+		scheduler<std::uint32_t> scheduler;
 
 		void galaxyWorker();
 		void starsystemWorker();

@@ -14,10 +14,11 @@
 #include "entt/entt.hpp"
 #include "log4cxx/logger.h"
 
+#include "starsystems/systems/scheduler.hpp"
 #include "utils/GameServices.hpp"
 
 template<typename Derived>
-class BaseSystem : public entt::process<Derived, std::uint32_t> {
+class BaseSystem : public process<Derived, uint32_t> {
 	public:
 		BaseSystem(StarSystem* starSystem) {
 			this->starSystem = starSystem;
@@ -37,11 +38,12 @@ class DailySystem : public BaseSystem<Derived> {
 			this->interval = interval;
 			lastDay = galaxy->day;
 		}
-		void update(uint32_t delta, void* data) {
+		bool checkProcessing() {
 			if (galaxy->day - lastDay >= interval) {
 				lastDay = galaxy->day;
-				static_cast<Derived*>(this)->update(data);
+				return true;
 			}
+			return false;
 		}
 	private:
 		uint32_t lastDay;
@@ -57,11 +59,12 @@ class IntervalSystem : public BaseSystem<Derived> {
 			this->interval = interval.count();
 			lastTime = galaxy->time;
 		}
-		void update(uint32_t delta, void* data) {
+		bool checkProcessing() {
 			if (galaxy->time - lastTime >= milliseconds(interval)) {
 				lastTime = galaxy->time;
-				static_cast<Derived*>(this)->update2(data);
+				return true;
 			}
+			return false;
 		}
 	private:
 		seconds lastTime;
@@ -73,8 +76,8 @@ class MovementSystem : public IntervalSystem<MovementSystem> {
 		MovementSystem(StarSystem* starSystem) : MovementSystem::IntervalSystem(1s, starSystem) {
 		};
 		
-		void init();
-		void update2(void* data);
+		void init(void* data);
+		void update(delta_type delta);
 		
 	private:
 		LoggerPtr log = Logger::getLogger("aurora.starsystems.systems.movement");

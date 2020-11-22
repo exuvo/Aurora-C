@@ -2127,3 +2127,131 @@
 [ INFO] [2020-11-22] [07:51:30,357] [x8000ae9e0] MovementSystem.update2 - update
 [ INFO] [2020-11-22] [07:51:30,357] [x8000aec50] StarSystem.update - starsystem e update
 [ INFO] [2020-11-22] [07:51:30,357] [x8000aec50] MovementSystem.update2 - update
+[FATAL] [2020-11-22] [22:29:18,880] [x800018040] .main - ### Starting ###
+[FATAL] [2020-11-22] [22:30:18,820] [x800018040] .main - ### Starting ###
+[FATAL] [2020-11-22] [22:30:32,335] [x800018040] .main - ### Starting ###
+[FATAL] [2020-11-22] [22:32:52,421] [x800018040] .main - ### Starting ###
+[ INFO] [2020-11-22] [22:32:52,421] [x8000aeac0] StarSystem.update - starsystem a update
+[ INFO] [2020-11-22] [22:32:52,421] [x8000aeac0] StarSystem.update - starsystem b update
+[ INFO] [2020-11-22] [22:32:52,421] [x8000aeac0] StarSystem.update - starsystem c update
+[ INFO] [2020-11-22] [22:32:52,421] [x8000aeac0] StarSystem.update - starsystem d update
+[ INFO] [2020-11-22] [22:32:52,421] [x8000aeac0] StarSystem.update - starsystem e update
+[ INFO] [2020-11-22] [22:32:52,422] [x8000af090] Galaxy.galaxyWorker - tick 1
+[ INFO] [2020-11-22] [22:32:52,422] [x8000aeac0] StarSystem.update - starsystem b update
+[ INFO] [2020-11-22] [22:32:52,422] [x8000aebc0] StarSystem.update - starsystem a update
+[ INFO] [2020-11-22] [22:32:52,422] [x8000aeac0] StarSystem.update - starsystem c update
+[ INFO] [2020-11-22] [22:32:52,422] [x8000aebc0] StarSystem.update - starsystem d update
+[ INFO] [2020-11-22] [22:32:52,422] [x8000aeac0] StarSystem.update - starsystem e update
+[ INFO] [2020-11-22] [22:32:53,422] [x8000af090] Galaxy.galaxyWorker - tick 2
+[ INFO] [2020-11-22] [22:32:53,422] [x8000aeac0] StarSystem.update - starsystem b update
+[ INFO] [2020-11-22] [22:32:53,422] [x8000aebc0] StarSystem.update - starsystem a update
+[ INFO] [2020-11-22] [22:32:53,422] [x8000aeac0] StarSystem.update - starsystem c update
+[ INFO] [2020-11-22] [22:32:53,422] [x8000aebc0] StarSystem.update - starsystem d update
+[ INFO] [2020-11-22] [22:32:53,422] [x8000aeac0] StarSystem.update - starsystem e update
+[ INFO] [2020-11-22] [22:32:54,421] [x8000af090] Galaxy.galaxyWorker - tick 3
+[ INFO] [2020-11-22] [22:32:54,422] [x8000aeac0] StarSystem.update - starsystem a update
+[ INFO] [2020-11-22] [22:32:54,422] [x8000aebc0] StarSystem.update - starsystem b update
+[ INFO] [2020-11-22] [22:32:54,422] [x8000aeac0] StarSystem.update - starsystem c update
+[ INFO] [2020-11-22] [22:32:54,422] [x8000aebc0] StarSystem.update - starsystem d update
+[ INFO] [2020-11-22] [22:32:54,422] [x8000aeac0] StarSystem.update - starsystem e update
+[ INFO] [2020-11-22] [22:32:55,421] [x8000af090] Galaxy.galaxyWorker - tick 4
+[ INFO] [2020-11-22] [22:32:55,421] [x8000aeac0] StarSystem.update - starsystem a update
+[ INFO] [2020-11-22] [22:32:55,422] [x8000aebc0] StarSystem.update - starsystem b update
+[ INFO] [2020-11-22] [22:32:55,422] [x8000aeac0] StarSystem.update - starsystem c update
+[ INFO] [2020-11-22] [22:32:55,422] [x8000aebc0] StarSystem.update - starsystem d update
+[ INFO] [2020-11-22] [22:32:55,422] [x8000aeac0] StarSystem.update - starsystem e update
+[ INFO] [2020-11-22] [22:32:56,421] [x8000af090] Galaxy.galaxyWorker - tick 5
+[ INFO] [2020-11-22] [22:32:56,421] [x8000aebc0] StarSystem.update - starsystem b update
+[ INFO] [2020-11-22] [22:32:56,421] [x8000aeac0] StarSystem.update - starsystem a update
+[ INFO] [2020-11-22] [22:32:56,421] [x8000aebc0] StarSystem.update - starsystem c update
+[ INFO] [2020-11-22] [22:32:56,422] [x8000aeac0] StarSystem.update - starsystem d update
+[ INFO] [2020-11-22] [22:32:56,422] [x8000aebc0] StarSystem.update - starsystem e update
+[ INFO] [2020-11-22] [22:32:57,421] [x8000af090] Galaxy.galaxyWorker - tick 6
+[ INFO] [2020-11-22] [22:32:57,421] [x8000aeac0] StarSystem.update - starsystem a update
+[ INFO] [2020-11-22] [22:32:57,421] [x8000aebc0] StarSystem.update - starsystem b update
+[ INFO] [2020-11-22] [22:32:57,421] [x8000aeac0] StarSystem.update - starsystem c update
+[ INFO] [2020-11-22] [22:32:57,421] [x8000aebc0] StarSystem.update - starsystem d update
+[ INFO] [2020-11-22] [22:32:57,421] [x8000aeac0] StarSystem.update - starsystem e update
+[ INFO] [2020-11-22] [22:32:58,422] [x8000af090] Galaxy.galaxyWorker - tick 7
+[ INFO] [2020-11-22] [22:32:58,422] [x8000aeac0] StarSystem.update - starsystem a update
+[ INFO] [2020-11-22] [22:32:58,422] [x8000aebc0] StarSystem.update - starsystem b update
+[ INFO] [2020-11-22] [22:32:58,423] [x8000aeac0] StarSystem.update - starsystem c update
+[ INFO] [2020-11-22] [22:32:58,423] [x8000aebc0] StarSystem.update - starsystem d update
+[ INFO] [2020-11-22] [22:32:58,423] [x8000aeac0] StarSystem.update - starsystem e update
+[FATAL] [2020-11-22] [22:33:39,999] [x800018040] .main - ### Starting ###
+[ INFO] [2020-11-22] [22:33:39,999] [x800018040] MovementSystem.init - init
+[ INFO] [2020-11-22] [22:33:39,999] [x800018040] MovementSystem.init - init
+[ INFO] [2020-11-22] [22:33:39,999] [x800018040] MovementSystem.init - init
+[ INFO] [2020-11-22] [22:33:39,999] [x800018040] MovementSystem.init - init
+[ INFO] [2020-11-22] [22:33:39,999] [x800018040] MovementSystem.init - init
+[ INFO] [2020-11-22] [22:33:40,000] [x8000aeac0] StarSystem.update - starsystem a update
+[ INFO] [2020-11-22] [22:33:40,000] [x8000aeac0] StarSystem.update - starsystem b update
+[ INFO] [2020-11-22] [22:33:40,000] [x8000aeac0] StarSystem.update - starsystem c update
+[ INFO] [2020-11-22] [22:33:40,000] [x8000aeac0] StarSystem.update - starsystem d update
+[ INFO] [2020-11-22] [22:33:40,000] [x8000aeac0] StarSystem.update - starsystem e update
+[ INFO] [2020-11-22] [22:33:40,000] [x8000af090] Galaxy.galaxyWorker - tick 1
+[ INFO] [2020-11-22] [22:33:40,000] [x8000aeac0] StarSystem.update - starsystem a update
+[ INFO] [2020-11-22] [22:33:40,000] [x8000aece0] StarSystem.update - starsystem b update
+[ INFO] [2020-11-22] [22:33:40,000] [x8000aeac0] MovementSystem.update - update
+[ INFO] [2020-11-22] [22:33:40,000] [x8000aece0] MovementSystem.update - update
+[ INFO] [2020-11-22] [22:33:40,000] [x8000aeac0] StarSystem.update - starsystem c update
+[ INFO] [2020-11-22] [22:33:40,000] [x8000aece0] StarSystem.update - starsystem d update
+[ INFO] [2020-11-22] [22:33:40,000] [x8000aeac0] MovementSystem.update - update
+[ INFO] [2020-11-22] [22:33:40,000] [x8000aece0] MovementSystem.update - update
+[ INFO] [2020-11-22] [22:33:40,000] [x8000aeac0] StarSystem.update - starsystem e update
+[ INFO] [2020-11-22] [22:33:40,000] [x8000aeac0] MovementSystem.update - update
+[ INFO] [2020-11-22] [22:33:41,000] [x8000af090] Galaxy.galaxyWorker - tick 2
+[ INFO] [2020-11-22] [22:33:41,000] [x8000aece0] StarSystem.update - starsystem a update
+[ INFO] [2020-11-22] [22:33:41,000] [x8000aeac0] StarSystem.update - starsystem b update
+[ INFO] [2020-11-22] [22:33:41,000] [x8000aece0] MovementSystem.update - update
+[ INFO] [2020-11-22] [22:33:41,000] [x8000aeac0] MovementSystem.update - update
+[ INFO] [2020-11-22] [22:33:41,000] [x8000aece0] StarSystem.update - starsystem c update
+[ INFO] [2020-11-22] [22:33:41,000] [x8000aeac0] StarSystem.update - starsystem d update
+[ INFO] [2020-11-22] [22:33:41,000] [x8000aece0] MovementSystem.update - update
+[ INFO] [2020-11-22] [22:33:41,000] [x8000aeac0] MovementSystem.update - update
+[ INFO] [2020-11-22] [22:33:41,001] [x8000aece0] StarSystem.update - starsystem e update
+[ INFO] [2020-11-22] [22:33:41,001] [x8000aece0] MovementSystem.update - update
+[ INFO] [2020-11-22] [22:33:42,000] [x8000af090] Galaxy.galaxyWorker - tick 3
+[ INFO] [2020-11-22] [22:33:42,000] [x8000aece0] StarSystem.update - starsystem b update
+[ INFO] [2020-11-22] [22:33:42,000] [x8000aeac0] StarSystem.update - starsystem a update
+[ INFO] [2020-11-22] [22:33:42,000] [x8000aece0] MovementSystem.update - update
+[ INFO] [2020-11-22] [22:33:42,000] [x8000aeac0] MovementSystem.update - update
+[ INFO] [2020-11-22] [22:33:42,000] [x8000aece0] StarSystem.update - starsystem c update
+[ INFO] [2020-11-22] [22:33:42,000] [x8000aeac0] StarSystem.update - starsystem d update
+[ INFO] [2020-11-22] [22:33:42,000] [x8000aece0] MovementSystem.update - update
+[ INFO] [2020-11-22] [22:33:42,000] [x8000aeac0] MovementSystem.update - update
+[ INFO] [2020-11-22] [22:33:42,000] [x8000aece0] StarSystem.update - starsystem e update
+[ INFO] [2020-11-22] [22:33:42,000] [x8000aece0] MovementSystem.update - update
+[ INFO] [2020-11-22] [22:33:43,000] [x8000af090] Galaxy.galaxyWorker - tick 4
+[ INFO] [2020-11-22] [22:33:43,000] [x8000aeac0] StarSystem.update - starsystem a update
+[ INFO] [2020-11-22] [22:33:43,000] [x8000aece0] StarSystem.update - starsystem b update
+[ INFO] [2020-11-22] [22:33:43,000] [x8000aeac0] MovementSystem.update - update
+[ INFO] [2020-11-22] [22:33:43,000] [x8000aece0] MovementSystem.update - update
+[ INFO] [2020-11-22] [22:33:43,000] [x8000aeac0] StarSystem.update - starsystem c update
+[ INFO] [2020-11-22] [22:33:43,000] [x8000aece0] StarSystem.update - starsystem d update
+[ INFO] [2020-11-22] [22:33:43,000] [x8000aeac0] MovementSystem.update - update
+[ INFO] [2020-11-22] [22:33:43,000] [x8000aece0] MovementSystem.update - update
+[ INFO] [2020-11-22] [22:33:43,000] [x8000aeac0] StarSystem.update - starsystem e update
+[ INFO] [2020-11-22] [22:33:43,000] [x8000aeac0] MovementSystem.update - update
+[ INFO] [2020-11-22] [22:33:44,000] [x8000af090] Galaxy.galaxyWorker - tick 5
+[ INFO] [2020-11-22] [22:33:44,000] [x8000aeac0] StarSystem.update - starsystem a update
+[ INFO] [2020-11-22] [22:33:44,000] [x8000aece0] StarSystem.update - starsystem b update
+[ INFO] [2020-11-22] [22:33:44,000] [x8000aeac0] MovementSystem.update - update
+[ INFO] [2020-11-22] [22:33:44,000] [x8000aece0] MovementSystem.update - update
+[ INFO] [2020-11-22] [22:33:44,000] [x8000aeac0] StarSystem.update - starsystem c update
+[ INFO] [2020-11-22] [22:33:44,000] [x8000aece0] StarSystem.update - starsystem d update
+[ INFO] [2020-11-22] [22:33:44,000] [x8000aeac0] MovementSystem.update - update
+[ INFO] [2020-11-22] [22:33:44,000] [x8000aece0] MovementSystem.update - update
+[ INFO] [2020-11-22] [22:33:44,000] [x8000aeac0] StarSystem.update - starsystem e update
+[ INFO] [2020-11-22] [22:33:44,000] [x8000aeac0] MovementSystem.update - update
+[ INFO] [2020-11-22] [22:33:45,000] [x8000af090] Galaxy.galaxyWorker - tick 6
+[ INFO] [2020-11-22] [22:33:45,000] [x8000aece0] StarSystem.update - starsystem a update
+[ INFO] [2020-11-22] [22:33:45,000] [x8000aeac0] StarSystem.update - starsystem b update
+[ INFO] [2020-11-22] [22:33:45,000] [x8000aece0] MovementSystem.update - update
+[ INFO] [2020-11-22] [22:33:45,000] [x8000aeac0] MovementSystem.update - update
+[ INFO] [2020-11-22] [22:33:45,000] [x8000aece0] StarSystem.update - starsystem c update
+[ INFO] [2020-11-22] [22:33:45,000] [x8000aeac0] StarSystem.update - starsystem d update
+[ INFO] [2020-11-22] [22:33:45,000] [x8000aece0] MovementSystem.update - update
+[ INFO] [2020-11-22] [22:33:45,000] [x8000aeac0] MovementSystem.update - update
+[ INFO] [2020-11-22] [22:33:45,000] [x8000aece0] StarSystem.update - starsystem e update
+[ INFO] [2020-11-22] [22:33:45,000] [x8000aece0] MovementSystem.update - update

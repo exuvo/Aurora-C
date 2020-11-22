@@ -11,6 +11,10 @@ void ProfilerEvents::start(nanoseconds time, std::string name) {
 	events.push_back(ProfilerEvent().start(time, name));
 }
 
+void ProfilerEvents::start(const char* name) {
+	events.push_back(ProfilerEvent().start(name));
+}
+
 void ProfilerEvents::start(std::string name) {
 	events.push_back(ProfilerEvent().start(name));
 }

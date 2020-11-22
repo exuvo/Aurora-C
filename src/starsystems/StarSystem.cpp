@@ -17,10 +17,10 @@ void StarSystem::init(Galaxy* galaxy) {
 	StarSystem::galaxy = galaxy;
 	scheduler.attach<MovementSystem>(this);
 	
-//	for (const auto& handler : scheduler.handlers) {
-//		static_cast<BaseSystem<MovementSystem>*>(handler.instance.get())->init();
-//	}
-	scheduler.update(0); // Calls init on all systems
+	scheduler.init(nullptr);
+	
+	shadow = new ShadowStarSystem(this);
+	workingShadow = new ShadowStarSystem(this);
 }
 
 void StarSystem::update(uint32_t deltaGameTime) {

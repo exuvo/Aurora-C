@@ -7,11 +7,11 @@
 
 #include "starsystems/systems/Systems.hpp"
 
-void MovementSystem::init() {
+void MovementSystem::init(void* data) {
 //	LOG4CXX_INFO(log, "init");
 }
 
-void MovementSystem::update2(void* data) {
+void MovementSystem::update(uint32_t delta) {
 	
 //	LOG4CXX_INFO(log, "update");
 }

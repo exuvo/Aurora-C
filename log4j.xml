@@ -8,8 +8,8 @@
 			<param name="ConversionPattern" value="[%5.10p] %d{[yyyy-MM-dd] [HH:mm:ss,SSS]} [%10.10t] %C{1}.%M - %m%n" />
 		</layout>
 	</appender>
-	<appender name="file-opengl" class="org.apache.log4j.FileAppender">
-		<param name="File" value="log.opengl" />
+	<appender name="file-vulcan" class="org.apache.log4j.FileAppender">
+		<param name="File" value="log.vulcan" />
 		<param name="Append" value="true" />
 		<layout class="org.apache.log4j.PatternLayout">
 			<param name="ConversionPattern" value="[%5.10p] %d{[HH:mm:ss,SSS]} %m%n" />
@@ -40,9 +40,9 @@
 		<appender-ref ref="file-error" />
 		<appender-ref ref="stdout" />
 	</root>
-	<logger name="org.opengl" additivity="false">
+	<logger name="vulcan" additivity="false">
 		<level value="info" />
-		<appender-ref ref="file-opengl" />
+		<appender-ref ref="file-vulcan" />
 	</logger>
 	<logger name="aurora" additivity="false">
 		<level value="info" />

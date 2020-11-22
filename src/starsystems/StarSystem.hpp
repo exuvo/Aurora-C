@@ -14,6 +14,7 @@
 #include "entt/entt.hpp"
 #include "log4cxx/logger.h"
 
+#include "starsystems/systems/scheduler.hpp"
 #include "utils/Profiling.hpp"
 
 using namespace std::chrono;
@@ -54,8 +55,8 @@ class StarSystem {
 		float updateTimeAverage = 0.0f;
 		
 		boost::circular_buffer<Command*> commandQueue {128};
-		ShadowStarSystem* shadow = new ShadowStarSystem(this);
-		ShadowStarSystem* workingShadow = new ShadowStarSystem(this);
+		ShadowStarSystem* shadow = nullptr;
+		ShadowStarSystem* workingShadow = nullptr;
 		bool skipClearShadowChanged = false;
 		
 		Galaxy* galaxy = nullptr;
@@ -69,7 +70,7 @@ class StarSystem {
 		
 		void init(Galaxy* galaxy);
 		void update(uint32_t deltaGameTime);
-		entt::scheduler<std::uint32_t> scheduler;
+		scheduler<std::uint32_t> scheduler;
 
 	private:
 		LoggerPtr log = Logger::getLogger("aurora.starsystem");

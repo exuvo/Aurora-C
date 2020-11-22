@@ -9,6 +9,7 @@
 #define SRC_PROFILING_HPP_
 
 #include <string>
+#include <cstring>
 #include <chrono>
 
 #include "utils/Bag.hpp"
@@ -21,14 +22,24 @@ class ProfilerEvent {
 		nanoseconds time = 0ns;
 		char name[50]; // Set to start event, null to end previous
 		
+		auto start(const char* name) -> ProfilerEvent& {
+			return start(duration_cast<nanoseconds>(steady_clock::now().time_since_epoch()), name);
+		}
+		
 		auto start(std::string name) -> ProfilerEvent& {
 			return start(duration_cast<nanoseconds>(steady_clock::now().time_since_epoch()), name);
 		}
 		
-		auto start(nanoseconds time, std::string name) -> ProfilerEvent& {
+		auto start(nanoseconds time, const char* name_in) -> ProfilerEvent& {
 			ProfilerEvent::time = time;
-			size_t written = name.copy(ProfilerEvent::name, ARRAY_LEN(name) - 1);
-			ProfilerEvent::name[written] = '\0';
+			strncpy(name, name_in, ARRAY_LEN(name));
+			
+			return *this;
+		}
+		
+		auto start(nanoseconds time, std::string name_in) -> ProfilerEvent& {
+			ProfilerEvent::time = time;
+			name_in.copy(name, ARRAY_LEN(name));
 			
 			return *this;
 		}
@@ -48,6 +59,7 @@ class ProfilerEvents {
 	public:
 
 		void start(nanoseconds time, std::string name);
+		void start(const char* name);
 		void start(std::string name);
 		void end(nanoseconds time = duration_cast<nanoseconds>(steady_clock::now().time_since_epoch()));
 
