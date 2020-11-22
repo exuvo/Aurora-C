@@ -8,6 +8,16 @@ project (AuroraC VERSION 0.1 LANGUAGES CXX)
 # custom allocators https://github.com/mtrebi/memory-allocators
 # stack vectors, strings, allocator https://chromium.googlesource.com/chromium/chromium/+/master/base/stack_container.h
 # print stack trace https://stackoverflow.com/questions/38433701/print-log4cxx-exception-stacktrace
+# mathlib glm
+# imgui
+# command line parsing cxxopts
+# zlib for packaging resources ?
+# more links https://github.com/MFatihMAR/Game-Networking-Resources
+# polynomial solvers
+#  https://www.alglib.net/equations/polynomial.php
+#  https://www.gnu.org/software/gsl/doc/html/poly.html#general-polynomial-equations
+#  https://www.boost.org/doc/libs/1_53_0/libs/math/doc/sf_and_dist/html/math_toolkit/toolkit/internals1/roots2.html
+#  https://eigen.tuxfamily.org/dox/unsupported/classEigen_1_1PolynomialSolver.html
 
 # log4cxx does not build with mingw (due to we allowed linking to libs built for cygwin, that use different std lib?) but tracy works. 
 
@@ -25,7 +35,7 @@ endif ()
 # Prevents cmake from following symbolic links using GLOB
 cmake_policy(SET CMP0009 NEW)
 
-add_subdirectory(lib/Artemis-Cpp)
+#add_subdirectory(lib/Artemis-Cpp)
 
 #if(NOT CYGWIN)
 #	set(GIT_SUBMODULE OFF)
@@ -60,7 +70,7 @@ endif()
 target_include_directories(AuroraC PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/lib/asmlib)
 
 target_link_libraries(AuroraC PUBLIC tracy_client)
-target_link_libraries(AuroraC PUBLIC ArtemisCpp)
+#target_link_libraries(AuroraC PUBLIC ArtemisCpp)
 target_link_libraries(AuroraC PUBLIC EnTT)
 #target_link_libraries(AuroraC PUBLIC gdx-cpp)
 #target_link_libraries(AuroraC PUBLIC Vulkan2DRenderer)

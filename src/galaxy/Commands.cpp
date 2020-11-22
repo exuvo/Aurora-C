@@ -9,7 +9,6 @@
 
 //TODO make generic for all commands, 
 std::pmr::synchronized_pool_resource command_pool;
-std::pmr::polymorphic_allocator<Command> command_allocator { &command_pool };
 
 bool EntityCommand::isValid() {
 	return false;
@@ -26,4 +25,19 @@ bool EntityCommand::isValid() {
 
 StarSystem* EntityCommand::getSystem() {
 	return entityRef.system;
+}
+
+static std::pmr::polymorphic_allocator<EntityMoveToPositionCommand> allocatorEntityMoveToPositionCommand { &command_pool };
+
+
+void EntityMoveToPositionCommand::apply() {
+	
+}
+
+static void* EntityMoveToPositionCommand::operator new(size_t n) {
+	return allocatorEntityMoveToPositionCommand.allocate(n);
+}
+
+static void EntityMoveToPositionCommand::operator delete(void* ptr) {
+	allocatorEntityMoveToPositionCommand.deallocate_object(ptr);
 }

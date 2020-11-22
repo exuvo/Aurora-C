@@ -13,6 +13,10 @@
 
 void Galaxy::init() {
 
+	for (StarSystem* system : systems) {
+		system->init(this);
+	}
+	
 	for (int i = 0; i < 2; i++) {
 		std::thread *workerThread = new std::thread(starsystemWorker, this);
 		threads.push_back(workerThread);

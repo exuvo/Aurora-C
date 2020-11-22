@@ -758,3 +758,1372 @@
 [ INFO] [2020-11-15] [05:11:07,463] [x8000adcc0] StarSystem.update - starsystem c took 50289088ns
 [ INFO] [2020-11-15] [05:11:07,463] [x8000ae3c0] StarSystem.update - starsystem d took 50220626ns
 [ INFO] [2020-11-15] [05:11:07,513] [x8000adcc0] StarSystem.update - starsystem e took 49737595ns
+[FATAL] [2020-11-15] [05:33:40,206] [x800018040] .main - ### Starting ###
+[ INFO] [2020-11-15] [05:33:40,207] [x8000aeac0] Galaxy.galaxyWorker - tick 1
+[ INFO] [2020-11-15] [05:33:40,257] [x8000ae8a0] StarSystem.update - starsystem b took 0ns
+[ INFO] [2020-11-15] [05:33:40,257] [x8000ae1a0] StarSystem.update - starsystem a took 0ns
+[ INFO] [2020-11-15] [05:33:40,307] [x8000ae8a0] StarSystem.update - starsystem a took 49981597ns
+[ INFO] [2020-11-15] [05:33:40,307] [x8000ae1a0] StarSystem.update - starsystem b took 49775629ns
+[ INFO] [2020-11-15] [05:33:40,357] [x8000ae8a0] StarSystem.update - starsystem c took 0ns
+[ INFO] [2020-11-15] [05:33:40,357] [x8000ae1a0] StarSystem.update - starsystem d took 0ns
+[ INFO] [2020-11-15] [05:33:40,407] [x8000ae8a0] StarSystem.update - starsystem e took 0ns
+[ INFO] [2020-11-15] [05:33:41,356] [x8000aeac0] Galaxy.galaxyWorker - tick 2
+[ INFO] [2020-11-15] [05:33:41,406] [x8000ae1a0] StarSystem.update - starsystem b took 50004710ns
+[ INFO] [2020-11-15] [05:33:41,406] [x8000ae8a0] StarSystem.update - starsystem a took 49995348ns
+[ INFO] [2020-11-15] [05:33:41,456] [x8000ae8a0] StarSystem.update - starsystem d took 50023142ns
+[ INFO] [2020-11-15] [05:33:41,456] [x8000ae1a0] StarSystem.update - starsystem c took 50029871ns
+[ INFO] [2020-11-15] [05:33:41,506] [x8000ae8a0] StarSystem.update - starsystem e took 49952048ns
+[ INFO] [2020-11-15] [05:33:42,357] [x8000aeac0] Galaxy.galaxyWorker - tick 3
+[ INFO] [2020-11-15] [05:33:42,407] [x8000ae1a0] StarSystem.update - starsystem a took 50060884ns
+[ INFO] [2020-11-15] [05:33:42,407] [x8000ae8a0] StarSystem.update - starsystem b took 50022265ns
+[ INFO] [2020-11-15] [05:33:42,457] [x8000ae8a0] StarSystem.update - starsystem d took 49874517ns
+[ INFO] [2020-11-15] [05:33:42,457] [x8000ae1a0] StarSystem.update - starsystem c took 49939468ns
+[ INFO] [2020-11-15] [05:33:42,507] [x8000ae8a0] StarSystem.update - starsystem e took 49960240ns
+[ INFO] [2020-11-15] [05:33:43,357] [x8000aeac0] Galaxy.galaxyWorker - tick 4
+[ INFO] [2020-11-15] [05:33:43,407] [x8000ae8a0] StarSystem.update - starsystem b took 50016705ns
+[ INFO] [2020-11-15] [05:33:43,407] [x8000ae1a0] StarSystem.update - starsystem a took 49990375ns
+[ INFO] [2020-11-15] [05:33:43,457] [x8000ae1a0] StarSystem.update - starsystem d took 49957314ns
+[ INFO] [2020-11-15] [05:33:43,457] [x8000ae8a0] StarSystem.update - starsystem c took 50009684ns
+[ INFO] [2020-11-15] [05:33:43,507] [x8000ae1a0] StarSystem.update - starsystem e took 49998859ns
+[ INFO] [2020-11-15] [05:33:44,357] [x8000aeac0] Galaxy.galaxyWorker - tick 5
+[ INFO] [2020-11-15] [05:33:44,407] [x8000ae1a0] StarSystem.update - starsystem a took 50029871ns
+[ INFO] [2020-11-15] [05:33:44,407] [x8000ae8a0] StarSystem.update - starsystem b took 49997981ns
+[ INFO] [2020-11-15] [05:33:44,457] [x8000ae1a0] StarSystem.update - starsystem c took 50000322ns
+[ INFO] [2020-11-15] [05:33:44,457] [x8000ae8a0] StarSystem.update - starsystem d took 49951462ns
+[ INFO] [2020-11-15] [05:33:44,507] [x8000ae1a0] StarSystem.update - starsystem e took 49970187ns
+[ INFO] [2020-11-15] [05:33:45,358] [x8000aeac0] Galaxy.galaxyWorker - tick 6
+[ INFO] [2020-11-15] [05:33:45,408] [x8000ae1a0] StarSystem.update - starsystem a took 50003247ns
+[ INFO] [2020-11-15] [05:33:45,408] [x8000ae8a0] StarSystem.update - starsystem b took 50033675ns
+[ INFO] [2020-11-15] [05:33:45,458] [x8000ae8a0] StarSystem.update - starsystem d took 49985694ns
+[ INFO] [2020-11-15] [05:33:45,458] [x8000ae1a0] StarSystem.update - starsystem c took 49991837ns
+[ INFO] [2020-11-15] [05:33:45,508] [x8000ae8a0] StarSystem.update - starsystem e took 49987742ns
+[FATAL] [2020-11-15] [05:35:51,255] [x800018040] .main - ### Starting ###
+[ INFO] [2020-11-15] [05:35:51,256] [x8000aeac0] Galaxy.galaxyWorker - tick 1
+[ INFO] [2020-11-15] [05:35:51,306] [x8000ae8a0] StarSystem.update - starsystem b took 0ns
+[ INFO] [2020-11-15] [05:35:51,306] [x8000ae1a0] StarSystem.update - starsystem a took 0ns
+[ INFO] [2020-11-15] [05:35:51,356] [x8000ae8a0] StarSystem.update - starsystem a took 50064980ns
+[ INFO] [2020-11-15] [05:35:51,356] [x8000ae1a0] StarSystem.update - starsystem b took 49751639ns
+[ INFO] [2020-11-15] [05:35:51,406] [x8000ae1a0] StarSystem.update - starsystem d took 0ns
+[ INFO] [2020-11-15] [05:35:51,406] [x8000ae8a0] StarSystem.update - starsystem c took 0ns
+[ INFO] [2020-11-15] [05:35:51,456] [x8000ae1a0] StarSystem.update - starsystem e took 0ns
+[ INFO] [2020-11-15] [05:35:52,405] [x8000aeac0] Galaxy.galaxyWorker - tick 2
+[ INFO] [2020-11-15] [05:35:52,455] [x8000ae8a0] StarSystem.update - starsystem b took 49983938ns
+[ INFO] [2020-11-15] [05:35:52,455] [x8000ae1a0] StarSystem.update - starsystem a took 49994178ns
+[ INFO] [2020-11-15] [05:35:52,505] [x8000ae8a0] StarSystem.update - starsystem c took 50078145ns
+[ INFO] [2020-11-15] [05:35:52,505] [x8000ae1a0] StarSystem.update - starsystem d took 49987156ns
+[ INFO] [2020-11-15] [05:35:52,555] [x8000ae8a0] StarSystem.update - starsystem e took 49988033ns
+[ INFO] [2020-11-15] [05:35:53,406] [x8000aeac0] Galaxy.galaxyWorker - tick 3
+[ INFO] [2020-11-15] [05:35:53,456] [x8000ae1a0] StarSystem.update - starsystem b took 49924254ns
+[ INFO] [2020-11-15] [05:35:53,456] [x8000ae8a0] StarSystem.update - starsystem a took 49948244ns
+[ INFO] [2020-11-15] [05:35:53,506] [x8000ae8a0] StarSystem.update - starsystem d took 49990960ns
+[ INFO] [2020-11-15] [05:35:53,506] [x8000ae1a0] StarSystem.update - starsystem c took 49990082ns
+[ INFO] [2020-11-15] [05:35:53,556] [x8000ae8a0] StarSystem.update - starsystem e took 49994178ns
+[FATAL] [2020-11-15] [09:37:02,595] [x800018040] .main - ### Starting ###
+[ INFO] [2020-11-15] [09:37:02,596] [x8000a67c0] Galaxy.galaxyWorker - tick 1
+[ INFO] [2020-11-15] [09:37:02,646] [x8000a5fc0] StarSystem.update - starsystem a took 0ns
+[ INFO] [2020-11-15] [09:37:02,646] [x8000a65a0] StarSystem.update - starsystem b took 0ns
+[ INFO] [2020-11-15] [09:37:02,696] [x8000a5fc0] StarSystem.update - starsystem a took 51132271ns
+[ INFO] [2020-11-15] [09:37:02,697] [x8000a65a0] StarSystem.update - starsystem b took 50807226ns
+[ INFO] [2020-11-15] [09:37:02,746] [x8000a5fc0] StarSystem.update - starsystem c took 0ns
+[ INFO] [2020-11-15] [09:37:02,747] [x8000a65a0] StarSystem.update - starsystem d took 0ns
+[ INFO] [2020-11-15] [09:37:02,796] [x8000a5fc0] StarSystem.update - starsystem e took 0ns
+[ INFO] [2020-11-15] [09:37:03,745] [x8000a67c0] Galaxy.galaxyWorker - tick 2
+[ INFO] [2020-11-15] [09:37:03,795] [x8000a5fc0] StarSystem.update - starsystem a took 49126711ns
+[ INFO] [2020-11-15] [09:37:03,795] [x8000a65a0] StarSystem.update - starsystem b took 50036893ns
+[ INFO] [2020-11-15] [09:37:03,845] [x8000a5fc0] StarSystem.update - starsystem c took 49976917ns
+[ INFO] [2020-11-15] [09:37:03,845] [x8000a65a0] StarSystem.update - starsystem d took 50004710ns
+[ INFO] [2020-11-15] [09:37:03,895] [x8000a5fc0] StarSystem.update - starsystem e took 50014657ns
+[ INFO] [2020-11-15] [09:37:04,747] [x8000a67c0] Galaxy.galaxyWorker - tick 3
+[ INFO] [2020-11-15] [09:37:04,797] [x8000a5fc0] StarSystem.update - starsystem b took 49860766ns
+[ INFO] [2020-11-15] [09:37:04,797] [x8000a65a0] StarSystem.update - starsystem a took 49826828ns
+[ INFO] [2020-11-15] [09:37:04,847] [x8000a65a0] StarSystem.update - starsystem d took 50042452ns
+[ INFO] [2020-11-15] [09:37:04,847] [x8000a5fc0] StarSystem.update - starsystem c took 50011440ns
+[ INFO] [2020-11-15] [09:37:04,897] [x8000a65a0] StarSystem.update - starsystem e took 50143681ns
+[ INFO] [2020-11-15] [09:37:05,747] [x8000a67c0] Galaxy.galaxyWorker - tick 4
+[ INFO] [2020-11-15] [09:37:05,797] [x8000a5fc0] StarSystem.update - starsystem b took 49964043ns
+[ INFO] [2020-11-15] [09:37:05,797] [x8000a65a0] StarSystem.update - starsystem a took 49992422ns
+[ INFO] [2020-11-15] [09:37:05,847] [x8000a5fc0] StarSystem.update - starsystem c took 50065564ns
+[ INFO] [2020-11-15] [09:37:05,847] [x8000a65a0] StarSystem.update - starsystem d took 50014365ns
+[ INFO] [2020-11-15] [09:37:05,897] [x8000a5fc0] StarSystem.update - starsystem e took 49953219ns
+[ INFO] [2020-11-15] [09:37:06,747] [x8000a67c0] Galaxy.galaxyWorker - tick 5
+[ INFO] [2020-11-15] [09:37:06,797] [x8000a5fc0] StarSystem.update - starsystem b took 50009977ns
+[ INFO] [2020-11-15] [09:37:06,797] [x8000a65a0] StarSystem.update - starsystem a took 50044499ns
+[ INFO] [2020-11-15] [09:37:06,847] [x8000a5fc0] StarSystem.update - starsystem c took 49994177ns
+[ INFO] [2020-11-15] [09:37:06,847] [x8000a65a0] StarSystem.update - starsystem d took 49995348ns
+[ INFO] [2020-11-15] [09:37:06,897] [x8000a5fc0] StarSystem.update - starsystem e took 49978672ns
+[ INFO] [2020-11-15] [09:40:10,792] [x8000a67c0] Galaxy.galaxyWorker - tick 6
+[ INFO] [2020-11-15] [09:40:10,842] [x8000a5fc0] StarSystem.update - starsystem a took 49980135ns
+[ INFO] [2020-11-15] [09:40:10,843] [x8000a65a0] StarSystem.update - starsystem b took 49944734ns
+[ INFO] [2020-11-15] [09:40:10,892] [x8000a5fc0] StarSystem.update - starsystem c took 49996811ns
+[ INFO] [2020-11-15] [09:40:10,893] [x8000a65a0] StarSystem.update - starsystem d took 49996811ns
+[ INFO] [2020-11-15] [09:40:10,942] [x8000a5fc0] StarSystem.update - starsystem e took 49999736ns
+[ INFO] [2020-11-15] [09:40:10,942] [x8000a67c0] Galaxy.galaxyWorker - tick 7
+[ INFO] [2020-11-15] [09:40:10,992] [x8000a65a0] StarSystem.update - starsystem b took 49669427ns
+[ INFO] [2020-11-15] [09:40:10,992] [x8000a5fc0] StarSystem.update - starsystem a took 49371591ns
+[ INFO] [2020-11-15] [09:40:11,042] [x8000a5fc0] StarSystem.update - starsystem d took 50009684ns
+[ INFO] [2020-11-15] [09:40:11,042] [x8000a65a0] StarSystem.update - starsystem c took 50027530ns
+[ INFO] [2020-11-15] [09:40:11,092] [x8000a5fc0] StarSystem.update - starsystem e took 49981890ns
+[ INFO] [2020-11-15] [09:40:11,092] [x8000a67c0] Galaxy.galaxyWorker - tick 8
+[ INFO] [2020-11-15] [09:40:11,142] [x8000a65a0] StarSystem.update - starsystem b took 50086922ns
+[ INFO] [2020-11-15] [09:40:11,142] [x8000a5fc0] StarSystem.update - starsystem a took 50120860ns
+[ INFO] [2020-11-15] [09:40:11,192] [x8000a65a0] StarSystem.update - starsystem c took 50014072ns
+[ INFO] [2020-11-15] [09:40:11,192] [x8000a5fc0] StarSystem.update - starsystem d took 49959363ns
+[ INFO] [2020-11-15] [09:40:11,242] [x8000a65a0] StarSystem.update - starsystem e took 49910795ns
+[ INFO] [2020-11-15] [09:40:11,242] [x8000a67c0] Galaxy.galaxyWorker - tick 9
+[ INFO] [2020-11-15] [09:40:11,292] [x8000a5fc0] StarSystem.update - starsystem b took 49902897ns
+[ INFO] [2020-11-15] [09:40:11,292] [x8000a65a0] StarSystem.update - starsystem a took 49945027ns
+[ INFO] [2020-11-15] [09:40:11,342] [x8000a5fc0] StarSystem.update - starsystem c took 50123493ns
+[ INFO] [2020-11-15] [09:40:11,342] [x8000a65a0] StarSystem.update - starsystem d took 50121152ns
+[ INFO] [2020-11-15] [09:40:11,392] [x8000a5fc0] StarSystem.update - starsystem e took 49900556ns
+[ INFO] [2020-11-15] [09:40:11,392] [x8000a67c0] Galaxy.galaxyWorker - tick 10
+[ INFO] [2020-11-15] [09:40:11,442] [x8000a65a0] StarSystem.update - starsystem b took 49956729ns
+[ INFO] [2020-11-15] [09:40:11,442] [x8000a5fc0] StarSystem.update - starsystem a took 49986278ns
+[ INFO] [2020-11-15] [09:40:11,492] [x8000a65a0] StarSystem.update - starsystem c took 49986278ns
+[ INFO] [2020-11-15] [09:40:11,492] [x8000a5fc0] StarSystem.update - starsystem d took 49988034ns
+[ INFO] [2020-11-15] [09:40:11,542] [x8000a65a0] StarSystem.update - starsystem e took 50017876ns
+[ INFO] [2020-11-15] [09:40:11,542] [x8000a67c0] Galaxy.galaxyWorker - tick 11
+[ INFO] [2020-11-15] [09:40:11,592] [x8000a65a0] StarSystem.update - starsystem a took 50008807ns
+[ INFO] [2020-11-15] [09:40:11,592] [x8000a5fc0] StarSystem.update - starsystem b took 49973406ns
+[ INFO] [2020-11-15] [09:40:11,642] [x8000a5fc0] StarSystem.update - starsystem d took 49965799ns
+[ INFO] [2020-11-15] [09:40:11,642] [x8000a65a0] StarSystem.update - starsystem c took 49964921ns
+[ INFO] [2020-11-15] [09:40:11,692] [x8000a5fc0] StarSystem.update - starsystem e took 49990082ns
+[ INFO] [2020-11-15] [09:40:11,692] [x8000a67c0] Galaxy.galaxyWorker - tick 12
+[ INFO] [2020-11-15] [09:40:11,742] [x8000a65a0] StarSystem.update - starsystem b took 50097162ns
+[ INFO] [2020-11-15] [09:40:11,742] [x8000a5fc0] StarSystem.update - starsystem a took 50063517ns
+[ INFO] [2020-11-15] [09:40:11,792] [x8000a65a0] StarSystem.update - starsystem c took 49909333ns
+[ INFO] [2020-11-15] [09:40:11,792] [x8000a5fc0] StarSystem.update - starsystem d took 49839701ns
+[ INFO] [2020-11-15] [09:40:11,842] [x8000a65a0] StarSystem.update - starsystem e took 50015242ns
+[ INFO] [2020-11-15] [09:40:11,842] [x8000a67c0] Galaxy.galaxyWorker - tick 13
+[ INFO] [2020-11-15] [09:40:11,892] [x8000a5fc0] StarSystem.update - starsystem b took 50022557ns
+[ INFO] [2020-11-15] [09:40:11,892] [x8000a65a0] StarSystem.update - starsystem a took 50062932ns
+[ INFO] [2020-11-15] [09:40:11,942] [x8000a65a0] StarSystem.update - starsystem d took 49901141ns
+[ INFO] [2020-11-15] [09:40:11,942] [x8000a5fc0] StarSystem.update - starsystem c took 49901434ns
+[ INFO] [2020-11-15] [09:40:11,992] [x8000a65a0] StarSystem.update - starsystem e took 49981012ns
+[ INFO] [2020-11-15] [09:40:11,992] [x8000a67c0] Galaxy.galaxyWorker - tick 14
+[ INFO] [2020-11-15] [09:40:12,042] [x8000a5fc0] StarSystem.update - starsystem b took 50182300ns
+[ INFO] [2020-11-15] [09:40:12,042] [x8000a65a0] StarSystem.update - starsystem a took 50220919ns
+[ INFO] [2020-11-15] [09:40:12,092] [x8000a5fc0] StarSystem.update - starsystem c took 49929228ns
+[ INFO] [2020-11-15] [09:40:12,092] [x8000a65a0] StarSystem.update - starsystem d took 49865448ns
+[ INFO] [2020-11-15] [09:40:12,142] [x8000a5fc0] StarSystem.update - starsystem e took 49892071ns
+[ INFO] [2020-11-15] [09:40:12,142] [x8000a67c0] Galaxy.galaxyWorker - tick 15
+[ INFO] [2020-11-15] [09:40:12,192] [x8000a65a0] StarSystem.update - starsystem b took 49976623ns
+[ INFO] [2020-11-15] [09:40:12,192] [x8000a5fc0] StarSystem.update - starsystem a took 50011440ns
+[ INFO] [2020-11-15] [09:40:12,242] [x8000a65a0] StarSystem.update - starsystem c took 49998567ns
+[ INFO] [2020-11-15] [09:40:12,242] [x8000a5fc0] StarSystem.update - starsystem d took 49995056ns
+[ INFO] [2020-11-15] [09:40:12,292] [x8000a65a0] StarSystem.update - starsystem e took 49979549ns
+[ INFO] [2020-11-15] [09:40:12,292] [x8000a67c0] Galaxy.galaxyWorker - tick 16
+[ INFO] [2020-11-15] [09:40:12,342] [x8000a65a0] StarSystem.update - starsystem a took 50121153ns
+[ INFO] [2020-11-15] [09:40:12,342] [x8000a5fc0] StarSystem.update - starsystem b took 50075219ns
+[ INFO] [2020-11-15] [09:40:12,392] [x8000a5fc0] StarSystem.update - starsystem d took 49928643ns
+[ INFO] [2020-11-15] [09:40:12,392] [x8000a65a0] StarSystem.update - starsystem c took 49928642ns
+[ INFO] [2020-11-15] [09:40:12,442] [x8000a5fc0] StarSystem.update - starsystem e took 49930691ns
+[ INFO] [2020-11-15] [09:40:12,442] [x8000a67c0] Galaxy.galaxyWorker - tick 17
+[ INFO] [2020-11-15] [09:40:12,492] [x8000a5fc0] StarSystem.update - starsystem a took 50059128ns
+[ INFO] [2020-11-15] [09:40:12,492] [x8000a65a0] StarSystem.update - starsystem b took 50080485ns
+[ INFO] [2020-11-15] [09:40:12,542] [x8000a65a0] StarSystem.update - starsystem d took 49893242ns
+[ INFO] [2020-11-15] [09:40:12,542] [x8000a5fc0] StarSystem.update - starsystem c took 49949415ns
+[ INFO] [2020-11-15] [09:40:12,592] [x8000a65a0] StarSystem.update - starsystem e took 49999152ns
+[ INFO] [2020-11-15] [09:40:12,942] [x8000a67c0] Galaxy.galaxyWorker - tick 18
+[ INFO] [2020-11-15] [09:40:12,992] [x8000a5fc0] StarSystem.update - starsystem b took 50128760ns
+[ INFO] [2020-11-15] [09:40:12,992] [x8000a65a0] StarSystem.update - starsystem a took 50096870ns
+[ INFO] [2020-11-15] [09:40:13,042] [x8000a5fc0] StarSystem.update - starsystem c took 49950585ns
+[ INFO] [2020-11-15] [09:40:13,042] [x8000a65a0] StarSystem.update - starsystem d took 49885342ns
+[ INFO] [2020-11-15] [09:40:13,092] [x8000a5fc0] StarSystem.update - starsystem e took 49939175ns
+[ INFO] [2020-11-15] [09:40:13,942] [x8000a67c0] Galaxy.galaxyWorker - tick 19
+[ INFO] [2020-11-15] [09:40:13,992] [x8000a65a0] StarSystem.update - starsystem a took 49978964ns
+[ INFO] [2020-11-15] [09:40:13,992] [x8000a5fc0] StarSystem.update - starsystem b took 49952048ns
+[ INFO] [2020-11-15] [09:40:14,042] [x8000a5fc0] StarSystem.update - starsystem d took 50015535ns
+[ INFO] [2020-11-15] [09:40:14,042] [x8000a65a0] StarSystem.update - starsystem c took 50017876ns
+[ INFO] [2020-11-15] [09:40:14,092] [x8000a5fc0] StarSystem.update - starsystem e took 49973698ns
+[ INFO] [2020-11-15] [09:40:14,942] [x8000a67c0] Galaxy.galaxyWorker - tick 20
+[ INFO] [2020-11-15] [09:40:14,992] [x8000a65a0] StarSystem.update - starsystem b took 50007343ns
+[ INFO] [2020-11-15] [09:40:14,992] [x8000a5fc0] StarSystem.update - starsystem a took 49981890ns
+[ INFO] [2020-11-15] [09:40:15,042] [x8000a65a0] StarSystem.update - starsystem c took 50214775ns
+[ INFO] [2020-11-15] [09:40:15,042] [x8000a5fc0] StarSystem.update - starsystem d took 50150702ns
+[ INFO] [2020-11-15] [09:40:15,092] [x8000a65a0] StarSystem.update - starsystem e took 49795231ns
+[ INFO] [2020-11-15] [09:40:15,942] [x8000a67c0] Galaxy.galaxyWorker - tick 21
+[ INFO] [2020-11-15] [09:40:15,992] [x8000a5fc0] StarSystem.update - starsystem b took 50063809ns
+[ INFO] [2020-11-15] [09:40:15,992] [x8000a65a0] StarSystem.update - starsystem a took 50091310ns
+[ INFO] [2020-11-15] [09:40:16,042] [x8000a65a0] StarSystem.update - starsystem d took 50110913ns
+[ INFO] [2020-11-15] [09:40:16,042] [x8000a5fc0] StarSystem.update - starsystem c took 50101258ns
+[ INFO] [2020-11-15] [09:40:16,092] [x8000a65a0] StarSystem.update - starsystem e took 49785283ns
+[ INFO] [2020-11-15] [09:40:16,942] [x8000a67c0] Galaxy.galaxyWorker - tick 22
+[ INFO] [2020-11-15] [09:40:16,992] [x8000a5fc0] StarSystem.update - starsystem a took 49985401ns
+[ INFO] [2020-11-15] [09:40:16,992] [x8000a65a0] StarSystem.update - starsystem b took 49947367ns
+[ INFO] [2020-11-15] [09:40:17,042] [x8000a5fc0] StarSystem.update - starsystem c took 50042159ns
+[ INFO] [2020-11-15] [09:40:17,042] [x8000a65a0] StarSystem.update - starsystem d took 49986278ns
+[ INFO] [2020-11-15] [09:40:17,092] [x8000a5fc0] StarSystem.update - starsystem e took 49972528ns
+[ INFO] [2020-11-15] [09:40:17,942] [x8000a67c0] Galaxy.galaxyWorker - tick 23
+[ INFO] [2020-11-15] [09:40:17,992] [x8000a65a0] StarSystem.update - starsystem a took 49990082ns
+[ INFO] [2020-11-15] [09:40:17,992] [x8000a5fc0] StarSystem.update - starsystem b took 50001492ns
+[ INFO] [2020-11-15] [09:40:18,042] [x8000a65a0] StarSystem.update - starsystem c took 50059128ns
+[ INFO] [2020-11-15] [09:40:18,042] [x8000a5fc0] StarSystem.update - starsystem d took 50070538ns
+[ INFO] [2020-11-15] [09:40:18,092] [x8000a65a0] StarSystem.update - starsystem e took 49944734ns
+[ INFO] [2020-11-15] [09:40:18,942] [x8000a67c0] Galaxy.galaxyWorker - tick 24
+[ INFO] [2020-11-15] [09:40:18,992] [x8000a5fc0] StarSystem.update - starsystem b took 50050351ns
+[ INFO] [2020-11-15] [09:40:18,992] [x8000a65a0] StarSystem.update - starsystem a took 50016998ns
+[ INFO] [2020-11-15] [09:40:19,042] [x8000a5fc0] StarSystem.update - starsystem c took 50080486ns
+[ INFO] [2020-11-15] [09:40:19,042] [x8000a65a0] StarSystem.update - starsystem d took 50067905ns
+[ INFO] [2020-11-15] [09:40:19,092] [x8000a5fc0] StarSystem.update - starsystem e took 49909918ns
+[ INFO] [2020-11-15] [09:40:19,942] [x8000a67c0] Galaxy.galaxyWorker - tick 25
+[ INFO] [2020-11-15] [09:40:19,992] [x8000a5fc0] StarSystem.update - starsystem a took 50048303ns
+[ INFO] [2020-11-15] [09:40:19,992] [x8000a65a0] StarSystem.update - starsystem b took 50013195ns
+[ INFO] [2020-11-15] [09:40:20,042] [x8000a65a0] StarSystem.update - starsystem d took 49955852ns
+[ INFO] [2020-11-15] [09:40:20,042] [x8000a5fc0] StarSystem.update - starsystem c took 49955558ns
+[ INFO] [2020-11-15] [09:40:20,092] [x8000a65a0] StarSystem.update - starsystem e took 49969309ns
+[ INFO] [2020-11-15] [09:40:20,942] [x8000a67c0] Galaxy.galaxyWorker - tick 26
+[ INFO] [2020-11-15] [09:40:20,992] [x8000a65a0] StarSystem.update - starsystem a took 50080486ns
+[ INFO] [2020-11-15] [09:40:20,992] [x8000a5fc0] StarSystem.update - starsystem b took 50110913ns
+[ INFO] [2020-11-15] [09:40:21,042] [x8000a65a0] StarSystem.update - starsystem c took 50031919ns
+[ INFO] [2020-11-15] [09:40:21,042] [x8000a5fc0] StarSystem.update - starsystem d took 49967554ns
+[ INFO] [2020-11-15] [09:40:21,092] [x8000a65a0] StarSystem.update - starsystem e took 49852282ns
+[ INFO] [2020-11-15] [09:40:21,942] [x8000a67c0] Galaxy.galaxyWorker - tick 27
+[ INFO] [2020-11-15] [09:40:21,992] [x8000a5fc0] StarSystem.update - starsystem a took 49981597ns
+[ INFO] [2020-11-15] [09:40:21,992] [x8000a65a0] StarSystem.update - starsystem b took 50010269ns
+[ INFO] [2020-11-15] [09:40:22,042] [x8000a5fc0] StarSystem.update - starsystem c took 50026946ns
+[ INFO] [2020-11-15] [09:40:22,042] [x8000a65a0] StarSystem.update - starsystem d took 50018754ns
+[ INFO] [2020-11-15] [09:40:22,092] [x8000a5fc0] StarSystem.update - starsystem e took 49957607ns
+[ INFO] [2020-11-15] [09:40:22,942] [x8000a67c0] Galaxy.galaxyWorker - tick 28
+[ INFO] [2020-11-15] [09:40:22,992] [x8000a5fc0] StarSystem.update - starsystem a took 50079023ns
+[ INFO] [2020-11-15] [09:40:22,992] [x8000a65a0] StarSystem.update - starsystem b took 50104476ns
+[ INFO] [2020-11-15] [09:40:23,042] [x8000a5fc0] StarSystem.update - starsystem c took 49941515ns
+[ INFO] [2020-11-15] [09:40:23,042] [x8000a65a0] StarSystem.update - starsystem d took 49932738ns
+[ INFO] [2020-11-15] [09:40:23,092] [x8000a5fc0] StarSystem.update - starsystem e took 49969895ns
+[ INFO] [2020-11-15] [09:40:23,942] [x8000a67c0] Galaxy.galaxyWorker - tick 29
+[ INFO] [2020-11-15] [09:40:23,992] [x8000a65a0] StarSystem.update - starsystem a took 49972821ns
+[ INFO] [2020-11-15] [09:40:23,992] [x8000a5fc0] StarSystem.update - starsystem b took 50006465ns
+[ INFO] [2020-11-15] [09:40:24,042] [x8000a65a0] StarSystem.update - starsystem c took 50009391ns
+[ INFO] [2020-11-15] [09:40:24,042] [x8000a5fc0] StarSystem.update - starsystem d took 49995348ns
+[ INFO] [2020-11-15] [09:40:24,092] [x8000a65a0] StarSystem.update - starsystem e took 49964629ns
+[ INFO] [2020-11-15] [09:40:24,942] [x8000a67c0] Galaxy.galaxyWorker - tick 30
+[ INFO] [2020-11-15] [09:40:24,992] [x8000a5fc0] StarSystem.update - starsystem b took 50050058ns
+[ INFO] [2020-11-15] [09:40:24,992] [x8000a65a0] StarSystem.update - starsystem a took 50025190ns
+[ INFO] [2020-11-15] [09:40:25,042] [x8000a65a0] StarSystem.update - starsystem d took 50150995ns
+[ INFO] [2020-11-15] [09:40:25,042] [x8000a5fc0] StarSystem.update - starsystem c took 50143096ns
+[ INFO] [2020-11-15] [09:40:25,092] [x8000a65a0] StarSystem.update - starsystem e took 49817466ns
+[ INFO] [2020-11-15] [09:40:25,942] [x8000a67c0] Galaxy.galaxyWorker - tick 31
+[ INFO] [2020-11-15] [09:40:25,992] [x8000a5fc0] StarSystem.update - starsystem b took 50003540ns
+[ INFO] [2020-11-15] [09:40:25,992] [x8000a65a0] StarSystem.update - starsystem a took 50022264ns
+[ INFO] [2020-11-15] [09:40:26,042] [x8000a65a0] StarSystem.update - starsystem d took 50024312ns
+[ INFO] [2020-11-15] [09:40:26,042] [x8000a5fc0] StarSystem.update - starsystem c took 50063224ns
+[ INFO] [2020-11-15] [09:40:26,092] [x8000a65a0] StarSystem.update - starsystem e took 49975746ns
+[ INFO] [2020-11-15] [09:40:26,942] [x8000a67c0] Galaxy.galaxyWorker - tick 32
+[ INFO] [2020-11-15] [09:40:26,992] [x8000a5fc0] StarSystem.update - starsystem b took 49994178ns
+[ INFO] [2020-11-15] [09:40:26,992] [x8000a65a0] StarSystem.update - starsystem a took 50124957ns
+[ INFO] [2020-11-15] [09:40:27,042] [x8000a5fc0] StarSystem.update - starsystem c took 50090140ns
+[ INFO] [2020-11-15] [09:40:27,042] [x8000a65a0] StarSystem.update - starsystem d took 49946197ns
+[ INFO] [2020-11-15] [09:40:27,092] [x8000a5fc0] StarSystem.update - starsystem e took 49932153ns
+[ INFO] [2020-11-15] [09:43:50,344] [x8000a67c0] Galaxy.galaxyWorker - tick 33
+[ INFO] [2020-11-15] [09:43:50,394] [x8000a65a0] StarSystem.update - starsystem b took 50019924ns
+[ INFO] [2020-11-15] [09:43:50,394] [x8000a5fc0] StarSystem.update - starsystem a took 50048596ns
+[ INFO] [2020-11-15] [09:43:50,444] [x8000a65a0] StarSystem.update - starsystem c took 49990960ns
+[ INFO] [2020-11-15] [09:43:50,444] [x8000a5fc0] StarSystem.update - starsystem d took 49995933ns
+[ INFO] [2020-11-15] [09:43:50,494] [x8000a65a0] StarSystem.update - starsystem e took 49991252ns
+[ INFO] [2020-11-15] [09:43:50,494] [x8000a67c0] Galaxy.galaxyWorker - tick 34
+[ INFO] [2020-11-15] [09:43:50,544] [x8000a65a0] StarSystem.update - starsystem a took 49675571ns
+[ INFO] [2020-11-15] [09:43:50,544] [x8000a5fc0] StarSystem.update - starsystem b took 49643973ns
+[ INFO] [2020-11-15] [09:43:50,594] [x8000a5fc0] StarSystem.update - starsystem d took 49988327ns
+[ INFO] [2020-11-15] [09:43:50,594] [x8000a65a0] StarSystem.update - starsystem c took 49983352ns
+[ INFO] [2020-11-15] [09:43:50,644] [x8000a5fc0] StarSystem.update - starsystem e took 49956729ns
+[ INFO] [2020-11-15] [09:43:50,644] [x8000a67c0] Galaxy.galaxyWorker - tick 35
+[ INFO] [2020-11-15] [09:43:50,694] [x8000a65a0] StarSystem.update - starsystem b took 50050936ns
+[ INFO] [2020-11-15] [09:43:50,694] [x8000a5fc0] StarSystem.update - starsystem a took 50028116ns
+[ INFO] [2020-11-15] [09:43:50,744] [x8000a5fc0] StarSystem.update - starsystem d took 49945611ns
+[ INFO] [2020-11-15] [09:43:50,744] [x8000a65a0] StarSystem.update - starsystem c took 49992715ns
+[ INFO] [2020-11-15] [09:43:50,794] [x8000a5fc0] StarSystem.update - starsystem e took 49973990ns
+[ INFO] [2020-11-15] [09:43:50,794] [x8000a67c0] Galaxy.galaxyWorker - tick 36
+[ INFO] [2020-11-15] [09:43:50,844] [x8000a5fc0] StarSystem.update - starsystem b took 49979842ns
+[ INFO] [2020-11-15] [09:43:50,844] [x8000a65a0] StarSystem.update - starsystem a took 50027531ns
+[ INFO] [2020-11-15] [09:43:50,894] [x8000a65a0] StarSystem.update - starsystem d took 49966969ns
+[ INFO] [2020-11-15] [09:43:50,894] [x8000a5fc0] StarSystem.update - starsystem c took 50033967ns
+[ INFO] [2020-11-15] [09:43:50,944] [x8000a65a0] StarSystem.update - starsystem e took 49971650ns
+[ INFO] [2020-11-15] [09:43:50,944] [x8000a67c0] Galaxy.galaxyWorker - tick 37
+[ INFO] [2020-11-15] [09:43:50,994] [x8000a5fc0] StarSystem.update - starsystem a took 50136659ns
+[ INFO] [2020-11-15] [09:43:50,994] [x8000a65a0] StarSystem.update - starsystem b took 50098040ns
+[ INFO] [2020-11-15] [09:43:51,044] [x8000a5fc0] StarSystem.update - starsystem c took 49923084ns
+[ INFO] [2020-11-15] [09:43:51,044] [x8000a65a0] StarSystem.update - starsystem d took 49857841ns
+[ INFO] [2020-11-15] [09:43:51,094] [x8000a5fc0] StarSystem.update - starsystem e took 49961118ns
+[ INFO] [2020-11-15] [09:43:51,094] [x8000a67c0] Galaxy.galaxyWorker - tick 38
+[ INFO] [2020-11-15] [09:43:51,144] [x8000a5fc0] StarSystem.update - starsystem a took 49993592ns
+[ INFO] [2020-11-15] [09:43:51,144] [x8000a65a0] StarSystem.update - starsystem b took 50004125ns
+[ INFO] [2020-11-15] [09:43:51,194] [x8000a5fc0] StarSystem.update - starsystem c took 50023434ns
+[ INFO] [2020-11-15] [09:43:51,194] [x8000a65a0] StarSystem.update - starsystem d took 50034845ns
+[ INFO] [2020-11-15] [09:43:51,244] [x8000a5fc0] StarSystem.update - starsystem e took 49967262ns
+[ INFO] [2020-11-15] [09:43:51,244] [x8000a67c0] Galaxy.galaxyWorker - tick 39
+[ INFO] [2020-11-15] [09:43:51,294] [x8000a65a0] StarSystem.update - starsystem a took 49945319ns
+[ INFO] [2020-11-15] [09:43:51,294] [x8000a5fc0] StarSystem.update - starsystem b took 49960825ns
+[ INFO] [2020-11-15] [09:43:51,344] [x8000a5fc0] StarSystem.update - starsystem d took 50013195ns
+[ INFO] [2020-11-15] [09:43:51,344] [x8000a65a0] StarSystem.update - starsystem c took 50009685ns
+[ INFO] [2020-11-15] [09:43:51,394] [x8000a5fc0] StarSystem.update - starsystem e took 49972235ns
+[ INFO] [2020-11-15] [09:43:51,394] [x8000a67c0] Galaxy.galaxyWorker - tick 40
+[ INFO] [2020-11-15] [09:43:51,444] [x8000a5fc0] StarSystem.update - starsystem a took 49996811ns
+[ INFO] [2020-11-15] [09:43:51,444] [x8000a65a0] StarSystem.update - starsystem b took 50021094ns
+[ INFO] [2020-11-15] [09:43:51,494] [x8000a65a0] StarSystem.update - starsystem d took 49957021ns
+[ INFO] [2020-11-15] [09:43:51,494] [x8000a5fc0] StarSystem.update - starsystem c took 50024605ns
+[ INFO] [2020-11-15] [09:43:51,544] [x8000a65a0] StarSystem.update - starsystem e took 49989204ns
+[ INFO] [2020-11-15] [09:43:51,544] [x8000a67c0] Galaxy.galaxyWorker - tick 41
+[ INFO] [2020-11-15] [09:43:51,594] [x8000a5fc0] StarSystem.update - starsystem a took 49964628ns
+[ INFO] [2020-11-15] [09:43:51,594] [x8000a65a0] StarSystem.update - starsystem b took 49983645ns
+[ INFO] [2020-11-15] [09:43:51,644] [x8000a5fc0] StarSystem.update - starsystem c took 50028701ns
+[ INFO] [2020-11-15] [09:43:51,644] [x8000a65a0] StarSystem.update - starsystem d took 49967846ns
+[ INFO] [2020-11-15] [09:43:51,694] [x8000a5fc0] StarSystem.update - starsystem e took 50003247ns
+[ INFO] [2020-11-15] [09:43:51,694] [x8000a67c0] Galaxy.galaxyWorker - tick 42
+[ INFO] [2020-11-15] [09:43:51,744] [x8000a65a0] StarSystem.update - starsystem a took 50041574ns
+[ INFO] [2020-11-15] [09:43:51,744] [x8000a5fc0] StarSystem.update - starsystem b took 50065272ns
+[ INFO] [2020-11-15] [09:43:51,794] [x8000a5fc0] StarSystem.update - starsystem d took 49927180ns
+[ INFO] [2020-11-15] [09:43:51,794] [x8000a65a0] StarSystem.update - starsystem c took 49926887ns
+[ INFO] [2020-11-15] [09:43:51,844] [x8000a5fc0] StarSystem.update - starsystem e took 50006174ns
+[ INFO] [2020-11-15] [09:43:51,844] [x8000a67c0] Galaxy.galaxyWorker - tick 43
+[ INFO] [2020-11-15] [09:43:51,894] [x8000a5fc0] StarSystem.update - starsystem a took 49964336ns
+[ INFO] [2020-11-15] [09:43:51,894] [x8000a65a0] StarSystem.update - starsystem b took 49987156ns
+[ INFO] [2020-11-15] [09:43:51,944] [x8000a5fc0] StarSystem.update - starsystem c took 50009392ns
+[ INFO] [2020-11-15] [09:43:51,944] [x8000a65a0] StarSystem.update - starsystem d took 49953804ns
+[ INFO] [2020-11-15] [09:43:51,994] [x8000a5fc0] StarSystem.update - starsystem e took 50007051ns
+[ INFO] [2020-11-15] [09:43:51,994] [x8000a67c0] Galaxy.galaxyWorker - tick 44
+[ INFO] [2020-11-15] [09:43:52,044] [x8000a5fc0] StarSystem.update - starsystem a took 49936541ns
+[ INFO] [2020-11-15] [09:43:52,044] [x8000a65a0] StarSystem.update - starsystem b took 49966091ns
+[ INFO] [2020-11-15] [09:43:52,094] [x8000a5fc0] StarSystem.update - starsystem c took 49997103ns
+[ INFO] [2020-11-15] [09:43:52,094] [x8000a65a0] StarSystem.update - starsystem d took 49997981ns
+[ INFO] [2020-11-15] [09:43:52,144] [x8000a5fc0] StarSystem.update - starsystem e took 49979257ns
+[ INFO] [2020-11-15] [09:43:52,494] [x8000a67c0] Galaxy.galaxyWorker - tick 45
+[ INFO] [2020-11-15] [09:43:52,544] [x8000a5fc0] StarSystem.update - starsystem a took 50056787ns
+[ INFO] [2020-11-15] [09:43:52,544] [x8000a65a0] StarSystem.update - starsystem b took 50085752ns
+[ INFO] [2020-11-15] [09:43:52,594] [x8000a65a0] StarSystem.update - starsystem d took 49948244ns
+[ INFO] [2020-11-15] [09:43:52,594] [x8000a5fc0] StarSystem.update - starsystem c took 49954974ns
+[ INFO] [2020-11-15] [09:43:52,644] [x8000a65a0] StarSystem.update - starsystem e took 49971943ns
+[ INFO] [2020-11-15] [09:43:53,494] [x8000a67c0] Galaxy.galaxyWorker - tick 46
+[ INFO] [2020-11-15] [09:43:53,544] [x8000a65a0] StarSystem.update - starsystem b took 50025483ns
+[ INFO] [2020-11-15] [09:43:53,544] [x8000a5fc0] StarSystem.update - starsystem a took 49995348ns
+[ INFO] [2020-11-15] [09:43:53,594] [x8000a5fc0] StarSystem.update - starsystem d took 49998859ns
+[ INFO] [2020-11-15] [09:43:53,594] [x8000a65a0] StarSystem.update - starsystem c took 50058543ns
+[ INFO] [2020-11-15] [09:43:53,644] [x8000a5fc0] StarSystem.update - starsystem e took 49984523ns
+[ INFO] [2020-11-15] [09:43:54,493] [x8000a67c0] Galaxy.galaxyWorker - tick 47
+[ INFO] [2020-11-15] [09:43:54,543] [x8000a5fc0] StarSystem.update - starsystem a took 50013780ns
+[ INFO] [2020-11-15] [09:43:54,543] [x8000a65a0] StarSystem.update - starsystem b took 49979550ns
+[ INFO] [2020-11-15] [09:43:54,593] [x8000a65a0] StarSystem.update - starsystem d took 49945319ns
+[ INFO] [2020-11-15] [09:43:54,593] [x8000a5fc0] StarSystem.update - starsystem c took 50011147ns
+[ INFO] [2020-11-15] [09:43:54,643] [x8000a65a0] StarSystem.update - starsystem e took 49985400ns
+[ INFO] [2020-11-15] [09:43:55,493] [x8000a67c0] Galaxy.galaxyWorker - tick 48
+[ INFO] [2020-11-15] [09:43:55,543] [x8000a65a0] StarSystem.update - starsystem b took 50049181ns
+[ INFO] [2020-11-15] [09:43:55,543] [x8000a5fc0] StarSystem.update - starsystem a took 50030456ns
+[ INFO] [2020-11-15] [09:43:55,593] [x8000a65a0] StarSystem.update - starsystem c took 50019339ns
+[ INFO] [2020-11-15] [09:43:55,593] [x8000a5fc0] StarSystem.update - starsystem d took 49955559ns
+[ INFO] [2020-11-15] [09:43:55,643] [x8000a65a0] StarSystem.update - starsystem e took 49950585ns
+[ INFO] [2020-11-15] [09:43:56,493] [x8000a67c0] Galaxy.galaxyWorker - tick 49
+[ INFO] [2020-11-15] [09:43:56,543] [x8000a65a0] StarSystem.update - starsystem b took 49928642ns
+[ INFO] [2020-11-15] [09:43:56,543] [x8000a5fc0] StarSystem.update - starsystem a took 49955851ns
+[ INFO] [2020-11-15] [09:43:56,593] [x8000a5fc0] StarSystem.update - starsystem d took 50005295ns
+[ INFO] [2020-11-15] [09:43:56,593] [x8000a65a0] StarSystem.update - starsystem c took 50004418ns
+[ INFO] [2020-11-15] [09:43:56,643] [x8000a5fc0] StarSystem.update - starsystem e took 49935956ns
+[ INFO] [2020-11-15] [09:43:57,493] [x8000a67c0] Galaxy.galaxyWorker - tick 50
+[ INFO] [2020-11-15] [09:43:57,543] [x8000a65a0] StarSystem.update - starsystem a took 49981305ns
+[ INFO] [2020-11-15] [09:43:57,543] [x8000a5fc0] StarSystem.update - starsystem b took 49953804ns
+[ INFO] [2020-11-15] [09:43:57,593] [x8000a65a0] StarSystem.update - starsystem c took 50003833ns
+[ INFO] [2020-11-15] [09:43:57,593] [x8000a5fc0] StarSystem.update - starsystem d took 49960532ns
+[ INFO] [2020-11-15] [09:43:57,643] [x8000a65a0] StarSystem.update - starsystem e took 49981013ns
+[ INFO] [2020-11-15] [09:43:58,493] [x8000a67c0] Galaxy.galaxyWorker - tick 51
+[ INFO] [2020-11-15] [09:43:58,543] [x8000a65a0] StarSystem.update - starsystem a took 49974869ns
+[ INFO] [2020-11-15] [09:43:58,543] [x8000a5fc0] StarSystem.update - starsystem b took 50006758ns
+[ INFO] [2020-11-15] [09:43:58,593] [x8000a65a0] StarSystem.update - starsystem c took 50043914ns
+[ INFO] [2020-11-15] [09:43:58,593] [x8000a5fc0] StarSystem.update - starsystem d took 50041867ns
+[ INFO] [2020-11-15] [09:43:58,643] [x8000a65a0] StarSystem.update - starsystem e took 49956729ns
+[ INFO] [2020-11-15] [09:43:59,493] [x8000a67c0] Galaxy.galaxyWorker - tick 52
+[ INFO] [2020-11-15] [09:43:59,543] [x8000a5fc0] StarSystem.update - starsystem a took 50019924ns
+[ INFO] [2020-11-15] [09:43:59,543] [x8000a65a0] StarSystem.update - starsystem b took 50052107ns
+[ INFO] [2020-11-15] [09:43:59,593] [x8000a65a0] StarSystem.update - starsystem d took 50241107ns
+[ INFO] [2020-11-15] [09:43:59,593] [x8000a5fc0] StarSystem.update - starsystem c took 50251931ns
+[ INFO] [2020-11-15] [09:43:59,643] [x8000a65a0] StarSystem.update - starsystem e took 49700147ns
+[ INFO] [2020-11-15] [09:44:00,493] [x8000a67c0] Galaxy.galaxyWorker - tick 53
+[ INFO] [2020-11-15] [09:44:00,543] [x8000a65a0] StarSystem.update - starsystem b took 50043037ns
+[ INFO] [2020-11-15] [09:44:00,543] [x8000a5fc0] StarSystem.update - starsystem a took 50010270ns
+[ INFO] [2020-11-15] [09:44:00,593] [x8000a65a0] StarSystem.update - starsystem c took 50131978ns
+[ INFO] [2020-11-15] [09:44:00,593] [x8000a5fc0] StarSystem.update - starsystem d took 50065272ns
+[ INFO] [2020-11-15] [09:44:00,643] [x8000a65a0] StarSystem.update - starsystem e took 49884464ns
+[ INFO] [2020-11-15] [09:44:01,493] [x8000a67c0] Galaxy.galaxyWorker - tick 54
+[ INFO] [2020-11-15] [09:44:01,543] [x8000a5fc0] StarSystem.update - starsystem a took 50006466ns
+[ INFO] [2020-11-15] [09:44:01,543] [x8000a65a0] StarSystem.update - starsystem b took 49971065ns
+[ INFO] [2020-11-15] [09:44:01,593] [x8000a65a0] StarSystem.update - starsystem d took 50217115ns
+[ INFO] [2020-11-15] [09:44:01,593] [x8000a5fc0] StarSystem.update - starsystem c took 50229404ns
+[ INFO] [2020-11-15] [09:44:01,643] [x8000a65a0] StarSystem.update - starsystem e took 49766559ns
+[ INFO] [2020-11-15] [09:44:02,493] [x8000a67c0] Galaxy.galaxyWorker - tick 55
+[ INFO] [2020-11-15] [09:44:02,543] [x8000a65a0] StarSystem.update - starsystem a took 49967262ns
+[ INFO] [2020-11-15] [09:44:02,543] [x8000a5fc0] StarSystem.update - starsystem b took 49985986ns
+[ INFO] [2020-11-15] [09:44:02,593] [x8000a65a0] StarSystem.update - starsystem c took 50018168ns
+[ INFO] [2020-11-15] [09:44:02,593] [x8000a5fc0] StarSystem.update - starsystem d took 49956729ns
+[ INFO] [2020-11-15] [09:44:02,643] [x8000a65a0] StarSystem.update - starsystem e took 50008514ns
+[ INFO] [2020-11-15] [09:44:03,494] [x8000a67c0] Galaxy.galaxyWorker - tick 56
+[ INFO] [2020-11-15] [09:44:03,544] [x8000a65a0] StarSystem.update - starsystem b took 49938589ns
+[ INFO] [2020-11-15] [09:44:03,544] [x8000a5fc0] StarSystem.update - starsystem a took 49908748ns
+[ INFO] [2020-11-15] [09:44:03,594] [x8000a5fc0] StarSystem.update - starsystem d took 50003540ns
+[ INFO] [2020-11-15] [09:44:03,594] [x8000a65a0] StarSystem.update - starsystem c took 50014951ns
+[ INFO] [2020-11-15] [09:44:03,644] [x8000a5fc0] StarSystem.update - starsystem e took 49987741ns
+[ INFO] [2020-11-15] [09:44:04,494] [x8000a67c0] Galaxy.galaxyWorker - tick 57
+[ INFO] [2020-11-15] [09:44:04,544] [x8000a5fc0] StarSystem.update - starsystem b took 49931276ns
+[ INFO] [2020-11-15] [09:44:04,544] [x8000a65a0] StarSystem.update - starsystem a took 49975161ns
+[ INFO] [2020-11-15] [09:44:04,594] [x8000a5fc0] StarSystem.update - starsystem c took 50041866ns
+[ INFO] [2020-11-15] [09:44:04,594] [x8000a65a0] StarSystem.update - starsystem d took 49985986ns
+[ INFO] [2020-11-15] [09:44:04,644] [x8000a5fc0] StarSystem.update - starsystem e took 49984815ns
+[ INFO] [2020-11-15] [09:44:05,494] [x8000a67c0] Galaxy.galaxyWorker - tick 58
+[ INFO] [2020-11-15] [09:44:05,544] [x8000a65a0] StarSystem.update - starsystem b took 49957021ns
+[ INFO] [2020-11-15] [09:44:05,544] [x8000a5fc0] StarSystem.update - starsystem a took 49995056ns
+[ INFO] [2020-11-15] [09:44:05,594] [x8000a65a0] StarSystem.update - starsystem c took 49991253ns
+[ INFO] [2020-11-15] [09:44:05,594] [x8000a5fc0] StarSystem.update - starsystem d took 49980720ns
+[ INFO] [2020-11-15] [09:44:05,644] [x8000a65a0] StarSystem.update - starsystem e took 50002077ns
+[ INFO] [2020-11-15] [09:44:06,494] [x8000a67c0] Galaxy.galaxyWorker - tick 59
+[ INFO] [2020-11-15] [09:44:06,544] [x8000a65a0] StarSystem.update - starsystem b took 49913136ns
+[ INFO] [2020-11-15] [09:44:06,544] [x8000a5fc0] StarSystem.update - starsystem a took 49948244ns
+[ INFO] [2020-11-15] [09:44:06,594] [x8000a5fc0] StarSystem.update - starsystem d took 50021387ns
+[ INFO] [2020-11-15] [09:44:06,594] [x8000a65a0] StarSystem.update - starsystem c took 50023728ns
+[ INFO] [2020-11-15] [09:44:06,644] [x8000a5fc0] StarSystem.update - starsystem e took 49980427ns
+[ INFO] [2020-11-15] [09:44:07,494] [x8000a67c0] Galaxy.galaxyWorker - tick 60
+[ INFO] [2020-11-15] [09:44:07,544] [x8000a5fc0] StarSystem.update - starsystem b took 49956437ns
+[ INFO] [2020-11-15] [09:44:07,544] [x8000a65a0] StarSystem.update - starsystem a took 50001785ns
+[ INFO] [2020-11-15] [09:44:07,594] [x8000a65a0] StarSystem.update - starsystem d took 49966384ns
+[ INFO] [2020-11-15] [09:44:07,594] [x8000a5fc0] StarSystem.update - starsystem c took 50025775ns
+[ INFO] [2020-11-15] [09:44:07,644] [x8000a65a0] StarSystem.update - starsystem e took 50004125ns
+[ INFO] [2020-11-15] [09:44:08,494] [x8000a67c0] Galaxy.galaxyWorker - tick 61
+[ INFO] [2020-11-15] [09:44:08,544] [x8000a65a0] StarSystem.update - starsystem b took 49955852ns
+[ INFO] [2020-11-15] [09:44:08,544] [x8000a5fc0] StarSystem.update - starsystem a took 49991252ns
+[ INFO] [2020-11-15] [09:44:08,594] [x8000a5fc0] StarSystem.update - starsystem d took 49981890ns
+[ INFO] [2020-11-15] [09:44:08,594] [x8000a65a0] StarSystem.update - starsystem c took 50037478ns
+[ INFO] [2020-11-15] [09:44:08,644] [x8000a5fc0] StarSystem.update - starsystem e took 49938590ns
+[ INFO] [2020-11-15] [09:44:09,494] [x8000a67c0] Galaxy.galaxyWorker - tick 62
+[ INFO] [2020-11-15] [09:44:09,544] [x8000a5fc0] StarSystem.update - starsystem b took 49943271ns
+[ INFO] [2020-11-15] [09:44:09,544] [x8000a65a0] StarSystem.update - starsystem a took 49988034ns
+[ INFO] [2020-11-15] [09:44:09,594] [x8000a5fc0] StarSystem.update - starsystem c took 50093066ns
+[ INFO] [2020-11-15] [09:44:09,594] [x8000a65a0] StarSystem.update - starsystem d took 50026361ns
+[ INFO] [2020-11-15] [09:44:09,644] [x8000a5fc0] StarSystem.update - starsystem e took 49913429ns
+[ INFO] [2020-11-15] [09:44:10,494] [x8000a67c0] Galaxy.galaxyWorker - tick 63
+[ INFO] [2020-11-15] [09:44:10,544] [x8000a5fc0] StarSystem.update - starsystem a took 50069953ns
+[ INFO] [2020-11-15] [09:44:10,544] [x8000a65a0] StarSystem.update - starsystem b took 50036308ns
+[ INFO] [2020-11-15] [09:44:10,594] [x8000a5fc0] StarSystem.update - starsystem c took 50037771ns
+[ INFO] [2020-11-15] [09:44:10,594] [x8000a65a0] StarSystem.update - starsystem d took 50036600ns
+[ INFO] [2020-11-15] [09:44:10,644] [x8000a5fc0] StarSystem.update - starsystem e took 49914307ns
+[ INFO] [2020-11-15] [09:44:11,494] [x8000a67c0] Galaxy.galaxyWorker - tick 64
+[ INFO] [2020-11-15] [09:44:11,544] [x8000a65a0] StarSystem.update - starsystem b took 50161235ns
+[ INFO] [2020-11-15] [09:44:11,544] [x8000a5fc0] StarSystem.update - starsystem a took 50136951ns
+[ INFO] [2020-11-15] [09:44:11,594] [x8000a5fc0] StarSystem.update - starsystem d took 49858719ns
+[ INFO] [2020-11-15] [09:44:11,594] [x8000a65a0] StarSystem.update - starsystem c took 49849063ns
+[ INFO] [2020-11-15] [09:44:11,644] [x8000a5fc0] StarSystem.update - starsystem e took 49980134ns
+[ INFO] [2020-11-15] [09:44:12,494] [x8000a67c0] Galaxy.galaxyWorker - tick 65
+[ INFO] [2020-11-15] [09:44:12,544] [x8000a65a0] StarSystem.update - starsystem b took 49940637ns
+[ INFO] [2020-11-15] [09:44:12,544] [x8000a5fc0] StarSystem.update - starsystem a took 49975161ns
+[ INFO] [2020-11-15] [09:44:12,594] [x8000a5fc0] StarSystem.update - starsystem d took 50139877ns
+[ INFO] [2020-11-15] [09:44:12,594] [x8000a65a0] StarSystem.update - starsystem c took 50203657ns
+[ INFO] [2020-11-15] [09:44:12,644] [x8000a5fc0] StarSystem.update - starsystem e took 49846138ns
+[ INFO] [2020-11-15] [09:44:13,494] [x8000a67c0] Galaxy.galaxyWorker - tick 66
+[ INFO] [2020-11-15] [09:44:13,544] [x8000a65a0] StarSystem.update - starsystem b took 49938005ns
+[ INFO] [2020-11-15] [09:44:13,544] [x8000a5fc0] StarSystem.update - starsystem a took 49973113ns
+[ INFO] [2020-11-15] [09:44:13,594] [x8000a65a0] StarSystem.update - starsystem c took 50027531ns
+[ INFO] [2020-11-15] [09:44:13,594] [x8000a5fc0] StarSystem.update - starsystem d took 49966677ns
+[ INFO] [2020-11-15] [09:44:13,644] [x8000a65a0] StarSystem.update - starsystem e took 49985108ns
+[ INFO] [2020-11-15] [09:44:14,494] [x8000a67c0] Galaxy.galaxyWorker - tick 67
+[ INFO] [2020-11-15] [09:44:14,544] [x8000a65a0] StarSystem.update - starsystem b took 50012317ns
+[ INFO] [2020-11-15] [09:44:14,544] [x8000a5fc0] StarSystem.update - starsystem a took 50051522ns
+[ INFO] [2020-11-15] [09:44:14,594] [x8000a65a0] StarSystem.update - starsystem c took 49982476ns
+[ INFO] [2020-11-15] [09:44:14,594] [x8000a5fc0] StarSystem.update - starsystem d took 49973113ns
+[ INFO] [2020-11-15] [09:44:14,644] [x8000a65a0] StarSystem.update - starsystem e took 49996811ns
+[ INFO] [2020-11-15] [09:44:15,493] [x8000a67c0] Galaxy.galaxyWorker - tick 68
+[ INFO] [2020-11-15] [09:44:15,543] [x8000a5fc0] StarSystem.update - starsystem b took 49960825ns
+[ INFO] [2020-11-15] [09:44:15,543] [x8000a65a0] StarSystem.update - starsystem a took 49984815ns
+[ INFO] [2020-11-15] [09:44:15,593] [x8000a65a0] StarSystem.update - starsystem d took 50010562ns
+[ INFO] [2020-11-15] [09:44:15,593] [x8000a5fc0] StarSystem.update - starsystem c took 49998274ns
+[ INFO] [2020-11-15] [09:44:15,643] [x8000a65a0] StarSystem.update - starsystem e took 49996518ns
+[ INFO] [2020-11-15] [09:44:16,493] [x8000a67c0] Galaxy.galaxyWorker - tick 69
+[ INFO] [2020-11-15] [09:44:16,543] [x8000a5fc0] StarSystem.update - starsystem b took 49986571ns
+[ INFO] [2020-11-15] [09:44:16,543] [x8000a65a0] StarSystem.update - starsystem a took 50013780ns
+[ INFO] [2020-11-15] [09:44:16,593] [x8000a5fc0] StarSystem.update - starsystem c took 50017291ns
+[ INFO] [2020-11-15] [09:44:16,593] [x8000a65a0] StarSystem.update - starsystem d took 49967554ns
+[ INFO] [2020-11-15] [09:44:16,643] [x8000a5fc0] StarSystem.update - starsystem e took 49974575ns
+[ INFO] [2020-11-15] [09:44:17,493] [x8000a67c0] Galaxy.galaxyWorker - tick 70
+[ INFO] [2020-11-15] [09:44:17,543] [x8000a5fc0] StarSystem.update - starsystem a took 49959363ns
+[ INFO] [2020-11-15] [09:44:17,543] [x8000a65a0] StarSystem.update - starsystem b took 49929813ns
+[ INFO] [2020-11-15] [09:44:17,593] [x8000a65a0] StarSystem.update - starsystem d took 50093651ns
+[ INFO] [2020-11-15] [09:44:17,593] [x8000a5fc0] StarSystem.update - starsystem c took 50084582ns
+[ INFO] [2020-11-15] [09:44:17,643] [x8000a65a0] StarSystem.update - starsystem e took 49878028ns
+[ INFO] [2020-11-15] [09:44:18,493] [x8000a67c0] Galaxy.galaxyWorker - tick 71
+[ INFO] [2020-11-15] [09:44:18,543] [x8000a65a0] StarSystem.update - starsystem b took 49968432ns
+[ INFO] [2020-11-15] [09:44:18,543] [x8000a5fc0] StarSystem.update - starsystem a took 49956144ns
+[ INFO] [2020-11-15] [09:44:18,593] [x8000a5fc0] StarSystem.update - starsystem d took 49980134ns
+[ INFO] [2020-11-15] [09:44:18,593] [x8000a65a0] StarSystem.update - starsystem c took 50040696ns
+[ INFO] [2020-11-15] [09:44:18,643] [x8000a5fc0] StarSystem.update - starsystem e took 49996811ns
+[FATAL] [2020-11-15] [09:44:46,889] [x800018040] .main - ### Starting ###
+[ INFO] [2020-11-15] [09:44:46,890] [x8000a67e0] Galaxy.galaxyWorker - tick 1
+[ INFO] [2020-11-15] [09:44:46,944] [x8000a64a0] StarSystem.update - starsystem b took 0ns
+[ INFO] [2020-11-15] [09:44:46,944] [x8000a5ec0] StarSystem.update - starsystem a took 0ns
+[ INFO] [2020-11-15] [09:44:46,994] [x8000a5ec0] StarSystem.update - starsystem b took 54177621ns
+[ INFO] [2020-11-15] [09:44:46,994] [x8000a64a0] StarSystem.update - starsystem a took 54545673ns
+[ INFO] [2020-11-15] [09:44:47,044] [x8000a64a0] StarSystem.update - starsystem d took 0ns
+[ INFO] [2020-11-15] [09:44:47,044] [x8000a5ec0] StarSystem.update - starsystem c took 0ns
+[ INFO] [2020-11-15] [09:44:47,094] [x8000a64a0] StarSystem.update - starsystem e took 0ns
+[ INFO] [2020-11-15] [09:44:48,043] [x8000a67e0] Galaxy.galaxyWorker - tick 2
+[ INFO] [2020-11-15] [09:44:48,093] [x8000a64a0] StarSystem.update - starsystem b took 49576974ns
+[ INFO] [2020-11-15] [09:44:48,093] [x8000a5ec0] StarSystem.update - starsystem a took 49657724ns
+[ INFO] [2020-11-15] [09:44:48,143] [x8000a64a0] StarSystem.update - starsystem c took 50094529ns
+[ INFO] [2020-11-15] [09:44:48,143] [x8000a5ec0] StarSystem.update - starsystem d took 49997981ns
+[ INFO] [2020-11-15] [09:44:48,193] [x8000a64a0] StarSystem.update - starsystem e took 49899385ns
+[ INFO] [2020-11-15] [09:45:13,146] [x8000a67e0] Galaxy.galaxyWorker - tick 3
+[ INFO] [2020-11-15] [09:45:13,196] [x8000a64a0] StarSystem.update - starsystem b took 49940637ns
+[ INFO] [2020-11-15] [09:45:13,196] [x8000a5ec0] StarSystem.update - starsystem a took 49958192ns
+[ INFO] [2020-11-15] [09:45:13,246] [x8000a5ec0] StarSystem.update - starsystem d took 50087215ns
+[ INFO] [2020-11-15] [09:45:13,246] [x8000a64a0] StarSystem.update - starsystem c took 50073172ns
+[ INFO] [2020-11-15] [09:45:13,296] [x8000a5ec0] StarSystem.update - starsystem e took 49862230ns
+[ INFO] [2020-11-15] [09:45:13,296] [x8000a67e0] Galaxy.galaxyWorker - tick 4
+[ INFO] [2020-11-15] [09:45:13,346] [x8000a64a0] StarSystem.update - starsystem b took 49756319ns
+[ INFO] [2020-11-15] [09:45:13,346] [x8000a5ec0] StarSystem.update - starsystem a took 49798742ns
+[ INFO] [2020-11-15] [09:45:13,397] [x8000a5ec0] StarSystem.update - starsystem d took 49761000ns
+[ INFO] [2020-11-15] [09:45:13,397] [x8000a64a0] StarSystem.update - starsystem c took 49823902ns
+[ INFO] [2020-11-15] [09:45:13,447] [x8000a5ec0] StarSystem.update - starsystem e took 49922206ns
+[ INFO] [2020-11-15] [09:45:13,447] [x8000a67e0] Galaxy.galaxyWorker - tick 5
+[ INFO] [2020-11-15] [09:45:13,497] [x8000a5ec0] StarSystem.update - starsystem a took 50109158ns
+[ INFO] [2020-11-15] [09:45:13,497] [x8000a64a0] StarSystem.update - starsystem b took 50071708ns
+[ INFO] [2020-11-15] [09:45:13,547] [x8000a5ec0] StarSystem.update - starsystem c took 49983646ns
+[ INFO] [2020-11-15] [09:45:13,547] [x8000a64a0] StarSystem.update - starsystem d took 49926302ns
+[ INFO] [2020-11-15] [09:45:13,597] [x8000a5ec0] StarSystem.update - starsystem e took 49937420ns
+[ INFO] [2020-11-15] [09:45:13,597] [x8000a67e0] Galaxy.galaxyWorker - tick 6
+[ INFO] [2020-11-15] [09:45:13,647] [x8000a5ec0] StarSystem.update - starsystem a took 49994763ns
+[ INFO] [2020-11-15] [09:45:13,647] [x8000a64a0] StarSystem.update - starsystem b took 50023143ns
+[ INFO] [2020-11-15] [09:45:13,697] [x8000a64a0] StarSystem.update - starsystem d took 50277092ns
+[ INFO] [2020-11-15] [09:45:13,697] [x8000a5ec0] StarSystem.update - starsystem c took 50271241ns
+[ INFO] [2020-11-15] [09:45:13,747] [x8000a64a0] StarSystem.update - starsystem e took 49679959ns
+[ INFO] [2020-11-15] [09:45:13,747] [x8000a67e0] Galaxy.galaxyWorker - tick 7
+[ INFO] [2020-11-15] [09:45:13,797] [x8000a5ec0] StarSystem.update - starsystem b took 50169719ns
+[ INFO] [2020-11-15] [09:45:13,797] [x8000a64a0] StarSystem.update - starsystem a took 50138707ns
+[ INFO] [2020-11-15] [09:45:13,847] [x8000a64a0] StarSystem.update - starsystem d took 50011732ns
+[ INFO] [2020-11-15] [09:45:13,847] [x8000a5ec0] StarSystem.update - starsystem c took 50073757ns
+[ INFO] [2020-11-15] [09:45:13,897] [x8000a64a0] StarSystem.update - starsystem e took 49802838ns
+[ INFO] [2020-11-15] [09:45:13,897] [x8000a67e0] Galaxy.galaxyWorker - tick 8
+[ INFO] [2020-11-15] [09:45:13,947] [x8000a5ec0] StarSystem.update - starsystem b took 50233792ns
+[ INFO] [2020-11-15] [09:45:13,947] [x8000a64a0] StarSystem.update - starsystem a took 50266560ns
+[ INFO] [2020-11-15] [09:45:13,997] [x8000a5ec0] StarSystem.update - starsystem c took 49813663ns
+[ INFO] [2020-11-15] [09:45:13,997] [x8000a64a0] StarSystem.update - starsystem d took 49747835ns
+[ INFO] [2020-11-15] [09:45:14,047] [x8000a5ec0] StarSystem.update - starsystem e took 49926595ns
+[ INFO] [2020-11-15] [09:45:14,047] [x8000a67e0] Galaxy.galaxyWorker - tick 9
+[ INFO] [2020-11-15] [09:45:14,097] [x8000a64a0] StarSystem.update - starsystem b took 49997689ns
+[ INFO] [2020-11-15] [09:45:14,097] [x8000a5ec0] StarSystem.update - starsystem a took 50033968ns
+[ INFO] [2020-11-15] [09:45:14,147] [x8000a64a0] StarSystem.update - starsystem c took 49974283ns
+[ INFO] [2020-11-15] [09:45:14,147] [x8000a5ec0] StarSystem.update - starsystem d took 49984231ns
+[ INFO] [2020-11-15] [09:45:14,197] [x8000a64a0] StarSystem.update - starsystem e took 50076389ns
+[ INFO] [2020-11-15] [09:45:14,197] [x8000a67e0] Galaxy.galaxyWorker - tick 10
+[ INFO] [2020-11-15] [09:45:14,247] [x8000a64a0] StarSystem.update - starsystem a took 50014072ns
+[ INFO] [2020-11-15] [09:45:14,247] [x8000a5ec0] StarSystem.update - starsystem b took 49973113ns
+[ INFO] [2020-11-15] [09:45:14,297] [x8000a5ec0] StarSystem.update - starsystem d took 49876565ns
+[ INFO] [2020-11-15] [09:45:14,297] [x8000a64a0] StarSystem.update - starsystem c took 49886220ns
+[ INFO] [2020-11-15] [09:45:14,347] [x8000a5ec0] StarSystem.update - starsystem e took 50009391ns
+[ INFO] [2020-11-15] [09:45:14,347] [x8000a67e0] Galaxy.galaxyWorker - tick 11
+[ INFO] [2020-11-15] [09:45:14,397] [x8000a5ec0] StarSystem.update - starsystem a took 50084582ns
+[ INFO] [2020-11-15] [09:45:14,397] [x8000a64a0] StarSystem.update - starsystem b took 50113254ns
+[ INFO] [2020-11-15] [09:45:14,447] [x8000a5ec0] StarSystem.update - starsystem c took 49926887ns
+[ INFO] [2020-11-15] [09:45:14,447] [x8000a64a0] StarSystem.update - starsystem d took 49861352ns
+[ INFO] [2020-11-15] [09:45:14,497] [x8000a5ec0] StarSystem.update - starsystem e took 49969894ns
+[ INFO] [2020-11-15] [09:45:14,497] [x8000a67e0] Galaxy.galaxyWorker - tick 12
+[ INFO] [2020-11-15] [09:45:14,547] [x8000a64a0] StarSystem.update - starsystem a took 49952048ns
+[ INFO] [2020-11-15] [09:45:14,547] [x8000a5ec0] StarSystem.update - starsystem b took 49966092ns
+[ INFO] [2020-11-15] [09:45:14,597] [x8000a64a0] StarSystem.update - starsystem c took 49997689ns
+[ INFO] [2020-11-15] [09:45:14,597] [x8000a5ec0] StarSystem.update - starsystem d took 49997981ns
+[ INFO] [2020-11-15] [09:45:14,647] [x8000a64a0] StarSystem.update - starsystem e took 50006758ns
+[ INFO] [2020-11-15] [09:45:14,647] [x8000a67e0] Galaxy.galaxyWorker - tick 13
+[ INFO] [2020-11-15] [09:45:14,697] [x8000a5ec0] StarSystem.update - starsystem b took 49981890ns
+[ INFO] [2020-11-15] [09:45:14,697] [x8000a64a0] StarSystem.update - starsystem a took 49958485ns
+[ INFO] [2020-11-15] [09:45:14,747] [x8000a64a0] StarSystem.update - starsystem d took 50180252ns
+[ INFO] [2020-11-15] [09:45:14,747] [x8000a5ec0] StarSystem.update - starsystem c took 50185225ns
+[ INFO] [2020-11-15] [09:45:14,797] [x8000a64a0] StarSystem.update - starsystem e took 49806641ns
+[ INFO] [2020-11-15] [09:45:14,797] [x8000a67e0] Galaxy.galaxyWorker - tick 14
+[ INFO] [2020-11-15] [09:45:14,847] [x8000a5ec0] StarSystem.update - starsystem b took 49978379ns
+[ INFO] [2020-11-15] [09:45:14,847] [x8000a64a0] StarSystem.update - starsystem a took 50011439ns
+[ INFO] [2020-11-15] [09:45:14,897] [x8000a5ec0] StarSystem.update - starsystem c took 50138414ns
+[ INFO] [2020-11-15] [09:45:14,897] [x8000a64a0] StarSystem.update - starsystem d took 50084874ns
+[ INFO] [2020-11-15] [09:45:14,947] [x8000a5ec0] StarSystem.update - starsystem e took 49833558ns
+[FATAL] [2020-11-15] [09:45:21,563] [x800018040] .main - ### Starting ###
+[ INFO] [2020-11-15] [09:45:21,565] [x8000a67e0] Galaxy.galaxyWorker - tick 1
+[ INFO] [2020-11-15] [09:45:21,631] [x8000a64a0] StarSystem.update - starsystem b took 0ns
+[ INFO] [2020-11-15] [09:45:21,631] [x8000a5ec0] StarSystem.update - starsystem a took 0ns
+[ INFO] [2020-11-15] [09:45:21,681] [x8000a5ec0] StarSystem.update - starsystem b took 67138717ns
+[ INFO] [2020-11-15] [09:45:21,681] [x8000a64a0] StarSystem.update - starsystem a took 67464054ns
+[ INFO] [2020-11-15] [09:45:21,731] [x8000a5ec0] StarSystem.update - starsystem c took 0ns
+[ INFO] [2020-11-15] [09:45:21,731] [x8000a64a0] StarSystem.update - starsystem d took 0ns
+[ INFO] [2020-11-15] [09:45:21,781] [x8000a5ec0] StarSystem.update - starsystem e took 0ns
+[ INFO] [2020-11-15] [09:45:22,730] [x8000a67e0] Galaxy.galaxyWorker - tick 2
+[ INFO] [2020-11-15] [09:45:22,780] [x8000a5ec0] StarSystem.update - starsystem b took 49264219ns
+[ INFO] [2020-11-15] [09:45:22,780] [x8000a64a0] StarSystem.update - starsystem a took 49335021ns
+[ INFO] [2020-11-15] [09:45:22,830] [x8000a64a0] StarSystem.update - starsystem d took 50023142ns
+[ INFO] [2020-11-15] [09:45:22,830] [x8000a5ec0] StarSystem.update - starsystem c took 49996811ns
+[ INFO] [2020-11-15] [09:45:22,880] [x8000a64a0] StarSystem.update - starsystem e took 49997104ns
+[ INFO] [2020-11-15] [09:45:23,714] [x8000a67e0] Galaxy.galaxyWorker - tick 3
+[ INFO] [2020-11-15] [09:45:23,764] [x8000a5ec0] StarSystem.update - starsystem a took 49859303ns
+[ INFO] [2020-11-15] [09:45:23,764] [x8000a64a0] StarSystem.update - starsystem b took 49828291ns
+[ INFO] [2020-11-15] [09:45:23,814] [x8000a5ec0] StarSystem.update - starsystem c took 50026360ns
+[ INFO] [2020-11-15] [09:45:23,814] [x8000a64a0] StarSystem.update - starsystem d took 49978671ns
+[ INFO] [2020-11-15] [09:45:23,864] [x8000a5ec0] StarSystem.update - starsystem e took 49989789ns
+[ INFO] [2020-11-15] [09:45:24,714] [x8000a67e0] Galaxy.galaxyWorker - tick 4
+[ INFO] [2020-11-15] [09:45:24,764] [x8000a64a0] StarSystem.update - starsystem a took 50116764ns
+[ INFO] [2020-11-15] [09:45:24,764] [x8000a5ec0] StarSystem.update - starsystem b took 50144266ns
+[ INFO] [2020-11-15] [09:45:24,814] [x8000a5ec0] StarSystem.update - starsystem d took 49964043ns
+[ INFO] [2020-11-15] [09:45:24,814] [x8000a64a0] StarSystem.update - starsystem c took 49965799ns
+[ INFO] [2020-11-15] [09:45:24,864] [x8000a5ec0] StarSystem.update - starsystem e took 49915477ns
+[ INFO] [2020-11-15] [09:45:25,714] [x8000a67e0] Galaxy.galaxyWorker - tick 5
+[ INFO] [2020-11-15] [09:45:25,764] [x8000a64a0] StarSystem.update - starsystem b took 49995348ns
+[ INFO] [2020-11-15] [09:45:25,764] [x8000a5ec0] StarSystem.update - starsystem a took 49978087ns
+[ INFO] [2020-11-15] [09:45:25,814] [x8000a5ec0] StarSystem.update - starsystem d took 50002662ns
+[ INFO] [2020-11-15] [09:45:25,814] [x8000a64a0] StarSystem.update - starsystem c took 50063224ns
+[ INFO] [2020-11-15] [09:45:25,864] [x8000a5ec0] StarSystem.update - starsystem e took 49971651ns
+[ INFO] [2020-11-15] [09:45:26,714] [x8000a67e0] Galaxy.galaxyWorker - tick 6
+[ INFO] [2020-11-15] [09:45:26,764] [x8000a64a0] StarSystem.update - starsystem b took 49977209ns
+[ INFO] [2020-11-15] [09:45:26,764] [x8000a5ec0] StarSystem.update - starsystem a took 50012610ns
+[ INFO] [2020-11-15] [09:45:26,814] [x8000a5ec0] StarSystem.update - starsystem d took 50203365ns
+[ INFO] [2020-11-15] [09:45:26,814] [x8000a64a0] StarSystem.update - starsystem c took 50270948ns
+[ INFO] [2020-11-15] [09:45:26,864] [x8000a5ec0] StarSystem.update - starsystem e took 49778555ns
+[ INFO] [2020-11-15] [09:45:27,714] [x8000a67e0] Galaxy.galaxyWorker - tick 7
+[ INFO] [2020-11-15] [09:45:27,764] [x8000a64a0] StarSystem.update - starsystem a took 49952340ns
+[ INFO] [2020-11-15] [09:45:27,764] [x8000a5ec0] StarSystem.update - starsystem b took 49920158ns
+[ INFO] [2020-11-15] [09:45:27,814] [x8000a64a0] StarSystem.update - starsystem c took 50077853ns
+[ INFO] [2020-11-15] [09:45:27,814] [x8000a5ec0] StarSystem.update - starsystem d took 50020216ns
+[ INFO] [2020-11-15] [09:45:27,864] [x8000a64a0] StarSystem.update - starsystem e took 49976624ns
+[FATAL] [2020-11-22] [05:02:18,507] [x800018040] .main - ### Starting ###
+[ INFO] [2020-11-22] [05:02:18,509] [x8000aec10] Galaxy.galaxyWorker - tick 1
+[ INFO] [2020-11-22] [05:02:19,509] [x8000aec10] Galaxy.galaxyWorker - tick 2
+[ INFO] [2020-11-22] [05:02:20,509] [x8000aec10] Galaxy.galaxyWorker - tick 3
+[ INFO] [2020-11-22] [05:02:21,508] [x8000aec10] Galaxy.galaxyWorker - tick 4
+[ INFO] [2020-11-22] [05:02:22,508] [x8000aec10] Galaxy.galaxyWorker - tick 5
+[ INFO] [2020-11-22] [05:02:23,508] [x8000aec10] Galaxy.galaxyWorker - tick 6
+[ INFO] [2020-11-22] [05:02:24,508] [x8000aec10] Galaxy.galaxyWorker - tick 7
+[ INFO] [2020-11-22] [05:02:25,508] [x8000aec10] Galaxy.galaxyWorker - tick 8
+[ INFO] [2020-11-22] [05:02:26,508] [x8000aec10] Galaxy.galaxyWorker - tick 9
+[ INFO] [2020-11-22] [05:02:27,508] [x8000aec10] Galaxy.galaxyWorker - tick 10
+[ INFO] [2020-11-22] [05:02:28,508] [x8000aec10] Galaxy.galaxyWorker - tick 11
+[ INFO] [2020-11-22] [05:02:29,508] [x8000aec10] Galaxy.galaxyWorker - tick 12
+[ INFO] [2020-11-22] [05:02:30,508] [x8000aec10] Galaxy.galaxyWorker - tick 13
+[ INFO] [2020-11-22] [05:02:31,508] [x8000aec10] Galaxy.galaxyWorker - tick 14
+[ INFO] [2020-11-22] [05:02:32,508] [x8000aec10] Galaxy.galaxyWorker - tick 15
+[ INFO] [2020-11-22] [05:02:33,508] [x8000aec10] Galaxy.galaxyWorker - tick 16
+[ INFO] [2020-11-22] [05:02:34,508] [x8000aec10] Galaxy.galaxyWorker - tick 17
+[ INFO] [2020-11-22] [05:02:35,509] [x8000aec10] Galaxy.galaxyWorker - tick 18
+[ INFO] [2020-11-22] [05:02:36,509] [x8000aec10] Galaxy.galaxyWorker - tick 19
+[ INFO] [2020-11-22] [05:02:37,509] [x8000aec10] Galaxy.galaxyWorker - tick 20
+[ INFO] [2020-11-22] [05:02:38,509] [x8000aec10] Galaxy.galaxyWorker - tick 21
+[ INFO] [2020-11-22] [05:02:39,509] [x8000aec10] Galaxy.galaxyWorker - tick 22
+[ INFO] [2020-11-22] [05:02:40,509] [x8000aec10] Galaxy.galaxyWorker - tick 23
+[ INFO] [2020-11-22] [05:02:41,509] [x8000aec10] Galaxy.galaxyWorker - tick 24
+[ INFO] [2020-11-22] [05:02:42,509] [x8000aec10] Galaxy.galaxyWorker - tick 25
+[ INFO] [2020-11-22] [05:02:43,509] [x8000aec10] Galaxy.galaxyWorker - tick 26
+[ INFO] [2020-11-22] [05:02:44,509] [x8000aec10] Galaxy.galaxyWorker - tick 27
+[ INFO] [2020-11-22] [05:02:45,509] [x8000aec10] Galaxy.galaxyWorker - tick 28
+[ INFO] [2020-11-22] [05:02:46,509] [x8000aec10] Galaxy.galaxyWorker - tick 29
+[ INFO] [2020-11-22] [05:02:47,509] [x8000aec10] Galaxy.galaxyWorker - tick 30
+[ INFO] [2020-11-22] [05:02:48,509] [x8000aec10] Galaxy.galaxyWorker - tick 31
+[ INFO] [2020-11-22] [05:02:49,509] [x8000aec10] Galaxy.galaxyWorker - tick 32
+[ INFO] [2020-11-22] [05:02:50,509] [x8000aec10] Galaxy.galaxyWorker - tick 33
+[ INFO] [2020-11-22] [05:02:51,508] [x8000aec10] Galaxy.galaxyWorker - tick 34
+[ INFO] [2020-11-22] [05:02:52,508] [x8000aec10] Galaxy.galaxyWorker - tick 35
+[ INFO] [2020-11-22] [05:02:53,509] [x8000aec10] Galaxy.galaxyWorker - tick 36
+[ INFO] [2020-11-22] [05:02:54,509] [x8000aec10] Galaxy.galaxyWorker - tick 37
+[ INFO] [2020-11-22] [05:02:55,509] [x8000aec10] Galaxy.galaxyWorker - tick 38
+[ INFO] [2020-11-22] [05:02:56,509] [x8000aec10] Galaxy.galaxyWorker - tick 39
+[ INFO] [2020-11-22] [05:02:57,509] [x8000aec10] Galaxy.galaxyWorker - tick 40
+[ INFO] [2020-11-22] [05:02:58,509] [x8000aec10] Galaxy.galaxyWorker - tick 41
+[ INFO] [2020-11-22] [05:02:59,509] [x8000aec10] Galaxy.galaxyWorker - tick 42
+[ INFO] [2020-11-22] [05:03:00,509] [x8000aec10] Galaxy.galaxyWorker - tick 43
+[ INFO] [2020-11-22] [05:03:01,509] [x8000aec10] Galaxy.galaxyWorker - tick 44
+[ INFO] [2020-11-22] [05:03:02,509] [x8000aec10] Galaxy.galaxyWorker - tick 45
+[ INFO] [2020-11-22] [05:03:03,509] [x8000aec10] Galaxy.galaxyWorker - tick 46
+[ INFO] [2020-11-22] [05:03:04,509] [x8000aec10] Galaxy.galaxyWorker - tick 47
+[ INFO] [2020-11-22] [05:03:05,509] [x8000aec10] Galaxy.galaxyWorker - tick 48
+[ INFO] [2020-11-22] [05:03:06,509] [x8000aec10] Galaxy.galaxyWorker - tick 49
+[ INFO] [2020-11-22] [05:03:07,509] [x8000aec10] Galaxy.galaxyWorker - tick 50
+[ INFO] [2020-11-22] [05:03:08,509] [x8000aec10] Galaxy.galaxyWorker - tick 51
+[ INFO] [2020-11-22] [05:03:09,509] [x8000aec10] Galaxy.galaxyWorker - tick 52
+[ INFO] [2020-11-22] [05:03:10,510] [x8000aec10] Galaxy.galaxyWorker - tick 53
+[ INFO] [2020-11-22] [05:03:11,510] [x8000aec10] Galaxy.galaxyWorker - tick 54
+[ INFO] [2020-11-22] [05:03:12,510] [x8000aec10] Galaxy.galaxyWorker - tick 55
+[ INFO] [2020-11-22] [05:03:13,510] [x8000aec10] Galaxy.galaxyWorker - tick 56
+[ INFO] [2020-11-22] [05:03:14,510] [x8000aec10] Galaxy.galaxyWorker - tick 57
+[ INFO] [2020-11-22] [05:03:15,510] [x8000aec10] Galaxy.galaxyWorker - tick 58
+[ INFO] [2020-11-22] [05:03:16,510] [x8000aec10] Galaxy.galaxyWorker - tick 59
+[ INFO] [2020-11-22] [05:03:17,510] [x8000aec10] Galaxy.galaxyWorker - tick 60
+[ INFO] [2020-11-22] [05:03:18,510] [x8000aec10] Galaxy.galaxyWorker - tick 61
+[ INFO] [2020-11-22] [05:03:19,510] [x8000aec10] Galaxy.galaxyWorker - tick 62
+[ INFO] [2020-11-22] [05:03:20,510] [x8000aec10] Galaxy.galaxyWorker - tick 63
+[ INFO] [2020-11-22] [05:03:21,509] [x8000aec10] Galaxy.galaxyWorker - tick 64
+[ INFO] [2020-11-22] [05:03:22,509] [x8000aec10] Galaxy.galaxyWorker - tick 65
+[ INFO] [2020-11-22] [05:03:23,509] [x8000aec10] Galaxy.galaxyWorker - tick 66
+[ INFO] [2020-11-22] [05:03:24,509] [x8000aec10] Galaxy.galaxyWorker - tick 67
+[ INFO] [2020-11-22] [05:03:25,509] [x8000aec10] Galaxy.galaxyWorker - tick 68
+[ INFO] [2020-11-22] [05:03:26,509] [x8000aec10] Galaxy.galaxyWorker - tick 69
+[ INFO] [2020-11-22] [05:03:27,509] [x8000aec10] Galaxy.galaxyWorker - tick 70
+[ INFO] [2020-11-22] [05:03:28,510] [x8000aec10] Galaxy.galaxyWorker - tick 71
+[ INFO] [2020-11-22] [05:03:29,510] [x8000aec10] Galaxy.galaxyWorker - tick 72
+[ INFO] [2020-11-22] [05:03:30,510] [x8000aec10] Galaxy.galaxyWorker - tick 73
+[ INFO] [2020-11-22] [05:03:31,510] [x8000aec10] Galaxy.galaxyWorker - tick 74
+[ INFO] [2020-11-22] [05:03:32,510] [x8000aec10] Galaxy.galaxyWorker - tick 75
+[ INFO] [2020-11-22] [05:03:33,510] [x8000aec10] Galaxy.galaxyWorker - tick 76
+[ INFO] [2020-11-22] [05:03:34,510] [x8000aec10] Galaxy.galaxyWorker - tick 77
+[ INFO] [2020-11-22] [05:03:35,510] [x8000aec10] Galaxy.galaxyWorker - tick 78
+[ INFO] [2020-11-22] [05:03:36,510] [x8000aec10] Galaxy.galaxyWorker - tick 79
+[ INFO] [2020-11-22] [05:03:37,510] [x8000aec10] Galaxy.galaxyWorker - tick 80
+[ INFO] [2020-11-22] [05:03:38,510] [x8000aec10] Galaxy.galaxyWorker - tick 81
+[ INFO] [2020-11-22] [05:03:39,510] [x8000aec10] Galaxy.galaxyWorker - tick 82
+[ INFO] [2020-11-22] [05:03:40,510] [x8000aec10] Galaxy.galaxyWorker - tick 83
+[ INFO] [2020-11-22] [05:03:41,510] [x8000aec10] Galaxy.galaxyWorker - tick 84
+[ INFO] [2020-11-22] [05:03:42,510] [x8000aec10] Galaxy.galaxyWorker - tick 85
+[ INFO] [2020-11-22] [05:03:43,510] [x8000aec10] Galaxy.galaxyWorker - tick 86
+[ INFO] [2020-11-22] [05:03:44,510] [x8000aec10] Galaxy.galaxyWorker - tick 87
+[ INFO] [2020-11-22] [05:03:45,511] [x8000aec10] Galaxy.galaxyWorker - tick 88
+[ INFO] [2020-11-22] [05:03:46,511] [x8000aec10] Galaxy.galaxyWorker - tick 89
+[ INFO] [2020-11-22] [05:03:47,511] [x8000aec10] Galaxy.galaxyWorker - tick 90
+[ INFO] [2020-11-22] [05:03:48,511] [x8000aec10] Galaxy.galaxyWorker - tick 91
+[ INFO] [2020-11-22] [05:03:49,511] [x8000aec10] Galaxy.galaxyWorker - tick 92
+[ INFO] [2020-11-22] [05:03:50,510] [x8000aec10] Galaxy.galaxyWorker - tick 93
+[ INFO] [2020-11-22] [05:03:51,510] [x8000aec10] Galaxy.galaxyWorker - tick 94
+[ INFO] [2020-11-22] [05:03:52,510] [x8000aec10] Galaxy.galaxyWorker - tick 95
+[ INFO] [2020-11-22] [05:03:53,510] [x8000aec10] Galaxy.galaxyWorker - tick 96
+[ INFO] [2020-11-22] [05:03:54,510] [x8000aec10] Galaxy.galaxyWorker - tick 97
+[ INFO] [2020-11-22] [05:03:55,510] [x8000aec10] Galaxy.galaxyWorker - tick 98
+[ INFO] [2020-11-22] [05:03:56,510] [x8000aec10] Galaxy.galaxyWorker - tick 99
+[ INFO] [2020-11-22] [05:03:57,510] [x8000aec10] Galaxy.galaxyWorker - tick 100
+[ INFO] [2020-11-22] [05:03:58,510] [x8000aec10] Galaxy.galaxyWorker - tick 101
+[ INFO] [2020-11-22] [05:03:59,510] [x8000aec10] Galaxy.galaxyWorker - tick 102
+[ INFO] [2020-11-22] [05:04:00,510] [x8000aec10] Galaxy.galaxyWorker - tick 103
+[ INFO] [2020-11-22] [05:04:01,510] [x8000aec10] Galaxy.galaxyWorker - tick 104
+[ INFO] [2020-11-22] [05:04:02,511] [x8000aec10] Galaxy.galaxyWorker - tick 105
+[ INFO] [2020-11-22] [05:04:03,511] [x8000aec10] Galaxy.galaxyWorker - tick 106
+[ INFO] [2020-11-22] [05:04:04,511] [x8000aec10] Galaxy.galaxyWorker - tick 107
+[ INFO] [2020-11-22] [05:04:05,511] [x8000aec10] Galaxy.galaxyWorker - tick 108
+[ INFO] [2020-11-22] [05:04:06,511] [x8000aec10] Galaxy.galaxyWorker - tick 109
+[ INFO] [2020-11-22] [05:04:07,511] [x8000aec10] Galaxy.galaxyWorker - tick 110
+[ INFO] [2020-11-22] [05:04:08,511] [x8000aec10] Galaxy.galaxyWorker - tick 111
+[ INFO] [2020-11-22] [05:04:09,511] [x8000aec10] Galaxy.galaxyWorker - tick 112
+[ INFO] [2020-11-22] [05:04:10,511] [x8000aec10] Galaxy.galaxyWorker - tick 113
+[ INFO] [2020-11-22] [05:04:11,511] [x8000aec10] Galaxy.galaxyWorker - tick 114
+[ INFO] [2020-11-22] [05:04:12,511] [x8000aec10] Galaxy.galaxyWorker - tick 115
+[ INFO] [2020-11-22] [05:04:13,511] [x8000aec10] Galaxy.galaxyWorker - tick 116
+[ INFO] [2020-11-22] [05:04:14,511] [x8000aec10] Galaxy.galaxyWorker - tick 117
+[ INFO] [2020-11-22] [05:04:15,511] [x8000aec10] Galaxy.galaxyWorker - tick 118
+[ INFO] [2020-11-22] [05:04:16,511] [x8000aec10] Galaxy.galaxyWorker - tick 119
+[ INFO] [2020-11-22] [05:04:17,511] [x8000aec10] Galaxy.galaxyWorker - tick 120
+[ INFO] [2020-11-22] [05:04:18,511] [x8000aec10] Galaxy.galaxyWorker - tick 121
+[ INFO] [2020-11-22] [05:04:19,511] [x8000aec10] Galaxy.galaxyWorker - tick 122
+[ INFO] [2020-11-22] [05:04:20,511] [x8000aec10] Galaxy.galaxyWorker - tick 123
+[ INFO] [2020-11-22] [05:04:21,511] [x8000aec10] Galaxy.galaxyWorker - tick 124
+[ INFO] [2020-11-22] [05:04:22,511] [x8000aec10] Galaxy.galaxyWorker - tick 125
+[ INFO] [2020-11-22] [05:04:23,511] [x8000aec10] Galaxy.galaxyWorker - tick 126
+[ INFO] [2020-11-22] [05:04:24,511] [x8000aec10] Galaxy.galaxyWorker - tick 127
+[ INFO] [2020-11-22] [05:04:25,511] [x8000aec10] Galaxy.galaxyWorker - tick 128
+[ INFO] [2020-11-22] [05:04:26,511] [x8000aec10] Galaxy.galaxyWorker - tick 129
+[ INFO] [2020-11-22] [05:04:27,511] [x8000aec10] Galaxy.galaxyWorker - tick 130
+[ INFO] [2020-11-22] [05:04:28,511] [x8000aec10] Galaxy.galaxyWorker - tick 131
+[ INFO] [2020-11-22] [05:04:29,511] [x8000aec10] Galaxy.galaxyWorker - tick 132
+[ INFO] [2020-11-22] [05:04:30,511] [x8000aec10] Galaxy.galaxyWorker - tick 133
+[ INFO] [2020-11-22] [05:04:31,511] [x8000aec10] Galaxy.galaxyWorker - tick 134
+[ INFO] [2020-11-22] [05:04:32,511] [x8000aec10] Galaxy.galaxyWorker - tick 135
+[ INFO] [2020-11-22] [05:04:33,511] [x8000aec10] Galaxy.galaxyWorker - tick 136
+[ INFO] [2020-11-22] [05:04:34,511] [x8000aec10] Galaxy.galaxyWorker - tick 137
+[ INFO] [2020-11-22] [05:04:35,511] [x8000aec10] Galaxy.galaxyWorker - tick 138
+[ INFO] [2020-11-22] [05:04:36,511] [x8000aec10] Galaxy.galaxyWorker - tick 139
+[ INFO] [2020-11-22] [05:04:37,512] [x8000aec10] Galaxy.galaxyWorker - tick 140
+[ INFO] [2020-11-22] [05:04:38,512] [x8000aec10] Galaxy.galaxyWorker - tick 141
+[ INFO] [2020-11-22] [05:04:39,512] [x8000aec10] Galaxy.galaxyWorker - tick 142
+[ INFO] [2020-11-22] [05:04:40,512] [x8000aec10] Galaxy.galaxyWorker - tick 143
+[ INFO] [2020-11-22] [05:04:41,512] [x8000aec10] Galaxy.galaxyWorker - tick 144
+[ INFO] [2020-11-22] [05:04:42,512] [x8000aec10] Galaxy.galaxyWorker - tick 145
+[ INFO] [2020-11-22] [05:04:43,512] [x8000aec10] Galaxy.galaxyWorker - tick 146
+[ INFO] [2020-11-22] [05:04:44,512] [x8000aec10] Galaxy.galaxyWorker - tick 147
+[ INFO] [2020-11-22] [05:04:45,512] [x8000aec10] Galaxy.galaxyWorker - tick 148
+[ INFO] [2020-11-22] [05:04:46,512] [x8000aec10] Galaxy.galaxyWorker - tick 149
+[ INFO] [2020-11-22] [05:04:47,512] [x8000aec10] Galaxy.galaxyWorker - tick 150
+[ INFO] [2020-11-22] [05:04:48,512] [x8000aec10] Galaxy.galaxyWorker - tick 151
+[ INFO] [2020-11-22] [05:04:49,512] [x8000aec10] Galaxy.galaxyWorker - tick 152
+[ INFO] [2020-11-22] [05:04:50,511] [x8000aec10] Galaxy.galaxyWorker - tick 153
+[ INFO] [2020-11-22] [05:04:51,511] [x8000aec10] Galaxy.galaxyWorker - tick 154
+[ INFO] [2020-11-22] [05:04:52,511] [x8000aec10] Galaxy.galaxyWorker - tick 155
+[ INFO] [2020-11-22] [05:04:53,511] [x8000aec10] Galaxy.galaxyWorker - tick 156
+[ INFO] [2020-11-22] [05:04:54,511] [x8000aec10] Galaxy.galaxyWorker - tick 157
+[ INFO] [2020-11-22] [05:04:55,512] [x8000aec10] Galaxy.galaxyWorker - tick 158
+[ INFO] [2020-11-22] [05:04:56,512] [x8000aec10] Galaxy.galaxyWorker - tick 159
+[ INFO] [2020-11-22] [05:04:57,512] [x8000aec10] Galaxy.galaxyWorker - tick 160
+[ INFO] [2020-11-22] [05:04:58,512] [x8000aec10] Galaxy.galaxyWorker - tick 161
+[ INFO] [2020-11-22] [05:04:59,512] [x8000aec10] Galaxy.galaxyWorker - tick 162
+[ INFO] [2020-11-22] [05:05:00,512] [x8000aec10] Galaxy.galaxyWorker - tick 163
+[ INFO] [2020-11-22] [05:05:01,512] [x8000aec10] Galaxy.galaxyWorker - tick 164
+[ INFO] [2020-11-22] [05:05:02,512] [x8000aec10] Galaxy.galaxyWorker - tick 165
+[ INFO] [2020-11-22] [05:05:03,512] [x8000aec10] Galaxy.galaxyWorker - tick 166
+[FATAL] [2020-11-22] [05:05:51,521] [x800018040] .main - ### Starting ###
+[ INFO] [2020-11-22] [05:05:51,522] [x8000aef40] Galaxy.galaxyWorker - tick 1
+[ INFO] [2020-11-22] [05:05:52,522] [x8000aef40] Galaxy.galaxyWorker - tick 2
+[ INFO] [2020-11-22] [05:05:53,522] [x8000aef40] Galaxy.galaxyWorker - tick 3
+[ INFO] [2020-11-22] [05:05:54,523] [x8000aef40] Galaxy.galaxyWorker - tick 4
+[ INFO] [2020-11-22] [05:05:55,523] [x8000aef40] Galaxy.galaxyWorker - tick 5
+[ INFO] [2020-11-22] [05:05:56,523] [x8000aef40] Galaxy.galaxyWorker - tick 6
+[ INFO] [2020-11-22] [05:05:57,523] [x8000aef40] Galaxy.galaxyWorker - tick 7
+[ INFO] [2020-11-22] [05:05:58,523] [x8000aef40] Galaxy.galaxyWorker - tick 8
+[FATAL] [2020-11-22] [06:37:32,849] [x800018040] .main - ### Starting ###
+[ INFO] [2020-11-22] [06:37:32,850] [x8000aef60] Galaxy.galaxyWorker - tick 1
+[ INFO] [2020-11-22] [06:37:33,850] [x8000aef60] Galaxy.galaxyWorker - tick 2
+[ INFO] [2020-11-22] [06:37:34,850] [x8000aef60] Galaxy.galaxyWorker - tick 3
+[ INFO] [2020-11-22] [06:37:35,850] [x8000aef60] Galaxy.galaxyWorker - tick 4
+[ INFO] [2020-11-22] [06:37:36,850] [x8000aef60] Galaxy.galaxyWorker - tick 5
+[FATAL] [2020-11-22] [06:40:36,987] [x800018040] .main - ### Starting ###
+[ INFO] [2020-11-22] [06:40:36,988] [x8000aef00] Galaxy.galaxyWorker - tick 1
+[ INFO] [2020-11-22] [06:40:37,988] [x8000aef00] Galaxy.galaxyWorker - tick 2
+[ INFO] [2020-11-22] [06:40:38,988] [x8000aef00] Galaxy.galaxyWorker - tick 3
+[ INFO] [2020-11-22] [06:40:39,988] [x8000aef00] Galaxy.galaxyWorker - tick 4
+[ INFO] [2020-11-22] [06:40:40,988] [x8000aef00] Galaxy.galaxyWorker - tick 5
+[ INFO] [2020-11-22] [06:40:41,988] [x8000aef00] Galaxy.galaxyWorker - tick 6
+[FATAL] [2020-11-22] [06:40:57,813] [x800018040] .main - ### Starting ###
+[ INFO] [2020-11-22] [06:40:57,814] [x8000aef20] Galaxy.galaxyWorker - tick 1
+[ INFO] [2020-11-22] [06:40:58,814] [x8000aef20] Galaxy.galaxyWorker - tick 2
+[ INFO] [2020-11-22] [06:40:59,815] [x8000aef20] Galaxy.galaxyWorker - tick 3
+[ INFO] [2020-11-22] [06:41:00,815] [x8000aef20] Galaxy.galaxyWorker - tick 4
+[FATAL] [2020-11-22] [06:53:17,808] [x800018040] .main - ### Starting ###
+[ INFO] [2020-11-22] [06:53:17,808] [x800018040] MovementSystem.init - init
+[ INFO] [2020-11-22] [06:53:17,808] [x800018040] MovementSystem.init - init
+[ INFO] [2020-11-22] [06:53:17,808] [x800018040] MovementSystem.init - init
+[ INFO] [2020-11-22] [06:53:17,808] [x800018040] MovementSystem.init - init
+[ INFO] [2020-11-22] [06:53:17,808] [x800018040] MovementSystem.init - init
+[ INFO] [2020-11-22] [06:53:17,809] [x8000aef20] Galaxy.galaxyWorker - tick 1
+[ INFO] [2020-11-22] [06:53:18,809] [x8000aef20] Galaxy.galaxyWorker - tick 2
+[ INFO] [2020-11-22] [06:53:19,809] [x8000aef20] Galaxy.galaxyWorker - tick 3
+[ INFO] [2020-11-22] [06:53:20,809] [x8000aef20] Galaxy.galaxyWorker - tick 4
+[FATAL] [2020-11-22] [06:54:46,719] [x800018040] .main - ### Starting ###
+[ INFO] [2020-11-22] [06:54:46,719] [x800018040] MovementSystem.init - init
+[ INFO] [2020-11-22] [06:54:46,719] [x800018040] MovementSystem.init - init
+[ INFO] [2020-11-22] [06:54:46,719] [x800018040] MovementSystem.init - init
+[ INFO] [2020-11-22] [06:54:46,719] [x800018040] MovementSystem.init - init
+[ INFO] [2020-11-22] [06:54:46,719] [x800018040] MovementSystem.init - init
+[ INFO] [2020-11-22] [06:54:46,720] [x8000aeaa0] StarSystem.update - starsystem a update
+[ INFO] [2020-11-22] [06:54:46,720] [x8000aeaa0] StarSystem.update - starsystem b update
+[ INFO] [2020-11-22] [06:54:46,720] [x8000aeaa0] StarSystem.update - starsystem c update
+[ INFO] [2020-11-22] [06:54:46,720] [x8000aeaa0] StarSystem.update - starsystem d update
+[ INFO] [2020-11-22] [06:54:46,720] [x8000aeaa0] StarSystem.update - starsystem e update
+[ INFO] [2020-11-22] [06:54:46,720] [x8000aef20] Galaxy.galaxyWorker - tick 1
+[ INFO] [2020-11-22] [06:54:46,720] [x8000aeaa0] StarSystem.update - starsystem b update
+[ INFO] [2020-11-22] [06:54:46,720] [x8000aeba0] StarSystem.update - starsystem a update
+[ INFO] [2020-11-22] [06:54:46,720] [x8000aeaa0] StarSystem.update - starsystem c update
+[ INFO] [2020-11-22] [06:54:46,720] [x8000aeba0] StarSystem.update - starsystem d update
+[ INFO] [2020-11-22] [06:54:46,720] [x8000aeaa0] StarSystem.update - starsystem e update
+[ INFO] [2020-11-22] [06:54:47,720] [x8000aef20] Galaxy.galaxyWorker - tick 2
+[ INFO] [2020-11-22] [06:54:47,720] [x8000aeaa0] StarSystem.update - starsystem a update
+[ INFO] [2020-11-22] [06:54:47,720] [x8000aeba0] StarSystem.update - starsystem b update
+[ INFO] [2020-11-22] [06:54:47,720] [x8000aeaa0] StarSystem.update - starsystem c update
+[ INFO] [2020-11-22] [06:54:47,720] [x8000aeba0] StarSystem.update - starsystem d update
+[ INFO] [2020-11-22] [06:54:47,720] [x8000aeaa0] StarSystem.update - starsystem e update
+[ INFO] [2020-11-22] [06:54:48,720] [x8000aef20] Galaxy.galaxyWorker - tick 3
+[ INFO] [2020-11-22] [06:54:48,720] [x8000aeaa0] StarSystem.update - starsystem a update
+[ INFO] [2020-11-22] [06:54:48,720] [x8000aeba0] StarSystem.update - starsystem b update
+[ INFO] [2020-11-22] [06:54:48,720] [x8000aeaa0] StarSystem.update - starsystem c update
+[ INFO] [2020-11-22] [06:54:48,720] [x8000aeba0] StarSystem.update - starsystem d update
+[ INFO] [2020-11-22] [06:54:48,720] [x8000aeaa0] StarSystem.update - starsystem e update
+[ INFO] [2020-11-22] [06:54:49,720] [x8000aef20] Galaxy.galaxyWorker - tick 4
+[ INFO] [2020-11-22] [06:54:49,720] [x8000aeaa0] StarSystem.update - starsystem a update
+[ INFO] [2020-11-22] [06:54:49,720] [x8000aeba0] StarSystem.update - starsystem b update
+[ INFO] [2020-11-22] [06:54:49,720] [x8000aeaa0] StarSystem.update - starsystem c update
+[ INFO] [2020-11-22] [06:54:49,720] [x8000aeba0] StarSystem.update - starsystem d update
+[ INFO] [2020-11-22] [06:54:49,720] [x8000aeaa0] StarSystem.update - starsystem e update
+[ INFO] [2020-11-22] [06:54:50,720] [x8000aef20] Galaxy.galaxyWorker - tick 5
+[ INFO] [2020-11-22] [06:54:50,720] [x8000aeaa0] StarSystem.update - starsystem a update
+[ INFO] [2020-11-22] [06:54:50,720] [x8000aeba0] StarSystem.update - starsystem b update
+[ INFO] [2020-11-22] [06:54:50,720] [x8000aeaa0] StarSystem.update - starsystem c update
+[ INFO] [2020-11-22] [06:54:50,720] [x8000aeba0] StarSystem.update - starsystem d update
+[ INFO] [2020-11-22] [06:54:50,720] [x8000aeaa0] StarSystem.update - starsystem e update
+[FATAL] [2020-11-22] [06:57:46,542] [x800018040] .main - ### Starting ###
+[ INFO] [2020-11-22] [06:57:46,542] [x800018040] MovementSystem.init - init
+[ INFO] [2020-11-22] [06:57:46,542] [x800018040] MovementSystem.init - init
+[ INFO] [2020-11-22] [06:57:46,542] [x800018040] MovementSystem.init - init
+[ INFO] [2020-11-22] [06:57:46,542] [x800018040] MovementSystem.init - init
+[ INFO] [2020-11-22] [06:57:46,542] [x800018040] MovementSystem.init - init
+[ INFO] [2020-11-22] [06:57:46,542] [x8000aeaa0] StarSystem.update - starsystem a update
+[ INFO] [2020-11-22] [06:57:46,543] [x8000aeaa0] StarSystem.update - starsystem b update
+[ INFO] [2020-11-22] [06:57:46,543] [x8000aeaa0] StarSystem.update - starsystem c update
+[ INFO] [2020-11-22] [06:57:46,543] [x8000aeaa0] StarSystem.update - starsystem d update
+[ INFO] [2020-11-22] [06:57:46,543] [x8000aeaa0] StarSystem.update - starsystem e update
+[ INFO] [2020-11-22] [06:57:46,543] [x8000aef20] Galaxy.galaxyWorker - tick 1
+[ INFO] [2020-11-22] [06:57:46,543] [x8000aeba0] StarSystem.update - starsystem a update
+[ INFO] [2020-11-22] [06:57:46,543] [x8000aeaa0] StarSystem.update - starsystem b update
+[ INFO] [2020-11-22] [06:57:46,543] [x8000aeba0] StarSystem.update - starsystem c update
+[ INFO] [2020-11-22] [06:57:46,543] [x8000aeaa0] StarSystem.update - starsystem d update
+[ INFO] [2020-11-22] [06:57:46,543] [x8000aeba0] StarSystem.update - starsystem e update
+[ INFO] [2020-11-22] [06:57:47,544] [x8000aef20] Galaxy.galaxyWorker - tick 2
+[ INFO] [2020-11-22] [06:57:47,544] [x8000aeba0] StarSystem.update - starsystem a update
+[ INFO] [2020-11-22] [06:57:47,544] [x8000aeaa0] StarSystem.update - starsystem b update
+[ INFO] [2020-11-22] [06:57:47,545] [x8000aeba0] StarSystem.update - starsystem c update
+[ INFO] [2020-11-22] [06:57:47,545] [x8000aeaa0] StarSystem.update - starsystem d update
+[ INFO] [2020-11-22] [06:57:47,545] [x8000aeba0] StarSystem.update - starsystem e update
+[ INFO] [2020-11-22] [06:57:48,544] [x8000aef20] Galaxy.galaxyWorker - tick 3
+[ INFO] [2020-11-22] [06:57:48,544] [x8000aeba0] StarSystem.update - starsystem a update
+[ INFO] [2020-11-22] [06:57:48,544] [x8000aeaa0] StarSystem.update - starsystem b update
+[ INFO] [2020-11-22] [06:57:48,544] [x8000aeba0] StarSystem.update - starsystem c update
+[ INFO] [2020-11-22] [06:57:48,544] [x8000aeaa0] StarSystem.update - starsystem d update
+[ INFO] [2020-11-22] [06:57:48,544] [x8000aeba0] StarSystem.update - starsystem e update
+[ INFO] [2020-11-22] [06:57:49,544] [x8000aef20] Galaxy.galaxyWorker - tick 4
+[ INFO] [2020-11-22] [06:57:49,544] [x8000aeba0] StarSystem.update - starsystem a update
+[ INFO] [2020-11-22] [06:57:49,544] [x8000aeaa0] StarSystem.update - starsystem b update
+[ INFO] [2020-11-22] [06:57:49,544] [x8000aeba0] StarSystem.update - starsystem c update
+[ INFO] [2020-11-22] [06:57:49,544] [x8000aeaa0] StarSystem.update - starsystem d update
+[ INFO] [2020-11-22] [06:57:49,544] [x8000aeba0] StarSystem.update - starsystem e update
+[ INFO] [2020-11-22] [06:57:50,544] [x8000aef20] Galaxy.galaxyWorker - tick 5
+[ INFO] [2020-11-22] [06:57:50,544] [x8000aeaa0] StarSystem.update - starsystem a update
+[ INFO] [2020-11-22] [06:57:50,544] [x8000aeba0] StarSystem.update - starsystem b update
+[ INFO] [2020-11-22] [06:57:50,544] [x8000aeaa0] StarSystem.update - starsystem c update
+[ INFO] [2020-11-22] [06:57:50,544] [x8000aeba0] StarSystem.update - starsystem d update
+[ INFO] [2020-11-22] [06:57:50,544] [x8000aeaa0] StarSystem.update - starsystem e update
+[ INFO] [2020-11-22] [06:57:51,544] [x8000aef20] Galaxy.galaxyWorker - tick 6
+[ INFO] [2020-11-22] [06:57:51,544] [x8000aeaa0] StarSystem.update - starsystem a update
+[ INFO] [2020-11-22] [06:57:51,544] [x8000aeba0] StarSystem.update - starsystem b update
+[ INFO] [2020-11-22] [06:57:51,544] [x8000aeaa0] StarSystem.update - starsystem c update
+[ INFO] [2020-11-22] [06:57:51,544] [x8000aeba0] StarSystem.update - starsystem d update
+[ INFO] [2020-11-22] [06:57:51,544] [x8000aeaa0] StarSystem.update - starsystem e update
+[FATAL] [2020-11-22] [06:58:54,831] [x800018040] .main - ### Starting ###
+[ INFO] [2020-11-22] [06:58:54,831] [x800018040] MovementSystem.init - init
+[ INFO] [2020-11-22] [06:58:54,831] [x800018040] MovementSystem.init - init
+[ INFO] [2020-11-22] [06:58:54,831] [x800018040] MovementSystem.init - init
+[ INFO] [2020-11-22] [06:58:54,832] [x800018040] MovementSystem.init - init
+[ INFO] [2020-11-22] [06:58:54,832] [x800018040] MovementSystem.init - init
+[ INFO] [2020-11-22] [06:58:54,832] [x800018040] MovementSystem.init - init
+[ INFO] [2020-11-22] [06:58:54,832] [x800018040] MovementSystem.init - init
+[ INFO] [2020-11-22] [06:58:54,832] [x800018040] MovementSystem.init - init
+[ INFO] [2020-11-22] [06:58:54,832] [x800018040] MovementSystem.init - init
+[ INFO] [2020-11-22] [06:58:54,832] [x800018040] MovementSystem.init - init
+[ INFO] [2020-11-22] [06:58:54,832] [x8000ae9c0] StarSystem.update - starsystem a update
+[ INFO] [2020-11-22] [06:58:54,832] [x8000ae9c0] StarSystem.update - starsystem b update
+[ INFO] [2020-11-22] [06:58:54,832] [x8000ae9c0] StarSystem.update - starsystem c update
+[ INFO] [2020-11-22] [06:58:54,832] [x8000ae9c0] StarSystem.update - starsystem d update
+[ INFO] [2020-11-22] [06:58:54,832] [x8000ae9c0] StarSystem.update - starsystem e update
+[ INFO] [2020-11-22] [06:58:54,832] [x8000aeed0] Galaxy.galaxyWorker - tick 1
+[ INFO] [2020-11-22] [06:58:54,832] [x8000aec30] StarSystem.update - starsystem a update
+[ INFO] [2020-11-22] [06:58:54,832] [x8000ae9c0] StarSystem.update - starsystem b update
+[ INFO] [2020-11-22] [06:58:54,832] [x8000aec30] StarSystem.update - starsystem c update
+[ INFO] [2020-11-22] [06:58:54,832] [x8000ae9c0] StarSystem.update - starsystem d update
+[ INFO] [2020-11-22] [06:58:54,833] [x8000aec30] StarSystem.update - starsystem e update
+[ INFO] [2020-11-22] [06:58:55,832] [x8000aeed0] Galaxy.galaxyWorker - tick 2
+[ INFO] [2020-11-22] [06:58:55,832] [x8000aec30] StarSystem.update - starsystem a update
+[ INFO] [2020-11-22] [06:58:55,832] [x8000ae9c0] StarSystem.update - starsystem b update
+[ INFO] [2020-11-22] [06:58:55,833] [x8000aec30] StarSystem.update - starsystem c update
+[ INFO] [2020-11-22] [06:58:55,833] [x8000ae9c0] StarSystem.update - starsystem d update
+[ INFO] [2020-11-22] [06:58:55,833] [x8000aec30] StarSystem.update - starsystem e update
+[ INFO] [2020-11-22] [06:58:56,833] [x8000aeed0] Galaxy.galaxyWorker - tick 3
+[ INFO] [2020-11-22] [06:58:56,833] [x8000aec30] StarSystem.update - starsystem a update
+[ INFO] [2020-11-22] [06:58:56,833] [x8000ae9c0] StarSystem.update - starsystem b update
+[ INFO] [2020-11-22] [06:58:56,834] [x8000aec30] StarSystem.update - starsystem c update
+[ INFO] [2020-11-22] [06:58:56,834] [x8000ae9c0] StarSystem.update - starsystem d update
+[ INFO] [2020-11-22] [06:58:56,834] [x8000aec30] StarSystem.update - starsystem e update
+[ INFO] [2020-11-22] [06:58:57,833] [x8000aeed0] Galaxy.galaxyWorker - tick 4
+[ INFO] [2020-11-22] [06:58:57,833] [x8000aec30] StarSystem.update - starsystem a update
+[ INFO] [2020-11-22] [06:58:57,833] [x8000ae9c0] StarSystem.update - starsystem b update
+[ INFO] [2020-11-22] [06:58:57,833] [x8000aec30] StarSystem.update - starsystem c update
+[ INFO] [2020-11-22] [06:58:57,833] [x8000ae9c0] StarSystem.update - starsystem d update
+[ INFO] [2020-11-22] [06:58:57,833] [x8000aec30] StarSystem.update - starsystem e update
+[ INFO] [2020-11-22] [06:58:58,833] [x8000aeed0] Galaxy.galaxyWorker - tick 5
+[ INFO] [2020-11-22] [06:58:58,833] [x8000aec30] StarSystem.update - starsystem a update
+[ INFO] [2020-11-22] [06:58:58,833] [x8000ae9c0] StarSystem.update - starsystem b update
+[ INFO] [2020-11-22] [06:58:58,833] [x8000aec30] StarSystem.update - starsystem c update
+[ INFO] [2020-11-22] [06:58:58,834] [x8000ae9c0] StarSystem.update - starsystem d update
+[ INFO] [2020-11-22] [06:58:58,834] [x8000aec30] StarSystem.update - starsystem e update
+[ INFO] [2020-11-22] [06:58:59,833] [x8000aeed0] Galaxy.galaxyWorker - tick 6
+[ INFO] [2020-11-22] [06:58:59,833] [x8000aec30] StarSystem.update - starsystem a update
+[ INFO] [2020-11-22] [06:58:59,833] [x8000ae9c0] StarSystem.update - starsystem b update
+[ INFO] [2020-11-22] [06:58:59,834] [x8000aec30] StarSystem.update - starsystem c update
+[ INFO] [2020-11-22] [06:58:59,834] [x8000ae9c0] StarSystem.update - starsystem d update
+[ INFO] [2020-11-22] [06:58:59,834] [x8000aec30] StarSystem.update - starsystem e update
+[ INFO] [2020-11-22] [06:59:00,833] [x8000aeed0] Galaxy.galaxyWorker - tick 7
+[ INFO] [2020-11-22] [06:59:00,833] [x8000aec30] StarSystem.update - starsystem a update
+[ INFO] [2020-11-22] [06:59:00,833] [x8000ae9c0] StarSystem.update - starsystem b update
+[ INFO] [2020-11-22] [06:59:00,833] [x8000aec30] StarSystem.update - starsystem c update
+[ INFO] [2020-11-22] [06:59:00,834] [x8000ae9c0] StarSystem.update - starsystem d update
+[ INFO] [2020-11-22] [06:59:00,834] [x8000aec30] StarSystem.update - starsystem e update
+[ INFO] [2020-11-22] [06:59:01,833] [x8000aeed0] Galaxy.galaxyWorker - tick 8
+[ INFO] [2020-11-22] [06:59:01,833] [x8000aec30] StarSystem.update - starsystem a update
+[ INFO] [2020-11-22] [06:59:01,833] [x8000ae9c0] StarSystem.update - starsystem b update
+[ INFO] [2020-11-22] [06:59:01,833] [x8000aec30] StarSystem.update - starsystem c update
+[ INFO] [2020-11-22] [06:59:01,833] [x8000ae9c0] StarSystem.update - starsystem d update
+[ INFO] [2020-11-22] [06:59:01,833] [x8000aec30] StarSystem.update - starsystem e update
+[ INFO] [2020-11-22] [06:59:02,833] [x8000aeed0] Galaxy.galaxyWorker - tick 9
+[ INFO] [2020-11-22] [06:59:02,833] [x8000aec30] StarSystem.update - starsystem a update
+[ INFO] [2020-11-22] [06:59:02,833] [x8000ae9c0] StarSystem.update - starsystem b update
+[ INFO] [2020-11-22] [06:59:02,833] [x8000aec30] StarSystem.update - starsystem c update
+[ INFO] [2020-11-22] [06:59:02,833] [x8000ae9c0] StarSystem.update - starsystem d update
+[ INFO] [2020-11-22] [06:59:02,833] [x8000aec30] StarSystem.update - starsystem e update
+[FATAL] [2020-11-22] [06:59:27,657] [x800018040] .main - ### Starting ###
+[ INFO] [2020-11-22] [06:59:27,657] [x800018040] MovementSystem.init - init
+[ INFO] [2020-11-22] [06:59:27,657] [x800018040] MovementSystem.init - init
+[ INFO] [2020-11-22] [06:59:27,657] [x800018040] MovementSystem.init - init
+[ INFO] [2020-11-22] [06:59:27,657] [x800018040] MovementSystem.init - init
+[ INFO] [2020-11-22] [06:59:27,657] [x800018040] MovementSystem.init - init
+[ INFO] [2020-11-22] [06:59:27,657] [x800018040] MovementSystem.init - init
+[ INFO] [2020-11-22] [06:59:27,657] [x800018040] MovementSystem.init - init
+[ INFO] [2020-11-22] [06:59:27,657] [x800018040] MovementSystem.init - init
+[ INFO] [2020-11-22] [06:59:27,657] [x800018040] MovementSystem.init - init
+[ INFO] [2020-11-22] [06:59:27,657] [x800018040] MovementSystem.init - init
+[ INFO] [2020-11-22] [06:59:27,658] [x8000a69d0] StarSystem.update - starsystem a update
+[ INFO] [2020-11-22] [07:00:10,584] [x8000a69d0] StarSystem.update - starsystem b update
+[ INFO] [2020-11-22] [07:00:10,584] [x8000a6ad0] StarSystem.update - starsystem c update
+[FATAL] [2020-11-22] [07:03:11,150] [x800018040] .main - ### Starting ###
+[ INFO] [2020-11-22] [07:03:11,150] [x800018040] MovementSystem.init - init
+[ INFO] [2020-11-22] [07:03:11,150] [x800018040] MovementSystem.init - init
+[ INFO] [2020-11-22] [07:03:11,150] [x800018040] MovementSystem.init - init
+[ INFO] [2020-11-22] [07:03:11,150] [x800018040] MovementSystem.init - init
+[ INFO] [2020-11-22] [07:03:11,150] [x800018040] MovementSystem.init - init
+[ INFO] [2020-11-22] [07:03:11,150] [x800018040] MovementSystem.init - init
+[ INFO] [2020-11-22] [07:03:11,150] [x800018040] MovementSystem.init - init
+[ INFO] [2020-11-22] [07:03:11,150] [x800018040] MovementSystem.init - init
+[ INFO] [2020-11-22] [07:03:11,150] [x800018040] MovementSystem.init - init
+[ INFO] [2020-11-22] [07:03:11,150] [x800018040] MovementSystem.init - init
+[ INFO] [2020-11-22] [07:03:11,151] [x8000aeae0] StarSystem.update - starsystem a update
+[ INFO] [2020-11-22] [07:03:11,151] [x8000aeae0] MovementSystem.update - update2
+[ INFO] [2020-11-22] [07:03:11,151] [x8000aeae0] StarSystem.update - starsystem b update
+[ INFO] [2020-11-22] [07:03:11,151] [x8000aeae0] MovementSystem.update - update2
+[ INFO] [2020-11-22] [07:03:11,151] [x8000aeae0] StarSystem.update - starsystem c update
+[ INFO] [2020-11-22] [07:03:11,151] [x8000aeae0] MovementSystem.update - update2
+[ INFO] [2020-11-22] [07:03:11,151] [x8000aeae0] StarSystem.update - starsystem d update
+[ INFO] [2020-11-22] [07:03:11,151] [x8000aeae0] MovementSystem.update - update2
+[ INFO] [2020-11-22] [07:03:11,151] [x8000aeae0] StarSystem.update - starsystem e update
+[ INFO] [2020-11-22] [07:03:11,151] [x8000aeae0] MovementSystem.update - update2
+[ INFO] [2020-11-22] [07:03:11,151] [x8000aee80] Galaxy.galaxyWorker - tick 1
+[ INFO] [2020-11-22] [07:03:11,151] [x8000aebe0] StarSystem.update - starsystem a update
+[ INFO] [2020-11-22] [07:03:11,151] [x8000aeae0] StarSystem.update - starsystem b update
+[ INFO] [2020-11-22] [07:03:11,151] [x8000aebe0] MovementSystem.update - update2
+[ INFO] [2020-11-22] [07:03:11,151] [x8000aeae0] MovementSystem.update - update2
+[ INFO] [2020-11-22] [07:03:11,152] [x8000aebe0] StarSystem.update - starsystem c update
+[ INFO] [2020-11-22] [07:03:11,152] [x8000aeae0] StarSystem.update - starsystem d update
+[ INFO] [2020-11-22] [07:03:11,152] [x8000aebe0] MovementSystem.update - update2
+[ INFO] [2020-11-22] [07:03:11,152] [x8000aeae0] MovementSystem.update - update2
+[ INFO] [2020-11-22] [07:03:11,152] [x8000aebe0] StarSystem.update - starsystem e update
+[ INFO] [2020-11-22] [07:03:11,152] [x8000aebe0] MovementSystem.update - update2
+[ INFO] [2020-11-22] [07:03:12,151] [x8000aee80] Galaxy.galaxyWorker - tick 2
+[ INFO] [2020-11-22] [07:03:12,151] [x8000aebe0] StarSystem.update - starsystem a update
+[ INFO] [2020-11-22] [07:03:12,152] [x8000aeae0] StarSystem.update - starsystem b update
+[ INFO] [2020-11-22] [07:03:12,152] [x8000aebe0] MovementSystem.update - update2
+[ INFO] [2020-11-22] [07:03:12,152] [x8000aeae0] MovementSystem.update - update2
+[ INFO] [2020-11-22] [07:03:12,152] [x8000aebe0] StarSystem.update - starsystem c update
+[ INFO] [2020-11-22] [07:03:12,152] [x8000aeae0] StarSystem.update - starsystem d update
+[ INFO] [2020-11-22] [07:03:12,152] [x8000aebe0] MovementSystem.update - update2
+[ INFO] [2020-11-22] [07:03:12,152] [x8000aeae0] MovementSystem.update - update2
+[ INFO] [2020-11-22] [07:03:12,152] [x8000aebe0] StarSystem.update - starsystem e update
+[ INFO] [2020-11-22] [07:03:12,152] [x8000aebe0] MovementSystem.update - update2
+[ INFO] [2020-11-22] [07:03:13,151] [x8000aee80] Galaxy.galaxyWorker - tick 3
+[ INFO] [2020-11-22] [07:03:13,151] [x8000aeae0] StarSystem.update - starsystem a update
+[ INFO] [2020-11-22] [07:03:13,151] [x8000aebe0] StarSystem.update - starsystem b update
+[ INFO] [2020-11-22] [07:03:13,151] [x8000aeae0] MovementSystem.update - update2
+[ INFO] [2020-11-22] [07:03:13,152] [x8000aebe0] MovementSystem.update - update2
+[ INFO] [2020-11-22] [07:03:13,152] [x8000aeae0] StarSystem.update - starsystem c update
+[ INFO] [2020-11-22] [07:03:13,152] [x8000aebe0] StarSystem.update - starsystem d update
+[ INFO] [2020-11-22] [07:03:13,152] [x8000aeae0] MovementSystem.update - update2
+[ INFO] [2020-11-22] [07:03:13,152] [x8000aebe0] MovementSystem.update - update2
+[ INFO] [2020-11-22] [07:03:13,152] [x8000aeae0] StarSystem.update - starsystem e update
+[ INFO] [2020-11-22] [07:03:13,152] [x8000aeae0] MovementSystem.update - update2
+[FATAL] [2020-11-22] [07:30:50,411] [x800018040] .main - ### Starting ###
+[ INFO] [2020-11-22] [07:30:50,412] [x800018040] MovementSystem.init - init
+[ INFO] [2020-11-22] [07:30:50,412] [x800018040] MovementSystem.init - init
+[ INFO] [2020-11-22] [07:30:50,412] [x800018040] MovementSystem.init - init
+[ INFO] [2020-11-22] [07:30:50,412] [x800018040] MovementSystem.init - init
+[ INFO] [2020-11-22] [07:30:50,412] [x800018040] MovementSystem.init - init
+[ INFO] [2020-11-22] [07:30:50,412] [x800018040] MovementSystem.init - init
+[ INFO] [2020-11-22] [07:30:50,412] [x800018040] MovementSystem.init - init
+[ INFO] [2020-11-22] [07:30:50,412] [x800018040] MovementSystem.init - init
+[ INFO] [2020-11-22] [07:30:50,412] [x800018040] MovementSystem.init - init
+[ INFO] [2020-11-22] [07:30:50,412] [x800018040] MovementSystem.init - init
+[ INFO] [2020-11-22] [07:30:50,412] [x8000aeac0] StarSystem.update - starsystem a update
+[ INFO] [2020-11-22] [07:30:50,412] [x8000aeac0] StarSystem.update - starsystem b update
+[ INFO] [2020-11-22] [07:30:50,412] [x8000aeac0] StarSystem.update - starsystem c update
+[ INFO] [2020-11-22] [07:30:50,412] [x8000aeac0] StarSystem.update - starsystem d update
+[ INFO] [2020-11-22] [07:30:50,412] [x8000aeac0] StarSystem.update - starsystem e update
+[ INFO] [2020-11-22] [07:30:50,412] [x8000aef20] Galaxy.galaxyWorker - tick 1
+[ INFO] [2020-11-22] [07:30:50,412] [x8000aece0] StarSystem.update - starsystem a update
+[ INFO] [2020-11-22] [07:30:50,412] [x8000aeac0] StarSystem.update - starsystem b update
+[ INFO] [2020-11-22] [07:30:50,413] [x8000aece0] StarSystem.update - starsystem c update
+[ INFO] [2020-11-22] [07:30:50,413] [x8000aeac0] StarSystem.update - starsystem d update
+[ INFO] [2020-11-22] [07:30:50,413] [x8000aece0] StarSystem.update - starsystem e update
+[ INFO] [2020-11-22] [07:30:51,412] [x8000aef20] Galaxy.galaxyWorker - tick 2
+[ INFO] [2020-11-22] [07:30:51,413] [x8000aece0] StarSystem.update - starsystem a update
+[ INFO] [2020-11-22] [07:30:51,413] [x8000aeac0] StarSystem.update - starsystem b update
+[ INFO] [2020-11-22] [07:30:51,413] [x8000aece0] StarSystem.update - starsystem c update
+[ INFO] [2020-11-22] [07:30:51,413] [x8000aeac0] StarSystem.update - starsystem d update
+[ INFO] [2020-11-22] [07:30:51,413] [x8000aece0] StarSystem.update - starsystem e update
+[ INFO] [2020-11-22] [07:30:52,412] [x8000aef20] Galaxy.galaxyWorker - tick 3
+[ INFO] [2020-11-22] [07:30:52,412] [x8000aeac0] StarSystem.update - starsystem a update
+[ INFO] [2020-11-22] [07:30:52,412] [x8000aece0] StarSystem.update - starsystem b update
+[ INFO] [2020-11-22] [07:30:52,412] [x8000aeac0] StarSystem.update - starsystem c update
+[ INFO] [2020-11-22] [07:30:52,413] [x8000aece0] StarSystem.update - starsystem d update
+[ INFO] [2020-11-22] [07:30:52,413] [x8000aeac0] StarSystem.update - starsystem e update
+[ INFO] [2020-11-22] [07:30:53,412] [x8000aef20] Galaxy.galaxyWorker - tick 4
+[ INFO] [2020-11-22] [07:30:53,412] [x8000aeac0] StarSystem.update - starsystem a update
+[ INFO] [2020-11-22] [07:30:53,412] [x8000aece0] StarSystem.update - starsystem b update
+[ INFO] [2020-11-22] [07:30:53,412] [x8000aeac0] StarSystem.update - starsystem c update
+[ INFO] [2020-11-22] [07:30:53,413] [x8000aece0] StarSystem.update - starsystem d update
+[ INFO] [2020-11-22] [07:30:53,413] [x8000aeac0] StarSystem.update - starsystem e update
+[FATAL] [2020-11-22] [07:31:54,698] [x800018040] .main - ### Starting ###
+[ INFO] [2020-11-22] [07:31:54,698] [x800018040] MovementSystem.init - init
+[ INFO] [2020-11-22] [07:31:54,698] [x800018040] MovementSystem.init - init
+[ INFO] [2020-11-22] [07:31:54,699] [x800018040] MovementSystem.init - init
+[ INFO] [2020-11-22] [07:31:54,699] [x800018040] MovementSystem.init - init
+[ INFO] [2020-11-22] [07:31:54,699] [x800018040] MovementSystem.init - init
+[ INFO] [2020-11-22] [07:31:54,699] [x800018040] MovementSystem.init - init
+[ INFO] [2020-11-22] [07:31:54,699] [x800018040] MovementSystem.init - init
+[ INFO] [2020-11-22] [07:31:54,699] [x800018040] MovementSystem.init - init
+[ INFO] [2020-11-22] [07:31:54,699] [x800018040] MovementSystem.init - init
+[ INFO] [2020-11-22] [07:31:54,699] [x800018040] MovementSystem.init - init
+[ INFO] [2020-11-22] [07:31:54,699] [x8000aeac0] StarSystem.update - starsystem a update
+[ERROR] [2020-11-22] [07:31:54,699] [x8000aeac0] Galaxy.starsystemWorker - Exception in system update for $system tick ${galaxy.time}aa
+[ INFO] [2020-11-22] [07:31:54,699] [x8000aeac0] StarSystem.update - starsystem b update
+[ERROR] [2020-11-22] [07:31:54,699] [x8000aeac0] Galaxy.starsystemWorker - Exception in system update for $system tick ${galaxy.time}aa
+[ INFO] [2020-11-22] [07:31:54,699] [x8000aece0] StarSystem.update - starsystem d update
+[ INFO] [2020-11-22] [07:31:54,699] [x8000aeac0] StarSystem.update - starsystem c update
+[ERROR] [2020-11-22] [07:31:54,699] [x8000aece0] Galaxy.starsystemWorker - Exception in system update for $system tick ${galaxy.time}aa
+[ERROR] [2020-11-22] [07:31:54,699] [x8000aeac0] Galaxy.starsystemWorker - Exception in system update for $system tick ${galaxy.time}aa
+[ INFO] [2020-11-22] [07:31:54,699] [x8000aece0] StarSystem.update - starsystem e update
+[ERROR] [2020-11-22] [07:31:54,699] [x8000aece0] Galaxy.starsystemWorker - Exception in system update for $system tick ${galaxy.time}aa
+[FATAL] [2020-11-22] [07:32:08,389] [x800018040] .main - ### Starting ###
+[ INFO] [2020-11-22] [07:32:08,390] [x800018040] MovementSystem.init - init
+[ INFO] [2020-11-22] [07:32:08,390] [x800018040] MovementSystem.init - init
+[ INFO] [2020-11-22] [07:32:08,390] [x800018040] MovementSystem.init - init
+[ INFO] [2020-11-22] [07:32:08,390] [x800018040] MovementSystem.init - init
+[ INFO] [2020-11-22] [07:32:08,390] [x800018040] MovementSystem.init - init
+[ INFO] [2020-11-22] [07:32:08,390] [x800018040] MovementSystem.init - init
+[ INFO] [2020-11-22] [07:32:08,390] [x800018040] MovementSystem.init - init
+[ INFO] [2020-11-22] [07:32:08,390] [x800018040] MovementSystem.init - init
+[ INFO] [2020-11-22] [07:32:08,390] [x800018040] MovementSystem.init - init
+[ INFO] [2020-11-22] [07:32:08,390] [x800018040] MovementSystem.init - init
+[ INFO] [2020-11-22] [07:32:08,390] [x8000aeac0] StarSystem.update - starsystem a update
+[ERROR] [2020-11-22] [07:32:08,390] [x8000aeac0] Galaxy.starsystemWorker - Exception in system update for $system tick ${galaxy.time}aa
+[ INFO] [2020-11-22] [07:32:08,390] [x8000aeac0] StarSystem.update - starsystem b update
+[ERROR] [2020-11-22] [07:32:08,390] [x8000aeac0] Galaxy.starsystemWorker - Exception in system update for $system tick ${galaxy.time}aa
+[ INFO] [2020-11-22] [07:32:08,390] [x8000aeac0] StarSystem.update - starsystem c update
+[ERROR] [2020-11-22] [07:32:08,390] [x8000aeac0] Galaxy.starsystemWorker - Exception in system update for $system tick ${galaxy.time}aa
+[ INFO] [2020-11-22] [07:32:08,390] [x8000aece0] StarSystem.update - starsystem d update
+[ INFO] [2020-11-22] [07:32:08,390] [x8000aeac0] StarSystem.update - starsystem e update
+[ERROR] [2020-11-22] [07:32:08,390] [x8000aece0] Galaxy.starsystemWorker - Exception in system update for $system tick ${galaxy.time}aa
+[ERROR] [2020-11-22] [07:32:08,391] [x8000aeac0] Galaxy.starsystemWorker - Exception in system update for $system tick ${galaxy.time}aa
+[FATAL] [2020-11-22] [07:32:44,459] [x800018040] .main - ### Starting ###
+[ INFO] [2020-11-22] [07:32:44,459] [x800018040] MovementSystem.init - init
+[ INFO] [2020-11-22] [07:32:44,459] [x800018040] MovementSystem.init - init
+[ INFO] [2020-11-22] [07:32:44,459] [x800018040] MovementSystem.init - init
+[ INFO] [2020-11-22] [07:32:44,459] [x800018040] MovementSystem.init - init
+[ INFO] [2020-11-22] [07:32:44,459] [x800018040] MovementSystem.init - init
+[ INFO] [2020-11-22] [07:32:44,459] [x800018040] MovementSystem.init - init
+[ INFO] [2020-11-22] [07:32:44,459] [x800018040] MovementSystem.init - init
+[ INFO] [2020-11-22] [07:32:44,459] [x800018040] MovementSystem.init - init
+[ INFO] [2020-11-22] [07:32:44,459] [x800018040] MovementSystem.init - init
+[ INFO] [2020-11-22] [07:32:44,459] [x800018040] MovementSystem.init - init
+[ INFO] [2020-11-22] [07:32:44,460] [x8000aeac0] StarSystem.update - starsystem a update
+[ INFO] [2020-11-22] [07:32:44,460] [x8000aeac0] StarSystem.update - starsystem b update
+[ INFO] [2020-11-22] [07:32:44,460] [x8000aeac0] StarSystem.update - starsystem c update
+[ INFO] [2020-11-22] [07:32:44,460] [x8000aeac0] StarSystem.update - starsystem d update
+[ INFO] [2020-11-22] [07:32:44,460] [x8000aeac0] StarSystem.update - starsystem e update
+[ INFO] [2020-11-22] [07:32:44,460] [x8000aef40] Galaxy.galaxyWorker - tick 1
+[ INFO] [2020-11-22] [07:32:44,460] [x8000aece0] StarSystem.update - starsystem a update
+[ INFO] [2020-11-22] [07:32:44,460] [x8000aeac0] StarSystem.update - starsystem b update
+[ INFO] [2020-11-22] [07:32:44,460] [x8000aece0] StarSystem.update - starsystem c update
+[ INFO] [2020-11-22] [07:32:44,460] [x8000aeac0] StarSystem.update - starsystem d update
+[ INFO] [2020-11-22] [07:32:44,461] [x8000aece0] StarSystem.update - starsystem e update
+[ INFO] [2020-11-22] [07:32:45,460] [x8000aef40] Galaxy.galaxyWorker - tick 2
+[ INFO] [2020-11-22] [07:32:45,460] [x8000aece0] StarSystem.update - starsystem a update
+[ INFO] [2020-11-22] [07:32:45,460] [x8000aeac0] StarSystem.update - starsystem b update
+[ INFO] [2020-11-22] [07:32:45,461] [x8000aece0] StarSystem.update - starsystem c update
+[ INFO] [2020-11-22] [07:32:45,461] [x8000aeac0] StarSystem.update - starsystem d update
+[ INFO] [2020-11-22] [07:32:45,461] [x8000aece0] StarSystem.update - starsystem e update
+[ INFO] [2020-11-22] [07:32:46,460] [x8000aef40] Galaxy.galaxyWorker - tick 3
+[ INFO] [2020-11-22] [07:32:46,460] [x8000aece0] StarSystem.update - starsystem a update
+[ INFO] [2020-11-22] [07:32:46,460] [x8000aeac0] StarSystem.update - starsystem b update
+[ INFO] [2020-11-22] [07:32:46,461] [x8000aece0] StarSystem.update - starsystem c update
+[ INFO] [2020-11-22] [07:32:46,461] [x8000aeac0] StarSystem.update - starsystem d update
+[ INFO] [2020-11-22] [07:32:46,461] [x8000aece0] StarSystem.update - starsystem e update
+[ INFO] [2020-11-22] [07:32:47,460] [x8000aef40] Galaxy.galaxyWorker - tick 4
+[ INFO] [2020-11-22] [07:32:47,460] [x8000aece0] StarSystem.update - starsystem a update
+[ INFO] [2020-11-22] [07:32:47,460] [x8000aeac0] StarSystem.update - starsystem b update
+[ INFO] [2020-11-22] [07:32:47,460] [x8000aece0] StarSystem.update - starsystem c update
+[ INFO] [2020-11-22] [07:32:47,460] [x8000aeac0] StarSystem.update - starsystem d update
+[ INFO] [2020-11-22] [07:32:47,460] [x8000aece0] StarSystem.update - starsystem e update
+[ INFO] [2020-11-22] [07:32:48,460] [x8000aef40] Galaxy.galaxyWorker - tick 5
+[ INFO] [2020-11-22] [07:32:48,460] [x8000aeac0] StarSystem.update - starsystem a update
+[ INFO] [2020-11-22] [07:32:48,460] [x8000aece0] StarSystem.update - starsystem b update
+[ INFO] [2020-11-22] [07:32:48,460] [x8000aeac0] StarSystem.update - starsystem c update
+[ INFO] [2020-11-22] [07:32:48,460] [x8000aece0] StarSystem.update - starsystem d update
+[ INFO] [2020-11-22] [07:32:48,460] [x8000aeac0] StarSystem.update - starsystem e update
+[ INFO] [2020-11-22] [07:32:49,460] [x8000aef40] Galaxy.galaxyWorker - tick 6
+[ INFO] [2020-11-22] [07:32:49,460] [x8000aeac0] StarSystem.update - starsystem a update
+[ INFO] [2020-11-22] [07:32:49,460] [x8000aece0] StarSystem.update - starsystem b update
+[ INFO] [2020-11-22] [07:32:49,460] [x8000aeac0] StarSystem.update - starsystem c update
+[ INFO] [2020-11-22] [07:32:49,460] [x8000aece0] StarSystem.update - starsystem d update
+[ INFO] [2020-11-22] [07:32:49,460] [x8000aeac0] StarSystem.update - starsystem e update
+[ INFO] [2020-11-22] [07:32:50,460] [x8000aef40] Galaxy.galaxyWorker - tick 7
+[ INFO] [2020-11-22] [07:32:50,460] [x8000aeac0] StarSystem.update - starsystem a update
+[ INFO] [2020-11-22] [07:32:50,460] [x8000aece0] StarSystem.update - starsystem b update
+[ INFO] [2020-11-22] [07:32:50,460] [x8000aeac0] StarSystem.update - starsystem c update
+[ INFO] [2020-11-22] [07:32:50,460] [x8000aece0] StarSystem.update - starsystem d update
+[ INFO] [2020-11-22] [07:32:50,460] [x8000aeac0] StarSystem.update - starsystem e update
+[FATAL] [2020-11-22] [07:34:42,182] [x800018040] .main - ### Starting ###
+[FATAL] [2020-11-22] [07:35:12,351] [x800018040] .main - ### Starting ###
+[FATAL] [2020-11-22] [07:37:39,620] [x800018040] .main - ### Starting ###
+[ INFO] [2020-11-22] [07:37:39,620] [x800018040] MovementSystem.init - init
+[ INFO] [2020-11-22] [07:37:39,620] [x800018040] MovementSystem.init - init
+[ INFO] [2020-11-22] [07:37:39,620] [x800018040] MovementSystem.init - init
+[ INFO] [2020-11-22] [07:37:39,620] [x800018040] MovementSystem.init - init
+[ INFO] [2020-11-22] [07:37:39,620] [x800018040] MovementSystem.init - init
+[ INFO] [2020-11-22] [07:37:39,621] [x8000aeac0] StarSystem.update - starsystem a update
+[ INFO] [2020-11-22] [07:37:39,621] [x8000aeac0] StarSystem.update - starsystem b update
+[ INFO] [2020-11-22] [07:37:39,621] [x8000aeac0] StarSystem.update - starsystem c update
+[ INFO] [2020-11-22] [07:37:39,621] [x8000aeac0] StarSystem.update - starsystem d update
+[ INFO] [2020-11-22] [07:37:39,621] [x8000aeac0] StarSystem.update - starsystem e update
+[ INFO] [2020-11-22] [07:37:39,621] [x8000aef20] Galaxy.galaxyWorker - tick 1
+[ INFO] [2020-11-22] [07:37:39,621] [x8000aeac0] StarSystem.update - starsystem a update
+[ INFO] [2020-11-22] [07:37:39,621] [x8000aece0] StarSystem.update - starsystem b update
+[ INFO] [2020-11-22] [07:37:39,621] [x8000aeac0] StarSystem.update - starsystem c update
+[ INFO] [2020-11-22] [07:37:39,621] [x8000aece0] StarSystem.update - starsystem d update
+[ INFO] [2020-11-22] [07:37:39,622] [x8000aeac0] StarSystem.update - starsystem e update
+[ INFO] [2020-11-22] [07:37:40,621] [x8000aef20] Galaxy.galaxyWorker - tick 2
+[ INFO] [2020-11-22] [07:37:40,621] [x8000aeac0] StarSystem.update - starsystem a update
+[ INFO] [2020-11-22] [07:37:40,621] [x8000aece0] StarSystem.update - starsystem b update
+[ INFO] [2020-11-22] [07:37:40,621] [x8000aeac0] StarSystem.update - starsystem c update
+[ INFO] [2020-11-22] [07:37:40,621] [x8000aece0] StarSystem.update - starsystem d update
+[ INFO] [2020-11-22] [07:37:40,622] [x8000aeac0] StarSystem.update - starsystem e update
+[ INFO] [2020-11-22] [07:37:41,621] [x8000aef20] Galaxy.galaxyWorker - tick 3
+[ INFO] [2020-11-22] [07:37:41,621] [x8000aeac0] StarSystem.update - starsystem a update
+[ INFO] [2020-11-22] [07:37:41,621] [x8000aece0] StarSystem.update - starsystem b update
+[ INFO] [2020-11-22] [07:37:41,621] [x8000aeac0] StarSystem.update - starsystem c update
+[ INFO] [2020-11-22] [07:37:41,621] [x8000aece0] StarSystem.update - starsystem d update
+[ INFO] [2020-11-22] [07:37:41,621] [x8000aeac0] StarSystem.update - starsystem e update
+[ INFO] [2020-11-22] [07:37:42,621] [x8000aef20] Galaxy.galaxyWorker - tick 4
+[ INFO] [2020-11-22] [07:37:42,621] [x8000aece0] StarSystem.update - starsystem a update
+[ INFO] [2020-11-22] [07:37:42,621] [x8000aeac0] StarSystem.update - starsystem b update
+[ INFO] [2020-11-22] [07:37:42,621] [x8000aece0] StarSystem.update - starsystem c update
+[ INFO] [2020-11-22] [07:37:42,621] [x8000aeac0] StarSystem.update - starsystem d update
+[ INFO] [2020-11-22] [07:37:42,621] [x8000aece0] StarSystem.update - starsystem e update
+[FATAL] [2020-11-22] [07:38:25,035] [x800018040] .main - ### Starting ###
+[ INFO] [2020-11-22] [07:38:25,035] [x800018040] MovementSystem.init - init
+[ INFO] [2020-11-22] [07:38:25,035] [x800018040] MovementSystem.init - init
+[ INFO] [2020-11-22] [07:38:25,035] [x800018040] MovementSystem.init - init
+[ INFO] [2020-11-22] [07:38:25,035] [x800018040] MovementSystem.init - init
+[ INFO] [2020-11-22] [07:38:25,035] [x800018040] MovementSystem.init - init
+[ INFO] [2020-11-22] [07:38:25,036] [x8000aeac0] StarSystem.update - starsystem a update
+[ INFO] [2020-11-22] [07:38:25,036] [x8000aeac0] StarSystem.update - starsystem b update
+[ INFO] [2020-11-22] [07:38:25,036] [x8000aeac0] StarSystem.update - starsystem c update
+[ INFO] [2020-11-22] [07:38:25,036] [x8000aeac0] StarSystem.update - starsystem d update
+[ INFO] [2020-11-22] [07:38:25,036] [x8000aeac0] StarSystem.update - starsystem e update
+[ INFO] [2020-11-22] [07:38:25,036] [x8000af670] Galaxy.galaxyWorker - tick 1
+[ INFO] [2020-11-22] [07:38:25,036] [x8000aeac0] StarSystem.update - starsystem b update
+[ INFO] [2020-11-22] [07:38:25,036] [x8000aebc0] StarSystem.update - starsystem a update
+[ INFO] [2020-11-22] [07:38:25,036] [x8000aeac0] StarSystem.update - starsystem c update
+[ INFO] [2020-11-22] [07:38:25,036] [x8000aebc0] StarSystem.update - starsystem d update
+[ INFO] [2020-11-22] [07:38:25,036] [x8000aeac0] StarSystem.update - starsystem e update
+[ INFO] [2020-11-22] [07:38:26,036] [x8000af670] Galaxy.galaxyWorker - tick 2
+[ INFO] [2020-11-22] [07:38:26,036] [x8000aeac0] StarSystem.update - starsystem a update
+[ INFO] [2020-11-22] [07:38:26,036] [x8000aebc0] StarSystem.update - starsystem b update
+[ INFO] [2020-11-22] [07:38:26,036] [x8000aeac0] StarSystem.update - starsystem c update
+[ INFO] [2020-11-22] [07:38:26,036] [x8000aebc0] StarSystem.update - starsystem d update
+[ INFO] [2020-11-22] [07:38:26,037] [x8000aeac0] StarSystem.update - starsystem e update
+[FATAL] [2020-11-22] [07:38:59,749] [x800018040] .main - ### Starting ###
+[FATAL] [2020-11-22] [07:41:23,300] [x800018040] .main - ### Starting ###
+[ INFO] [2020-11-22] [07:41:23,300] [x800018040] MovementSystem.init - init
+[ INFO] [2020-11-22] [07:41:23,300] [x800018040] MovementSystem.init - init
+[ INFO] [2020-11-22] [07:41:23,300] [x800018040] MovementSystem.init - init
+[ INFO] [2020-11-22] [07:41:23,300] [x800018040] MovementSystem.init - init
+[ INFO] [2020-11-22] [07:41:23,300] [x800018040] MovementSystem.init - init
+[ INFO] [2020-11-22] [07:41:23,301] [x8000aeac0] StarSystem.update - starsystem a update
+[ INFO] [2020-11-22] [07:41:23,301] [x8000aeac0] StarSystem.update - starsystem b update
+[ INFO] [2020-11-22] [07:41:23,301] [x8000aeac0] StarSystem.update - starsystem c update
+[ INFO] [2020-11-22] [07:41:23,301] [x8000aeac0] StarSystem.update - starsystem d update
+[ INFO] [2020-11-22] [07:41:23,301] [x8000aeac0] StarSystem.update - starsystem e update
+[ INFO] [2020-11-22] [07:41:23,301] [x8000aef40] Galaxy.galaxyWorker - tick 1
+[ INFO] [2020-11-22] [07:41:23,301] [x8000aebc0] StarSystem.update - starsystem a update
+[ INFO] [2020-11-22] [07:41:23,301] [x8000aeac0] StarSystem.update - starsystem b update
+[ INFO] [2020-11-22] [07:41:23,301] [x8000aebc0] StarSystem.update - starsystem c update
+[ INFO] [2020-11-22] [07:41:23,301] [x8000aeac0] StarSystem.update - starsystem d update
+[ INFO] [2020-11-22] [07:41:23,301] [x8000aebc0] StarSystem.update - starsystem e update
+[ INFO] [2020-11-22] [07:41:24,301] [x8000aef40] Galaxy.galaxyWorker - tick 2
+[ INFO] [2020-11-22] [07:41:24,301] [x8000aeac0] StarSystem.update - starsystem a update
+[ INFO] [2020-11-22] [07:41:24,301] [x8000aebc0] StarSystem.update - starsystem b update
+[ INFO] [2020-11-22] [07:41:24,302] [x8000aeac0] StarSystem.update - starsystem c update
+[ INFO] [2020-11-22] [07:41:24,302] [x8000aebc0] StarSystem.update - starsystem d update
+[ INFO] [2020-11-22] [07:41:24,302] [x8000aeac0] StarSystem.update - starsystem e update
+[ INFO] [2020-11-22] [07:41:25,301] [x8000aef40] Galaxy.galaxyWorker - tick 3
+[ INFO] [2020-11-22] [07:41:25,301] [x8000aeac0] StarSystem.update - starsystem a update
+[ INFO] [2020-11-22] [07:41:25,301] [x8000aebc0] StarSystem.update - starsystem b update
+[ INFO] [2020-11-22] [07:41:25,301] [x8000aeac0] StarSystem.update - starsystem c update
+[ INFO] [2020-11-22] [07:41:25,301] [x8000aebc0] StarSystem.update - starsystem d update
+[ INFO] [2020-11-22] [07:41:25,301] [x8000aeac0] StarSystem.update - starsystem e update
+[FATAL] [2020-11-22] [07:51:24,355] [x800018040] .main - ### Starting ###
+[ INFO] [2020-11-22] [07:51:24,355] [x800018040] MovementSystem.init - init
+[ INFO] [2020-11-22] [07:51:24,355] [x800018040] MovementSystem.init - init
+[ INFO] [2020-11-22] [07:51:24,355] [x800018040] MovementSystem.init - init
+[ INFO] [2020-11-22] [07:51:24,355] [x800018040] MovementSystem.init - init
+[ INFO] [2020-11-22] [07:51:24,355] [x800018040] MovementSystem.init - init
+[ INFO] [2020-11-22] [07:51:24,356] [x8000ae9e0] StarSystem.update - starsystem a update
+[ INFO] [2020-11-22] [07:51:24,356] [x8000ae9e0] StarSystem.update - starsystem b update
+[ INFO] [2020-11-22] [07:51:24,356] [x8000ae9e0] StarSystem.update - starsystem c update
+[ INFO] [2020-11-22] [07:51:24,356] [x8000ae9e0] StarSystem.update - starsystem d update
+[ INFO] [2020-11-22] [07:51:24,356] [x8000ae9e0] StarSystem.update - starsystem e update
+[ INFO] [2020-11-22] [07:51:24,356] [x8000aeef0] Galaxy.galaxyWorker - tick 1
+[ INFO] [2020-11-22] [07:51:24,356] [x8000aec50] StarSystem.update - starsystem a update
+[ INFO] [2020-11-22] [07:51:24,356] [x8000ae9e0] StarSystem.update - starsystem b update
+[ INFO] [2020-11-22] [07:51:24,356] [x8000aec50] MovementSystem.update2 - update
+[ INFO] [2020-11-22] [07:51:24,356] [x8000ae9e0] MovementSystem.update2 - update
+[ INFO] [2020-11-22] [07:51:24,356] [x8000aec50] StarSystem.update - starsystem c update
+[ INFO] [2020-11-22] [07:51:24,356] [x8000ae9e0] StarSystem.update - starsystem d update
+[ INFO] [2020-11-22] [07:51:24,356] [x8000aec50] MovementSystem.update2 - update
+[ INFO] [2020-11-22] [07:51:24,357] [x8000ae9e0] MovementSystem.update2 - update
+[ INFO] [2020-11-22] [07:51:24,357] [x8000aec50] StarSystem.update - starsystem e update
+[ INFO] [2020-11-22] [07:51:24,357] [x8000aec50] MovementSystem.update2 - update
+[ INFO] [2020-11-22] [07:51:25,356] [x8000aeef0] Galaxy.galaxyWorker - tick 2
+[ INFO] [2020-11-22] [07:51:25,356] [x8000aec50] StarSystem.update - starsystem a update
+[ INFO] [2020-11-22] [07:51:25,356] [x8000ae9e0] StarSystem.update - starsystem b update
+[ INFO] [2020-11-22] [07:51:25,356] [x8000aec50] MovementSystem.update2 - update
+[ INFO] [2020-11-22] [07:51:25,357] [x8000ae9e0] MovementSystem.update2 - update
+[ INFO] [2020-11-22] [07:51:25,357] [x8000aec50] StarSystem.update - starsystem c update
+[ INFO] [2020-11-22] [07:51:25,357] [x8000ae9e0] StarSystem.update - starsystem d update
+[ INFO] [2020-11-22] [07:51:25,357] [x8000aec50] MovementSystem.update2 - update
+[ INFO] [2020-11-22] [07:51:25,357] [x8000ae9e0] MovementSystem.update2 - update
+[ INFO] [2020-11-22] [07:51:25,357] [x8000aec50] StarSystem.update - starsystem e update
+[ INFO] [2020-11-22] [07:51:25,357] [x8000aec50] MovementSystem.update2 - update
+[ INFO] [2020-11-22] [07:51:26,356] [x8000aeef0] Galaxy.galaxyWorker - tick 3
+[ INFO] [2020-11-22] [07:51:26,356] [x8000ae9e0] StarSystem.update - starsystem a update
+[ INFO] [2020-11-22] [07:51:26,356] [x8000aec50] StarSystem.update - starsystem b update
+[ INFO] [2020-11-22] [07:51:26,356] [x8000ae9e0] MovementSystem.update2 - update
+[ INFO] [2020-11-22] [07:51:26,356] [x8000aec50] MovementSystem.update2 - update
+[ INFO] [2020-11-22] [07:51:26,356] [x8000ae9e0] StarSystem.update - starsystem c update
+[ INFO] [2020-11-22] [07:51:26,356] [x8000aec50] StarSystem.update - starsystem d update
+[ INFO] [2020-11-22] [07:51:26,356] [x8000ae9e0] MovementSystem.update2 - update
+[ INFO] [2020-11-22] [07:51:26,356] [x8000aec50] MovementSystem.update2 - update
+[ INFO] [2020-11-22] [07:51:26,356] [x8000ae9e0] StarSystem.update - starsystem e update
+[ INFO] [2020-11-22] [07:51:26,357] [x8000ae9e0] MovementSystem.update2 - update
+[ INFO] [2020-11-22] [07:51:27,356] [x8000aeef0] Galaxy.galaxyWorker - tick 4
+[ INFO] [2020-11-22] [07:51:27,356] [x8000aec50] StarSystem.update - starsystem a update
+[ INFO] [2020-11-22] [07:51:27,356] [x8000ae9e0] StarSystem.update - starsystem b update
+[ INFO] [2020-11-22] [07:51:27,356] [x8000aec50] MovementSystem.update2 - update
+[ INFO] [2020-11-22] [07:51:27,356] [x8000ae9e0] MovementSystem.update2 - update
+[ INFO] [2020-11-22] [07:51:27,356] [x8000aec50] StarSystem.update - starsystem c update
+[ INFO] [2020-11-22] [07:51:27,356] [x8000ae9e0] StarSystem.update - starsystem d update
+[ INFO] [2020-11-22] [07:51:27,356] [x8000aec50] MovementSystem.update2 - update
+[ INFO] [2020-11-22] [07:51:27,357] [x8000ae9e0] MovementSystem.update2 - update
+[ INFO] [2020-11-22] [07:51:27,357] [x8000aec50] StarSystem.update - starsystem e update
+[ INFO] [2020-11-22] [07:51:27,357] [x8000aec50] MovementSystem.update2 - update
+[ INFO] [2020-11-22] [07:51:28,356] [x8000aeef0] Galaxy.galaxyWorker - tick 5
+[ INFO] [2020-11-22] [07:51:28,356] [x8000aec50] StarSystem.update - starsystem a update
+[ INFO] [2020-11-22] [07:51:28,356] [x8000ae9e0] StarSystem.update - starsystem b update
+[ INFO] [2020-11-22] [07:51:28,356] [x8000aec50] MovementSystem.update2 - update
+[ INFO] [2020-11-22] [07:51:28,356] [x8000ae9e0] MovementSystem.update2 - update
+[ INFO] [2020-11-22] [07:51:28,356] [x8000aec50] StarSystem.update - starsystem c update
+[ INFO] [2020-11-22] [07:51:28,356] [x8000ae9e0] StarSystem.update - starsystem d update
+[ INFO] [2020-11-22] [07:51:28,356] [x8000aec50] MovementSystem.update2 - update
+[ INFO] [2020-11-22] [07:51:28,356] [x8000ae9e0] MovementSystem.update2 - update
+[ INFO] [2020-11-22] [07:51:28,356] [x8000aec50] StarSystem.update - starsystem e update
+[ INFO] [2020-11-22] [07:51:28,356] [x8000aec50] MovementSystem.update2 - update
+[ INFO] [2020-11-22] [07:51:29,356] [x8000aeef0] Galaxy.galaxyWorker - tick 6
+[ INFO] [2020-11-22] [07:51:29,356] [x8000aec50] StarSystem.update - starsystem a update
+[ INFO] [2020-11-22] [07:51:29,356] [x8000ae9e0] StarSystem.update - starsystem b update
+[ INFO] [2020-11-22] [07:51:29,356] [x8000aec50] MovementSystem.update2 - update
+[ INFO] [2020-11-22] [07:51:29,356] [x8000ae9e0] MovementSystem.update2 - update
+[ INFO] [2020-11-22] [07:51:29,356] [x8000aec50] StarSystem.update - starsystem c update
+[ INFO] [2020-11-22] [07:51:29,356] [x8000ae9e0] StarSystem.update - starsystem d update
+[ INFO] [2020-11-22] [07:51:29,356] [x8000aec50] MovementSystem.update2 - update
+[ INFO] [2020-11-22] [07:51:29,356] [x8000ae9e0] MovementSystem.update2 - update
+[ INFO] [2020-11-22] [07:51:29,356] [x8000aec50] StarSystem.update - starsystem e update
+[ INFO] [2020-11-22] [07:51:29,356] [x8000aec50] MovementSystem.update2 - update
+[ INFO] [2020-11-22] [07:51:30,357] [x8000aeef0] Galaxy.galaxyWorker - tick 7
+[ INFO] [2020-11-22] [07:51:30,357] [x8000aec50] StarSystem.update - starsystem a update
+[ INFO] [2020-11-22] [07:51:30,357] [x8000ae9e0] StarSystem.update - starsystem b update
+[ INFO] [2020-11-22] [07:51:30,357] [x8000aec50] MovementSystem.update2 - update
+[ INFO] [2020-11-22] [07:51:30,357] [x8000ae9e0] MovementSystem.update2 - update
+[ INFO] [2020-11-22] [07:51:30,357] [x8000aec50] StarSystem.update - starsystem c update
+[ INFO] [2020-11-22] [07:51:30,357] [x8000ae9e0] StarSystem.update - starsystem d update
+[ INFO] [2020-11-22] [07:51:30,357] [x8000aec50] MovementSystem.update2 - update
+[ INFO] [2020-11-22] [07:51:30,357] [x8000ae9e0] MovementSystem.update2 - update
+[ INFO] [2020-11-22] [07:51:30,357] [x8000aec50] StarSystem.update - starsystem e update
+[ INFO] [2020-11-22] [07:51:30,357] [x8000aec50] MovementSystem.update2 - update

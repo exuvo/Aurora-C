@@ -14,14 +14,27 @@
 #include "entt/entt.hpp"
 #include "log4cxx/logger.h"
 
+#include "utils/Profiling.hpp"
+
 using namespace std::chrono;
 using namespace log4cxx;
 
 class Command;
 class StarSystem;
+class Galaxy;
 
 class ShadowStarSystem {
 		public:
+			entt::registry registry;
+			std::vector<bool> added;
+			std::vector<bool> changed;
+			std::vector<std::vector<bool>> changedComponents;
+			std::vector<bool> deleted;
+			
+			bool quadtreeShipsChanged = false;
+			bool quadtreePlanetoidsChanged = false;
+			
+			ProfilerEvents profilerEvents;
 		
 		ShadowStarSystem(StarSystem* starSystem) {
 			this->starSystem = starSystem;
@@ -31,10 +44,6 @@ class ShadowStarSystem {
 		
 	private:
 		StarSystem* starSystem;
-		entt::registry registry;
-		std::vector<bool> added;
-		std::vector<bool> changed;
-		std::vector<bool> deleted;
 };
 
 class StarSystem {
@@ -47,23 +56,23 @@ class StarSystem {
 		boost::circular_buffer<Command*> commandQueue {128};
 		ShadowStarSystem* shadow = new ShadowStarSystem(this);
 		ShadowStarSystem* workingShadow = new ShadowStarSystem(this);
+		bool skipClearShadowChanged = false;
+		
+		Galaxy* galaxy = nullptr;
+		entt::registry registry;
 
 		StarSystem(std::string name) {
 			this->name = name;
 		}
 		StarSystem(const StarSystem&) = default;
-		StarSystem(StarSystem&&) noexcept = default;
+		StarSystem(StarSystem&&) = default;
 		
-		void init();
+		void init(Galaxy* galaxy);
 		void update(uint32_t deltaGameTime);
+		entt::scheduler<std::uint32_t> scheduler;
 
 	private:
 		LoggerPtr log = Logger::getLogger("aurora.starsystem");
-		entt::registry registry;
-		entt::scheduler<std::uint32_t> scheduler;
-		
 };
-
-
 
 #endif /* SRC_STARSYSTEMS_STARSYSTEM_HPP_ */

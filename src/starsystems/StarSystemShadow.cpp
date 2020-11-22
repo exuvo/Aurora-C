@@ -5,6 +5,9 @@
  *      Author: exuvo
  */
 
+#include "starsystems/StarSystem.hpp"
 
-
+void ShadowStarSystem::update() {
+	
+}
 

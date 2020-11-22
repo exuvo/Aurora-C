@@ -17,7 +17,6 @@
 #include "entt/entt.hpp"
 #include "log4cxx/logger.h"
 
-#include "starsystems/StarSystem.hpp"
 #include "galaxy/Empire.hpp"
 #include "galaxy/Player.hpp"
 #include "utils/Profiling.hpp"
@@ -26,6 +25,7 @@ using namespace std::chrono;
 using namespace log4cxx;
 
 class Galaxy;
+class StarSystem;
 
 class ShadowGalaxy {
 	public:
@@ -67,7 +67,6 @@ class Galaxy {
 		std::vector<Empire> empires;
 		std::vector<Player> players;
 		
-
 		Galaxy(std::vector<Empire>& empires, std::vector<StarSystem*>& systems) {
 			Galaxy::empires = std::move(empires);
 			Galaxy::systems = std::move(systems);

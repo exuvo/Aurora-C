@@ -20,6 +20,7 @@ class Command {
 		virtual void apply() = 0;
 		virtual StarSystem* getSystem() = 0;
 		
+		virtual void free() = 0;
 		virtual ~Command() = default;
 		
 	private:
@@ -30,10 +31,23 @@ class EntityCommand : Command {
 		virtual bool isValid();
 		virtual StarSystem* getSystem();
 		
+		virtual ~EntityCommand() = default;
+		
 	private:
 		EntityReference entityRef;
 };
 
-extern std::pmr::polymorphic_allocator<Command> command_allocator;
+class EntityMoveToPositionCommand : EntityCommand {
+	public:
+		virtual void apply();
+		
+		virtual ~EntityMoveToPositionCommand() = default;
+		
+		static void* operator new(size_t);
+		static void operator delete(void* ptr);
+		
+	private:
+		EntityReference entityRef;
+};
 
 #endif /* SRC_GALAXY_COMMANDS_HPP_ */

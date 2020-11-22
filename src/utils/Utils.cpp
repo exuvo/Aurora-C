@@ -9,10 +9,17 @@
 #include <iostream>
 #include <exception>
 
-#if defined __unix__
-#include <pthread.h>
-#elif defined _WIN32
+#if defined _WIN32
 #include <processthreadsapi>
+#elif defined __CYGWIN__
+#define THREAD_PRIORITY_BELOW_NORMAL -1
+#define THREAD_PRIORITY_NORMAL 0
+#define THREAD_PRIORITY_ABOVE_NORMAL 1
+#define THREAD_PRIORITY_HIGHEST 2
+#include <w32api/processthreadsapi.h>
+#include <w32api/errhandlingapi.h>
+#elif defined __unix__
+#include <pthread.h>
 #endif
 
 #include "log4cxx/logger.h"
@@ -24,12 +31,32 @@ using namespace log4cxx;
 static LoggerPtr log = Logger::getLogger("aurora.utils");
 
 void setThreadPriority(std::thread &thread, ThreadPriority prio) {
-#ifdef __CYGWIN__
-	return; //TODO fixme: giving ENOTSUP for some reason
-#endif
 	
 	std::thread::native_handle_type tHandle = thread.native_handle();
-#if defined __unix__
+	
+#if (defined _WIN32) or (defined __CYGWIN__)
+	
+	int priority;
+	
+	if (prio == ThreadPriority::LOW) {
+		priority = THREAD_PRIORITY_BELOW_NORMAL;
+	} else if (prio == ThreadPriority::NORMAL) {
+		priority = THREAD_PRIORITY_NORMAL;
+	} else if (prio == ThreadPriority::HIGH) {
+		priority = THREAD_PRIORITY_ABOVE_NORMAL;
+	} else if (prio == ThreadPriority::HIGHER) {
+		priority = THREAD_PRIORITY_HIGHEST;
+	}
+	
+	int err = SetThreadPriority(tHandle, priority);
+	
+	if (err) {
+		int err2 = GetLastError();
+		LOG4CXX_WARN(log, "Failed to set thread priority: " << err << ", " << err2);
+	}
+	
+#elif defined __unix__
+	
 	sched_param sch;
 	int policy;
 	pthread_getschedparam(tHandle, &policy, &sch);
@@ -70,19 +97,5 @@ void setThreadPriority(std::thread &thread, ThreadPriority prio) {
 		
 		LOG4CXX_WARN(log, out.str());
 	}
-#elif defined _WIN32
-	int priority;
-	
-	if (prio == ThreadPriority::LOW) {
-		priority = THREAD_PRIORITY_BELOW_NORMAL;
-	} else if (prio == ThreadPriority::NORMAL) {
-		priority = THREAD_PRIORITY_NORMAL;
-	} else if (prio == ThreadPriority::HIGH) {
-		priority = THREAD_PRIORITY_ABOVE_NORMAL;
-	} else if (prio == ThreadPriority::HIGHER) {
-		priority = THREAD_PRIORITY_HIGHEST;
-	}
-	
-	SetThreadPriority(tHandle, priority);
 #endif
 }
