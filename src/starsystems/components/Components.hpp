@@ -14,7 +14,7 @@
 #include "log4cxx/logger.h"
 
 #include "IDComponents.hpp"
-
-
+#include "MovementComponents.hpp"
+#include "TimedComponents.hpp"
 
 #endif /* SRC_STARSYSTEMS_COMPONENTS_COMPONENTS_HPP_ */

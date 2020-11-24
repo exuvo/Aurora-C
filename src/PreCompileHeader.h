@@ -36,4 +36,6 @@
 
 #include <assert.h>
 
+#include <eigen3/Eigen/Core>
+
 #include <entt/entt.hpp>

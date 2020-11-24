@@ -8,7 +8,6 @@ project (AuroraC VERSION 0.1 LANGUAGES CXX)
 # custom allocators https://github.com/mtrebi/memory-allocators
 # stack vectors, strings, allocator https://chromium.googlesource.com/chromium/chromium/+/master/base/stack_container.h
 # print stack trace https://stackoverflow.com/questions/38433701/print-log4cxx-exception-stacktrace
-# mathlib glm
 # imgui
 # command line parsing cxxopts
 # zlib for packaging resources ?
@@ -50,7 +49,11 @@ add_subdirectory(lib/tracy)
 
 add_subdirectory(lib/entt)
 
+message("============= Aurora-C ============")
+
 find_package(Boost 1.66 REQUIRED) # COMPONENTS
+find_package(Eigen3 3.3 REQUIRED NO_MODULE)
+find_package(OpenMP REQUIRED)
 
 file(GLOB_RECURSE SOURCE_FILES CONFIGURE_DEPENDS src/*.cpp)
 #file(GLOB_RECURSE HEADER_FILES "${CMAKE_CURRENT_SOURCE_DIR}/src/*.h")
@@ -76,6 +79,8 @@ target_link_libraries(AuroraC PUBLIC EnTT)
 #target_link_libraries(AuroraC PUBLIC Vulkan2DRenderer)
 target_link_libraries(AuroraC PUBLIC ${Boost_LIBRARIES})
 target_include_directories(AuroraC PUBLIC ${Boost_INCLUDE_DIRS})
+target_link_libraries(AuroraC PUBLIC Eigen3::Eigen)
+target_link_libraries(AuroraC PUBLIC OpenMP::OpenMP_CXX)
 
 # broken shit
 #target_precompile_headers(AuroraC PRIVATE <string>)
@@ -87,10 +92,13 @@ set_target_properties(AuroraC PROPERTIES CXX_EXTENSIONS OFF)
 set_target_properties(AuroraC PROPERTIES INTERPROCEDURAL_OPTIMIZATION off) #link time optimization
 
 if (CMAKE_CXX_COMPILER_ID MATCHES "Clang|GNU")
-	target_compile_options(AuroraC PRIVATE -msse4.1)
+	target_compile_options(AuroraC PRIVATE -march=native)
+#	target_compile_options(AuroraC PRIVATE -msse4.1 -mavx512f)
+	target_compile_options(AuroraC PRIVATE $<$<CONFIG:RELEASE>: -O3>)
 endif()
 if (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
 	target_compile_options(AuroraC PRIVATE -Wall -Wextra -Wno-unused-parameter)
+	target_compile_options(AuroraC PRIVATE $<$<CONFIG:RELEASE>: -fno-trapping-math -fno-math-errno -fno-signed-zeros >)
 	if (MINGW)
 		target_compile_options(AuroraC PRIVATE --warn-no-builtin-declaration-mismatch)
 	else()
@@ -98,7 +106,7 @@ if (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
 	endif()
 elseif (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
 elseif (CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
-	target_compile_options(AuroraC PRIVATE /arch:SSE4.1)
+	target_compile_options(AuroraC PRIVATE /arch:SSE4.1 /arch:AVX)
 endif()
 
 #target_link_options(AuroraC PRIVATE -)

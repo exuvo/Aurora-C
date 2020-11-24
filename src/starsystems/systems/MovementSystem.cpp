@@ -6,13 +6,16 @@
  */
 
 #include "starsystems/systems/Systems.hpp"
+#include "starsystems/components/Components.hpp"
 
 void MovementSystem::init(void* data) {
 //	LOG4CXX_INFO(log, "init");
+	
 }
 
 void MovementSystem::update(uint32_t delta) {
-	
 //	LOG4CXX_INFO(log, "update");
+	
+	
 }
 

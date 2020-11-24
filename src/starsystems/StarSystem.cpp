@@ -62,12 +62,6 @@ void StarSystem::update(uint32_t deltaGameTime) {
 	
 	profilerEvents.start("processing");
 	
-//		val invocationStrategy = nextInvocationStrategy
-//		if (invocationStrategy != null) {
-//			world.setInvocationStrategy(invocationStrategy);
-//			nextInvocationStrategy = null;
-//		}
-	
 	if (deltaGameTime <= 100) { //  || combatSubscription.entityCount > 0
 	
 		for (uint32_t i = 0; i < deltaGameTime; i++) {
