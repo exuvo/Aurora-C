@@ -38,7 +38,7 @@ class DailySystem : public BaseSystem<Derived> {
 			this->interval = interval;
 			lastDay = galaxy->day;
 		}
-		bool checkProcessing() {
+		bool isActive() {
 			if (galaxy->day - lastDay >= interval) {
 				lastDay = galaxy->day;
 				return true;
@@ -59,7 +59,7 @@ class IntervalSystem : public BaseSystem<Derived> {
 			this->interval = interval.count();
 			lastTime = galaxy->time;
 		}
-		bool checkProcessing() {
+		bool isActive() {
 			if (galaxy->time - lastTime >= milliseconds(interval)) {
 				lastTime = galaxy->time;
 				return true;

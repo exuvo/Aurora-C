@@ -15,7 +15,26 @@
 
 void StarSystem::init(Galaxy* galaxy) {
 	StarSystem::galaxy = galaxy;
+	
+//	scheduler.attach<MovementPreSystem>(this);
+//	scheduler.attach<ShipPreSystem>(this);
+//	scheduler.attach<TargetingPreSystem>(this);
+//	scheduler.attach<WeaponPreSystem>(this);
+//	scheduler.attach<PowerPreSystem>(this);
+	
+//	scheduler.attach<OrbitSystem>(this);
+//	scheduler.attach<ColonySystem>(this);
+//	scheduler.attach<ShipSystem>(this);
+//	scheduler.attach<MovementPredictedSystem>(this);
 	scheduler.attach<MovementSystem>(this);
+//	scheduler.attach<SolarIrradianceSystem>(this);
+//	scheduler.attach<PassiveSensorSystem>(this);
+//	scheduler.attach<TargetingSystem>(this);
+//	scheduler.attach<WeaponSystem>(this);
+//	scheduler.attach<TimedLifeSystem>(this);
+//	scheduler.attach<SpatialPartitioningSystem>(this);
+//	scheduler.attach<SpatialPartitioningPlanetoidsSystem>(this);
+	
 	
 	scheduler.init(nullptr);
 	

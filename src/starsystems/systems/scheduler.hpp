@@ -27,9 +27,7 @@ class process {
     bool checkProcessing(void) const ENTT_NOEXCEPT {
     	return true;
     }
-    void preUpdate(void) const ENTT_NOEXCEPT {}
     void update(const Delta delta) const ENTT_NOEXCEPT {}
-    void postUpdate(void) const ENTT_NOEXCEPT {}
     
 	protected:
     
@@ -48,23 +46,13 @@ class scheduler {
 		}
 		
 		template<typename Proc>
-		static bool checkProcessing(process_handler& handler) {
+		static bool isActive(process_handler& handler) {
 			return static_cast<Proc*>(handler.instance.get())->checkProcessing();
-		}
-		
-		template<typename Proc>
-		static void preUpdate(process_handler& handler) {
-			static_cast<Proc*>(handler.instance.get())->preUpdate();
 		}
 		
 		template<typename Proc>
 		static void update(process_handler& handler, Delta delta) {
 			static_cast<Proc*>(handler.instance.get())->update(delta);
-		}
-		
-		template<typename Proc>
-		static void postUpdate(process_handler& handler) {
-			static_cast<Proc*>(handler.instance.get())->postUpdate();
 		}
 		
 		template<typename Proc>
@@ -80,18 +68,14 @@ class scheduler {
 	public:
 		struct process_handler {
 				using instance_type = std::unique_ptr<void, void(*)(void*)>;
-				using checkProcessing_fn_type = bool (process_handler&);
-				using preUpdate_fn_type = void (process_handler&);
+				using isActive_fn_type = bool (process_handler&);
 				using update_fn_type = void (process_handler&, Delta);
-				using postUpdate_fn_type = void (process_handler&);
 				using init_fn_type = void (process_handler&, void*);
 				using name_fn_type = const char* (void);
 
 				instance_type instance;
-				checkProcessing_fn_type* checkProcessing;
-				preUpdate_fn_type* preUpdate;
+				isActive_fn_type* isActive;
 				update_fn_type* update;
-				postUpdate_fn_type* postUpdate;
 				init_fn_type* init;
 				name_fn_type* name;
 		};
@@ -155,10 +139,8 @@ class scheduler {
 			static_assert(std::is_base_of_v<process<Proc, Delta>, Proc>, "Invalid process type");
 			auto proc = typename process_handler::instance_type { new Proc { std::forward<Args>(args) ... }, &scheduler::deleter<Proc> };
 			process_handler handler { std::move(proc), 
-				&scheduler::checkProcessing<Proc>, 
-				&scheduler::preUpdate<Proc>,
+				&scheduler::isActive<Proc>, 
 				&scheduler::update<Proc>, 
-				&scheduler::postUpdate<Proc>, 
 				&scheduler::init<Proc>,
 				&scheduler::name<Proc>
 			};
@@ -185,7 +167,7 @@ class scheduler {
 			
 			for (size_t i = 0; i < size; i++) {
 				process_handler& handler = handlers[i];
-				active[i] = handler.checkProcessing(handler);
+				active[i] = handler.isActive(handler);
 			}
 			
 			if (!profiling) {
@@ -193,21 +175,7 @@ class scheduler {
 				for (size_t i = 0; i < size; i++) {
 					if (active[i]) {
 						process_handler& handler = handlers[i];
-						handler.preUpdate(handler);
-					}
-				}
-				
-				for (size_t i = 0; i < size; i++) {
-					if (active[i]) {
-						process_handler& handler = handlers[i];
 						handler.update(handler, delta);
-					}
-				}
-				
-				for (size_t i = 0; i < size; i++) {
-					if (active[i]) {
-						process_handler& handler = handlers[i];
-						handler.postUpdate(handler);
 					}
 				}
 				
@@ -215,34 +183,12 @@ class scheduler {
 				
 				profilerEvents.clear();
 				
-				profilerEvents.start("preUpdate");
-				for (size_t i = 0; i < size; i++) {
-					if (active[i]) {
-						process_handler& handler = handlers[i];
-						profilerEvents.start(handler.name());
-						handler.preUpdate(handler);
-						profilerEvents.end();
-					}
-				}
-				profilerEvents.end();
-				
 				profilerEvents.start("update");
 				for (size_t i = 0; i < size; i++) {
 					if (active[i]) {
 						process_handler& handler = handlers[i];
 						profilerEvents.start(handler.name());
 						handler.update(handler, delta);
-						profilerEvents.end();
-					}
-				}
-				profilerEvents.end();
-				
-				profilerEvents.start("postUpdate");
-				for (size_t i = 0; i < size; i++) {
-					if (active[i]) {
-						process_handler& handler = handlers[i];
-						profilerEvents.start(handler.name());
-						handler.postUpdate(handler);
 						profilerEvents.end();
 					}
 				}
