@@ -14,7 +14,7 @@
 using Eigen::Vector2i;
 using Eigen::Vector2f;
 using Eigen::Vector2d;
-typedef Eigen::Matrix<long, 2, 1> Vector2l;
+typedef Eigen::Matrix<int64_t, 2, 1> Vector2l;
 
 template <typename T> inline constexpr
 int signum(T x, std::false_type is_signed) {

@@ -37,8 +37,6 @@ int64_t vectorsCross(const Vector2l& a, const Vector2l& b) {
 // Returns the angle in radians of this vector (point) relative to the given vector. Angles are towards the positive y-axis. (typically counter-clockwise)
 // https://stackoverflow.com/questions/21483999/using-atan2-to-find-angle-between-two-vectors
 double vectorsAngle(const Vector2l& a, const Vector2l& b) {
-	// |A·B| = |A| |B| COS(θ)
-	// |A×B| = |A| |B| SIN(θ)
 	return atan2(vectorsCross(a, b), a.dot(b));
 }
 
@@ -47,6 +45,7 @@ double vectorLength(const Vector2l& a) {
 	return a.norm();
 }
 
+// counter clock wise rotation
 Vector2l vectorRotate(const Vector2l& a, const double angleRad) {
 	Eigen::Rotation2D rotation { angleRad };
 	Vector2d b = static_cast<Vector2d>(rotation * a.cast<double>()); // cast only for eclipse indexer

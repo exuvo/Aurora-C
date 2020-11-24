@@ -8,7 +8,6 @@ project (AuroraC VERSION 0.1 LANGUAGES CXX)
 # custom allocators https://github.com/mtrebi/memory-allocators
 # stack vectors, strings, allocator https://chromium.googlesource.com/chromium/chromium/+/master/base/stack_container.h
 # print stack trace https://stackoverflow.com/questions/38433701/print-log4cxx-exception-stacktrace
-# imgui
 # command line parsing cxxopts
 # zlib for packaging resources ?
 # more links https://github.com/MFatihMAR/Game-Networking-Resources
@@ -49,7 +48,26 @@ add_subdirectory(lib/tracy)
 
 add_subdirectory(lib/entt)
 
-message("============= Aurora-C ============")
+set(IMGUI_EXAMPLES OFF)
+set(IMGUI_DISABLE_FILE_FUNCTIONS OFF)
+set(IMGUI_ENABLE_STDLIB_SUPPORT ON)
+
+set(IMGUI_IMPL_SDL OFF)
+set(IMGUI_IMPL_METAL OFF)
+set(IMGUI_IMPL_OSX OFF)
+set(IMGUI_IMPL_WIN32 OFF)
+set(IMGUI_IMPL_GLFW ON)
+set(IMGUI_IMPL_GLUT OFF)
+set(IMGUI_IMPL_OPENGL3 OFF)
+set(IMGUI_IMPL_OPENGL2 OFF)
+set(IMGUI_IMPL_DX9 OFF)
+set(IMGUI_IMPL_DX10 OFF)
+set(IMGUI_IMPL_DX11 OFF)
+set(IMGUI_IMPL_DX12 OFF)
+set(IMGUI_IMPL_VULKAN ON)
+add_subdirectory(lib/imgui)
+
+message("========== Aurora-C ==========")
 
 find_package(Boost 1.66 REQUIRED) # COMPONENTS
 find_package(Eigen3 3.3 REQUIRED NO_MODULE)
@@ -81,6 +99,8 @@ target_link_libraries(AuroraC PUBLIC ${Boost_LIBRARIES})
 target_include_directories(AuroraC PUBLIC ${Boost_INCLUDE_DIRS})
 target_link_libraries(AuroraC PUBLIC Eigen3::Eigen)
 target_link_libraries(AuroraC PUBLIC OpenMP::OpenMP_CXX)
+target_link_libraries(AuroraC PUBLIC imgui)
+#target_link_libraries(AuroraC PUBLIC imgui-glfw imgui-vulkan)  
 
 # broken shit
 #target_precompile_headers(AuroraC PRIVATE <string>)
