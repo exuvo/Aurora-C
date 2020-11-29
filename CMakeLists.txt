@@ -1,4 +1,4 @@
-cmake_minimum_required (VERSION 3.17)
+cmake_minimum_required (VERSION 3.16)
 
 project (AuroraC VERSION 0.1 LANGUAGES CXX)
 
@@ -114,7 +114,7 @@ set_target_properties(AuroraC PROPERTIES INTERPROCEDURAL_OPTIMIZATION off) #link
 
 if (CMAKE_CXX_COMPILER_ID MATCHES "Clang|GNU")
 	target_compile_options(AuroraC PRIVATE -march=native)
-#	target_compile_options(AuroraC PRIVATE -msse4.1 -mavx512f)
+#	target_compile_options(AuroraC PRIVATE -msse4.2 -mavx2)
 	target_compile_options(AuroraC PRIVATE $<$<CONFIG:RELEASE>: -O3>)
 endif()
 if (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
@@ -127,7 +127,7 @@ if (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
 	endif()
 elseif (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
 elseif (CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
-	target_compile_options(AuroraC PRIVATE /arch:SSE4.1 /arch:AVX)
+	target_compile_options(AuroraC PRIVATE /arch:SSE4.2 /arch:AVX2)
 endif()
 
 #target_link_options(AuroraC PRIVATE -)
@@ -181,23 +181,11 @@ ELSE()
   message("APR not found locally, you should install it or let me download and compile during build (slow)")
   include(ExternalProject)
   
-  string(LENGTH ${CMAKE_C_COMPILER} LEN)
-  MATH(EXPR LEN "${LEN}-4")
-  string(SUBSTRING ${CMAKE_C_COMPILER} 0 ${LEN} AUTOTOOLS_TARGET)
-  
-  if(CMAKE_HOST_SYSTEM_NAME MATCHES "CYGWIN" AND MINGW)
-  	message(FATAL "can not build APR with mingw")
-  	SET(configure bash -c <SOURCE_DIR>/configure CC=${CMAKE_C_COMPILER} CCX=${CMAKE_CXX_COMPILER} --prefix=<INSTALL_DIR> --build=${AUTOTOOLS_TARGET} --host=${AUTOTOOLS_TARGET} --target=${AUTOTOOLS_TARGET})
-#  	SET(configure bash -c <SOURCE_DIR>/configure CC=${CMAKE_C_COMPILER} CCX=${CMAKE_CXX_COMPILER} --prefix=<INSTALL_DIR>)
-  else()
-  	SET(configure <SOURCE_DIR>/configure --prefix=<INSTALL_DIR>)
-  endif()
-  
   ExternalProject_Add(
     APR
     URL https://ftp.acc.umu.se/mirror/apache.org//apr/apr-1.7.0.tar.gz
     URL_HASH SHA256=48e9dbf45ae3fdc7b491259ffb6ccf7d63049ffacbc1c0977cced095e4c2d5a2
-    CONFIGURE_COMMAND ${configure}
+    CONFIGURE_COMMAND <SOURCE_DIR>/configure --prefix=<INSTALL_DIR>
     BUILD_COMMAND make -j${cores}
     BUILD_BYPRODUCTS <INSTALL_DIR>/lib/libapr-1.a
   )
@@ -218,8 +206,8 @@ ELSE()
     APRUTIL
     URL https://ftp.acc.umu.se/mirror/apache.org//apr/apr-util-1.6.1.tar.gz
     URL_HASH SHA256=b65e40713da57d004123b6319828be7f1273fbc6490e145874ee1177e112c459
-#    CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=<INSTALL_DIR> -DCMAKE_BUILD_TYPE=Release
-    <SOURCE_DIR>/configure --prefix=<INSTALL_DIR>
+#    CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=<INSTALL_DIR> -DCMAKE_BUILD_TYPE=Release # windows only
+    CONFIGURE_COMMAND <SOURCE_DIR>/configure --prefix=<INSTALL_DIR>
     BUILD_COMMAND make -j${cores}
     BUILD_BYPRODUCTS <INSTALL_DIR>/lib/libaprutil-1.a
     DEPENDS ${APR_DEPEND}
@@ -250,6 +238,7 @@ ELSE()
   SET (Log4Cxx_LIBRARY_DIRS ${install_dir}/lib)
   SET (Log4Cxx_LIBRARIES log4cxx)
   target_link_directories(AuroraC PRIVATE ${Log4Cxx_LIBRARY_DIRS})
+	add_dependencies(AuroraC Log4Cxx)
   
   FIND_PACKAGE (ODBC) # Log4Cxx automatically builds against this shit if it exists with no build option to skip
 	IF (ODBC_FOUND)
@@ -258,5 +247,3 @@ ELSE()
 ENDIF()
 target_include_directories(AuroraC PRIVATE ${Log4Cxx_INCLUDE_DIRS})
 target_link_libraries(AuroraC PRIVATE ${Log4Cxx_LIBRARIES} ${APRUTIL_LIBRARIES} ${APR_LIBRARIES})
-add_dependencies(AuroraC Log4Cxx)
-

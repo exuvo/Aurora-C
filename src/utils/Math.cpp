@@ -40,6 +40,10 @@ double vectorsAngle(const Vector2l& a, const Vector2l& b) {
 	return atan2(vectorsCross(a, b), a.dot(b));
 }
 
+double vectorAngle(const Vector2l& a) {
+	return atan2(a.y(), a.x());
+}
+
 double vectorLength(const Vector2l& a) {
 //	return hypot(a.x(), a.y());
 	return a.norm();

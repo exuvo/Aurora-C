@@ -14,13 +14,13 @@
 #include "utils/Profiling.hpp"
 
 template<typename Derived, typename Delta>
-class process {
+class Process {
 	public:
 		using delta_type = Delta;
 		
     /*! @brief Default destructor. */
-    virtual ~process() {
-        static_assert(std::is_base_of_v<process, Derived>, "Incorrect use of the class template");
+    virtual ~Process() {
+    	static_assert(std::is_base_of_v<Process, Derived>, "Incorrect use of the class template");
     }
     
     void init(void* data = nullptr) const ENTT_NOEXCEPT {}
@@ -36,7 +36,7 @@ class process {
 };
 
 template<typename Delta>
-class scheduler {
+class Scheduler {
 	public:
 		struct process_handler;
 	private:
@@ -80,9 +80,9 @@ class scheduler {
 				name_fn_type* name;
 		};
 
-		scheduler() = default;
-		scheduler(scheduler&&) = default; // move constructor
-		scheduler& operator=(scheduler&&) = default; // move assignment operator
+		Scheduler() = default;
+		Scheduler(Scheduler&&) = default; // move constructor
+		Scheduler& operator=(Scheduler&&) = default; // move assignment operator
 		
 		std::vector<process_handler> handlers { };
 		bool profiling = false;
@@ -136,13 +136,13 @@ class scheduler {
 		 */
 		template<typename Proc, typename ... Args>
 		void attach(Args&& ... args) {
-			static_assert(std::is_base_of_v<process<Proc, Delta>, Proc>, "Invalid process type");
-			auto proc = typename process_handler::instance_type { new Proc { std::forward<Args>(args) ... }, &scheduler::deleter<Proc> };
+			static_assert(std::is_base_of_v<Process<Proc, Delta>, Proc>, "Invalid process type");
+			auto proc = typename process_handler::instance_type { new Proc { std::forward<Args>(args) ... }, &Scheduler::deleter<Proc> };
 			process_handler handler { std::move(proc), 
-				&scheduler::isActive<Proc>, 
-				&scheduler::update<Proc>, 
-				&scheduler::init<Proc>,
-				&scheduler::name<Proc>
+				&Scheduler::isActive<Proc>, 
+				&Scheduler::update<Proc>, 
+				&Scheduler::init<Proc>,
+				&Scheduler::name<Proc>
 			};
 			
 			handlers.emplace_back(std::move(handler));

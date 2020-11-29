@@ -8,8 +8,6 @@
 #include <utility>
 #include <algorithm>
 
-#include <intrin.h>
-
 static int ceil_div(float value, float divisor)
 {
     // Returns the value divided by the divisor rounded up.

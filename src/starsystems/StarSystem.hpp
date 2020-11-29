@@ -14,7 +14,7 @@
 #include "entt/entt.hpp"
 #include "log4cxx/logger.h"
 
-#include "starsystems/systems/scheduler.hpp"
+#include "starsystems/systems/Scheduler.hpp"
 #include "utils/Profiling.hpp"
 
 using namespace std::chrono;
@@ -70,7 +70,7 @@ class StarSystem {
 		
 		void init(Galaxy* galaxy);
 		void update(uint32_t deltaGameTime);
-		scheduler<std::uint32_t> scheduler;
+		Scheduler<std::uint32_t> scheduler;
 		
 		template<typename... Component>
 		void changed(entt::entity) {

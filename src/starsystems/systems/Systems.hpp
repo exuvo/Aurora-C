@@ -14,11 +14,12 @@
 #include "entt/entt.hpp"
 #include "log4cxx/logger.h"
 
-#include "starsystems/systems/scheduler.hpp"
+#include "starsystems/components/Components.hpp"
+#include "starsystems/systems/Scheduler.hpp"
 #include "utils/GameServices.hpp"
 
 template<typename Derived>
-class BaseSystem : public process<Derived, uint32_t> {
+class BaseSystem : public Process<Derived, uint32_t> {
 	public:
 		BaseSystem(StarSystem* starSystem): 
 			galaxy(*(starSystem->galaxy)),
@@ -90,6 +91,7 @@ class MovementSystem : public IntervalSystem<MovementSystem> {
 		
 	private:
 		LoggerPtr log = Logger::getLogger("aurora.starsystems.systems.movement");
+		void moveTo(entt::entity entity, delta_type delta, TimedMovementComponent& movement, MassComponent& massComponent, ThrustComponent& thrustComponent, Vector2l& targetPos, TimedMovementComponent* targetMovement, entt::entity targetEntity, ApproachType approach);
 };
 
 #endif /* SRC_STARSYSTEMS_SYSTEMS_SYSTEMS_HPP_ */

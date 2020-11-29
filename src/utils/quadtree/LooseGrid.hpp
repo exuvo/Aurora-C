@@ -6,7 +6,7 @@
 #define LGRID_HPP
 
 #include "SmallList.hpp"
-#include <intrin.h>
+#include <immintrin.h>
 
 union SimdVec4f {
 	float data[4];

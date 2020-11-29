@@ -34,6 +34,7 @@ int signum(T x) {
 Vector2l vectorsLerp(const Vector2l& a, const Vector2l& b, const uint64_t current, const uint64_t max);
 int64_t vectorsCross(const Vector2l& a, const Vector2l& b);
 double vectorsAngle(const Vector2l& a, const Vector2l& b);
+double vectorAngle(const Vector2l& a);
 double vectorLength(const Vector2l& a);
 Vector2l vectorRotate(const Vector2l& a, const double angleRad);
 

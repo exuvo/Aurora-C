@@ -12,18 +12,20 @@
 
 #include "starsystems/StarSystem.hpp"
 
-class EntityUUID {
-	public:
+struct EntityUUID {
 		uint8_t starSystemID;
 		uint8_t empireID;
 		uint32_t entityUID;
 };
 
-class EntityReference {
-	public:
+struct EntityReference {
 		StarSystem* system;
 		entt::id_type entityID;
 		EntityUUID entityUUID;
+};
+
+struct UUIDComponent {
+		EntityUUID uuid;
 };
 
 #endif /* SRC_STARSYSTEMS_COMPONENTS_IDCOMPONENTS_HPP_ */

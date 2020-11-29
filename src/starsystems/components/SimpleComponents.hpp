@@ -10,8 +10,14 @@
 
 #include <cstdint>
 
+#include "galaxy/Empire.hpp"
+
 struct TextComponent {
-		std::string text;
+		char text[50];
+};
+
+struct NameComponent {
+		std::string name;
 };
 
 struct TintComponent {
