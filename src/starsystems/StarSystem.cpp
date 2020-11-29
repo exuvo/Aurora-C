@@ -16,8 +16,8 @@
 
 template<typename Component>
 void registerComponentListener(entt::registry& registry, StarSystem* starSystem) {
-	registry.on_construct<Component>().template connect<&starSystem->added<Component>>(starSystem);
-	registry.on_destroy<Component>().template connect<&starSystem->deleted<Component>>(starSystem);
+	registry.on_construct<Component>().template connect<&StarSystem::added<Component>>(starSystem);
+	registry.on_destroy<Component>().template connect<&StarSystem::deleted<Component>>(starSystem);
 }
 
 template<typename ... Component>

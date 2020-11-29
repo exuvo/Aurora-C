@@ -14,6 +14,14 @@
 
 struct TextComponent {
 		char text[50];
+		
+		TextComponent(){
+			text[0] = '\0';
+		};
+		
+		TextComponent(const char* str) {
+			strncpy(text, str, ARRAY_LEN(text));
+		}
 };
 
 struct NameComponent {

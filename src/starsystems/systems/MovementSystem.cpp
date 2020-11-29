@@ -129,7 +129,7 @@ void MovementSystem::update(delta_type delta) {
 				movement.previous.time = galaxy.time;
 			}
 
-//			registry.emplace_or_replace<TextComponent>(entity, "s " + (long) velocity.norm());
+			registry.emplace_or_replace<TextComponent>(entity, "s " + (long) velocity.norm());
 			
 			starSystem.changed<TimedMovementComponent, ThrustComponent, TextComponent>(entity);
 		}
@@ -168,12 +168,12 @@ void MovementSystem::update(delta_type delta) {
 			MoveToEntityComponent& moveComponent = view4.get<MoveToEntityComponent>(entity);
 			TimedMovementComponent& targetMovement = registry.get<TimedMovementComponent>(moveComponent.target);
 			
-//			moveTo(entity, delta, movement, massComponent, thrustComponent, targetMovement.get(galaxy.time).value.position, &targetMovement, moveComponent.target, moveComponent.approach);
+			moveTo(entity, delta, movement, massComponent, thrustComponent, targetMovement.get(galaxy.time).value.position, &targetMovement, moveComponent.target, moveComponent.approach);
 		}
 	}
 }
 
-void MovementSystem::moveTo(entt::entity entityID, delta_type delta, TimedMovementComponent& movement, MassComponent& massComponent, ThrustComponent& thrustComponent, Vector2l& targetPosition, TimedMovementComponent* targetMovement, entt::entity targetEntity, ApproachType approach) {
+void MovementSystem::moveTo(entt::entity entityID, delta_type delta, TimedMovementComponent& movement, MassComponent& massComponent, ThrustComponent& thrustComponent, Vector2l targetPosition, TimedMovementComponent* targetMovement, entt::entity targetEntity, ApproachType approach) {
 	
 	MovementValues shipMovementValue = movement.previous.value;
 	

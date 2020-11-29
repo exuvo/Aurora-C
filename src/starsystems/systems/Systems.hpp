@@ -91,7 +91,7 @@ class MovementSystem : public IntervalSystem<MovementSystem> {
 		
 	private:
 		LoggerPtr log = Logger::getLogger("aurora.starsystems.systems.movement");
-		void moveTo(entt::entity entity, delta_type delta, TimedMovementComponent& movement, MassComponent& massComponent, ThrustComponent& thrustComponent, Vector2l& targetPos, TimedMovementComponent* targetMovement, entt::entity targetEntity, ApproachType approach);
+		void moveTo(entt::entity entity, delta_type delta, TimedMovementComponent& movement, MassComponent& massComponent, ThrustComponent& thrustComponent, Vector2l targetPos, TimedMovementComponent* targetMovement, entt::entity targetEntity, ApproachType approach);
 };
 
 #endif /* SRC_STARSYSTEMS_SYSTEMS_SYSTEMS_HPP_ */

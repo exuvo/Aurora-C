@@ -28,6 +28,8 @@ int main(int argc, char **argv) {
 	Galaxy galaxy(empires, starSystems);
 
 	galaxy.init();
+	
+	cout <<  "running" << flush;
 
 	while(true){
 		std::this_thread::sleep_for(50s);

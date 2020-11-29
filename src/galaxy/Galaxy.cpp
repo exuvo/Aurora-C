@@ -18,11 +18,11 @@ void Galaxy::init() {
 	}
 	
 	for (int i = 0; i < 2; i++) {
-		std::thread *workerThread = new std::thread(starsystemWorker, this);
+		std::thread *workerThread = new std::thread(&Galaxy::starsystemWorker, this);
 		threads.push_back(workerThread);
 	}
 
-	galaxyThread = new std::thread(galaxyWorker, this);
+	galaxyThread = new std::thread(&Galaxy::galaxyWorker, this);
 }
 
 void Galaxy::galaxyWorker() {
@@ -38,7 +38,7 @@ void Galaxy::galaxyWorker() {
 			nanoseconds now = duration_cast<nanoseconds>(steady_clock::now().time_since_epoch());
 			
 			if (speed > 0ns) {
-								
+				
 				if (speed != oldSpeed) {
 					accumulator = 0ns;
 					oldSpeed = speed;

@@ -34,7 +34,7 @@ void setThreadPriority(std::thread &thread, ThreadPriority prio) {
 	
 	std::thread::native_handle_type tHandle = thread.native_handle();
 	
-#if (defined _WIN32) or (defined __CYGWIN__)
+#if (defined _WIN32) // or (defined __CYGWIN__)
 	
 	int priority;
 	
@@ -62,18 +62,18 @@ void setThreadPriority(std::thread &thread, ThreadPriority prio) {
 	pthread_getschedparam(tHandle, &policy, &sch);
 	
 	if (prio == ThreadPriority::LOW) {
-		sch.sched_priority = 19;
+		sch.sched_priority = 18;
 	} else if (prio == ThreadPriority::NORMAL) {
-		sch.sched_priority = 20;
+		sch.sched_priority = 19;
 	} else if (prio == ThreadPriority::HIGH) {
-		sch.sched_priority = 21;
+		sch.sched_priority = 20;
 	} else if (prio == ThreadPriority::HIGHER) {
-		sch.sched_priority = 22;
+		sch.sched_priority = 21;
 	} else {
 		throw std::logic_error("Invalid prio parameter");
 	}
 	
-	int err = pthread_setschedparam(tHandle, SCHED_RR, &sch);
+	int err = pthread_setschedparam(tHandle, SCHED_FIFO, &sch);
 	
 	if (err) {
 		std::ostringstream out;

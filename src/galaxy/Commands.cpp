@@ -39,5 +39,5 @@ static void* EntityMoveToPositionCommand::operator new(size_t n) {
 }
 
 static void EntityMoveToPositionCommand::operator delete(void* ptr) {
-	allocatorEntityMoveToPositionCommand.deallocate_object(ptr);
+//	allocatorEntityMoveToPositionCommand.deallocate_object(ptr);
 }

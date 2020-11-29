@@ -8,11 +8,12 @@
 #ifndef SRC_GALAXY_GALAXY_HPP_
 #define SRC_GALAXY_GALAXY_HPP_
 
+#include <atomic>
+#include <chrono>
+#include <condition_variable>
+#include <mutex>
 #include <thread>
 #include <vector>
-#include <mutex>
-#include <condition_variable>
-#include <chrono>
 
 #include "entt/entt.hpp"
 #include "log4cxx/logger.h"
