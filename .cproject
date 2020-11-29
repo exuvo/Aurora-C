@@ -328,5 +328,11 @@
         </scannerConfigBuildInfo>
         	
     </storageModule>
+    	
+    <storageModule moduleId="org.eclipse.cdt.core.language.mapping">
+        		
+        <project-mappings/>
+        	
+    </storageModule>
     
 </cproject>

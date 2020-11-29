@@ -9,7 +9,7 @@
 
 #include "Math.hpp"
 
-Vector2l vectorsLerp(const Vector2l a, const Vector2l b, uint64_t current, uint64_t max) {
+Vector2l vectorsLerp(const Vector2l& a, const Vector2l& b, const uint64_t current, const uint64_t max) {
 	uint64_t invAlpha = max - current;
 	
 	__int128_t x1 = a.x();

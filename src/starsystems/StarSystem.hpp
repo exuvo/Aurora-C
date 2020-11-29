@@ -71,9 +71,20 @@ class StarSystem {
 		void init(Galaxy* galaxy);
 		void update(uint32_t deltaGameTime);
 		scheduler<std::uint32_t> scheduler;
+		
+		template<typename... Component>
+		void changed(entt::entity) {
+			
+		}
 
 	private:
 		LoggerPtr log = Logger::getLogger("aurora.starsystem");
+		
+		template<typename... Component>
+		void added(entt::registry&, entt::entity);
+		
+		template<typename... Component>
+		void deleted(entt::registry&, entt::entity);
 };
 
 #endif /* SRC_STARSYSTEMS_STARSYSTEM_HPP_ */

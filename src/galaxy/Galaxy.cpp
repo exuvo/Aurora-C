@@ -62,8 +62,8 @@ void Galaxy::galaxyWorker() {
 
 //						println("tickSize $tickSize, speed $speed, diff ${now - lastProcess}, accumulator $accumulator")
 
-					time += seconds(tickSize);
-					LOG4CXX_INFO(log, "tick " << time.count());
+					time += tickSize;
+					LOG4CXX_INFO(log, "tick " << time);
 					updateDay();
 					
 					ProfilerEvents& profilerEvents = workingShadow->profilerEvents;
@@ -248,6 +248,6 @@ void Galaxy::starsystemWorker() {
 }
 
 int Galaxy::updateDay() {
-	day = time.count() / (24L * 60L * 60L);
+	day = time / (24L * 60L * 60L);
 	return day;
 }

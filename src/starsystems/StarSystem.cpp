@@ -12,11 +12,27 @@
 
 #include "StarSystem.hpp"
 #include "systems/Systems.hpp"
+#include "components/Components.hpp"
+
+template<typename Component>
+void registerComponentListener(entt::registry& registry, StarSystem* starSystem) {
+	registry.on_construct<Component>().template connect<&starSystem->added<Component>>(starSystem);
+	registry.on_destroy<Component>().template connect<&starSystem->deleted<Component>>(starSystem);
+}
+
+template<typename ... Component>
+void registerComponentListeners(entt::registry& registry, StarSystem* starSystem) {
+//	(registerComponentListener<Component>(registry, starSystem), ...); // c++ 17
+	
+	// older c++ https://stackoverflow.com/a/17340003/2531250
+	using expand = int[];
+	(void) expand { 0, ((void) registerComponentListener<Component>(registry, starSystem), 0)... };
+}
 
 void StarSystem::init(Galaxy* galaxy) {
 	StarSystem::galaxy = galaxy;
 	
-//	scheduler.attach<MovementPreSystem>(this);
+	scheduler.attach<MovementPreSystem>(this);
 //	scheduler.attach<ShipPreSystem>(this);
 //	scheduler.attach<TargetingPreSystem>(this);
 //	scheduler.attach<WeaponPreSystem>(this);
@@ -35,11 +51,22 @@ void StarSystem::init(Galaxy* galaxy) {
 //	scheduler.attach<SpatialPartitioningSystem>(this);
 //	scheduler.attach<SpatialPartitioningPlanetoidsSystem>(this);
 	
+	scheduler.init();
 	
-	scheduler.init(nullptr);
+	registerComponentListeners<TextComponent, TintComponent, RenderComponent>(registry, this);
 	
 	shadow = new ShadowStarSystem(this);
 	workingShadow = new ShadowStarSystem(this);
+}
+
+template<typename... Component>
+void StarSystem::added(entt::registry& registry, entt::entity entity) {
+	LOG4CXX_DEBUG(log, "starsystem " << name << " created entity " << entity);
+}
+
+template<typename... Component>
+void StarSystem::deleted(entt::registry& registry, entt::entity entity) {
+	LOG4CXX_DEBUG(log, "starsystem " << name << " deleted entity " << entity);
 }
 
 void StarSystem::update(uint32_t deltaGameTime) {

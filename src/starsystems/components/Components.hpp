@@ -15,6 +15,7 @@
 
 #include "IDComponents.hpp"
 #include "MovementComponents.hpp"
+#include "SimpleComponents.hpp"
 #include "TimedComponents.hpp"
 
 #endif /* SRC_STARSYSTEMS_COMPONENTS_COMPONENTS_HPP_ */

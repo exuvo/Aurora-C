@@ -59,7 +59,7 @@ class Galaxy {
 		std::recursive_mutex shadowLock;
 		ProfilerEvents renderProfilerEvents;
 		
-		seconds time = 0s;
+		uint64_t time = 0; // seconds
 		uint32_t day = updateDay();
 		nanoseconds speed = 1s;
 		bool speedLimited = false;

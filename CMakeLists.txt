@@ -16,6 +16,7 @@ project (AuroraC VERSION 0.1 LANGUAGES CXX)
 #  https://www.gnu.org/software/gsl/doc/html/poly.html#general-polynomial-equations
 #  https://www.boost.org/doc/libs/1_53_0/libs/math/doc/sf_and_dist/html/math_toolkit/toolkit/internals1/roots2.html
 #  https://eigen.tuxfamily.org/dox/unsupported/classEigen_1_1PolynomialSolver.html
+# vulcan multi gpu https://www.ea.com/seed/news/khronos-munich-2018-halcyon-vulkan https://github.com/Glavnokoman/vuh
 
 # log4cxx does not build with mingw (due to we allowed linking to libs built for cygwin, that use different std lib?) but tracy works. 
 
@@ -117,7 +118,7 @@ if (CMAKE_CXX_COMPILER_ID MATCHES "Clang|GNU")
 	target_compile_options(AuroraC PRIVATE $<$<CONFIG:RELEASE>: -O3>)
 endif()
 if (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
-	target_compile_options(AuroraC PRIVATE -Wall -Wextra -Wno-unused-parameter)
+	target_compile_options(AuroraC PRIVATE -Wall -Wextra -Wno-unused-parameter -Wno-unused-variable)
 	target_compile_options(AuroraC PRIVATE $<$<CONFIG:RELEASE>: -fno-trapping-math -fno-math-errno -fno-signed-zeros >)
 	if (MINGW)
 		target_compile_options(AuroraC PRIVATE --warn-no-builtin-declaration-mismatch)

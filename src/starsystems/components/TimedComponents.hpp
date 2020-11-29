@@ -8,12 +8,10 @@
 #ifndef SRC_STARSYSTEMS_COMPONENTS_TIMEDCOMPONENTS_HPP_
 #define SRC_STARSYSTEMS_COMPONENTS_TIMEDCOMPONENTS_HPP_
 
-#include <eigen3/Eigen/Geometry> 
-
 #include "entt/entt.hpp"
 
+#include "MovementComponents.hpp"
 #include "utils/Math.hpp"
-#include "utils/enum.h"
 
 // In m, cm/s, cm/s�
 struct MovementValues {
@@ -37,12 +35,6 @@ struct MovementValues {
 			return Vector2l { (signum(position.x()) * 500 + position.x()) / 1000, (signum(position.y()) * 500 + position.y()) / 1000};
 		}
 };
-
-BETTER_ENUM(ApproachType, uint8_t,
-	COAST,
-	BRACHISTOCHRONE, // Arrive at target using a Brachistochrone trajectory
-	BALLISTIC // Arrive at target as quickly as possible
-);
 
 template<typename T>
 struct TimedValue {

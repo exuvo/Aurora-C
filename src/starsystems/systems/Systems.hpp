@@ -20,27 +20,28 @@
 template<typename Derived>
 class BaseSystem : public process<Derived, uint32_t> {
 	public:
-		BaseSystem(StarSystem* starSystem) {
-			this->starSystem = starSystem;
-			galaxy = starSystem->galaxy;
-		}
+		BaseSystem(StarSystem* starSystem): 
+			galaxy(*(starSystem->galaxy)),
+			starSystem(*starSystem),
+			registry(starSystem->registry)
+		{};
+		
 	protected:
-		StarSystem* starSystem;
-		Galaxy* galaxy;
+		Galaxy& galaxy;
+		StarSystem& starSystem;
+		entt::registry& registry;
 };
 
 template<typename Derived>
 class DailySystem : public BaseSystem<Derived> {
-	using DailySystem::BaseSystem::galaxy;
-	
 	public:
 		DailySystem(uint32_t interval, StarSystem* starSystem) : DailySystem::BaseSystem(starSystem) {
 			this->interval = interval;
-			lastDay = galaxy->day;
+			lastDay = this->galaxy.day;
 		}
 		bool isActive() {
-			if (galaxy->day - lastDay >= interval) {
-				lastDay = galaxy->day;
+			if (this->galaxy.day - lastDay >= interval) {
+				lastDay = this->galaxy.day;
 				return true;
 			}
 			return false;
@@ -52,31 +53,39 @@ class DailySystem : public BaseSystem<Derived> {
 
 template<typename Derived>
 class IntervalSystem : public BaseSystem<Derived> {
-	using IntervalSystem::BaseSystem::galaxy;
-	
 	public:
 		IntervalSystem(seconds interval, StarSystem* starSystem): IntervalSystem::BaseSystem(starSystem) {
 			this->interval = interval.count();
-			lastTime = galaxy->time;
+			lastTime = this->galaxy.time;
 		}
 		bool isActive() {
-			if (galaxy->time - lastTime >= milliseconds(interval)) {
-				lastTime = galaxy->time;
+			if (this->galaxy.time - lastTime >= interval) {
+				lastTime = this->galaxy.time;
 				return true;
 			}
 			return false;
 		}
 	private:
-		seconds lastTime;
+		uint64_t lastTime;
 		uint32_t interval;
+};
+
+class MovementPreSystem : public IntervalSystem<MovementPreSystem> {
+	public:
+		MovementPreSystem(StarSystem* starSystem) : MovementPreSystem::IntervalSystem(1s, starSystem) {};
+		
+		void init();
+		void update(delta_type delta);
+		
+	private:
+		LoggerPtr log = Logger::getLogger("aurora.starsystems.systems.movement.pre");
 };
 
 class MovementSystem : public IntervalSystem<MovementSystem> {
 	public:
-		MovementSystem(StarSystem* starSystem) : MovementSystem::IntervalSystem(1s, starSystem) {
-		};
+		MovementSystem(StarSystem* starSystem) : MovementSystem::IntervalSystem(1s, starSystem) {};
 		
-		void init(void* data);
+		void init();
 		void update(delta_type delta);
 		
 	private:

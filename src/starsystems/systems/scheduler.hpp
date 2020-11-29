@@ -56,8 +56,8 @@ class scheduler {
 		}
 		
 		template<typename Proc>
-		static void init(process_handler& handler, void* data) {
-			static_cast<Proc*>(handler.instance.get())->init(data);
+		static void init(process_handler& handler) {
+			static_cast<Proc*>(handler.instance.get())->init();
 		}
 		
 		template<typename Proc>
@@ -70,7 +70,7 @@ class scheduler {
 				using instance_type = std::unique_ptr<void, void(*)(void*)>;
 				using isActive_fn_type = bool (process_handler&);
 				using update_fn_type = void (process_handler&, Delta);
-				using init_fn_type = void (process_handler&, void*);
+				using init_fn_type = void (process_handler&);
 				using name_fn_type = const char* (void);
 
 				instance_type instance;
@@ -148,9 +148,9 @@ class scheduler {
 			handlers.emplace_back(std::move(handler));
 		}
 		
-		void init(void* data = nullptr) {
+		void init() {
 			for (process_handler& handler : handlers) {
-				handler.init(handler, data);
+				handler.init(handler);
 			}
 		}
 		
