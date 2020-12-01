@@ -25,10 +25,10 @@ struct ThrustComponent {
 
 struct OrbitComponent {
 	entt::entity parent = entt::null;
-	float e_eccentricity = 0; // 0 = circle, 0 < elliptic < 1
 	float a_semiMajorAxis = 1; // In AU
-	float w_argumentOfPeriapsis = 0; // In 360 degrees
-	float M_meanAnomaly = 0; // In 360 degrees
+	float e_eccentricity = 0; // 0 = circle, 0 < elliptic < 1
+	int16_t w_argumentOfPeriapsis = 0; // In 360 degrees
+	int16_t M_meanAnomaly = 0; // In 360 degrees
 };
 
 struct OnPredictedMovementComponent {};

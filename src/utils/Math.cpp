@@ -5,8 +5,6 @@
  *      Author: exuvo
  */
 
-#include <math.h>
-
 #include "Math.hpp"
 
 Vector2l vectorsLerp(const Vector2l& a, const Vector2l& b, const uint64_t current, const uint64_t max) {
@@ -56,3 +54,21 @@ Vector2l vectorRotate(const Vector2l& a, const double angleRad) {
 	return b.cast<int64_t>();
 }
 
+Vector2d vectorRotate(const Vector2d& a, const double angleRad) {
+	Eigen::Rotation2D rotation { angleRad };
+	return static_cast<Vector2d>(rotation * a); // cast only for eclipse indexer
+}
+
+double getPositiveRootOfQuadraticEquation(double a, double b, double c) {
+	return (-b + sqrt(b * b - 4 * a * c)) / (2 * a);
+}
+		
+std::optional<double> getPositiveRootOfQuadraticEquationSafe(double a, double b, double c) {
+	double tmp = b * b - 4 * a * c;
+	
+	if (tmp < 0) { // square root of a negative number, no interception is possible
+		return {};
+	}
+	
+	return (-b + sqrt(tmp)) / (2 * a);
+}

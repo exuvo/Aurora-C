@@ -13,6 +13,8 @@
 #include "StarSystem.hpp"
 #include "systems/Systems.hpp"
 #include "components/Components.hpp"
+#include "utils/Math.hpp"
+#include "utils/Utils.hpp"
 
 template<typename Component>
 void registerComponentListener(entt::registry& registry, StarSystem* starSystem) {
@@ -32,7 +34,9 @@ void registerComponentListeners(entt::registry& registry, StarSystem* starSystem
 void StarSystem::init(Galaxy* galaxy) {
 	StarSystem::galaxy = galaxy;
 	
-	scheduler.attach<MovementPreSystem>(this);
+	Systems systems;
+	
+	systems.movementPreSystem = scheduler.attach<MovementPreSystem>(this);
 //	scheduler.attach<ShipPreSystem>(this);
 //	scheduler.attach<TargetingPreSystem>(this);
 //	scheduler.attach<WeaponPreSystem>(this);
@@ -42,31 +46,57 @@ void StarSystem::init(Galaxy* galaxy) {
 //	scheduler.attach<ColonySystem>(this);
 //	scheduler.attach<ShipSystem>(this);
 //	scheduler.attach<MovementPredictedSystem>(this);
-	scheduler.attach<MovementSystem>(this);
+	systems.movementSystem = scheduler.attach<MovementSystem>(this);
 //	scheduler.attach<SolarIrradianceSystem>(this);
 //	scheduler.attach<PassiveSensorSystem>(this);
 //	scheduler.attach<TargetingSystem>(this);
-//	scheduler.attach<WeaponSystem>(this);
+	systems.weaponSystem = scheduler.attach<WeaponSystem>(this);
 //	scheduler.attach<TimedLifeSystem>(this);
 //	scheduler.attach<SpatialPartitioningSystem>(this);
 //	scheduler.attach<SpatialPartitioningPlanetoidsSystem>(this);
 	
-	scheduler.init();
+	scheduler.init(&systems);
 	
 	registerComponentListeners<TextComponent, TintComponent, RenderComponent>(registry, this);
 	
 	shadow = new ShadowStarSystem(this);
 	workingShadow = new ShadowStarSystem(this);
+	
+	Empire& empire1 = galaxy->empires[0];
+	
+	entt::entity e1 = registry.create();
+	registry.emplace<TextComponent>(e1, "Sun");
+	registry.emplace<TimedMovementComponent>(e1).previous.value.position = {0, 0};
+	registry.emplace<RenderComponent>(e1);
+	registry.emplace<SunComponent>(e1, 1361);
+	registry.emplace<CircleComponent>(e1, 696340000.0f);
+	registry.emplace<MassComponent>(e1, 1.988e30);
+	
+	entt::entity e2 = registry.create();
+	registry.emplace<TextComponent>(e2, "Earth");
+	registry.emplace<TimedMovementComponent>(e2);
+	registry.emplace<RenderComponent>(e2);
+	registry.emplace<CircleComponent>(e2, 6371000.0f);
+	registry.emplace<MassComponent>(e2, 5.972e24);
+	registry.emplace<OrbitComponent>(e2, e1, 1.0f, 0.0f, -45, 0);
+	
+	entt::entity e3 = registry.create();
+	registry.emplace<TextComponent>(e3, "Moon");
+	registry.emplace<TimedMovementComponent>(e3);
+	registry.emplace<RenderComponent>(e3);
+	registry.emplace<CircleComponent>(e3, 1737100.0f);
+//	registry.emplace<MassComponent>(e3, ?);
+	registry.emplace<OrbitComponent>(e3, e2, static_cast<float>(384400.0 / Units::AU), 0.2f, 0, 30);
 }
 
-template<typename... Component>
+template<typename Component>
 void StarSystem::added(entt::registry& registry, entt::entity entity) {
-	LOG4CXX_DEBUG(log, "starsystem " << name << " created entity " << entity);
+	LOG4CXX_DEBUG(log, "starsystem " << name << " created component " << type_name<Component>() << " for entity " << entity);
 }
 
-template<typename... Component>
+template<typename Component>
 void StarSystem::deleted(entt::registry& registry, entt::entity entity) {
-	LOG4CXX_DEBUG(log, "starsystem " << name << " deleted entity " << entity);
+	LOG4CXX_DEBUG(log, "starsystem " << name << " deleted component " << type_name<Component>() << " for entity " << entity);
 }
 
 void StarSystem::update(uint32_t deltaGameTime) {

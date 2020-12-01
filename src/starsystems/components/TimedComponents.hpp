@@ -25,6 +25,12 @@ struct MovementValues {
 			acceleration = {0, 0};
 		}
 		
+		MovementValues(Vector2l position2, Vector2l velocity2, Vector2l acceleration2) {
+			position = position2;
+			velocity = velocity2;
+			acceleration = acceleration2;
+		}
+		
 		MovementValues(uint32_t x, uint32_t y, uint32_t vx, uint32_t vy, uint32_t ax, uint32_t ay) {
 			position = {x, y};
 			velocity = {vx, vy};
@@ -65,7 +71,7 @@ struct InterpolatedComponent : public TimedComponent<T> {
 			next.time = 0;
 		}
 		
-		virtual void setValue(Tval& timedValue, T& newValue) = 0;
+		virtual void setValue(Tval& timedValue, const T& newValue) = 0;
 		
 		void set(T& value, uint64_t time) {
 			if (previous.time > time) {
@@ -80,7 +86,7 @@ struct InterpolatedComponent : public TimedComponent<T> {
 			previous.time = time;
 		}
 		
-		virtual bool setPrediction(T& value, uint64_t time) {
+		virtual bool setPrediction(const  T& value, uint64_t time) {
 	
 			if (previous.time >= time) {
 				next.time = 0; // why?
@@ -123,7 +129,7 @@ struct TimedMovementComponent: InterpolatedComponent<MovementValues> {
 	
 	TimedMovementComponent() : InterpolatedComponent<MovementValues>(Tval { MovementValues {}, 0 }) {}
 	
-	virtual void setValue(Tval& timedValue, MovementValues& newValue) override {
+	virtual void setValue(Tval& timedValue, const MovementValues& newValue) override {
 		timedValue.value = newValue;
 	}
 	
@@ -144,7 +150,7 @@ struct TimedMovementComponent: InterpolatedComponent<MovementValues> {
 		return *this;
 	}
 	
-	TimedMovementComponent& set(Vector2l& position, Vector2l& velocity, Vector2l& acceleration, uint64_t time) {
+	TimedMovementComponent& set(const Vector2l& position, const Vector2l& velocity, const Vector2l& acceleration, uint64_t time) {
 
 		if (previous.time > time) {
 			return *this;
@@ -172,7 +178,7 @@ struct TimedMovementComponent: InterpolatedComponent<MovementValues> {
 //		next.time = 0;
 //	}
 	
-	virtual bool setPrediction(MovementValues& value, uint64_t time) override {
+	virtual bool setPrediction(const MovementValues& value, uint64_t time) override {
 
 		if (InterpolatedComponent::setPrediction(value, time)) {
 			approach = ApproachType::COAST;
@@ -190,7 +196,7 @@ struct TimedMovementComponent: InterpolatedComponent<MovementValues> {
 		return false;
 	}
 	
-	bool setPredictionCoast(MovementValues& value, Vector2l& aimTarget, uint64_t time) {
+	bool setPredictionCoast(const MovementValues& value, const Vector2l& aimTarget, uint64_t time) {
 
 		if (InterpolatedComponent::setPrediction(value, time)) {
 			approach = ApproachType::COAST;
@@ -208,7 +214,7 @@ struct TimedMovementComponent: InterpolatedComponent<MovementValues> {
 		return false;
 	}
 
-	bool setPredictionBrachistocrone(MovementValues& value, int64_t startAcceleration, uint64_t time) {
+	bool setPredictionBrachistocrone(const MovementValues& value, int64_t startAcceleration, uint64_t time) {
 
 		if (InterpolatedComponent::setPrediction(value, time)) {
 			approach = ApproachType::BRACHISTOCHRONE;
@@ -226,7 +232,7 @@ struct TimedMovementComponent: InterpolatedComponent<MovementValues> {
 		return false;
 	}
 
-	bool setPredictionBallistic(MovementValues& value, Vector2l& aimTarget, int64_t startAcceleration, uint64_t time) {
+	bool setPredictionBallistic(const MovementValues& value, const Vector2l& aimTarget, int64_t startAcceleration, uint64_t time) {
 
 		if (InterpolatedComponent::setPrediction(value, time)) {
 			approach = ApproachType::BALLISTIC;
@@ -242,7 +248,7 @@ struct TimedMovementComponent: InterpolatedComponent<MovementValues> {
 			auto startPosition = previous.value.position;
 			auto angle = vectorsAngle(startPosition, aimTarget);
 			
-			interpolated.value.acceleration = vectorRotate({averageAcceleration, 0}, angle);
+			interpolated.value.acceleration = vectorRotate(Vector2l{averageAcceleration, 0}, angle);
 			
 			return true;
 		}
@@ -290,7 +296,7 @@ struct TimedMovementComponent: InterpolatedComponent<MovementValues> {
 				
 				double angle = vectorsAngle(startPosition, aimTarget);
 
-				velocity = vectorRotate({averageAcceleration * traveledTime, 0}, angle);
+				velocity = vectorRotate(Vector2l{averageAcceleration * traveledTime, 0}, angle);
 				velocity += startVelocity;
 				
 //				acceleration.set(lerp(startAcceleration, finalAcceleration, distanceTraveled, totalDistance.toLong()), 0).rotateRad(angle);

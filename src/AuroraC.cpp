@@ -21,15 +21,16 @@ int main(int argc, char **argv) {
 	log = Logger::getLogger("aurora");
 	LOG4CXX_FATAL(log, "### Starting ###");
 
-	cout <<  "starting" << flush;
+	cout <<  "starting" << endl << flush;
 
-	vector<StarSystem*> starSystems { new StarSystem("a"), new StarSystem("b"), new StarSystem("c"), new StarSystem("d"), new StarSystem("e") };
-	vector<Empire> empires { Empire() };
+	vector<StarSystem*> starSystems { new StarSystem("test")};
+//	vector<StarSystem*> starSystems { new StarSystem("a"), new StarSystem("b"), new StarSystem("c"), new StarSystem("d"), new StarSystem("e") };
+	vector<Empire> empires { Empire("player1") };
 	Galaxy galaxy(empires, starSystems);
 
 	galaxy.init();
 	
-	cout <<  "running" << flush;
+	cout <<  "running" << endl;
 
 	while(true){
 		std::this_thread::sleep_for(50s);

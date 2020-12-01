@@ -3131,3 +3131,513 @@
 [ INFO] [2020-11-30] [00:17:05,314] [x8000b00f0] StarSystem.update - starsystem c update
 [ INFO] [2020-11-30] [00:17:05,314] [x8000b0260] StarSystem.update - starsystem d update
 [ INFO] [2020-11-30] [00:17:05,314] [x8000b00f0] StarSystem.update - starsystem e update
+[FATAL] [2020-12-01] [03:50:10,460] [x800018040] .main - ### Starting ###
+[ INFO] [2020-12-01] [03:50:10,462] [x8000b1a10] StarSystem.update - starsystem a update
+[ INFO] [2020-12-01] [03:50:10,462] [x8000b1a10] StarSystem.update - starsystem b update
+[ INFO] [2020-12-01] [03:50:10,462] [x8000b1a10] StarSystem.update - starsystem c update
+[ INFO] [2020-12-01] [03:50:10,462] [x8000b1a10] StarSystem.update - starsystem d update
+[ INFO] [2020-12-01] [03:50:10,462] [x8000b1a10] StarSystem.update - starsystem e update
+[ INFO] [2020-12-01] [03:50:10,462] [x8000b4ac0] Galaxy.galaxyWorker - tick 1
+[ INFO] [2020-12-01] [03:50:10,462] [x8000b1a10] StarSystem.update - starsystem a update
+[ INFO] [2020-12-01] [03:50:10,462] [x8000b1b60] StarSystem.update - starsystem b update
+[ INFO] [2020-12-01] [03:50:10,463] [x8000b1a10] StarSystem.update - starsystem c update
+[ INFO] [2020-12-01] [03:50:10,463] [x8000b1b60] StarSystem.update - starsystem d update
+[ INFO] [2020-12-01] [03:50:10,463] [x8000b1a10] StarSystem.update - starsystem e update
+[ INFO] [2020-12-01] [03:50:11,462] [x8000b4ac0] Galaxy.galaxyWorker - tick 2
+[ INFO] [2020-12-01] [03:50:11,463] [x8000b1a10] StarSystem.update - starsystem a update
+[ INFO] [2020-12-01] [03:50:11,463] [x8000b1b60] StarSystem.update - starsystem b update
+[ INFO] [2020-12-01] [03:50:11,463] [x8000b1a10] StarSystem.update - starsystem c update
+[ INFO] [2020-12-01] [03:50:11,463] [x8000b1b60] StarSystem.update - starsystem d update
+[ INFO] [2020-12-01] [03:50:11,463] [x8000b1a10] StarSystem.update - starsystem e update
+[ INFO] [2020-12-01] [03:50:12,462] [x8000b4ac0] Galaxy.galaxyWorker - tick 3
+[ INFO] [2020-12-01] [03:50:12,462] [x8000b1b60] StarSystem.update - starsystem b update
+[ INFO] [2020-12-01] [03:50:12,462] [x8000b1a10] StarSystem.update - starsystem a update
+[ INFO] [2020-12-01] [03:50:12,462] [x8000b1b60] StarSystem.update - starsystem c update
+[ INFO] [2020-12-01] [03:50:12,462] [x8000b1a10] StarSystem.update - starsystem d update
+[ INFO] [2020-12-01] [03:50:12,462] [x8000b1b60] StarSystem.update - starsystem e update
+[ INFO] [2020-12-01] [03:50:13,462] [x8000b4ac0] Galaxy.galaxyWorker - tick 4
+[ INFO] [2020-12-01] [03:50:13,462] [x8000b1a10] StarSystem.update - starsystem a update
+[ INFO] [2020-12-01] [03:50:13,462] [x8000b1b60] StarSystem.update - starsystem b update
+[ INFO] [2020-12-01] [03:50:13,462] [x8000b1a10] StarSystem.update - starsystem c update
+[ INFO] [2020-12-01] [03:50:13,462] [x8000b1b60] StarSystem.update - starsystem d update
+[ INFO] [2020-12-01] [03:50:13,462] [x8000b1a10] StarSystem.update - starsystem e update
+[ INFO] [2020-12-01] [03:50:14,463] [x8000b4ac0] Galaxy.galaxyWorker - tick 5
+[ INFO] [2020-12-01] [03:50:14,463] [x8000b1a10] StarSystem.update - starsystem a update
+[ INFO] [2020-12-01] [03:50:14,463] [x8000b1b60] StarSystem.update - starsystem b update
+[ INFO] [2020-12-01] [03:50:14,464] [x8000b1a10] StarSystem.update - starsystem c update
+[ INFO] [2020-12-01] [03:50:14,464] [x8000b1b60] StarSystem.update - starsystem d update
+[ INFO] [2020-12-01] [03:50:14,464] [x8000b1a10] StarSystem.update - starsystem e update
+[ INFO] [2020-12-01] [03:50:15,463] [x8000b4ac0] Galaxy.galaxyWorker - tick 6
+[ INFO] [2020-12-01] [03:50:15,463] [x8000b1a10] StarSystem.update - starsystem a update
+[ INFO] [2020-12-01] [03:50:15,463] [x8000b1b60] StarSystem.update - starsystem b update
+[ INFO] [2020-12-01] [03:50:15,463] [x8000b1a10] StarSystem.update - starsystem c update
+[ INFO] [2020-12-01] [03:50:15,464] [x8000b1b60] StarSystem.update - starsystem d update
+[ INFO] [2020-12-01] [03:50:15,464] [x8000b1a10] StarSystem.update - starsystem e update
+[ INFO] [2020-12-01] [03:50:16,463] [x8000b4ac0] Galaxy.galaxyWorker - tick 7
+[ INFO] [2020-12-01] [03:50:16,463] [x8000b1b60] StarSystem.update - starsystem a update
+[ INFO] [2020-12-01] [03:50:16,463] [x8000b1a10] StarSystem.update - starsystem b update
+[ INFO] [2020-12-01] [03:50:16,463] [x8000b1b60] StarSystem.update - starsystem c update
+[ INFO] [2020-12-01] [03:50:16,463] [x8000b1a10] StarSystem.update - starsystem d update
+[ INFO] [2020-12-01] [03:50:16,463] [x8000b1b60] StarSystem.update - starsystem e update
+[ INFO] [2020-12-01] [03:50:17,463] [x8000b4ac0] Galaxy.galaxyWorker - tick 8
+[ INFO] [2020-12-01] [03:50:17,463] [x8000b1b60] StarSystem.update - starsystem a update
+[ INFO] [2020-12-01] [03:50:17,463] [x8000b1a10] StarSystem.update - starsystem b update
+[ INFO] [2020-12-01] [03:50:17,463] [x8000b1b60] StarSystem.update - starsystem c update
+[ INFO] [2020-12-01] [03:50:17,463] [x8000b1a10] StarSystem.update - starsystem d update
+[ INFO] [2020-12-01] [03:50:17,463] [x8000b1b60] StarSystem.update - starsystem e update
+[ INFO] [2020-12-01] [03:50:18,463] [x8000b4ac0] Galaxy.galaxyWorker - tick 9
+[ INFO] [2020-12-01] [03:50:18,463] [x8000b1b60] StarSystem.update - starsystem a update
+[ INFO] [2020-12-01] [03:50:18,463] [x8000b1a10] StarSystem.update - starsystem b update
+[ INFO] [2020-12-01] [03:50:18,463] [x8000b1b60] StarSystem.update - starsystem c update
+[ INFO] [2020-12-01] [03:50:18,463] [x8000b1a10] StarSystem.update - starsystem d update
+[ INFO] [2020-12-01] [03:50:18,463] [x8000b1b60] StarSystem.update - starsystem e update
+[ INFO] [2020-12-01] [03:50:19,463] [x8000b4ac0] Galaxy.galaxyWorker - tick 10
+[ INFO] [2020-12-01] [03:50:19,463] [x8000b1b60] StarSystem.update - starsystem a update
+[ INFO] [2020-12-01] [03:50:19,463] [x8000b1a10] StarSystem.update - starsystem b update
+[ INFO] [2020-12-01] [03:50:19,463] [x8000b1b60] StarSystem.update - starsystem c update
+[ INFO] [2020-12-01] [03:50:19,463] [x8000b1a10] StarSystem.update - starsystem d update
+[ INFO] [2020-12-01] [03:50:19,463] [x8000b1b60] StarSystem.update - starsystem e update
+[ INFO] [2020-12-01] [03:50:20,463] [x8000b4ac0] Galaxy.galaxyWorker - tick 11
+[ INFO] [2020-12-01] [03:50:20,463] [x8000b1a10] StarSystem.update - starsystem a update
+[ INFO] [2020-12-01] [03:50:20,463] [x8000b1b60] StarSystem.update - starsystem b update
+[ INFO] [2020-12-01] [03:50:20,463] [x8000b1a10] StarSystem.update - starsystem c update
+[ INFO] [2020-12-01] [03:50:20,463] [x8000b1b60] StarSystem.update - starsystem d update
+[ INFO] [2020-12-01] [03:50:20,463] [x8000b1a10] StarSystem.update - starsystem e update
+[ INFO] [2020-12-01] [03:50:21,463] [x8000b4ac0] Galaxy.galaxyWorker - tick 12
+[ INFO] [2020-12-01] [03:50:21,463] [x8000b1b60] StarSystem.update - starsystem a update
+[ INFO] [2020-12-01] [03:50:21,463] [x8000b1a10] StarSystem.update - starsystem b update
+[ INFO] [2020-12-01] [03:50:21,463] [x8000b1b60] StarSystem.update - starsystem c update
+[ INFO] [2020-12-01] [03:50:21,463] [x8000b1a10] StarSystem.update - starsystem d update
+[ INFO] [2020-12-01] [03:50:21,463] [x8000b1b60] StarSystem.update - starsystem e update
+[ INFO] [2020-12-01] [03:50:22,463] [x8000b4ac0] Galaxy.galaxyWorker - tick 13
+[ INFO] [2020-12-01] [03:50:22,463] [x8000b1b60] StarSystem.update - starsystem a update
+[ INFO] [2020-12-01] [03:50:22,463] [x8000b1a10] StarSystem.update - starsystem b update
+[ INFO] [2020-12-01] [03:50:22,463] [x8000b1b60] StarSystem.update - starsystem c update
+[ INFO] [2020-12-01] [03:50:22,463] [x8000b1a10] StarSystem.update - starsystem d update
+[ INFO] [2020-12-01] [03:50:22,463] [x8000b1b60] StarSystem.update - starsystem e update
+[ INFO] [2020-12-01] [03:50:23,463] [x8000b4ac0] Galaxy.galaxyWorker - tick 14
+[ INFO] [2020-12-01] [03:50:23,463] [x8000b1b60] StarSystem.update - starsystem a update
+[ INFO] [2020-12-01] [03:50:23,463] [x8000b1a10] StarSystem.update - starsystem b update
+[ INFO] [2020-12-01] [03:50:23,463] [x8000b1b60] StarSystem.update - starsystem c update
+[ INFO] [2020-12-01] [03:50:23,463] [x8000b1a10] StarSystem.update - starsystem d update
+[ INFO] [2020-12-01] [03:50:23,463] [x8000b1b60] StarSystem.update - starsystem e update
+[ INFO] [2020-12-01] [03:50:24,463] [x8000b4ac0] Galaxy.galaxyWorker - tick 15
+[ INFO] [2020-12-01] [03:50:24,463] [x8000b1a10] StarSystem.update - starsystem a update
+[ INFO] [2020-12-01] [03:50:24,463] [x8000b1b60] StarSystem.update - starsystem b update
+[ INFO] [2020-12-01] [03:50:24,463] [x8000b1a10] StarSystem.update - starsystem c update
+[ INFO] [2020-12-01] [03:50:24,463] [x8000b1b60] StarSystem.update - starsystem d update
+[ INFO] [2020-12-01] [03:50:24,463] [x8000b1a10] StarSystem.update - starsystem e update
+[ INFO] [2020-12-01] [03:50:25,463] [x8000b4ac0] Galaxy.galaxyWorker - tick 16
+[ INFO] [2020-12-01] [03:50:25,463] [x8000b1a10] StarSystem.update - starsystem a update
+[ INFO] [2020-12-01] [03:50:25,463] [x8000b1b60] StarSystem.update - starsystem b update
+[ INFO] [2020-12-01] [03:50:25,463] [x8000b1a10] StarSystem.update - starsystem c update
+[ INFO] [2020-12-01] [03:50:25,463] [x8000b1b60] StarSystem.update - starsystem d update
+[ INFO] [2020-12-01] [03:50:25,463] [x8000b1a10] StarSystem.update - starsystem e update
+[ INFO] [2020-12-01] [03:50:26,463] [x8000b4ac0] Galaxy.galaxyWorker - tick 17
+[ INFO] [2020-12-01] [03:50:26,463] [x8000b1a10] StarSystem.update - starsystem a update
+[ INFO] [2020-12-01] [03:50:26,463] [x8000b1b60] StarSystem.update - starsystem b update
+[ INFO] [2020-12-01] [03:50:26,463] [x8000b1a10] StarSystem.update - starsystem c update
+[ INFO] [2020-12-01] [03:50:26,463] [x8000b1b60] StarSystem.update - starsystem d update
+[ INFO] [2020-12-01] [03:50:26,463] [x8000b1a10] StarSystem.update - starsystem e update
+[ INFO] [2020-12-01] [03:50:27,463] [x8000b4ac0] Galaxy.galaxyWorker - tick 18
+[ INFO] [2020-12-01] [03:50:27,463] [x8000b1a10] StarSystem.update - starsystem a update
+[ INFO] [2020-12-01] [03:50:27,463] [x8000b1b60] StarSystem.update - starsystem b update
+[ INFO] [2020-12-01] [03:50:27,463] [x8000b1a10] StarSystem.update - starsystem c update
+[ INFO] [2020-12-01] [03:50:27,463] [x8000b1b60] StarSystem.update - starsystem d update
+[ INFO] [2020-12-01] [03:50:27,463] [x8000b1a10] StarSystem.update - starsystem e update
+[ INFO] [2020-12-01] [03:50:28,463] [x8000b4ac0] Galaxy.galaxyWorker - tick 19
+[ INFO] [2020-12-01] [03:50:28,463] [x8000b1a10] StarSystem.update - starsystem a update
+[ INFO] [2020-12-01] [03:50:28,463] [x8000b1b60] StarSystem.update - starsystem b update
+[ INFO] [2020-12-01] [03:50:28,463] [x8000b1a10] StarSystem.update - starsystem c update
+[ INFO] [2020-12-01] [03:50:28,463] [x8000b1b60] StarSystem.update - starsystem d update
+[ INFO] [2020-12-01] [03:50:28,463] [x8000b1a10] StarSystem.update - starsystem e update
+[ INFO] [2020-12-01] [03:50:29,462] [x8000b4ac0] Galaxy.galaxyWorker - tick 20
+[ INFO] [2020-12-01] [03:50:29,463] [x8000b1a10] StarSystem.update - starsystem a update
+[ INFO] [2020-12-01] [03:50:29,463] [x8000b1b60] StarSystem.update - starsystem b update
+[ INFO] [2020-12-01] [03:50:29,463] [x8000b1a10] StarSystem.update - starsystem c update
+[ INFO] [2020-12-01] [03:50:29,463] [x8000b1b60] StarSystem.update - starsystem d update
+[ INFO] [2020-12-01] [03:50:29,463] [x8000b1a10] StarSystem.update - starsystem e update
+[ INFO] [2020-12-01] [03:50:30,462] [x8000b4ac0] Galaxy.galaxyWorker - tick 21
+[ INFO] [2020-12-01] [03:50:30,463] [x8000b1b60] StarSystem.update - starsystem a update
+[ INFO] [2020-12-01] [03:50:30,463] [x8000b1a10] StarSystem.update - starsystem b update
+[ INFO] [2020-12-01] [03:50:30,463] [x8000b1b60] StarSystem.update - starsystem c update
+[ INFO] [2020-12-01] [03:50:30,463] [x8000b1a10] StarSystem.update - starsystem d update
+[ INFO] [2020-12-01] [03:50:30,463] [x8000b1b60] StarSystem.update - starsystem e update
+[ INFO] [2020-12-01] [03:50:31,462] [x8000b4ac0] Galaxy.galaxyWorker - tick 22
+[ INFO] [2020-12-01] [03:50:31,462] [x8000b1a10] StarSystem.update - starsystem a update
+[ INFO] [2020-12-01] [03:50:31,462] [x8000b1b60] StarSystem.update - starsystem b update
+[ INFO] [2020-12-01] [03:50:31,463] [x8000b1a10] StarSystem.update - starsystem c update
+[ INFO] [2020-12-01] [03:50:31,463] [x8000b1b60] StarSystem.update - starsystem d update
+[ INFO] [2020-12-01] [03:50:31,463] [x8000b1a10] StarSystem.update - starsystem e update
+[FATAL] [2020-12-01] [04:33:20,628] [x800018040] .main - ### Starting ###
+[ INFO] [2020-12-01] [04:33:20,629] [x8000b1a40] StarSystem.update - starsystem a update
+[ INFO] [2020-12-01] [04:33:20,629] [x8000b1a40] StarSystem.update - starsystem b update
+[ INFO] [2020-12-01] [04:33:20,629] [x8000b1a40] StarSystem.update - starsystem c update
+[ INFO] [2020-12-01] [04:33:20,629] [x8000b1a40] StarSystem.update - starsystem d update
+[ INFO] [2020-12-01] [04:33:20,629] [x8000b1a40] StarSystem.update - starsystem e update
+[ INFO] [2020-12-01] [04:33:20,629] [x8000b54b0] Galaxy.galaxyWorker - tick 1
+[ INFO] [2020-12-01] [04:33:20,629] [x8000b1a40] StarSystem.update - starsystem a update
+[ INFO] [2020-12-01] [04:33:20,629] [x8000b1bb0] StarSystem.update - starsystem b update
+[ INFO] [2020-12-01] [04:33:20,629] [x8000b1a40] StarSystem.update - starsystem c update
+[ INFO] [2020-12-01] [04:33:20,629] [x8000b1bb0] StarSystem.update - starsystem d update
+[ INFO] [2020-12-01] [04:33:20,629] [x8000b1a40] StarSystem.update - starsystem e update
+[ INFO] [2020-12-01] [04:33:21,629] [x8000b54b0] Galaxy.galaxyWorker - tick 2
+[ INFO] [2020-12-01] [04:33:21,629] [x8000b1bb0] StarSystem.update - starsystem a update
+[ INFO] [2020-12-01] [04:33:21,629] [x8000b1a40] StarSystem.update - starsystem b update
+[ INFO] [2020-12-01] [04:33:21,629] [x8000b1bb0] StarSystem.update - starsystem c update
+[ INFO] [2020-12-01] [04:33:21,629] [x8000b1a40] StarSystem.update - starsystem d update
+[ INFO] [2020-12-01] [04:33:21,630] [x8000b1bb0] StarSystem.update - starsystem e update
+[ INFO] [2020-12-01] [04:33:22,630] [x8000b54b0] Galaxy.galaxyWorker - tick 3
+[ INFO] [2020-12-01] [04:33:22,630] [x8000b1a40] StarSystem.update - starsystem a update
+[ INFO] [2020-12-01] [04:33:22,630] [x8000b1bb0] StarSystem.update - starsystem b update
+[ INFO] [2020-12-01] [04:33:22,630] [x8000b1a40] StarSystem.update - starsystem c update
+[ INFO] [2020-12-01] [04:33:22,630] [x8000b1bb0] StarSystem.update - starsystem d update
+[ INFO] [2020-12-01] [04:33:22,630] [x8000b1a40] StarSystem.update - starsystem e update
+[ INFO] [2020-12-01] [04:33:23,630] [x8000b54b0] Galaxy.galaxyWorker - tick 4
+[ INFO] [2020-12-01] [04:33:23,630] [x8000b1bb0] StarSystem.update - starsystem a update
+[ INFO] [2020-12-01] [04:33:23,630] [x8000b1a40] StarSystem.update - starsystem b update
+[ INFO] [2020-12-01] [04:33:23,630] [x8000b1bb0] StarSystem.update - starsystem c update
+[ INFO] [2020-12-01] [04:33:23,630] [x8000b1a40] StarSystem.update - starsystem d update
+[ INFO] [2020-12-01] [04:33:23,630] [x8000b1bb0] StarSystem.update - starsystem e update
+[ INFO] [2020-12-01] [04:33:24,630] [x8000b54b0] Galaxy.galaxyWorker - tick 5
+[ INFO] [2020-12-01] [04:33:24,630] [x8000b1bb0] StarSystem.update - starsystem a update
+[ INFO] [2020-12-01] [04:33:24,630] [x8000b1a40] StarSystem.update - starsystem b update
+[ INFO] [2020-12-01] [04:33:24,630] [x8000b1bb0] StarSystem.update - starsystem c update
+[ INFO] [2020-12-01] [04:33:24,630] [x8000b1a40] StarSystem.update - starsystem d update
+[ INFO] [2020-12-01] [04:33:24,630] [x8000b1bb0] StarSystem.update - starsystem e update
+[ INFO] [2020-12-01] [04:33:25,630] [x8000b54b0] Galaxy.galaxyWorker - tick 6
+[ INFO] [2020-12-01] [04:33:25,630] [x8000b1bb0] StarSystem.update - starsystem a update
+[ INFO] [2020-12-01] [04:33:25,630] [x8000b1a40] StarSystem.update - starsystem b update
+[ INFO] [2020-12-01] [04:33:25,630] [x8000b1bb0] StarSystem.update - starsystem c update
+[ INFO] [2020-12-01] [04:33:25,630] [x8000b1a40] StarSystem.update - starsystem d update
+[ INFO] [2020-12-01] [04:33:25,630] [x8000b1bb0] StarSystem.update - starsystem e update
+[ INFO] [2020-12-01] [04:33:26,630] [x8000b54b0] Galaxy.galaxyWorker - tick 7
+[ INFO] [2020-12-01] [04:33:26,630] [x8000b1bb0] StarSystem.update - starsystem a update
+[ INFO] [2020-12-01] [04:33:26,630] [x8000b1a40] StarSystem.update - starsystem b update
+[ INFO] [2020-12-01] [04:33:26,630] [x8000b1bb0] StarSystem.update - starsystem c update
+[ INFO] [2020-12-01] [04:33:26,630] [x8000b1a40] StarSystem.update - starsystem d update
+[ INFO] [2020-12-01] [04:33:26,630] [x8000b1bb0] StarSystem.update - starsystem e update
+[ INFO] [2020-12-01] [04:33:27,630] [x8000b54b0] Galaxy.galaxyWorker - tick 8
+[ INFO] [2020-12-01] [04:33:27,630] [x8000b1a40] StarSystem.update - starsystem a update
+[ INFO] [2020-12-01] [04:33:27,630] [x8000b1bb0] StarSystem.update - starsystem b update
+[ INFO] [2020-12-01] [04:33:27,630] [x8000b1a40] StarSystem.update - starsystem c update
+[ INFO] [2020-12-01] [04:33:27,630] [x8000b1bb0] StarSystem.update - starsystem d update
+[ INFO] [2020-12-01] [04:33:27,630] [x8000b1a40] StarSystem.update - starsystem e update
+[ INFO] [2020-12-01] [04:33:28,630] [x8000b54b0] Galaxy.galaxyWorker - tick 9
+[ INFO] [2020-12-01] [04:33:28,630] [x8000b1a40] StarSystem.update - starsystem a update
+[ INFO] [2020-12-01] [04:33:28,630] [x8000b1bb0] StarSystem.update - starsystem b update
+[ INFO] [2020-12-01] [04:33:28,630] [x8000b1a40] StarSystem.update - starsystem c update
+[ INFO] [2020-12-01] [04:33:28,630] [x8000b1bb0] StarSystem.update - starsystem d update
+[ INFO] [2020-12-01] [04:33:28,630] [x8000b1a40] StarSystem.update - starsystem e update
+[ INFO] [2020-12-01] [04:33:29,630] [x8000b54b0] Galaxy.galaxyWorker - tick 10
+[ INFO] [2020-12-01] [04:33:29,630] [x8000b1bb0] StarSystem.update - starsystem a update
+[ INFO] [2020-12-01] [04:33:29,630] [x8000b1a40] StarSystem.update - starsystem b update
+[ INFO] [2020-12-01] [04:33:29,630] [x8000b1bb0] StarSystem.update - starsystem c update
+[ INFO] [2020-12-01] [04:33:29,630] [x8000b1a40] StarSystem.update - starsystem d update
+[ INFO] [2020-12-01] [04:33:29,630] [x8000b1bb0] StarSystem.update - starsystem e update
+[ INFO] [2020-12-01] [04:33:30,630] [x8000b54b0] Galaxy.galaxyWorker - tick 11
+[ INFO] [2020-12-01] [04:33:30,630] [x8000b1bb0] StarSystem.update - starsystem a update
+[ INFO] [2020-12-01] [04:33:30,630] [x8000b1a40] StarSystem.update - starsystem b update
+[ INFO] [2020-12-01] [04:33:30,630] [x8000b1bb0] StarSystem.update - starsystem c update
+[ INFO] [2020-12-01] [04:33:30,630] [x8000b1a40] StarSystem.update - starsystem d update
+[ INFO] [2020-12-01] [04:33:30,630] [x8000b1bb0] StarSystem.update - starsystem e update
+[ INFO] [2020-12-01] [04:33:31,630] [x8000b54b0] Galaxy.galaxyWorker - tick 12
+[ INFO] [2020-12-01] [04:33:31,630] [x8000b1bb0] StarSystem.update - starsystem a update
+[ INFO] [2020-12-01] [04:33:31,630] [x8000b1a40] StarSystem.update - starsystem b update
+[ INFO] [2020-12-01] [04:33:31,630] [x8000b1bb0] StarSystem.update - starsystem c update
+[ INFO] [2020-12-01] [04:33:31,630] [x8000b1a40] StarSystem.update - starsystem d update
+[ INFO] [2020-12-01] [04:33:31,630] [x8000b1bb0] StarSystem.update - starsystem e update
+[ INFO] [2020-12-01] [04:33:32,630] [x8000b54b0] Galaxy.galaxyWorker - tick 13
+[ INFO] [2020-12-01] [04:33:32,630] [x8000b1bb0] StarSystem.update - starsystem a update
+[ INFO] [2020-12-01] [04:33:32,630] [x8000b1a40] StarSystem.update - starsystem b update
+[ INFO] [2020-12-01] [04:33:32,630] [x8000b1bb0] StarSystem.update - starsystem c update
+[ INFO] [2020-12-01] [04:33:32,630] [x8000b1a40] StarSystem.update - starsystem d update
+[ INFO] [2020-12-01] [04:33:32,630] [x8000b1bb0] StarSystem.update - starsystem e update
+[ INFO] [2020-12-01] [04:33:33,629] [x8000b54b0] Galaxy.galaxyWorker - tick 14
+[ INFO] [2020-12-01] [04:33:33,630] [x8000b1bb0] StarSystem.update - starsystem a update
+[ INFO] [2020-12-01] [04:33:33,630] [x8000b1a40] StarSystem.update - starsystem b update
+[ INFO] [2020-12-01] [04:33:33,630] [x8000b1bb0] StarSystem.update - starsystem c update
+[ INFO] [2020-12-01] [04:33:33,630] [x8000b1a40] StarSystem.update - starsystem d update
+[ INFO] [2020-12-01] [04:33:33,630] [x8000b1bb0] StarSystem.update - starsystem e update
+[ INFO] [2020-12-01] [04:33:34,629] [x8000b54b0] Galaxy.galaxyWorker - tick 15
+[ INFO] [2020-12-01] [04:33:34,630] [x8000b1a40] StarSystem.update - starsystem a update
+[ INFO] [2020-12-01] [04:33:34,630] [x8000b1bb0] StarSystem.update - starsystem b update
+[ INFO] [2020-12-01] [04:33:34,630] [x8000b1a40] StarSystem.update - starsystem c update
+[ INFO] [2020-12-01] [04:33:34,630] [x8000b1bb0] StarSystem.update - starsystem d update
+[ INFO] [2020-12-01] [04:33:34,630] [x8000b1a40] StarSystem.update - starsystem e update
+[ INFO] [2020-12-01] [04:33:35,629] [x8000b54b0] Galaxy.galaxyWorker - tick 16
+[ INFO] [2020-12-01] [04:33:35,629] [x8000b1a40] StarSystem.update - starsystem a update
+[ INFO] [2020-12-01] [04:33:35,629] [x8000b1bb0] StarSystem.update - starsystem b update
+[ INFO] [2020-12-01] [04:33:35,630] [x8000b1a40] StarSystem.update - starsystem c update
+[ INFO] [2020-12-01] [04:33:35,630] [x8000b1bb0] StarSystem.update - starsystem d update
+[ INFO] [2020-12-01] [04:33:35,630] [x8000b1a40] StarSystem.update - starsystem e update
+[ INFO] [2020-12-01] [04:33:36,629] [x8000b54b0] Galaxy.galaxyWorker - tick 17
+[ INFO] [2020-12-01] [04:33:36,629] [x8000b1bb0] StarSystem.update - starsystem a update
+[ INFO] [2020-12-01] [04:33:36,629] [x8000b1a40] StarSystem.update - starsystem b update
+[ INFO] [2020-12-01] [04:33:36,629] [x8000b1bb0] StarSystem.update - starsystem c update
+[ INFO] [2020-12-01] [04:33:36,630] [x8000b1a40] StarSystem.update - starsystem d update
+[ INFO] [2020-12-01] [04:33:36,630] [x8000b1bb0] StarSystem.update - starsystem e update
+[ INFO] [2020-12-01] [04:33:37,629] [x8000b54b0] Galaxy.galaxyWorker - tick 18
+[ INFO] [2020-12-01] [04:33:37,629] [x8000b1a40] StarSystem.update - starsystem a update
+[ INFO] [2020-12-01] [04:33:37,629] [x8000b1bb0] StarSystem.update - starsystem b update
+[ INFO] [2020-12-01] [04:33:37,630] [x8000b1a40] StarSystem.update - starsystem c update
+[ INFO] [2020-12-01] [04:33:37,630] [x8000b1bb0] StarSystem.update - starsystem d update
+[ INFO] [2020-12-01] [04:33:37,630] [x8000b1a40] StarSystem.update - starsystem e update
+[ INFO] [2020-12-01] [04:33:38,629] [x8000b54b0] Galaxy.galaxyWorker - tick 19
+[ INFO] [2020-12-01] [04:33:38,629] [x8000b1a40] StarSystem.update - starsystem a update
+[ INFO] [2020-12-01] [04:33:38,629] [x8000b1bb0] StarSystem.update - starsystem b update
+[ INFO] [2020-12-01] [04:33:38,630] [x8000b1a40] StarSystem.update - starsystem c update
+[ INFO] [2020-12-01] [04:33:38,630] [x8000b1bb0] StarSystem.update - starsystem d update
+[ INFO] [2020-12-01] [04:33:38,630] [x8000b1a40] StarSystem.update - starsystem e update
+[ INFO] [2020-12-01] [04:33:39,630] [x8000b54b0] Galaxy.galaxyWorker - tick 20
+[ INFO] [2020-12-01] [04:33:39,630] [x8000b1bb0] StarSystem.update - starsystem a update
+[ INFO] [2020-12-01] [04:33:39,630] [x8000b1a40] StarSystem.update - starsystem b update
+[ INFO] [2020-12-01] [04:33:39,630] [x8000b1bb0] StarSystem.update - starsystem c update
+[ INFO] [2020-12-01] [04:33:39,630] [x8000b1a40] StarSystem.update - starsystem d update
+[ INFO] [2020-12-01] [04:33:39,630] [x8000b1bb0] StarSystem.update - starsystem e update
+[ INFO] [2020-12-01] [04:33:40,630] [x8000b54b0] Galaxy.galaxyWorker - tick 21
+[ INFO] [2020-12-01] [04:33:40,630] [x8000b1a40] StarSystem.update - starsystem a update
+[ INFO] [2020-12-01] [04:33:40,630] [x8000b1bb0] StarSystem.update - starsystem b update
+[ INFO] [2020-12-01] [04:33:40,630] [x8000b1a40] StarSystem.update - starsystem c update
+[ INFO] [2020-12-01] [04:33:40,630] [x8000b1bb0] StarSystem.update - starsystem d update
+[ INFO] [2020-12-01] [04:33:40,630] [x8000b1a40] StarSystem.update - starsystem e update
+[ INFO] [2020-12-01] [04:33:41,630] [x8000b54b0] Galaxy.galaxyWorker - tick 22
+[ INFO] [2020-12-01] [04:33:41,630] [x8000b1bb0] StarSystem.update - starsystem a update
+[ INFO] [2020-12-01] [04:33:41,630] [x8000b1a40] StarSystem.update - starsystem b update
+[ INFO] [2020-12-01] [04:33:41,630] [x8000b1bb0] StarSystem.update - starsystem c update
+[ INFO] [2020-12-01] [04:33:41,630] [x8000b1a40] StarSystem.update - starsystem d update
+[ INFO] [2020-12-01] [04:33:41,630] [x8000b1bb0] StarSystem.update - starsystem e update
+[ INFO] [2020-12-01] [04:33:42,630] [x8000b54b0] Galaxy.galaxyWorker - tick 23
+[ INFO] [2020-12-01] [04:33:42,630] [x8000b1bb0] StarSystem.update - starsystem a update
+[ INFO] [2020-12-01] [04:33:42,630] [x8000b1a40] StarSystem.update - starsystem b update
+[ INFO] [2020-12-01] [04:33:42,630] [x8000b1bb0] StarSystem.update - starsystem c update
+[ INFO] [2020-12-01] [04:33:42,630] [x8000b1a40] StarSystem.update - starsystem d update
+[ INFO] [2020-12-01] [04:33:42,630] [x8000b1bb0] StarSystem.update - starsystem e update
+[ INFO] [2020-12-01] [04:33:43,630] [x8000b54b0] Galaxy.galaxyWorker - tick 24
+[ INFO] [2020-12-01] [04:33:43,630] [x8000b1bb0] StarSystem.update - starsystem a update
+[ INFO] [2020-12-01] [04:33:43,630] [x8000b1a40] StarSystem.update - starsystem b update
+[ INFO] [2020-12-01] [04:33:43,630] [x8000b1bb0] StarSystem.update - starsystem c update
+[ INFO] [2020-12-01] [04:33:43,630] [x8000b1a40] StarSystem.update - starsystem d update
+[ INFO] [2020-12-01] [04:33:43,630] [x8000b1bb0] StarSystem.update - starsystem e update
+[ INFO] [2020-12-01] [04:33:44,630] [x8000b54b0] Galaxy.galaxyWorker - tick 25
+[ INFO] [2020-12-01] [04:33:44,630] [x8000b1a40] StarSystem.update - starsystem a update
+[ INFO] [2020-12-01] [04:33:44,630] [x8000b1bb0] StarSystem.update - starsystem b update
+[ INFO] [2020-12-01] [04:33:44,630] [x8000b1a40] StarSystem.update - starsystem c update
+[ INFO] [2020-12-01] [04:33:44,630] [x8000b1bb0] StarSystem.update - starsystem d update
+[ INFO] [2020-12-01] [04:33:44,630] [x8000b1a40] StarSystem.update - starsystem e update
+[ INFO] [2020-12-01] [04:33:45,630] [x8000b54b0] Galaxy.galaxyWorker - tick 26
+[ INFO] [2020-12-01] [04:33:45,630] [x8000b1a40] StarSystem.update - starsystem a update
+[ INFO] [2020-12-01] [04:33:45,630] [x8000b1bb0] StarSystem.update - starsystem b update
+[ INFO] [2020-12-01] [04:33:45,630] [x8000b1a40] StarSystem.update - starsystem c update
+[ INFO] [2020-12-01] [04:33:45,630] [x8000b1bb0] StarSystem.update - starsystem d update
+[ INFO] [2020-12-01] [04:33:45,630] [x8000b1a40] StarSystem.update - starsystem e update
+[ INFO] [2020-12-01] [04:33:46,630] [x8000b54b0] Galaxy.galaxyWorker - tick 27
+[ INFO] [2020-12-01] [04:33:46,630] [x8000b1a40] StarSystem.update - starsystem a update
+[ INFO] [2020-12-01] [04:33:46,630] [x8000b1bb0] StarSystem.update - starsystem b update
+[ INFO] [2020-12-01] [04:33:46,630] [x8000b1a40] StarSystem.update - starsystem c update
+[ INFO] [2020-12-01] [04:33:46,630] [x8000b1bb0] StarSystem.update - starsystem d update
+[ INFO] [2020-12-01] [04:33:46,630] [x8000b1a40] StarSystem.update - starsystem e update
+[ INFO] [2020-12-01] [04:33:47,630] [x8000b54b0] Galaxy.galaxyWorker - tick 28
+[ INFO] [2020-12-01] [04:33:47,630] [x8000b1bb0] StarSystem.update - starsystem a update
+[ INFO] [2020-12-01] [04:33:47,630] [x8000b1a40] StarSystem.update - starsystem b update
+[ INFO] [2020-12-01] [04:33:47,630] [x8000b1bb0] StarSystem.update - starsystem c update
+[ INFO] [2020-12-01] [04:33:47,630] [x8000b1a40] StarSystem.update - starsystem d update
+[ INFO] [2020-12-01] [04:33:47,630] [x8000b1bb0] StarSystem.update - starsystem e update
+[ INFO] [2020-12-01] [04:33:48,630] [x8000b54b0] Galaxy.galaxyWorker - tick 29
+[ INFO] [2020-12-01] [04:33:48,630] [x8000b1a40] StarSystem.update - starsystem a update
+[ INFO] [2020-12-01] [04:33:48,630] [x8000b1bb0] StarSystem.update - starsystem b update
+[ INFO] [2020-12-01] [04:33:48,630] [x8000b1a40] StarSystem.update - starsystem c update
+[ INFO] [2020-12-01] [04:33:48,630] [x8000b1bb0] StarSystem.update - starsystem d update
+[ INFO] [2020-12-01] [04:33:48,630] [x8000b1a40] StarSystem.update - starsystem e update
+[ INFO] [2020-12-01] [04:33:49,630] [x8000b54b0] Galaxy.galaxyWorker - tick 30
+[ INFO] [2020-12-01] [04:33:49,630] [x8000b1a40] StarSystem.update - starsystem a update
+[ INFO] [2020-12-01] [04:33:49,630] [x8000b1bb0] StarSystem.update - starsystem b update
+[ INFO] [2020-12-01] [04:33:49,630] [x8000b1a40] StarSystem.update - starsystem c update
+[ INFO] [2020-12-01] [04:33:49,630] [x8000b1bb0] StarSystem.update - starsystem d update
+[ INFO] [2020-12-01] [04:33:49,630] [x8000b1a40] StarSystem.update - starsystem e update
+[ INFO] [2020-12-01] [04:33:50,630] [x8000b54b0] Galaxy.galaxyWorker - tick 31
+[ INFO] [2020-12-01] [04:33:50,630] [x8000b1a40] StarSystem.update - starsystem a update
+[ INFO] [2020-12-01] [04:33:50,630] [x8000b1bb0] StarSystem.update - starsystem b update
+[ INFO] [2020-12-01] [04:33:50,630] [x8000b1a40] StarSystem.update - starsystem c update
+[ INFO] [2020-12-01] [04:33:50,630] [x8000b1bb0] StarSystem.update - starsystem d update
+[ INFO] [2020-12-01] [04:33:50,630] [x8000b1a40] StarSystem.update - starsystem e update
+[ INFO] [2020-12-01] [04:33:51,630] [x8000b54b0] Galaxy.galaxyWorker - tick 32
+[ INFO] [2020-12-01] [04:33:51,630] [x8000b1a40] StarSystem.update - starsystem a update
+[ INFO] [2020-12-01] [04:33:51,630] [x8000b1bb0] StarSystem.update - starsystem b update
+[ INFO] [2020-12-01] [04:33:51,630] [x8000b1a40] StarSystem.update - starsystem c update
+[ INFO] [2020-12-01] [04:33:51,630] [x8000b1bb0] StarSystem.update - starsystem d update
+[ INFO] [2020-12-01] [04:33:51,630] [x8000b1a40] StarSystem.update - starsystem e update
+[ INFO] [2020-12-01] [04:33:52,630] [x8000b54b0] Galaxy.galaxyWorker - tick 33
+[ INFO] [2020-12-01] [04:33:52,630] [x8000b1a40] StarSystem.update - starsystem a update
+[ INFO] [2020-12-01] [04:33:52,630] [x8000b1bb0] StarSystem.update - starsystem b update
+[ INFO] [2020-12-01] [04:33:52,630] [x8000b1a40] StarSystem.update - starsystem c update
+[ INFO] [2020-12-01] [04:33:52,630] [x8000b1bb0] StarSystem.update - starsystem d update
+[ INFO] [2020-12-01] [04:33:52,630] [x8000b1a40] StarSystem.update - starsystem e update
+[ INFO] [2020-12-01] [04:33:53,630] [x8000b54b0] Galaxy.galaxyWorker - tick 34
+[ INFO] [2020-12-01] [04:33:53,630] [x8000b1a40] StarSystem.update - starsystem a update
+[ INFO] [2020-12-01] [04:33:53,630] [x8000b1bb0] StarSystem.update - starsystem b update
+[ INFO] [2020-12-01] [04:33:53,630] [x8000b1a40] StarSystem.update - starsystem c update
+[ INFO] [2020-12-01] [04:33:53,630] [x8000b1bb0] StarSystem.update - starsystem d update
+[ INFO] [2020-12-01] [04:33:53,630] [x8000b1a40] StarSystem.update - starsystem e update
+[ INFO] [2020-12-01] [04:33:54,629] [x8000b54b0] Galaxy.galaxyWorker - tick 35
+[ INFO] [2020-12-01] [04:33:54,630] [x8000b1a40] StarSystem.update - starsystem a update
+[ INFO] [2020-12-01] [04:33:54,630] [x8000b1bb0] StarSystem.update - starsystem b update
+[ INFO] [2020-12-01] [04:33:54,630] [x8000b1a40] StarSystem.update - starsystem c update
+[ INFO] [2020-12-01] [04:33:54,630] [x8000b1bb0] StarSystem.update - starsystem d update
+[ INFO] [2020-12-01] [04:33:54,630] [x8000b1a40] StarSystem.update - starsystem e update
+[ INFO] [2020-12-01] [04:33:55,629] [x8000b54b0] Galaxy.galaxyWorker - tick 36
+[ INFO] [2020-12-01] [04:33:55,630] [x8000b1a40] StarSystem.update - starsystem a update
+[ INFO] [2020-12-01] [04:33:55,630] [x8000b1bb0] StarSystem.update - starsystem b update
+[ INFO] [2020-12-01] [04:33:55,630] [x8000b1a40] StarSystem.update - starsystem c update
+[ INFO] [2020-12-01] [04:33:55,630] [x8000b1bb0] StarSystem.update - starsystem d update
+[ INFO] [2020-12-01] [04:33:55,630] [x8000b1a40] StarSystem.update - starsystem e update
+[ INFO] [2020-12-01] [04:33:56,629] [x8000b54b0] Galaxy.galaxyWorker - tick 37
+[ INFO] [2020-12-01] [04:33:56,629] [x8000b1bb0] StarSystem.update - starsystem a update
+[ INFO] [2020-12-01] [04:33:56,629] [x8000b1a40] StarSystem.update - starsystem b update
+[ INFO] [2020-12-01] [04:33:56,630] [x8000b1bb0] StarSystem.update - starsystem c update
+[ INFO] [2020-12-01] [04:33:56,630] [x8000b1a40] StarSystem.update - starsystem d update
+[ INFO] [2020-12-01] [04:33:56,630] [x8000b1bb0] StarSystem.update - starsystem e update
+[ INFO] [2020-12-01] [04:33:57,630] [x8000b54b0] Galaxy.galaxyWorker - tick 38
+[ INFO] [2020-12-01] [04:33:57,630] [x8000b1bb0] StarSystem.update - starsystem a update
+[ INFO] [2020-12-01] [04:33:57,630] [x8000b1a40] StarSystem.update - starsystem b update
+[ INFO] [2020-12-01] [04:33:57,630] [x8000b1bb0] StarSystem.update - starsystem c update
+[ INFO] [2020-12-01] [04:33:57,631] [x8000b1a40] StarSystem.update - starsystem d update
+[ INFO] [2020-12-01] [04:33:57,631] [x8000b1bb0] StarSystem.update - starsystem e update
+[ INFO] [2020-12-01] [04:33:58,630] [x8000b54b0] Galaxy.galaxyWorker - tick 39
+[ INFO] [2020-12-01] [04:33:58,630] [x8000b1bb0] StarSystem.update - starsystem a update
+[ INFO] [2020-12-01] [04:33:58,631] [x8000b1a40] StarSystem.update - starsystem b update
+[ INFO] [2020-12-01] [04:33:58,631] [x8000b1bb0] StarSystem.update - starsystem c update
+[ INFO] [2020-12-01] [04:33:58,631] [x8000b1a40] StarSystem.update - starsystem d update
+[ INFO] [2020-12-01] [04:33:58,631] [x8000b1bb0] StarSystem.update - starsystem e update
+[ INFO] [2020-12-01] [04:33:59,630] [x8000b54b0] Galaxy.galaxyWorker - tick 40
+[ INFO] [2020-12-01] [04:33:59,630] [x8000b1a40] StarSystem.update - starsystem a update
+[ INFO] [2020-12-01] [04:33:59,630] [x8000b1bb0] StarSystem.update - starsystem b update
+[ INFO] [2020-12-01] [04:33:59,630] [x8000b1a40] StarSystem.update - starsystem c update
+[ INFO] [2020-12-01] [04:33:59,630] [x8000b1bb0] StarSystem.update - starsystem d update
+[ INFO] [2020-12-01] [04:33:59,630] [x8000b1a40] StarSystem.update - starsystem e update
+[ INFO] [2020-12-01] [04:34:00,630] [x8000b54b0] Galaxy.galaxyWorker - tick 41
+[ INFO] [2020-12-01] [04:34:00,630] [x8000b1a40] StarSystem.update - starsystem a update
+[ INFO] [2020-12-01] [04:34:00,630] [x8000b1bb0] StarSystem.update - starsystem b update
+[ INFO] [2020-12-01] [04:34:00,630] [x8000b1a40] StarSystem.update - starsystem c update
+[ INFO] [2020-12-01] [04:34:00,630] [x8000b1bb0] StarSystem.update - starsystem d update
+[ INFO] [2020-12-01] [04:34:00,631] [x8000b1a40] StarSystem.update - starsystem e update
+[ INFO] [2020-12-01] [04:34:01,630] [x8000b54b0] Galaxy.galaxyWorker - tick 42
+[ INFO] [2020-12-01] [04:34:01,630] [x8000b1a40] StarSystem.update - starsystem a update
+[ INFO] [2020-12-01] [04:34:01,630] [x8000b1bb0] StarSystem.update - starsystem b update
+[ INFO] [2020-12-01] [04:34:01,631] [x8000b1a40] StarSystem.update - starsystem c update
+[ INFO] [2020-12-01] [04:34:01,631] [x8000b1bb0] StarSystem.update - starsystem d update
+[ INFO] [2020-12-01] [04:34:01,631] [x8000b1a40] StarSystem.update - starsystem e update
+[ INFO] [2020-12-01] [04:34:02,630] [x8000b54b0] Galaxy.galaxyWorker - tick 43
+[ INFO] [2020-12-01] [04:34:02,630] [x8000b1a40] StarSystem.update - starsystem a update
+[ INFO] [2020-12-01] [04:34:02,630] [x8000b1bb0] StarSystem.update - starsystem b update
+[ INFO] [2020-12-01] [04:34:02,630] [x8000b1a40] StarSystem.update - starsystem c update
+[ INFO] [2020-12-01] [04:34:02,631] [x8000b1bb0] StarSystem.update - starsystem d update
+[ INFO] [2020-12-01] [04:34:02,631] [x8000b1a40] StarSystem.update - starsystem e update
+[ INFO] [2020-12-01] [04:34:03,630] [x8000b54b0] Galaxy.galaxyWorker - tick 44
+[ INFO] [2020-12-01] [04:34:03,630] [x8000b1a40] StarSystem.update - starsystem a update
+[ INFO] [2020-12-01] [04:34:03,630] [x8000b1bb0] StarSystem.update - starsystem b update
+[ INFO] [2020-12-01] [04:34:03,630] [x8000b1a40] StarSystem.update - starsystem c update
+[ INFO] [2020-12-01] [04:34:03,630] [x8000b1bb0] StarSystem.update - starsystem d update
+[ INFO] [2020-12-01] [04:34:03,630] [x8000b1a40] StarSystem.update - starsystem e update
+[ INFO] [2020-12-01] [04:34:04,630] [x8000b54b0] Galaxy.galaxyWorker - tick 45
+[ INFO] [2020-12-01] [04:34:04,630] [x8000b1a40] StarSystem.update - starsystem a update
+[ INFO] [2020-12-01] [04:34:04,630] [x8000b1bb0] StarSystem.update - starsystem b update
+[ INFO] [2020-12-01] [04:34:04,630] [x8000b1a40] StarSystem.update - starsystem c update
+[ INFO] [2020-12-01] [04:34:04,630] [x8000b1bb0] StarSystem.update - starsystem d update
+[ INFO] [2020-12-01] [04:34:04,630] [x8000b1a40] StarSystem.update - starsystem e update
+[ INFO] [2020-12-01] [04:34:05,630] [x8000b54b0] Galaxy.galaxyWorker - tick 46
+[ INFO] [2020-12-01] [04:34:05,630] [x8000b1a40] StarSystem.update - starsystem a update
+[ INFO] [2020-12-01] [04:34:05,630] [x8000b1bb0] StarSystem.update - starsystem b update
+[ INFO] [2020-12-01] [04:34:05,630] [x8000b1a40] StarSystem.update - starsystem c update
+[ INFO] [2020-12-01] [04:34:05,630] [x8000b1bb0] StarSystem.update - starsystem d update
+[ INFO] [2020-12-01] [04:34:05,630] [x8000b1a40] StarSystem.update - starsystem e update
+[ INFO] [2020-12-01] [04:34:06,630] [x8000b54b0] Galaxy.galaxyWorker - tick 47
+[ INFO] [2020-12-01] [04:34:06,630] [x8000b1bb0] StarSystem.update - starsystem a update
+[ INFO] [2020-12-01] [04:34:06,630] [x8000b1a40] StarSystem.update - starsystem b update
+[ INFO] [2020-12-01] [04:34:06,630] [x8000b1bb0] StarSystem.update - starsystem c update
+[ INFO] [2020-12-01] [04:34:06,630] [x8000b1a40] StarSystem.update - starsystem d update
+[ INFO] [2020-12-01] [04:34:06,630] [x8000b1bb0] StarSystem.update - starsystem e update
+[ INFO] [2020-12-01] [04:34:07,630] [x8000b54b0] Galaxy.galaxyWorker - tick 48
+[ INFO] [2020-12-01] [04:34:07,630] [x8000b1a40] StarSystem.update - starsystem a update
+[ INFO] [2020-12-01] [04:34:07,630] [x8000b1bb0] StarSystem.update - starsystem b update
+[ INFO] [2020-12-01] [04:34:07,630] [x8000b1a40] StarSystem.update - starsystem c update
+[ INFO] [2020-12-01] [04:34:07,630] [x8000b1bb0] StarSystem.update - starsystem d update
+[ INFO] [2020-12-01] [04:34:07,630] [x8000b1a40] StarSystem.update - starsystem e update
+[ INFO] [2020-12-01] [04:34:08,630] [x8000b54b0] Galaxy.galaxyWorker - tick 49
+[ INFO] [2020-12-01] [04:34:08,630] [x8000b1a40] StarSystem.update - starsystem a update
+[ INFO] [2020-12-01] [04:34:08,630] [x8000b1bb0] StarSystem.update - starsystem b update
+[ INFO] [2020-12-01] [04:34:08,630] [x8000b1a40] StarSystem.update - starsystem c update
+[ INFO] [2020-12-01] [04:34:08,630] [x8000b1bb0] StarSystem.update - starsystem d update
+[ INFO] [2020-12-01] [04:34:08,630] [x8000b1a40] StarSystem.update - starsystem e update
+[FATAL] [2020-12-01] [05:08:46,141] [x800018040] .main - ### Starting ###
+[DEBUG] [2020-12-01] [05:08:46,141] [x800018040] StarSystem.added - starsystem testSystem created entity 0.0
+[DEBUG] [2020-12-01] [05:08:46,141] [x800018040] StarSystem.added - starsystem testSystem created entity 0.0
+[DEBUG] [2020-12-01] [05:08:46,141] [x800018040] StarSystem.added - starsystem testSystem created entity 1.0
+[DEBUG] [2020-12-01] [05:08:46,141] [x800018040] StarSystem.added - starsystem testSystem created entity 1.0
+[DEBUG] [2020-12-01] [05:08:46,141] [x800018040] StarSystem.added - starsystem testSystem created entity 2.0
+[DEBUG] [2020-12-01] [05:08:46,141] [x800018040] StarSystem.added - starsystem testSystem created entity 2.0
+[ INFO] [2020-12-01] [05:08:46,141] [x8000dde30] StarSystem.update - starsystem testSystem update
+[ INFO] [2020-12-01] [05:08:46,142] [x8000e6950] Galaxy.galaxyWorker - tick 1
+[ INFO] [2020-12-01] [05:08:46,142] [x8000ddfa0] StarSystem.update - starsystem testSystem update
+[ INFO] [2020-12-01] [05:08:47,142] [x8000e6950] Galaxy.galaxyWorker - tick 2
+[ INFO] [2020-12-01] [05:08:47,142] [x8000dde30] StarSystem.update - starsystem testSystem update
+[ INFO] [2020-12-01] [05:08:48,142] [x8000e6950] Galaxy.galaxyWorker - tick 3
+[ INFO] [2020-12-01] [05:08:48,142] [x8000dde30] StarSystem.update - starsystem testSystem update
+[ INFO] [2020-12-01] [05:08:49,142] [x8000e6950] Galaxy.galaxyWorker - tick 4
+[ INFO] [2020-12-01] [05:08:49,142] [x8000dde30] StarSystem.update - starsystem testSystem update
+[ INFO] [2020-12-01] [05:08:50,142] [x8000e6950] Galaxy.galaxyWorker - tick 5
+[ INFO] [2020-12-01] [05:08:50,142] [x8000dde30] StarSystem.update - starsystem testSystem update
+[ INFO] [2020-12-01] [05:08:51,142] [x8000e6950] Galaxy.galaxyWorker - tick 6
+[ INFO] [2020-12-01] [05:08:51,142] [x8000dde30] StarSystem.update - starsystem testSystem update
+[ INFO] [2020-12-01] [05:08:52,142] [x8000e6950] Galaxy.galaxyWorker - tick 7
+[ INFO] [2020-12-01] [05:08:52,142] [x8000dde30] StarSystem.update - starsystem testSystem update
+[ INFO] [2020-12-01] [05:08:53,142] [x8000e6950] Galaxy.galaxyWorker - tick 8
+[ INFO] [2020-12-01] [05:08:53,142] [x8000dde30] StarSystem.update - starsystem testSystem update
+[ INFO] [2020-12-01] [05:08:54,141] [x8000e6950] Galaxy.galaxyWorker - tick 9
+[ INFO] [2020-12-01] [05:08:54,142] [x8000dde30] StarSystem.update - starsystem testSystem update
+[FATAL] [2020-12-01] [05:14:43,837] [x800018040] .main - ### Starting ###
+[DEBUG] [2020-12-01] [05:14:43,837] [x800018040] StarSystem.added - starsystem testSystem created component 13TextComponent for entity 0.0
+[DEBUG] [2020-12-01] [05:14:43,837] [x800018040] StarSystem.added - starsystem testSystem created component 15RenderComponent for entity 0.0
+[DEBUG] [2020-12-01] [05:14:43,837] [x800018040] StarSystem.added - starsystem testSystem created component 13TextComponent for entity 1.0
+[DEBUG] [2020-12-01] [05:14:43,837] [x800018040] StarSystem.added - starsystem testSystem created component 15RenderComponent for entity 1.0
+[DEBUG] [2020-12-01] [05:14:43,837] [x800018040] StarSystem.added - starsystem testSystem created component 13TextComponent for entity 2.0
+[DEBUG] [2020-12-01] [05:14:43,837] [x800018040] StarSystem.added - starsystem testSystem created component 15RenderComponent for entity 2.0
+[ INFO] [2020-12-01] [05:14:43,838] [x8000dde30] StarSystem.update - starsystem testSystem update
+[ INFO] [2020-12-01] [05:14:43,838] [x8000e6950] Galaxy.galaxyWorker - tick 1
+[ INFO] [2020-12-01] [05:14:43,838] [x8000ddfa0] StarSystem.update - starsystem testSystem update
+[ INFO] [2020-12-01] [05:14:44,839] [x8000e6950] Galaxy.galaxyWorker - tick 2
+[ INFO] [2020-12-01] [05:14:44,839] [x8000ddfa0] StarSystem.update - starsystem testSystem update
+[ INFO] [2020-12-01] [05:14:45,839] [x8000e6950] Galaxy.galaxyWorker - tick 3
+[ INFO] [2020-12-01] [05:14:45,839] [x8000ddfa0] StarSystem.update - starsystem testSystem update
+[ INFO] [2020-12-01] [05:14:46,839] [x8000e6950] Galaxy.galaxyWorker - tick 4
+[ INFO] [2020-12-01] [05:14:46,839] [x8000ddfa0] StarSystem.update - starsystem testSystem update
+[ INFO] [2020-12-01] [05:14:47,839] [x8000e6950] Galaxy.galaxyWorker - tick 5
+[ INFO] [2020-12-01] [05:14:47,839] [x8000ddfa0] StarSystem.update - starsystem testSystem update
+[ INFO] [2020-12-01] [05:14:48,839] [x8000e6950] Galaxy.galaxyWorker - tick 6
+[ INFO] [2020-12-01] [05:14:48,839] [x8000ddfa0] StarSystem.update - starsystem testSystem update
+[ INFO] [2020-12-01] [05:14:49,839] [x8000e6950] Galaxy.galaxyWorker - tick 7
+[ INFO] [2020-12-01] [05:14:49,839] [x8000dde30] StarSystem.update - starsystem testSystem update
+[ INFO] [2020-12-01] [05:14:50,839] [x8000e6950] Galaxy.galaxyWorker - tick 8
+[ INFO] [2020-12-01] [05:14:50,839] [x8000ddfa0] StarSystem.update - starsystem testSystem update
+[FATAL] [2020-12-01] [05:27:52,266] [x800018040] .main - ### Starting ###
+[DEBUG] [2020-12-01] [05:27:52,266] [x800018040] StarSystem.added - starsystem testSystem created component TextComponent for entity 0:0
+[DEBUG] [2020-12-01] [05:27:52,266] [x800018040] StarSystem.added - starsystem testSystem created component RenderComponent for entity 0:0
+[DEBUG] [2020-12-01] [05:27:52,266] [x800018040] StarSystem.added - starsystem testSystem created component TextComponent for entity 1:0
+[DEBUG] [2020-12-01] [05:27:52,266] [x800018040] StarSystem.added - starsystem testSystem created component RenderComponent for entity 1:0
+[DEBUG] [2020-12-01] [05:27:52,266] [x800018040] StarSystem.added - starsystem testSystem created component TextComponent for entity 2:0
+[DEBUG] [2020-12-01] [05:27:52,266] [x800018040] StarSystem.added - starsystem testSystem created component RenderComponent for entity 2:0
+[ INFO] [2020-12-01] [05:27:52,266] [x8000dde30] StarSystem.update - starsystem testSystem update
+[ INFO] [2020-12-01] [05:27:52,267] [x8000e6950] Galaxy.galaxyWorker - tick 1
+[ INFO] [2020-12-01] [05:27:52,267] [x8000ddfa0] StarSystem.update - starsystem testSystem update
+[ INFO] [2020-12-01] [05:27:53,267] [x8000e6950] Galaxy.galaxyWorker - tick 2
+[ INFO] [2020-12-01] [05:27:53,267] [x8000ddfa0] StarSystem.update - starsystem testSystem update
+[ INFO] [2020-12-01] [05:27:54,266] [x8000e6950] Galaxy.galaxyWorker - tick 3
+[ INFO] [2020-12-01] [05:27:54,267] [x8000ddfa0] StarSystem.update - starsystem testSystem update
+[ INFO] [2020-12-01] [05:27:55,266] [x8000e6950] Galaxy.galaxyWorker - tick 4
+[ INFO] [2020-12-01] [05:27:55,266] [x8000ddfa0] StarSystem.update - starsystem testSystem update
+[ INFO] [2020-12-01] [05:27:56,266] [x8000e6950] Galaxy.galaxyWorker - tick 5
+[ INFO] [2020-12-01] [05:27:56,266] [x8000ddfa0] StarSystem.update - starsystem testSystem update
+[ INFO] [2020-12-01] [05:27:57,266] [x8000e6950] Galaxy.galaxyWorker - tick 6
+[ INFO] [2020-12-01] [05:27:57,266] [x8000ddfa0] StarSystem.update - starsystem testSystem update
+[ INFO] [2020-12-01] [05:27:58,266] [x8000e6950] Galaxy.galaxyWorker - tick 7
+[ INFO] [2020-12-01] [05:27:58,266] [x8000ddfa0] StarSystem.update - starsystem testSystem update

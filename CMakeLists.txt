@@ -4,9 +4,8 @@ project (AuroraC VERSION 0.1 LANGUAGES CXX)
 
 #TODO speedups https://cmake.org/cmake/help/v3.16/prop_tgt/UNITY_BUILD.html https://cmake.org/cmake/help/latest/command/target_precompile_headers.html
 # reflection https://github.com/jsoysouvanh/Refureku
-# SIMD https://github.com/VcDevel/Vc
+# c++ SIMD https://github.com/VcDevel/Vc
 # custom allocators https://github.com/mtrebi/memory-allocators
-# stack vectors, strings, allocator https://chromium.googlesource.com/chromium/chromium/+/master/base/stack_container.h
 # print stack trace https://stackoverflow.com/questions/38433701/print-log4cxx-exception-stacktrace
 # command line parsing cxxopts
 # zlib for packaging resources ?
@@ -17,6 +16,8 @@ project (AuroraC VERSION 0.1 LANGUAGES CXX)
 #  https://www.boost.org/doc/libs/1_53_0/libs/math/doc/sf_and_dist/html/math_toolkit/toolkit/internals1/roots2.html
 #  https://eigen.tuxfamily.org/dox/unsupported/classEigen_1_1PolynomialSolver.html
 # vulcan multi gpu https://www.ea.com/seed/news/khronos-munich-2018-halcyon-vulkan https://github.com/Glavnokoman/vuh
+# dynamic frame pacing https://youtu.be/nkCaQ-x-zyA?t=1789
+# more quad tree optimizations https://www.youtube.com/watch?v=6BIfqfC1i7U
 
 # log4cxx does not build with mingw (due to we allowed linking to libs built for cygwin, that use different std lib?) but tracy works. 
 
@@ -71,7 +72,7 @@ add_subdirectory(lib/imgui)
 message("========== Aurora-C ==========")
 
 find_package(Boost 1.66 REQUIRED) # COMPONENTS
-find_package(Eigen3 3.3 REQUIRED NO_MODULE)
+#find_package(Eigen3 3.3 REQUIRED NO_MODULE) # 3.4 not released yet
 find_package(OpenMP REQUIRED)
 
 file(GLOB_RECURSE SOURCE_FILES CONFIGURE_DEPENDS src/*.cpp)
@@ -98,7 +99,8 @@ target_link_libraries(AuroraC PUBLIC EnTT)
 #target_link_libraries(AuroraC PUBLIC Vulkan2DRenderer)
 target_link_libraries(AuroraC PUBLIC ${Boost_LIBRARIES})
 target_include_directories(AuroraC PUBLIC ${Boost_INCLUDE_DIRS})
-target_link_libraries(AuroraC PUBLIC Eigen3::Eigen)
+#target_link_libraries(AuroraC PUBLIC Eigen3::Eigen)
+target_include_directories(AuroraC PUBLIC "lib/eigen") # 3.4 is not released yet so we have to include it ourselves
 target_link_libraries(AuroraC PUBLIC OpenMP::OpenMP_CXX)
 target_link_libraries(AuroraC PUBLIC imgui)
 #target_link_libraries(AuroraC PUBLIC imgui-glfw imgui-vulkan)  
@@ -110,15 +112,16 @@ target_link_libraries(AuroraC PUBLIC imgui)
 set_target_properties(AuroraC PROPERTIES CXX_STANDARD 20)
 set_target_properties(AuroraC PROPERTIES CXX_STANDARD_REQUIRED ON)
 set_target_properties(AuroraC PROPERTIES CXX_EXTENSIONS OFF)
-set_target_properties(AuroraC PROPERTIES INTERPROCEDURAL_OPTIMIZATION off) #link time optimization
+set_target_properties(AuroraC PROPERTIES INTERPROCEDURAL_OPTIMIZATION_RELEASE ON) #link time optimization
 
 if (CMAKE_CXX_COMPILER_ID MATCHES "Clang|GNU")
 	target_compile_options(AuroraC PRIVATE -march=native)
-#	target_compile_options(AuroraC PRIVATE -msse4.2 -mavx2)
+	#target_compile_options(AuroraC PRIVATE -msse4.2 -mavx2)
+	target_compile_options(AuroraC PRIVATE $<$<CONFIG:DEBUG>: -O1>)
 	target_compile_options(AuroraC PRIVATE $<$<CONFIG:RELEASE>: -O3>)
 endif()
 if (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
-	target_compile_options(AuroraC PRIVATE -Wall -Wextra -Wno-unused-parameter -Wno-unused-variable)
+	target_compile_options(AuroraC PRIVATE -Wall -Wextra -Wno-unused-parameter -Wno-unused-variable -Wno-stringop-truncation -Wno-narrowing)
 	target_compile_options(AuroraC PRIVATE $<$<CONFIG:RELEASE>: -fno-trapping-math -fno-math-errno -fno-signed-zeros >)
 	if (MINGW)
 		target_compile_options(AuroraC PRIVATE --warn-no-builtin-declaration-mismatch)
@@ -126,6 +129,7 @@ if (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
 		target_compile_options(AuroraC PRIVATE -Wno-builtin-declaration-mismatch)
 	endif()
 elseif (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+	set(_CMAKE_LTO_THIN TRUE)
 elseif (CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
 	target_compile_options(AuroraC PRIVATE /arch:SSE4.2 /arch:AVX2)
 endif()

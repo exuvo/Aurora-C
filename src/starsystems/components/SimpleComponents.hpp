@@ -13,7 +13,7 @@
 #include "galaxy/Empire.hpp"
 
 struct TextComponent {
-		char text[50];
+		char text[50]; // not NULL terminated when full size is used
 		
 		TextComponent(){
 			text[0] = '\0';

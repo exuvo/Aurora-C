@@ -102,6 +102,6 @@ void setThreadPriority(std::thread &thread, ThreadPriority prio) {
 
 namespace entt {
 	std::ostream& operator<<(std::ostream& os, const entt::entity& e) {
-		return os << (uint32_t) entt::registry::entity(e) << "." << (uint32_t) entt::registry::version(e);
+		return os << (uint32_t) entt::registry::entity(e) << ":" << (uint32_t) entt::registry::version(e);
 	}
 }

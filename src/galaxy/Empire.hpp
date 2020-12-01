@@ -14,7 +14,15 @@
 
 class Empire {
 	public:
+		uint8_t id = 0;
+		std::string name;
 		boost::circular_buffer<Command*> commandQueue {128}; // For local player and ai
+		
+		Empire(std::string aName) {
+			name = aName;
+		}
+		
+//		static const Empire gaia = { "GAIA" };
 		
 	private:
 };

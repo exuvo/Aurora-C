@@ -45,7 +45,7 @@
 		<appender-ref ref="file-vulcan" />
 	</logger>
 	<logger name="aurora" additivity="false">
-		<level value="info" />
+		<level value="debug" />
 		<appender-ref ref="file" />
 		<appender-ref ref="file-error" />
 		<appender-ref ref="stdout-error" />

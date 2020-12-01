@@ -9,8 +9,9 @@
 #define SRC_STARSYSTEMS_SYSTEMS_SYSTEMS_HPP_
 
 #include <chrono>
-
+#include <eigen3/unsupported/Eigen/Polynomials>
 #include <exception>
+
 #include "entt/entt.hpp"
 #include "log4cxx/logger.h"
 
@@ -71,11 +72,39 @@ class IntervalSystem : public BaseSystem<Derived> {
 		uint32_t interval;
 };
 
+struct InterceptResult {
+		uint64_t timeToIntercept;
+		Vector2l aimPosition;
+		Vector2l interceptPosition;
+		Vector2l interceptVelocity;
+		Vector2l relativeInterceptVelocity;
+};
+
+struct Systems;
+
+class WeaponSystem : public IntervalSystem<WeaponSystem> {
+	public:
+		WeaponSystem(StarSystem* starSystem) : WeaponSystem::IntervalSystem(1s, starSystem) {};
+		
+		void init(void*);
+		void update(delta_type delta);
+		
+		std::optional<InterceptResult> getInterceptionPosition5(MovementValues shooterMovement, MovementValues targetMovement, double missileLaunchSpeed, double missileStartAcceleration, double missileEndAcceleration, double missileAccelTime);
+		std::optional<InterceptResult> getInterceptionPosition4(MovementValues shooterMovement, MovementValues targetMovement, double missileLaunchSpeed, double missileAcceleration, double missileAccelTime);
+		std::optional<InterceptResult> getInterceptionPosition3(MovementValues shooterMovement, MovementValues targetMovement, double missileLaunchSpeed, double missileStartAcceleration, double missileEndAcceleration);
+		std::optional<InterceptResult> getInterceptionPosition2(MovementValues shooterMovement, MovementValues targetMovement, double missileLaunchSpeed, double missileAcceleration);
+		std::optional<InterceptResult> getInterceptionPosition1(MovementValues shooterMovement, MovementValues targetMovement, double projectileSpeed);
+		
+	private:
+		LoggerPtr log = Logger::getLogger("aurora.starsystems.systems.weapon");
+		Eigen::PolynomialSolver<double, 4> polynomialSolver;
+};
+
 class MovementPreSystem : public IntervalSystem<MovementPreSystem> {
 	public:
 		MovementPreSystem(StarSystem* starSystem) : MovementPreSystem::IntervalSystem(1s, starSystem) {};
 		
-		void init();
+		void init(void*);
 		void update(delta_type delta);
 		
 	private:
@@ -86,12 +115,19 @@ class MovementSystem : public IntervalSystem<MovementSystem> {
 	public:
 		MovementSystem(StarSystem* starSystem) : MovementSystem::IntervalSystem(1s, starSystem) {};
 		
-		void init();
+		void init(void*);
 		void update(delta_type delta);
 		
 	private:
 		LoggerPtr log = Logger::getLogger("aurora.starsystems.systems.movement");
-		void moveTo(entt::entity entity, delta_type delta, TimedMovementComponent& movement, MassComponent& massComponent, ThrustComponent& thrustComponent, Vector2l targetPos, TimedMovementComponent* targetMovement, entt::entity targetEntity, ApproachType approach);
+		void moveTo(entt::entity entity, delta_type delta, TimedMovementComponent& movement, MassComponent& massComponent, ThrustComponent& thrustComponent, Vector2l targetPos, MovementValues* targetMovement, entt::entity targetEntity, ApproachType approach);
+		WeaponSystem* weaponSystem = nullptr;
+};
+
+struct Systems {
+		WeaponSystem* weaponSystem = nullptr;
+		MovementPreSystem* movementPreSystem = nullptr;
+		MovementSystem* movementSystem = nullptr;
 };
 
 #endif /* SRC_STARSYSTEMS_SYSTEMS_SYSTEMS_HPP_ */

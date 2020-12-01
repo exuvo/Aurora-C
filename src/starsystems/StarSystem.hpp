@@ -72,7 +72,7 @@ class StarSystem {
 		void update(uint32_t deltaGameTime);
 		Scheduler<std::uint32_t> scheduler;
 		
-		template<typename... Component>
+		template<typename Component>
 		void added(entt::registry&, entt::entity);
 		
 		template<typename... Component>
@@ -80,7 +80,7 @@ class StarSystem {
 			
 		}
 		
-		template<typename... Component>
+		template<typename Component>
 		void deleted(entt::registry&, entt::entity);
 		
 	private:

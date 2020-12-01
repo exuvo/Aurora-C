@@ -56,8 +56,8 @@ class Scheduler {
 		}
 		
 		template<typename Proc>
-		static void init(process_handler& handler) {
-			static_cast<Proc*>(handler.instance.get())->init();
+		static void init(process_handler& handler, void* data) {
+			static_cast<Proc*>(handler.instance.get())->init(data);
 		}
 		
 		template<typename Proc>
@@ -70,7 +70,7 @@ class Scheduler {
 				using instance_type = std::unique_ptr<void, void(*)(void*)>;
 				using isActive_fn_type = bool (process_handler&);
 				using update_fn_type = void (process_handler&, Delta);
-				using init_fn_type = void (process_handler&);
+				using init_fn_type = void (process_handler&, void*);
 				using name_fn_type = const char* (void);
 
 				instance_type instance;
@@ -135,10 +135,12 @@ class Scheduler {
 		 * @param args Parameters to use to initialize the process.
 		 */
 		template<typename Proc, typename ... Args>
-		void attach(Args&& ... args) {
+		Proc* attach(Args&& ... args) {
 			static_assert(std::is_base_of_v<Process<Proc, Delta>, Proc>, "Invalid process type");
-			auto proc = typename process_handler::instance_type { new Proc { std::forward<Args>(args) ... }, &Scheduler::deleter<Proc> };
-			process_handler handler { std::move(proc), 
+			
+			Proc* proc = new Proc { std::forward<Args>(args) ... };
+			auto instance_type = typename process_handler::instance_type { proc, &Scheduler::deleter<Proc> };
+			process_handler handler { std::move(instance_type), 
 				&Scheduler::isActive<Proc>, 
 				&Scheduler::update<Proc>, 
 				&Scheduler::init<Proc>,
@@ -146,11 +148,12 @@ class Scheduler {
 			};
 			
 			handlers.emplace_back(std::move(handler));
+			return proc;
 		}
 		
-		void init() {
+		void init(void* data) {
 			for (process_handler& handler : handlers) {
-				handler.init(handler);
+				handler.init(handler, data);
 			}
 		}
 		
