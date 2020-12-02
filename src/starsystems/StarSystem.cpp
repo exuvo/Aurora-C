@@ -10,8 +10,9 @@
 
 #include "Tracy.hpp"
 
-#include "systems/Systems.hpp"
-#include "StarSystem.hpp"
+#include "starsystems/systems/Systems.hpp"
+#include "starsystems/StarSystem.hpp"
+#include "starsystems/StarSystemShadow.hpp"
 #include "utils/Math.hpp"
 #include "utils/Utils.hpp"
 
@@ -103,6 +104,19 @@ void StarSystem::deleted(entt::registry& registry, entt::entity entity) {
 	workingShadow->deleted.reserve(index + 1);
 	workingShadow->deleted[index] = true;
 }
+
+#define CHANGED_TEMPLATE(r, unused, component) \
+template<> \
+void StarSystem::changed2<component>(entt::entity entity) { \
+	LOG4CXX_DEBUG(log, "starsystem " << name << " changed component " << type_name<component>() << " of entity " << entity); \
+/*	BOOST_HANA_CONSTANT_ASSERT_MSG(hana::find(syncedComponentToIndexMap, hana::type_c<component>) != hana::nothing, "missing component mapping"); */ \
+	std::vector<bool>& changedVector = workingShadow->changedComponents[syncedComponentToIndexMap[hana::type_c<component>]]; \
+	uint32_t index = static_cast<uint32_t>(registry.entity(entity)); \
+	changedVector.reserve(index + 1); \
+	changedVector[index] = true; \
+};
+
+BOOST_PP_SEQ_FOR_EACH(CHANGED_TEMPLATE, ~, SYNCED_COMPONENTS_SEQ)
 
 void StarSystem::update(uint32_t deltaGameTime) {
 	LOG4CXX_INFO(log, "starsystem " << name << " update");
