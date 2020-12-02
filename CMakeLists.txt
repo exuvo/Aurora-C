@@ -105,7 +105,7 @@ target_link_libraries(AuroraC PUBLIC OpenMP::OpenMP_CXX)
 target_link_libraries(AuroraC PUBLIC imgui)
 #target_link_libraries(AuroraC PUBLIC imgui-glfw imgui-vulkan)  
 
-# broken shit
+# broken
 #target_precompile_headers(AuroraC PRIVATE <string>)
 #target_precompile_headers(AuroraC PRIVATE "src/PreCompileHeader.h")
 
@@ -117,10 +117,11 @@ set_target_properties(AuroraC PROPERTIES INTERPROCEDURAL_OPTIMIZATION_RELEASE ON
 if (CMAKE_CXX_COMPILER_ID MATCHES "Clang|GNU")
 	target_compile_options(AuroraC PRIVATE -march=native)
 	#target_compile_options(AuroraC PRIVATE -msse4.2 -mavx2)
-	target_compile_options(AuroraC PRIVATE $<$<CONFIG:DEBUG>: -O1>)
+#	target_compile_options(AuroraC PRIVATE $<$<CONFIG:DEBUG>: -O1>)
 	target_compile_options(AuroraC PRIVATE $<$<CONFIG:RELEASE>: -O3>)
 endif()
 if (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+#	target_compile_options(AuroraC PRIVATE -ftime-report) # debug compile time
 	target_compile_options(AuroraC PRIVATE -Wall -Wextra -Wno-unused-parameter -Wno-unused-variable -Wno-stringop-truncation -Wno-narrowing)
 	target_compile_options(AuroraC PRIVATE $<$<CONFIG:RELEASE>: -fno-trapping-math -fno-math-errno -fno-signed-zeros >)
 	if (MINGW)

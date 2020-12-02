@@ -16,6 +16,7 @@
 #include "log4cxx/logger.h"
 
 #include "starsystems/components/Components.hpp"
+#include "starsystems/StarSystem.hpp"
 #include "starsystems/systems/Scheduler.hpp"
 #include "utils/GameServices.hpp"
 

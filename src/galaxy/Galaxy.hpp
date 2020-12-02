@@ -21,6 +21,7 @@
 #include "galaxy/Empire.hpp"
 #include "galaxy/Player.hpp"
 #include "starsystems/systems/Scheduler.hpp"
+#include "starsystems/StarSystem.hpp"
 #include "utils/Profiling.hpp"
 
 using namespace std::chrono;

@@ -13,6 +13,8 @@
 #include "starsystems/StarSystem.hpp"
 #include "starsystems/components/IDComponents.hpp"
 
+class StarSystem;
+
 class Command {
 	public:
 		

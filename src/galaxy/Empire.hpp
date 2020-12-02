@@ -12,6 +12,8 @@
 
 #include "galaxy/Commands.hpp"
 
+class Command;
+
 class Empire {
 	public:
 		uint8_t id = 0;

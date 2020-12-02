@@ -3641,3 +3641,32 @@
 [ INFO] [2020-12-01] [05:27:57,266] [x8000ddfa0] StarSystem.update - starsystem testSystem update
 [ INFO] [2020-12-01] [05:27:58,266] [x8000e6950] Galaxy.galaxyWorker - tick 7
 [ INFO] [2020-12-01] [05:27:58,266] [x8000ddfa0] StarSystem.update - starsystem testSystem update
+[FATAL] [2020-12-02] [08:02:26,385] [x800018040] .main - ### Starting ###
+[DEBUG] [2020-12-02] [08:02:26,387] [x800018040] StarSystem.added - starsystem test added component TextComponent to entity 0:0
+[FATAL] [2020-12-02] [08:02:44,945] [x800018040] .main - ### Starting ###
+[DEBUG] [2020-12-02] [08:02:44,946] [x800018040] StarSystem.added - starsystem test added component TextComponent to entity 0:0
+[FATAL] [2020-12-02] [08:18:55,616] [x800018040] .main - ### Starting ###
+[DEBUG] [2020-12-02] [08:18:55,617] [x800018040] StarSystem.added - starsystem test added component TextComponent to entity 0:0
+[DEBUG] [2020-12-02] [08:18:55,617] [x800018040] StarSystem.added - starsystem test added component TimedMovementComponent to entity 0:0
+[DEBUG] [2020-12-02] [08:18:55,617] [x800018040] StarSystem.added - starsystem test added component RenderComponent to entity 0:0
+[DEBUG] [2020-12-02] [08:18:55,617] [x800018040] StarSystem.added - starsystem test added component TextComponent to entity 1:0
+[DEBUG] [2020-12-02] [08:18:55,617] [x800018040] StarSystem.added - starsystem test added component TimedMovementComponent to entity 1:0
+[DEBUG] [2020-12-02] [08:18:55,617] [x800018040] StarSystem.added - starsystem test added component RenderComponent to entity 1:0
+[DEBUG] [2020-12-02] [08:18:55,617] [x800018040] StarSystem.added - starsystem test added component TextComponent to entity 2:0
+[DEBUG] [2020-12-02] [08:18:55,617] [x800018040] StarSystem.added - starsystem test added component TimedMovementComponent to entity 2:0
+[DEBUG] [2020-12-02] [08:18:55,617] [x800018040] StarSystem.added - starsystem test added component RenderComponent to entity 2:0
+[ INFO] [2020-12-02] [08:18:55,617] [x8000de0a0] StarSystem.update - starsystem test update
+[ INFO] [2020-12-02] [08:18:55,618] [x8000e7370] Galaxy.galaxyWorker - tick 1
+[ INFO] [2020-12-02] [08:18:55,618] [x8000de0a0] StarSystem.update - starsystem test update
+[ INFO] [2020-12-02] [08:18:56,618] [x8000e7370] Galaxy.galaxyWorker - tick 2
+[ INFO] [2020-12-02] [08:18:56,618] [x8000de0a0] StarSystem.update - starsystem test update
+[ INFO] [2020-12-02] [08:18:57,618] [x8000e7370] Galaxy.galaxyWorker - tick 3
+[ INFO] [2020-12-02] [08:18:57,618] [x8000de0a0] StarSystem.update - starsystem test update
+[ INFO] [2020-12-02] [08:18:58,620] [x8000e7370] Galaxy.galaxyWorker - tick 4
+[ INFO] [2020-12-02] [08:18:58,620] [x8000de0a0] StarSystem.update - starsystem test update
+[ INFO] [2020-12-02] [08:18:59,617] [x8000e7370] Galaxy.galaxyWorker - tick 5
+[ INFO] [2020-12-02] [08:18:59,618] [x8000de0a0] StarSystem.update - starsystem test update
+[ INFO] [2020-12-02] [08:19:00,617] [x8000e7370] Galaxy.galaxyWorker - tick 6
+[ INFO] [2020-12-02] [08:19:00,617] [x8000de1f0] StarSystem.update - starsystem test update
+[ INFO] [2020-12-02] [08:19:01,617] [x8000e7370] Galaxy.galaxyWorker - tick 7
+[ INFO] [2020-12-02] [08:19:01,617] [x8000de1f0] StarSystem.update - starsystem test update

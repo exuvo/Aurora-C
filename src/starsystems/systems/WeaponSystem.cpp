@@ -344,7 +344,7 @@ std::optional<InterceptResult> WeaponSystem::getInterceptionPosition3(MovementVa
 //		try {
 			double initialGuess = getPositiveRootOfQuadraticEquation(missileAcceleration, missileLaunchSpeed, -relativePosition.norm());
 			
-			if (isnan(initialGuess) || initialGuess <= 0) {
+			if (std::isnan(initialGuess) || initialGuess <= 0) {
 				LOG4CXX_WARN(log, "invalid initialGuess $initialGuess");
 				initialGuess = 1.0;
 			}

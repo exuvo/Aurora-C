@@ -247,9 +247,6 @@ void Quadtree::cleanup()
 
 QuadNodeData Quadtree::root_data() const
 {
-    QuadNodeData rd = { 0, 0, 0, 0 };
-    rd.rect = root_rect;
-    rd.index = 0;
-    rd.depth = 0;
+    QuadNodeData rd = { root_rect, 0, 0 };
     return rd;
 }

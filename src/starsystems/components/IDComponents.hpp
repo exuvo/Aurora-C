@@ -12,6 +12,8 @@
 
 #include "starsystems/StarSystem.hpp"
 
+class StarSystem;
+
 struct EntityUUID {
 		uint8_t starSystemID;
 		uint8_t empireID;

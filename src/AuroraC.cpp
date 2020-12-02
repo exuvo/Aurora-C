@@ -11,14 +11,13 @@ using namespace std;
 using namespace log4cxx;
 
 //TODO Port simulation, test performance via console/tracy
-LoggerPtr log;
 
 int main(int argc, char **argv) {
 	tracy::StartupProfiler();
 	tracy::SetThreadName("startup");
 
 	log4cxx::xml::DOMConfigurator::configure("log4j.xml");
-	log = Logger::getLogger("aurora");
+	LoggerPtr log = Logger::getLogger("aurora");
 	LOG4CXX_FATAL(log, "### Starting ###");
 
 	cout <<  "starting" << endl << flush;

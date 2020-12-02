@@ -11,6 +11,9 @@
 #include <cstdint>
 
 #include "galaxy/Empire.hpp"
+#include "utils/Utils.hpp"
+
+struct Empire;
 
 struct TextComponent {
 		char text[50]; // not NULL terminated when full size is used

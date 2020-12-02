@@ -10,9 +10,8 @@
 
 #include "Tracy.hpp"
 
-#include "StarSystem.hpp"
 #include "systems/Systems.hpp"
-#include "components/Components.hpp"
+#include "StarSystem.hpp"
 #include "utils/Math.hpp"
 #include "utils/Utils.hpp"
 
@@ -28,7 +27,7 @@ void registerComponentListeners(entt::registry& registry, StarSystem* starSystem
 	
 	// older c++ https://stackoverflow.com/a/17340003/2531250
 	using expand = int[];
-	(void) expand { 0, ((void) registerComponentListener<Component>(registry, starSystem), 0)... };
+	(void) expand { 0, ((void) registerComponentListener<Component>(registry, starSystem), 0) ... };
 }
 
 void StarSystem::init(Galaxy* galaxy) {
@@ -57,7 +56,7 @@ void StarSystem::init(Galaxy* galaxy) {
 	
 	scheduler.init(&systems);
 	
-	registerComponentListeners<TextComponent, TintComponent, RenderComponent>(registry, this);
+	registerComponentListeners<SYNCED_COMPONENTS>(registry, this);
 	
 	shadow = new ShadowStarSystem(this);
 	workingShadow = new ShadowStarSystem(this);
@@ -91,18 +90,24 @@ void StarSystem::init(Galaxy* galaxy) {
 
 template<typename Component>
 void StarSystem::added(entt::registry& registry, entt::entity entity) {
-	LOG4CXX_DEBUG(log, "starsystem " << name << " created component " << type_name<Component>() << " for entity " << entity);
+	LOG4CXX_DEBUG(log, "starsystem " << name << " added component " << type_name<Component>() << " to entity " << entity);
+	uint32_t index = static_cast<uint32_t>(registry.entity(entity));
+	workingShadow->added.reserve(index + 1);
+	workingShadow->added[index] = true;
 }
 
 template<typename Component>
 void StarSystem::deleted(entt::registry& registry, entt::entity entity) {
-	LOG4CXX_DEBUG(log, "starsystem " << name << " deleted component " << type_name<Component>() << " for entity " << entity);
+	LOG4CXX_DEBUG(log, "starsystem " << name << " deleted component " << type_name<Component>() << " from entity " << entity);
+	uint32_t index = static_cast<uint32_t>(registry.entity(entity));
+	workingShadow->deleted.reserve(index + 1);
+	workingShadow->deleted[index] = true;
 }
 
 void StarSystem::update(uint32_t deltaGameTime) {
+	LOG4CXX_INFO(log, "starsystem " << name << " update");
 //	std::this_thread::sleep_for(50ms);
 //	LOG4CXX_INFO(log, "starsystem " << name << " took " << updateTime.count() << "ns");
-	LOG4CXX_INFO(log, "starsystem " << name << " update");
 //	std::cout << "starsystem " << name << " (" << galacticEntityID << ")" << std::endl;
 	
 	ProfilerEvents &profilerEvents = workingShadow->profilerEvents;
@@ -117,7 +122,7 @@ void StarSystem::update(uint32_t deltaGameTime) {
 		
 	} else {
 		workingShadow->changed.clear();
-		for (std::vector<bool> &bitVector : workingShadow->changedComponents) {
+		for (std::vector<bool>& bitVector : workingShadow->changedComponents) {
 			bitVector.clear();
 		}
 	}
