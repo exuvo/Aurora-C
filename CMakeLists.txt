@@ -21,7 +21,8 @@ project (AuroraC VERSION 0.1 LANGUAGES CXX)
 
 # log4cxx does not build with mingw (due to we allowed linking to libs built for cygwin, that use different std lib?) but tracy works. 
 
-set(CMAKE_VERBOSE_MAKEFILE ON CACHE BOOL "" FORCE)
+# does not work with ninja
+#set(CMAKE_VERBOSE_MAKEFILE ON CACHE BOOL "" FORCE)
 
 option (FORCE_COLORED_OUTPUT "Always produce ANSI-colored output (GNU/Clang only)." TRUE)
 if (${FORCE_COLORED_OUTPUT})
@@ -37,10 +38,24 @@ cmake_policy(SET CMP0009 NEW)
 
 #add_subdirectory(lib/Artemis-Cpp)
 
-#if(NOT CYGWIN)
-#	set(GIT_SUBMODULE OFF)
-#endif()
-#add_subdirectory(lib/Vulkan2DRenderer)
+if(CYGWIN)
+	set(GIT_SUBMODULE OFF CACHE BOOL "" FORCE)
+	set(Vulkan_FOUND 1)
+	set(Vulkan_INCLUDE_DIR "D:/Program Files/VulkanSDK/Include")
+	set(Vulkan_LIBRARY "D:/Program Files/VulkanSDK/Lib")
+	set(Vulkan_LIBRARIES ${Vulkan_LIBRARY})
+	set(Vulkan_INCLUDE_DIRS ${Vulkan_INCLUDE_DIR})
+	mark_as_advanced(Vulkan_INCLUDE_DIR Vulkan_LIBRARY)
+	add_library(Vulkan::Vulkan UNKNOWN IMPORTED)
+	set_target_properties(Vulkan::Vulkan PROPERTIES IMPORTED_LOCATION "${Vulkan_LIBRARIES}" INTERFACE_INCLUDE_DIRECTORIES "${Vulkan_INCLUDE_DIRS}")
+		
+	add_compile_definitions(VK_USE_PLATFORM_WIN32_KHR=1)
+endif()
+
+set(VK2D_BUILD_DOCS OFF)
+set(VK2D_BUILD_TESTS OFF)
+set(VK2D_BUILD_EXAMPLES OFF)
+add_subdirectory(lib/Vulkan2DRenderer)
 
 set(TRACY_ENABLE ON)
 set(TRACY_ON_DEMAND ON)
@@ -96,7 +111,7 @@ target_link_libraries(AuroraC PUBLIC tracy_client)
 #target_link_libraries(AuroraC PUBLIC ArtemisCpp)
 target_link_libraries(AuroraC PUBLIC EnTT)
 #target_link_libraries(AuroraC PUBLIC gdx-cpp)
-#target_link_libraries(AuroraC PUBLIC Vulkan2DRenderer)
+target_link_libraries(AuroraC PUBLIC VK2D)
 target_link_libraries(AuroraC PUBLIC ${Boost_LIBRARIES})
 target_include_directories(AuroraC PUBLIC ${Boost_INCLUDE_DIRS})
 #target_link_libraries(AuroraC PUBLIC Eigen3::Eigen)
