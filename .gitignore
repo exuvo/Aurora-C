@@ -1,2 +1,5 @@
 build
 /AuroraC.exe.stackdump
+/log.error
+/log.log
+/log.vulcan
