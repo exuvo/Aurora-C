@@ -10,8 +10,6 @@
 
 #include "entt/entt.hpp"
 
-#include "starsystems/StarSystem.hpp"
-
 class StarSystem;
 
 struct EntityUUID {

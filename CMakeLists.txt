@@ -105,8 +105,7 @@ target_link_libraries(AuroraC PUBLIC OpenMP::OpenMP_CXX)
 target_link_libraries(AuroraC PUBLIC imgui)
 #target_link_libraries(AuroraC PUBLIC imgui-glfw imgui-vulkan)  
 
-# broken
-#target_precompile_headers(AuroraC PRIVATE <string>)
+# broken on cygwin
 #target_precompile_headers(AuroraC PRIVATE "src/PreCompileHeader.h")
 
 set_target_properties(AuroraC PROPERTIES CXX_STANDARD 20)

@@ -10,7 +10,6 @@
 
 #include <cstdint>
 
-#include "galaxy/Empire.hpp"
 #include "utils/Utils.hpp"
 
 struct Empire;

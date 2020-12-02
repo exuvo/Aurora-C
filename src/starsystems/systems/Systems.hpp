@@ -16,19 +16,18 @@
 #include "log4cxx/logger.h"
 
 #include "starsystems/components/Components.hpp"
-#include "starsystems/StarSystem.hpp"
 #include "starsystems/systems/Scheduler.hpp"
 #include "utils/GameServices.hpp"
 
 template<typename Derived>
 class BaseSystem : public Process<Derived, uint32_t> {
 	public:
-		BaseSystem(StarSystem* starSystem): 
+		BaseSystem(StarSystem* starSystem):
 			galaxy(*(starSystem->galaxy)),
 			starSystem(*starSystem),
 			registry(starSystem->registry)
 		{};
-		
+	
 	protected:
 		Galaxy& galaxy;
 		StarSystem& starSystem;
