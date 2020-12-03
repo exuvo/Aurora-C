@@ -1,12 +1,6 @@
-[submodule "lib/tracy"]
-	path = lib/tracy
-	url = https://github.com/wolfpld/tracy
 [submodule "lib/Vulkan2DRenderer"]
 	path = lib/Vulkan2DRenderer
-	url = https://github.com/Noxagonal/Vulkan2DRenderer
-[submodule "lib/Vc"]
-	path = lib/Vc
-	url = https://github.com/VcDevel/Vc
+	url = https://github.com/exuvo/Vulkan2DRenderer
 [submodule "lib/entt"]
 	path = lib/entt
 	url = https://github.com/skypjack/entt
