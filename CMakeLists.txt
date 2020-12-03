@@ -76,6 +76,7 @@ endif()
 #set(VK2D_BUILD_EXAMPLES OFF)
 #add_subdirectory(lib/Vulkan2DRenderer)
 
+set(BUILD_TESTING OFF)
 add_subdirectory(lib/entt)
 
 set(TRACY_ENABLE ON)
