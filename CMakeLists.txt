@@ -36,7 +36,21 @@ endif ()
 # Prevents cmake from following symbolic links using GLOB
 cmake_policy(SET CMP0009 NEW)
 
-#add_subdirectory(lib/Artemis-Cpp)
+# Update library submodules with git.
+if(EXISTS "${PROJECT_SOURCE_DIR}/.git" AND NOT EXISTS "${PROJECT_SOURCE_DIR}/lib/tracy/CMakeLists.txt")
+	find_package(Git QUIET)
+	if(GIT_FOUND)
+			message(STATUS "Submodule update")
+			execute_process(COMMAND ${GIT_EXECUTABLE} submodule update --init --recursive
+				WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
+				RESULT_VARIABLE GIT_SUBMOD_RESULT)
+			if(NOT GIT_SUBMOD_RESULT EQUAL "0")
+				message(FATAL_ERROR "git submodule update --init failed with ${GIT_SUBMOD_RESULT}, please checkout submodules")
+			endif()
+	else()
+		message(FATAL_ERROR "Git not found, make sure submodules are initialized")
+	endif()
+endif()
 
 if(CYGWIN)
 	set(GIT_SUBMODULE OFF CACHE BOOL "" FORCE)
@@ -66,7 +80,8 @@ set(TRACY_ENABLE ON)
 set(TRACY_ON_DEMAND ON)
 set(TRACY_NO_EXIT OFF)
 set(TRACY_NO_BROADCAST OFF)
-add_subdirectory(lib/tracy)
+#add_subdirectory(lib/tracy)
+add_subdirectory(lib)
 
 add_subdirectory(lib/entt)
 
