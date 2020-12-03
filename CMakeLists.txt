@@ -37,7 +37,7 @@ endif ()
 cmake_policy(SET CMP0009 NEW)
 
 # Update library submodules with git.
-if(EXISTS "${PROJECT_SOURCE_DIR}/.git" AND NOT EXISTS "${PROJECT_SOURCE_DIR}/lib/tracy/CMakeLists.txt")
+if(EXISTS "${PROJECT_SOURCE_DIR}/.git" AND NOT EXISTS "${PROJECT_SOURCE_DIR}/lib/Vulkan2DRenderer/CMakeLists.txt")
 	find_package(Git QUIET)
 	if(GIT_FOUND)
 			message(STATUS "Submodule update")
@@ -76,14 +76,13 @@ endif()
 #set(VK2D_BUILD_EXAMPLES OFF)
 #add_subdirectory(lib/Vulkan2DRenderer)
 
+add_subdirectory(lib/entt)
+
 set(TRACY_ENABLE ON)
 set(TRACY_ON_DEMAND ON)
 set(TRACY_NO_EXIT OFF)
 set(TRACY_NO_BROADCAST OFF)
 #add_subdirectory(lib/tracy)
-add_subdirectory(lib)
-
-add_subdirectory(lib/entt)
 
 set(IMGUI_EXAMPLES OFF)
 set(IMGUI_DISABLE_FILE_FUNCTIONS OFF)
@@ -102,7 +101,9 @@ set(IMGUI_IMPL_DX10 OFF)
 set(IMGUI_IMPL_DX11 OFF)
 set(IMGUI_IMPL_DX12 OFF)
 set(IMGUI_IMPL_VULKAN ON)
-add_subdirectory(lib/imgui)
+#add_subdirectory(lib/imgui)
+
+add_subdirectory(lib)
 
 message("========== Aurora-C ==========")
 
