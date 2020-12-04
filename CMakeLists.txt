@@ -52,25 +52,6 @@ if(EXISTS "${PROJECT_SOURCE_DIR}/.git" AND NOT EXISTS "${PROJECT_SOURCE_DIR}/lib
 	endif()
 endif()
 
-if(CYGWIN)
-	set(GIT_SUBMODULE OFF CACHE BOOL "" FORCE)
-	set(Vulkan_FOUND 1)
-	set(Vulkan_INCLUDE_DIR "D:/Program Files/VulkanSDK/Include")
-	set(Vulkan_LIBRARY "D:/Program Files/VulkanSDK/Lib")
-	set(Vulkan_LIBRARIES ${Vulkan_LIBRARY})
-	set(Vulkan_INCLUDE_DIRS ${Vulkan_INCLUDE_DIR})
-	mark_as_advanced(Vulkan_INCLUDE_DIR Vulkan_LIBRARY)
-	add_library(Vulkan::Vulkan UNKNOWN IMPORTED)
-	set_target_properties(Vulkan::Vulkan PROPERTIES IMPORTED_LOCATION "${Vulkan_LIBRARIES}" INTERFACE_INCLUDE_DIRECTORIES "${Vulkan_INCLUDE_DIRS}")
-		
-	add_compile_definitions(VK_USE_PLATFORM_WIN32_KHR=1)
-	
-	#message("WIN32: " ${WIN32})
-	#message("VULKAN_SDK: " $ENV{VULKAN_SDK})
-	#set(WIN32 1)
-	#set(ENV{VULKAN_SDK} "D:/Program Files/VulkanSDK/Lib")
-endif()
-
 #set(VK2D_BUILD_DOCS OFF)
 #set(VK2D_BUILD_TESTS OFF)
 #set(VK2D_BUILD_EXAMPLES OFF)
@@ -142,8 +123,9 @@ target_link_libraries(AuroraC PUBLIC OpenMP::OpenMP_CXX)
 target_link_libraries(AuroraC PUBLIC imgui)
 #target_link_libraries(AuroraC PUBLIC imgui-glfw imgui-vulkan)  
 
-# broken on cygwin
-#target_precompile_headers(AuroraC PRIVATE "src/PreCompileHeader.h")
+if(NOT CYGWIN) # broken on cygwin
+	target_precompile_headers(AuroraC PRIVATE "src/PreCompileHeader.h")
+endif()
 
 set_target_properties(AuroraC PROPERTIES CXX_STANDARD 20)
 set_target_properties(AuroraC PROPERTIES CXX_STANDARD_REQUIRED ON)
