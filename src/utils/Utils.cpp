@@ -57,6 +57,9 @@ void setThreadPriority(std::thread &thread, ThreadPriority prio) {
 	
 #elif defined __unix__
 	
+	// Not working correctly, spamming the log with warnings
+
+	/*
 	sched_param sch;
 	int policy;
 	pthread_getschedparam(tHandle, &policy, &sch);
@@ -96,7 +99,7 @@ void setThreadPriority(std::thread &thread, ThreadPriority prio) {
 		}
 		
 		LOG4CXX_WARN(log, out.str());
-	}
+	}*/
 #endif
 }
 
