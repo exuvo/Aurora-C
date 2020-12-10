@@ -52,10 +52,10 @@ if(EXISTS "${PROJECT_SOURCE_DIR}/.git" AND NOT EXISTS "${PROJECT_SOURCE_DIR}/lib
 	endif()
 endif()
 
-#set(VK2D_BUILD_DOCS OFF)
-#set(VK2D_BUILD_TESTS OFF)
-#set(VK2D_BUILD_EXAMPLES OFF)
-#add_subdirectory(lib/Vulkan2DRenderer)
+set(VK2D_BUILD_DOCS OFF)
+set(VK2D_BUILD_TESTS ON)
+set(VK2D_BUILD_EXAMPLES ON)
+add_subdirectory(lib/Vulkan2DRenderer)
 
 set(BUILD_TESTING OFF)
 add_subdirectory(lib/entt)
@@ -114,18 +114,17 @@ target_link_libraries(AuroraC PUBLIC tracy_client)
 #target_link_libraries(AuroraC PUBLIC ArtemisCpp)
 target_link_libraries(AuroraC PUBLIC EnTT)
 #target_link_libraries(AuroraC PUBLIC gdx-cpp)
-#target_link_libraries(AuroraC PUBLIC VK2D)
+target_link_libraries(AuroraC PUBLIC VK2D)
 target_link_libraries(AuroraC PUBLIC ${Boost_LIBRARIES})
 target_include_directories(AuroraC PUBLIC ${Boost_INCLUDE_DIRS})
 #target_link_libraries(AuroraC PUBLIC Eigen3::Eigen)
-target_include_directories(AuroraC PUBLIC "lib/eigen") # 3.4 is not released yet so we have to include it ourselves
+#TODO makes wrong path, expects root folder named eigen3 ex /usr/include/eigen3/Eigen /usr/include/eigen3/unsupported/Eigen
+target_include_directories(AuroraC PUBLIC "lib/eigen" "lib/eigen/unsupported") # 3.4 is not released yet so we have to include it ourselves
 target_link_libraries(AuroraC PUBLIC OpenMP::OpenMP_CXX)
 target_link_libraries(AuroraC PUBLIC imgui)
 #target_link_libraries(AuroraC PUBLIC imgui-glfw imgui-vulkan)  
 
-if(NOT CYGWIN) # broken on cygwin
-	target_precompile_headers(AuroraC PRIVATE "src/PreCompileHeader.h")
-endif()
+target_precompile_headers(AuroraC PRIVATE "src/PreCompileHeader.h")
 
 set_target_properties(AuroraC PROPERTIES CXX_STANDARD 20)
 set_target_properties(AuroraC PROPERTIES CXX_STANDARD_REQUIRED ON)
@@ -185,16 +184,6 @@ endif()
 
 LIST (APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
-#macro(WinToCygwinPath in_path out_var)
-#	if(CMAKE_HOST_SYSTEM_NAME MATCHES "CYGWIN" AND MINGW)
-#    string(SUBSTRING ${in_path} 0 1 CYG_DRIVE)
-#    string(TOLOWER ${CYG_DRIVE} CYG_DRIVE)
-#    string(SUBSTRING ${in_path} 2 -1 TMP_END_OF_PATH)
-#    set(${out_var} "/cygdrive/${CYG_DRIVE}${TMP_END_OF_PATH}")
-#		message("in " ${in_path} " out " ${${out_var}})
-#	endif()
-#endmacro()
-
 FIND_PACKAGE (APR)
 IF (APR_FOUND)
 #  message("Found Apache Runtime Environment")
@@ -229,7 +218,6 @@ ELSE()
     APRUTIL
     URL https://ftp.acc.umu.se/mirror/apache.org//apr/apr-util-1.6.1.tar.gz
     URL_HASH SHA256=b65e40713da57d004123b6319828be7f1273fbc6490e145874ee1177e112c459
-#    CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=<INSTALL_DIR> -DCMAKE_BUILD_TYPE=Release # windows only
     CONFIGURE_COMMAND <SOURCE_DIR>/configure --prefix=<INSTALL_DIR>
     BUILD_COMMAND make -j${cores}
     BUILD_BYPRODUCTS <INSTALL_DIR>/lib/libaprutil-1.a
