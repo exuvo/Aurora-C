@@ -12,6 +12,7 @@
 #include "Galaxy.hpp"
 
 void Galaxy::init() {
+	LOG4CXX_INFO(log, "initializing galaxy");
 
 	for (StarSystem* system : systems) {
 		system->init(this);

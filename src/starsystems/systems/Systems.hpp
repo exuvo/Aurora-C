@@ -15,9 +15,11 @@
 #include "entt/entt.hpp"
 #include "log4cxx/logger.h"
 
+#include "galaxy/Galaxy.hpp"
 #include "starsystems/components/Components.hpp"
 #include "starsystems/systems/Scheduler.hpp"
-#include "utils/GameServices.hpp"
+
+using namespace log4cxx;
 
 template<typename Derived>
 class BaseSystem : public Process<Derived, uint32_t> {

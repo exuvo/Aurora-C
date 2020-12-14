@@ -9,6 +9,7 @@
 #define SRC_UTILS_UTILS_HPP_
 
 #include <thread>
+#include <algorithm>
 
 #if defined(__clang__) || defined(__GNUG__)
 #include <cxxabi.h>
@@ -43,6 +44,30 @@ std::string type_name() {
 
 namespace entt {
 	std::ostream& operator<<(std::ostream& os, const entt::entity& e);
+}
+
+template<typename T>
+void vectorEraseUnorderedIdx(std::vector<T>& vec, int index) {
+	assert(index < vec.size());
+	vec[index] = std::move(vec[vec.size() - 1]);
+	vec.pop_back();
+}
+
+template<typename T>
+void vectorEraseUnorderedIter(std::vector<T>& vec, typename std::vector<T>::iterator it) {
+	assert(it < vec.end());
+	*it = std::move(*(vec.end() - 1));
+	vec.pop_back();
+}
+
+template<typename T>
+bool vectorEraseUnorderedVal(std::vector<T>& vec, const T& value) {
+	typename std::vector<T>::iterator position = std::find(vec.begin(), vec.end(), value);
+	if (position != vec.end()) {
+    vectorEraseUnorderedIter(vec, position);
+    return true;
+	}
+	return false;
 }
 
 #endif /* SRC_UTILS_UTILS_HPP_ */
