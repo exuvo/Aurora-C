@@ -17,8 +17,20 @@ using namespace log4cxx;
 
 AuroraGlobal Aurora;
 
-void VK2D_APIENTRY VK2D_log(vk2d::ReportSeverity severity, std::string_view message) {
-	std::cout << message << std::endl;
+void VK2D_log(vk2d::ReportSeverity severity, std::string_view message) {
+	LoggerPtr log = Logger::getLogger("aurora.ui");
+	
+	if (severity == vk2d::ReportSeverity::CRITICAL_ERROR || severity == vk2d::ReportSeverity::DEVICE_LOST) {
+		LOG4CXX_FATAL(log, message);
+	} else if (severity == vk2d::ReportSeverity::NON_CRITICAL_ERROR) {
+		LOG4CXX_ERROR(log, message);
+	} else if (severity == vk2d::ReportSeverity::WARNING || severity == vk2d::ReportSeverity::PERFORMANCE_WARNING) {
+		LOG4CXX_WARN(log, message);
+	} else if (severity == vk2d::ReportSeverity::INFO) {
+		LOG4CXX_INFO(log, message);
+	} else if (severity == vk2d::ReportSeverity::VERBOSE) {
+		LOG4CXX_DEBUG(log, message);
+	}
 }
 
 int main(int argc, char **argv) {
@@ -62,7 +74,8 @@ int main(int argc, char **argv) {
 	cout <<  "running" << endl;
 
 	uint32_t frameRate = 60;
-	nanoseconds frameDelay = 1s / frameRate;
+	nanoseconds frameDelay = duration_cast<nanoseconds>(1s) / frameRate;
+	assert(frameDelay > 0ns);
 	
 	nanoseconds accumulator = 0s;
 	nanoseconds lastRun = duration_cast<nanoseconds>(steady_clock::now().time_since_epoch());
@@ -93,7 +106,6 @@ int main(int argc, char **argv) {
 				
 				if (sleepTime >= 10ms) {
 					std::this_thread::sleep_for(5ms);
-					break;
 					
 				} else if (sleepTime > 1ms) {
 					std::this_thread::sleep_for(sleepTime - 1ms);
@@ -124,10 +136,20 @@ int main(int argc, char **argv) {
 		}
 	}
 	
-	cout << "end" << flush;
+	cout << "shutdown" << flush;
+	
+	if (Aurora.galaxy != nullptr) {
+		Aurora.galaxy->shutdown = true;
+		std::unique_lock<std::mutex> lock(Aurora.galaxy->galaxyThreadMutex);
+		Aurora.galaxy->galaxyThreadCondvar.notify_one();
+	}
 	
 	delete Aurora.vk2dInstance;
+	
+	if (Aurora.galaxy != nullptr) {
+		Aurora.galaxy->galaxyThread->join();
+	}
 
 	tracy::ShutdownProfiler();
-	return 0;
+	exit(0);
 }

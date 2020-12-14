@@ -55,7 +55,8 @@ class Galaxy {
 		std::vector<StarSystem*> systems;
 		std::thread* galaxyThread = nullptr;
 		bool shutdown = false;
-		bool sleeping = false;
+		std::mutex galaxyThreadMutex;
+		std::condition_variable galaxyThreadCondvar;
 		ShadowGalaxy* shadow = new ShadowGalaxy(this);
 		std::recursive_mutex shadowLock;
 		ProfilerEvents renderProfilerEvents;
@@ -81,8 +82,8 @@ class Galaxy {
 	private:
 		LoggerPtr log = Logger::getLogger("aurora.galaxy");
 		std::vector<std::thread*> threads;
-		std::mutex mutex;
-		std::condition_variable condvar;
+		std::mutex workerMutex;
+		std::condition_variable workerCondvar;
 		std::atomic<uint32_t> takenWorkCounter;
 		std::atomic<uint32_t> completedWorkCounter;
 		ShadowGalaxy* workingShadow = new ShadowGalaxy(this);

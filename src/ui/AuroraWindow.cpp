@@ -11,6 +11,8 @@
 #include "Aurora.hpp"
 #include "utils/Utils.hpp"
 
+using namespace std::chrono;
+
 AuroraWindow::AuroraWindow() {
 	
 	std::cout << "creating window" << std::endl;
@@ -36,8 +38,10 @@ void AuroraWindow::render() {
 		return;
 	}
 	
+	float x = duration_cast<milliseconds>(steady_clock::now().time_since_epoch()).count() % (100 + window->GetSize().x) - window->GetSize().x / 2 - 100;
+	
 	window->DrawRectangle(
-		{{0, 0}, {100,100}},
+		{{x, 0}, {x + 100,100}},
 		true,
 		vk2d::Colorf( 1.0f, 0.0f, 0.0f, 1.0f )
 	);
@@ -106,7 +110,7 @@ void AuroraWindow::EventCharacter(vk2d::Window* window, uint32_t character, vk2d
 }
 
 void AuroraWindow::EventWindowSize(vk2d::Window* window, vk2d::Vector2u size) {
-	std::cout << "window resize" << std::endl;
+//	std::cout << "window resize" << std::endl;
 }
 
 void AuroraWindow::EventWindowMaximize(vk2d::Window* window, bool maximized) {

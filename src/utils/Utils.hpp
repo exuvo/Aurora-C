@@ -17,14 +17,16 @@
 
 #include "entt/entt.hpp"
 
+#include "utils/enum.h"
+
 #define ARRAY_LEN(x) (sizeof(x) / sizeof(x[0]))
 
-enum class ThreadPriority {
+BETTER_ENUM(ThreadPriority, uint8_t,
 		LOW,
 		NORMAL,
 		HIGH,
 		HIGHER
-};
+);
 
 void setThreadPriority(std::thread& thread, ThreadPriority prio);
 

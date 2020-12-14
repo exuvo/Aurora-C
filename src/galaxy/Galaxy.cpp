@@ -93,8 +93,8 @@ void Galaxy::galaxyWorker() {
 					
 					profilerEvents.start("run threads");
 					{
-						std::unique_lock<std::mutex> lock(mutex);
-						condvar.notify_all();
+						std::unique_lock<std::mutex> lock(workerMutex);
+						workerCondvar.notify_all();
 					}
 					workingShadow->added.clear();
 					workingShadow->changed.clear();
@@ -173,23 +173,23 @@ void Galaxy::galaxyWorker() {
 					nanoseconds sleepTime = speed - accumulator;
 
 					if (sleepTime > 1ms) {
-						sleeping = true;
 						std::this_thread::sleep_for(sleepTime - 1ms);
-						sleeping = false;
 						
 					} else if ((speed - accumulator) / 1us > 10) {
-						sleeping = true;
 						std::this_thread::yield();
-						sleeping = false;
 					}
 				}
 
 			} else {
 				oldSpeed = speed;
-				sleeping = true;
-				std::this_thread::sleep_for(1s);
-				sleeping = false;
+				std::unique_lock<std::mutex> lock(galaxyThreadMutex);
+				galaxyThreadCondvar.wait_for(lock, 1s);
 			}
+		}
+		
+		{
+			std::unique_lock<std::mutex> lock(workerMutex);
+			workerCondvar.notify_all();
 		}
 		
 		for (std::thread* thread : threads) {
@@ -207,10 +207,9 @@ void Galaxy::starsystemWorker() {
 	
 	while (!shutdown) {
 		{
-			std::unique_lock<std::mutex> lock(mutex);
+			std::unique_lock<std::mutex> lock(workerMutex);
 			if (takenWorkCounter >= systems.size()) {
-				condvar.wait(lock);
-//				lock.unlock(); automatic when lock is destroyed
+				workerCondvar.wait(lock);
 			}
 		}
 
