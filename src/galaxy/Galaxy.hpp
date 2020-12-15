@@ -15,6 +15,7 @@
 #include <thread>
 #include <vector>
 
+#include "Tracy.hpp"
 #include "entt/entt.hpp"
 #include "log4cxx/logger.h"
 
@@ -58,7 +59,7 @@ class Galaxy {
 		std::mutex galaxyThreadMutex;
 		std::condition_variable galaxyThreadCondvar;
 		ShadowGalaxy* shadow = new ShadowGalaxy(this);
-		std::recursive_mutex shadowLock;
+		TracyLockable(std::recursive_mutex, shadowLock);
 		ProfilerEvents renderProfilerEvents;
 		
 		uint64_t time = 0; // seconds
@@ -82,8 +83,8 @@ class Galaxy {
 	private:
 		LoggerPtr log = Logger::getLogger("aurora.galaxy");
 		std::vector<std::thread*> threads;
-		std::mutex workerMutex;
-		std::condition_variable workerCondvar;
+		TracyLockable(std::mutex, workerMutex);
+		std::condition_variable_any workerCondvar;
 		std::atomic<uint32_t> takenWorkCounter;
 		std::atomic<uint32_t> completedWorkCounter;
 		ShadowGalaxy* workingShadow = new ShadowGalaxy(this);

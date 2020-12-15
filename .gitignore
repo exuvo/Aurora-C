@@ -3,3 +3,4 @@ build
 /log.error
 /log.log
 /log.vulcan
+/imgui.ini

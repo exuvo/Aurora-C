@@ -13,7 +13,7 @@
 using namespace std;
 using namespace log4cxx;
 
-//TODO Port simulation, test performance via console/tracy
+//TODO Port simulation, test performance
 
 AuroraGlobal Aurora;
 
@@ -80,7 +80,7 @@ int main(int argc, char **argv) {
 	nanoseconds accumulator = 0s;
 	nanoseconds lastRun = duration_cast<nanoseconds>(steady_clock::now().time_since_epoch());
 	
-	while(!Aurora.shutdown){
+	while(!Aurora.shutdown){ 
 		
 		// make each window its own thread? maybe with separate vk2dInstance?
 		while (true) {
@@ -152,4 +152,20 @@ int main(int argc, char **argv) {
 
 	tracy::ShutdownProfiler();
 	exit(0);
+}
+
+void* operator new(std::size_t count) {
+	auto ptr = malloc(count);
+	TracySecureAlloc(ptr, count);
+	return ptr;
+}
+
+void operator delete(void* ptr) noexcept {
+	TracySecureFree(ptr);
+	free(ptr);
+}
+
+void operator delete(void* ptr, size_t size) noexcept {
+	TracySecureFree(ptr);
+	free(ptr);
 }

@@ -53,8 +53,10 @@ if(EXISTS "${PROJECT_SOURCE_DIR}/.git" AND NOT EXISTS "${PROJECT_SOURCE_DIR}/lib
 endif()
 
 set(VK2D_BUILD_DOCS OFF)
-set(VK2D_BUILD_TESTS ON)
-set(VK2D_BUILD_EXAMPLES ON)
+set(VK2D_DEBUG OFF)
+set(VK2D_BUILD_TESTS OFF)
+set(VK2D_BUILD_EXAMPLES OFF)
+set(VK2D_BUILD_STATIC_LIBRARY ON)
 add_subdirectory(lib/Vulkan2DRenderer)
 
 set(BUILD_TESTING OFF)
@@ -64,26 +66,16 @@ set(TRACY_ENABLE ON)
 set(TRACY_ON_DEMAND ON)
 set(TRACY_NO_EXIT OFF)
 set(TRACY_NO_BROADCAST OFF)
-#add_subdirectory(lib/tracy)
 
 set(IMGUI_EXAMPLES OFF)
 set(IMGUI_DISABLE_FILE_FUNCTIONS OFF)
 set(IMGUI_ENABLE_STDLIB_SUPPORT ON)
-
 set(IMGUI_IMPL_SDL OFF)
 set(IMGUI_IMPL_METAL OFF)
 set(IMGUI_IMPL_OSX OFF)
 set(IMGUI_IMPL_WIN32 OFF)
 set(IMGUI_IMPL_GLFW ON)
-set(IMGUI_IMPL_GLUT OFF)
-set(IMGUI_IMPL_OPENGL3 OFF)
-set(IMGUI_IMPL_OPENGL2 OFF)
-set(IMGUI_IMPL_DX9 OFF)
-set(IMGUI_IMPL_DX10 OFF)
-set(IMGUI_IMPL_DX11 OFF)
-set(IMGUI_IMPL_DX12 OFF)
 set(IMGUI_IMPL_VULKAN ON)
-#add_subdirectory(lib/imgui)
 
 add_subdirectory(lib)
 
@@ -97,8 +89,6 @@ file(GLOB_RECURSE SOURCE_FILES CONFIGURE_DEPENDS src/*.cpp)
 #file(GLOB_RECURSE HEADER_FILES "${CMAKE_CURRENT_SOURCE_DIR}/src/*.h")
 
 add_executable(AuroraC ${SOURCE_FILES})
-#add_executable(AuroraC src/AuroraC.cpp)
-#add_executable(AuroraC src/AuroraC.cpp lib/tracy/TracyClient.cpp)
 target_include_directories(AuroraC PUBLIC src)
 
 if (WIN32 OR CYGWIN)
@@ -111,9 +101,7 @@ endif()
 target_include_directories(AuroraC PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/lib/asmlib)
 
 target_link_libraries(AuroraC PUBLIC tracy_client)
-#target_link_libraries(AuroraC PUBLIC ArtemisCpp)
 target_link_libraries(AuroraC PUBLIC EnTT)
-#target_link_libraries(AuroraC PUBLIC gdx-cpp)
 target_link_libraries(AuroraC PUBLIC VK2D)
 target_link_libraries(AuroraC PUBLIC ${Boost_LIBRARIES})
 target_include_directories(AuroraC PUBLIC ${Boost_INCLUDE_DIRS})
@@ -121,8 +109,7 @@ target_include_directories(AuroraC PUBLIC ${Boost_INCLUDE_DIRS})
 #TODO makes wrong path?, expects root folder named eigen3 ex /usr/include/eigen3/Eigen /usr/include/eigen3/unsupported/Eigen, somehow still works for parts of it?
 target_include_directories(AuroraC PUBLIC "lib/eigen" "lib/eigen/unsupported") # 3.4 is not released yet so we have to include it ourselves
 target_link_libraries(AuroraC PUBLIC OpenMP::OpenMP_CXX)
-target_link_libraries(AuroraC PUBLIC imgui)
-#target_link_libraries(AuroraC PUBLIC imgui-glfw imgui-vulkan)  
+target_link_libraries(AuroraC PUBLIC imgui-glfw imgui-vulkan)
 
 target_precompile_headers(AuroraC PRIVATE "src/PreCompileHeader.h")
 

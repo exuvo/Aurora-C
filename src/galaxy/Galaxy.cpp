@@ -93,7 +93,7 @@ void Galaxy::galaxyWorker() {
 					
 					profilerEvents.start("run threads");
 					{
-						std::unique_lock<std::mutex> lock(workerMutex);
+						std::unique_lock<LockableBase(std::mutex)> lock(workerMutex);
 						workerCondvar.notify_all();
 					}
 					workingShadow->added.clear();
@@ -117,7 +117,7 @@ void Galaxy::galaxyWorker() {
 					
 					profilerEvents.start("shadows lock");
 					{
-						std::unique_lock<std::recursive_mutex> lock(shadowLock);
+						std::unique_lock<LockableBase(std::recursive_mutex)> lock(shadowLock);
 						profilerEvents.start("promote shadows");
 						for (StarSystem* system : systems) {
 							auto oldShadowWorld = system->shadow;
@@ -188,7 +188,7 @@ void Galaxy::galaxyWorker() {
 		}
 		
 		{
-			std::unique_lock<std::mutex> lock(workerMutex);
+			std::unique_lock<LockableBase(std::mutex)> lock(workerMutex);
 			workerCondvar.notify_all();
 		}
 		
@@ -207,7 +207,7 @@ void Galaxy::starsystemWorker() {
 	
 	while (!shutdown) {
 		{
-			std::unique_lock<std::mutex> lock(workerMutex);
+			std::unique_lock<LockableBase(std::mutex)> lock(workerMutex);
 			if (takenWorkCounter >= systems.size()) {
 				workerCondvar.wait(lock);
 			}

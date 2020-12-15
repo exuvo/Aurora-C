@@ -124,6 +124,8 @@ void StarSystem::update(uint32_t deltaGameTime) {
 //	LOG4CXX_INFO(log, "starsystem " << name << " took " << updateTime.count() << "ns");
 //	std::cout << "starsystem " << name << " (" << galacticEntityID << ")" << std::endl;
 	
+	ZoneScoped;
+	
 	ProfilerEvents &profilerEvents = workingShadow->profilerEvents;
 	profilerEvents.clear();
 	

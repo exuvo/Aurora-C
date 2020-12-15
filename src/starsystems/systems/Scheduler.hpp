@@ -7,6 +7,7 @@
 #include <utility>
 #include <vector>
 
+#include "Tracy.hpp"
 #include "entt/config/config.h"
 #include "entt/core/type_traits.hpp"
 #include "log4cxx/logger.h"
@@ -184,12 +185,15 @@ class Scheduler {
 				
 			} else {
 				
+				ZoneScoped;
 				profilerEvents.clear();
 				
 				profilerEvents.start("update");
 				for (size_t i = 0; i < size; i++) {
 					if (active[i]) {
 						process_handler& handler = handlers[i];
+						ZoneScoped;
+						ZoneText(handler.name(), strlen(handler.name()));
 						profilerEvents.start(handler.name());
 						handler.update(handler, delta);
 						profilerEvents.end();

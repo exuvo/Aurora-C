@@ -10,6 +10,7 @@
 
 #include <vector>
 #include <VK2D.h>
+//#include <examples/imgui_impl_vulkan.h>
 
 #include "ui/AuroraWindow.hpp"
 
@@ -21,6 +22,7 @@ struct AuroraGlobal {
 		std::vector<AuroraWindow*> windows;
 		bool shutdown = false;
 		vk2d::Instance* vk2dInstance;
+//		struct ImGui_ImplVulkan_InitInfo imGuiImpl; // For docking branch
 };
 
 extern AuroraGlobal Aurora;
