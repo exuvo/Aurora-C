@@ -49,7 +49,7 @@ namespace entt {
 }
 
 template<typename T>
-void vectorEraseUnorderedIdx(std::vector<T>& vec, int index) {
+void vectorEraseUnorderedIdx(std::vector<T>& vec, size_t index) {
 	assert(index < vec.size());
 	vec[index] = std::move(vec[vec.size() - 1]);
 	vec.pop_back();

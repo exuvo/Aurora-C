@@ -8,15 +8,21 @@
 #ifndef SRC_UI_AURORAWINDOW_HPP_
 #define SRC_UI_AURORAWINDOW_HPP_
 
-#include "Tracy.hpp"
-#include "TracyVulkan.hpp"
+#include <vulkan/vulkan_core.h>
 
 #include <VK2D.h>
-#include <examples/imgui_impl_vulkan.h>
 
-#include "log4cxx/logger.h"
+#include <log4cxx/logger.h>
 
 using namespace log4cxx;
+
+namespace tracy {
+	class VkCtx;
+}
+
+using TracyVkCtx = tracy::VkCtx*;
+
+class UILayer;
 
 class AuroraWindow : vk2d::WindowEventHandler {
 	public:
@@ -26,9 +32,8 @@ class AuroraWindow : vk2d::WindowEventHandler {
 		void render();
 
 		vk2d::Window* window;
-		ImGuiContext* imGuiCtx = nullptr;
 		std::vector<TracyVkCtx> tracyVkCtxs;
-//		std::unique_ptr<vk2d::Instance> vk2dInstance;
+		std::vector<UILayer*> layers;
 		
 	private:
 		LoggerPtr log = Logger::getLogger("aurora.ui.window");

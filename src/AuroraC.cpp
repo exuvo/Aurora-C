@@ -1,10 +1,11 @@
 #include <iostream>
 #include <thread>
 
-#include "Tracy.hpp"
-#include "log4cxx/logger.h"
-#include "log4cxx/xml/domconfigurator.h"
-#include "log4cxx/helpers/exception.h"
+#include <Tracy.hpp>
+
+#include <log4cxx/logger.h>
+#include <log4cxx/xml/domconfigurator.h>
+#include <log4cxx/helpers/exception.h>
 
 #include "galaxy/Galaxy.hpp"
 #include "ui/AuroraWindow.hpp"
@@ -68,8 +69,7 @@ int main(int argc, char **argv) {
 		return 1;
 	}
 	
-	AuroraWindow* window = new AuroraWindow();
-	Aurora.windows.push_back(window);
+	Aurora.windows.push_back(new AuroraWindow());
 	
 	cout <<  "running" << endl;
 
@@ -125,7 +125,9 @@ int main(int argc, char **argv) {
 			
 			for (size_t i=0; i < Aurora.windows.size(); i++) {
 				AuroraWindow* window = Aurora.windows[i];
+				
 				if (window->window->ShouldClose()) {
+					vectorEraseUnorderedIdx(Aurora.windows, i);
 					delete window;
 					i--;
 				}

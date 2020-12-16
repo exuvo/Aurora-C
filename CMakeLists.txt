@@ -74,7 +74,7 @@ set(IMGUI_IMPL_SDL OFF)
 set(IMGUI_IMPL_METAL OFF)
 set(IMGUI_IMPL_OSX OFF)
 set(IMGUI_IMPL_WIN32 OFF)
-set(IMGUI_IMPL_GLFW ON)
+set(IMGUI_IMPL_GLFW OFF)
 set(IMGUI_IMPL_VULKAN ON)
 
 add_subdirectory(lib)
@@ -84,6 +84,7 @@ message("========== Aurora-C ==========")
 find_package(Boost 1.66 REQUIRED) # COMPONENTS
 #find_package(Eigen3 3.3 REQUIRED NO_MODULE) # 3.4 not released yet
 find_package(OpenMP REQUIRED)
+#find_package(fmt REQUIRED)
 
 file(GLOB_RECURSE SOURCE_FILES CONFIGURE_DEPENDS src/*.cpp)
 #file(GLOB_RECURSE HEADER_FILES "${CMAKE_CURRENT_SOURCE_DIR}/src/*.h")
@@ -103,13 +104,14 @@ target_include_directories(AuroraC PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/lib/asmli
 target_link_libraries(AuroraC PUBLIC tracy_client)
 target_link_libraries(AuroraC PUBLIC EnTT)
 target_link_libraries(AuroraC PUBLIC VK2D)
+#target_link_libraries(AuroraC PUBLIC fmt)
 target_link_libraries(AuroraC PUBLIC ${Boost_LIBRARIES})
 target_include_directories(AuroraC PUBLIC ${Boost_INCLUDE_DIRS})
 #target_link_libraries(AuroraC PUBLIC Eigen3::Eigen)
 #TODO makes wrong path?, expects root folder named eigen3 ex /usr/include/eigen3/Eigen /usr/include/eigen3/unsupported/Eigen, somehow still works for parts of it?
 target_include_directories(AuroraC PUBLIC "lib/eigen" "lib/eigen/unsupported") # 3.4 is not released yet so we have to include it ourselves
 target_link_libraries(AuroraC PUBLIC OpenMP::OpenMP_CXX)
-target_link_libraries(AuroraC PUBLIC imgui-glfw imgui-vulkan)
+target_link_libraries(AuroraC PUBLIC imgui-vulkan) # imgui-glfw
 
 target_precompile_headers(AuroraC PRIVATE "src/PreCompileHeader.h")
 
