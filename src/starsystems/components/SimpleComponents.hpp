@@ -9,6 +9,7 @@
 #define SRC_STARSYSTEMS_COMPONENTS_SIMPLECOMPONENTS_HPP_
 
 #include <cstdint>
+#include <Types/Color.hpp>
 
 #include "utils/Utils.hpp"
 
@@ -31,8 +32,7 @@ struct NameComponent {
 };
 
 struct TintComponent {
-//TODO		Color color;
-		int color;
+		vk2d::Colorf color;
 };
 
 struct RenderComponent {};

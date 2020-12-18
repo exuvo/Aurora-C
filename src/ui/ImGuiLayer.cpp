@@ -17,9 +17,11 @@
 #include <examples/imgui_impl_vulkan.h>
 
 #include "Aurora.hpp"
-#include "ImGuiLayer.hpp"
-#include "imgui_impl_glfw.h"
+#include "ui/ImGuiLayer.hpp"
+#include "ui/imgui_impl_glfw.h"
+#include "ui/KeyMappings.hpp"
 #include "utils/dbg.h"
+#include "utils/Utils.hpp"
 
 static int imGuiContexts = 0;
 static ImGuiContext* mainCtx = nullptr;
@@ -158,6 +160,10 @@ ImGuiLayer::~ImGuiLayer() {
 	if (ctx != nullptr) {
 		ImGui::SetCurrentContext(ctx);
 		
+		for (UIWindow* uiWindow : uiWindows) {
+			delete uiWindow;
+		}
+		
 		if (--imGuiContexts == 0) {
 			ImGui_ImplVulkan_Shutdown();
 			
@@ -191,16 +197,51 @@ void ImGuiLayer::render() {
   {
   	ZoneScopedN("ImGui");
   	
-		ImGui::Begin("Hello, world!");
-		ImGui::Text("test");
-		ImGui::End();
+  	for (UIWindow* uiWindow : uiWindows) {
+  		if (uiWindow->visible) {
+  			uiWindow->render();
+  		}
+		}
 		
 		ImGui::Render();
 		ImDrawData* draw_data = ImGui::GetDrawData();
-  
+		
 		TracyVkZone(window.tracyVkCtxs[window.window->impl->next_image], window.window->impl->vk_render_command_buffers[window.window->impl->next_image], "ImGui Render");
 		ImGui_ImplVulkan_RenderDrawData(draw_data, window.window->impl->vk_render_command_buffers[window.window->impl->next_image]);
   }
+}
+
+void ImGuiLayer::addWindow(UIWindow* uiWindow) {
+	uiWindows.push_back(uiWindow);
+}
+
+void ImGuiLayer::removeWindow(UIWindow* uiWindow) {
+	vectorEraseUnorderedVal(uiWindows, uiWindow);
+	delete uiWindow;
+}
+
+template<aUIWindow T>
+void ImGuiLayer::showWindow() {
+	for (UIWindow* uiWindow : uiWindows) {
+		if (dynamic_cast<T*>(uiWindow)) {
+			uiWindow->visible = true;
+			return;
+		}
+	}
+	
+	throw std::invalid_argument("No ui window of type " + type_name<T>());
+}
+
+template<aUIWindow T>
+void ImGuiLayer::hideWindow() {
+	for (UIWindow* uiWindow : uiWindows) {
+		if (dynamic_cast<T*>(uiWindow)) {
+			uiWindow->visible = false;
+			return;
+		}
+	}
+	
+	throw std::invalid_argument("No ui window of type " + type_name<T>());
 }
 
 bool ImGuiLayer::eventKeyboard(vk2d::KeyboardButton button, int32_t scancode, vk2d::ButtonAction action, vk2d::ModifierKeyFlags modifier_keys) {

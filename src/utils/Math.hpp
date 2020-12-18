@@ -54,6 +54,8 @@ __attribute__((warn_unused_result)) double vectorAngle(const Vector2l& a);
 __attribute__((warn_unused_result)) double vectorLength(const Vector2l& a);
 __attribute__((warn_unused_result)) Vector2l vectorRotate(const Vector2l& a, const double angleRad);
 __attribute__((warn_unused_result)) Vector2d vectorRotate(const Vector2d& a, const double angleRad);
+__attribute__((warn_unused_result)) Vector2l vectorRotateDeg(const Vector2l& a, const double angleDegrees);
+__attribute__((warn_unused_result)) Vector2d vectorRotateDeg(const Vector2d& a, const double angleDegrees);
 
 __attribute__((warn_unused_result)) double getPositiveRootOfQuadraticEquation(double a, double b, double c);
 __attribute__((warn_unused_result)) std::optional<double> getPositiveRootOfQuadraticEquationSafe(double a, double b, double c);

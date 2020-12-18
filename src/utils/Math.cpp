@@ -59,6 +59,14 @@ Vector2d vectorRotate(const Vector2d& a, const double angleRad) {
 	return static_cast<Vector2d>(rotation * a); // cast only for eclipse indexer
 }
 
+Vector2l vectorRotateDeg(const Vector2l& a, const double angleDegrees) {
+	return vectorRotate(a, angleDegrees * std::numbers::pi / 180);
+}
+
+Vector2d vectorRotateDeg(const Vector2d& a, const double angleDegrees) {
+	return vectorRotate(a, angleDegrees * std::numbers::pi / 180);
+}
+
 double getPositiveRootOfQuadraticEquation(double a, double b, double c) {
 	return (-b + sqrt(b * b - 4 * a * c)) / (2 * a);
 }

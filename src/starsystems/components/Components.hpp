@@ -17,5 +17,6 @@
 #include "MovementComponents.hpp"
 #include "SimpleComponents.hpp"
 #include "TimedComponents.hpp"
+#include "StrategicIconComponent.hpp"
 
 #endif /* SRC_STARSYSTEMS_COMPONENTS_COMPONENTS_HPP_ */

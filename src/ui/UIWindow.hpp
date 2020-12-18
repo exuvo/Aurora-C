@@ -15,9 +15,9 @@ class UIWindow {
 		UIWindow();
 		virtual ~UIWindow();
 		
-		virtual void draw();
+		virtual void render();
 		
-		bool visible;
+		bool visible = false;
 };
 
 

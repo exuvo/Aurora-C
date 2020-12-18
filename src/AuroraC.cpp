@@ -9,6 +9,8 @@
 
 #include "galaxy/Galaxy.hpp"
 #include "ui/AuroraWindow.hpp"
+#include "ui/StarSystemLayer.hpp"
+#include "ui/ImGuiLayer.hpp"
 #include "Aurora.hpp"
 
 using namespace std;
@@ -47,10 +49,10 @@ int main(int argc, char **argv) {
 	vector<StarSystem*> starSystems { new StarSystem("test")};
 //	vector<StarSystem*> starSystems { new StarSystem("a"), new StarSystem("b"), new StarSystem("c"), new StarSystem("d"), new StarSystem("e") };
 	vector<Empire> empires { Empire("player1") };
-	Galaxy galaxy(empires, starSystems);
-	Aurora.galaxy = &galaxy;
+	Galaxy* galaxy = new Galaxy(empires, starSystems);
+	Aurora.galaxy = galaxy;
 
-	galaxy.init();
+	galaxy->init();
 	
 	LOG4CXX_INFO(log, "creating vk2d instance");
 	std::cout <<  "creating vk2d instance" << std::endl;
@@ -69,7 +71,12 @@ int main(int argc, char **argv) {
 		return 1;
 	}
 	
-	Aurora.windows.push_back(new AuroraWindow());
+	{
+		auto window = new AuroraWindow();
+		window->setMainLayer(new StarSystemLayer(*window, galaxy->systems[0]));
+		window->addLayer(new ImGuiLayer(*window));
+		Aurora.windows.push_back(window);
+	}
 	
 	cout <<  "running" << endl;
 

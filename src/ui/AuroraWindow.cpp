@@ -17,7 +17,6 @@
 #include "Aurora.hpp"
 #include "ui/AuroraWindow.hpp"
 #include "ui/UILayer.hpp"
-#include "ui/ImGuiLayer.hpp"
 #include "utils/dbg.h"
 #include "utils/Utils.hpp"
 
@@ -44,8 +43,6 @@ AuroraWindow::AuroraWindow() {
 		                                window->impl->vk_render_command_buffers[i]);
 		tracyVkCtxs.push_back(tmp);
 	}
-	
-	layers.push_back(new ImGuiLayer(*this));
 	
 	return;
 	
@@ -101,9 +98,9 @@ void AuroraWindow::render() {
 		TracyVkZone(tracyVkCtxs[window->impl->next_image], window->impl->vk_render_command_buffers[window->impl->next_image], "Render");
 		
 		window->DrawRectangle(
-			{{x, 0}, {x + 100,100}},
+			{{x, 0}, {x + 100, 100}},
 			true,
-			vk2d::Colorf( 1.0f, 0.0f, 0.0f, 1.0f )
+			vk2d::Colorf::WHITE()
 		);
 		
 		for (UILayer* layer : layers) {
@@ -116,6 +113,23 @@ void AuroraWindow::render() {
 		return;
 	}
 	FrameMark
+}
+
+void AuroraWindow::addLayer(UILayer* layer) {
+	layers.push_back(layer);
+}
+
+void AuroraWindow::setMainLayer(UILayer* layer) {
+	if (layers.size() == 0) {
+		layers.push_back(layer);
+	} else {
+		delete layers[0];
+		layers[0] = layer;
+	}
+}
+
+bool AuroraWindow::isKeyPressed(int glfwKey) {
+	return glfwGetKey(window->impl->glfw_window, glfwKey) == GLFW_PRESS;
 }
 
 void AuroraWindow::EventMouseButton(vk2d::Window*	window, vk2d::MouseButton	button, vk2d::ButtonAction action,
@@ -138,7 +152,7 @@ void AuroraWindow::EventCursorEnter(vk2d::Window* window, bool entered) {
 }
 
 void AuroraWindow::EventWindowFocus(vk2d::Window* window, bool focused) {
-	std::cout << "window focus " << focused << std::endl;
+//	std::cout << "window focus " << focused << std::endl;
 }
 
 void AuroraWindow::EventCursorPosition(vk2d::Window* window, vk2d::Vector2d position) {
@@ -160,7 +174,7 @@ void AuroraWindow::EventWindowIconify(vk2d::Window* window, bool iconified) {
 }
 
 void AuroraWindow::EventWindowClose(vk2d::Window* window) {
-	std::cout << "window close" << std::endl;
+//	std::cout << "window close" << std::endl;
 	window->CloseWindow();
 }
 
@@ -180,7 +194,7 @@ void AuroraWindow::EventWindowSize(vk2d::Window* window, vk2d::Vector2u size) {
 }
 
 void AuroraWindow::EventWindowMaximize(vk2d::Window* window, bool maximized) {
-	std::cout << "window maximized " << maximized << std::endl;
+//	std::cout << "window maximized " << maximized << std::endl;
 }
 
 void AuroraWindow::EventKeyboard(vk2d::Window* window, vk2d::KeyboardButton button, int32_t scancode,

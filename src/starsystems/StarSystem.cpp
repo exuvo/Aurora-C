@@ -87,6 +87,13 @@ void StarSystem::init(Galaxy* galaxy) {
 	registry.emplace<CircleComponent>(e3, 1737100.0f);
 //	registry.emplace<MassComponent>(e3, ?);
 	registry.emplace<OrbitComponent>(e3, e2, static_cast<float>(384400.0 / Units::AU), 0.2f, 0, 30);
+	
+	entt::entity e4 = registry.create();
+	registry.emplace<TextComponent>(e4, "Ship");
+	registry.emplace<TimedMovementComponent>(e4).previous.value.position = vectorRotateDeg(Vector2d{Units::AU * 1000 * 0.9, 0.0}, 45).cast<int64_t>();
+	registry.emplace<RenderComponent>(e4);
+	registry.emplace<CircleComponent>(e4, 1.0f);
+	registry.emplace<MassComponent>(e4, 1000);
 }
 
 template<typename Component>

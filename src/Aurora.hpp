@@ -16,7 +16,17 @@
 
 class Galaxy;
 
+//TODO reflection load these from xml
+struct Settings {
+		struct {
+				bool debugDisableStrategicView = false;
+				bool debugSpatialPartitioning = false;
+				bool debugSpatialPartitioningPlanetoids = false;
+		} render;
+};
+
 struct AuroraGlobal {
+		Settings settings;
 //	using galaxy = entt::service_locator<Galaxy>;
 		Galaxy* galaxy;
 		std::vector<AuroraWindow*> windows;

@@ -30,7 +30,10 @@ class AuroraWindow : vk2d::WindowEventHandler {
 		virtual ~AuroraWindow();
 		
 		void render();
-
+		void addLayer(UILayer* layer);
+		void setMainLayer(UILayer* layer);
+		bool isKeyPressed(int glfwKey);
+		
 		vk2d::Window* window;
 		std::vector<TracyVkCtx> tracyVkCtxs;
 		std::vector<UILayer*> layers;
