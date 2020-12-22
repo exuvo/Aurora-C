@@ -20,7 +20,10 @@
 #include "ui/ImGuiLayer.hpp"
 #include "ui/imgui_impl_glfw.h"
 #include "ui/KeyMappings.hpp"
+#include "ui/ImGuiDemoWindow.hpp"
+#include "ui/MainDebugWindow.hpp"
 #include "utils/dbg.h"
+#include "utils/RenderUtils.hpp"
 #include "utils/Utils.hpp"
 
 static int imGuiContexts = 0;
@@ -46,7 +49,32 @@ ImGuiLayer::ImGuiLayer(AuroraWindow& parentWindow): UILayer(parentWindow) {
   io.ConfigFlags |= ImGuiConfigFlags_IsSRGB;
   
   ImGui::StyleColorsDark();
+  
+	ImGuiStyle& style = ImGui::GetStyle();
+	style.ItemSpacing.y = 3;
+	
+  ImVec4* colors = style.Colors;
+	colors[ImGuiCol_FrameBg]          = { 0.43, 0.43, 0.43, 0.39 };
+	colors[ImGuiCol_FrameBgHovered]   = { 0.47, 0.47, 0.69, 0.40 };
+	colors[ImGuiCol_FrameBgActive]    = { 0.42, 0.41, 0.64, 0.69 };
+	colors[ImGuiCol_TitleBg]          = { 0.04, 0.04, 0.04, 0.87 };
+	colors[ImGuiCol_TitleBgActive]    = { 0.32, 0.32, 0.63, 1.00 };
+	colors[ImGuiCol_TitleBgCollapsed] = { 0.00, 0.00, 0.00, 0.51 };
+	colors[ImGuiCol_Header]           = { 0.40, 0.40, 0.90, 0.45 };
+	colors[ImGuiCol_HeaderHovered]    = { 0.45, 0.45, 0.90, 0.80 };
+	colors[ImGuiCol_HeaderActive]     = { 0.53, 0.53, 0.87, 0.80 };
+	colors[ImGuiCol_PlotLines]        = { 0.80, 0.80, 0.80, 1.00 };
+	colors[ImGuiCol_PlotHistogram]    = { 0.90, 0.70, 0.00, 1.00 };
+	
+	// convert style from sRGB to linear https://github.com/ocornut/imgui/issues/578#issuecomment-577222389
+	for (size_t i = 0; i < ImGuiCol_COUNT; i++) {
+		toLinearRGB(&style.Colors[i]);
+	}
+	
   imGuiContexts++;
+  
+  addWindow(new MainDebugWindow(*this));
+  addWindow(new ImGuiDemoWindow(*this));
 }
 
 void ImGuiLayer::initShared(){
@@ -220,28 +248,35 @@ void ImGuiLayer::removeWindow(UIWindow* uiWindow) {
 	delete uiWindow;
 }
 
-template<aUIWindow T>
-void ImGuiLayer::showWindow() {
-	for (UIWindow* uiWindow : uiWindows) {
-		if (dynamic_cast<T*>(uiWindow)) {
-			uiWindow->visible = true;
-			return;
-		}
+bool ImGuiLayer::keyAction(KeyActions_ImGuiLayer action) {
+	
+	if (action == KeyActions_ImGuiLayer::DEBUG) {
+		
+		toggleWindow<MainDebugWindow>();
+		
+	} else if (action == KeyActions_ImGuiLayer::SHIP_DEBUG) {
+		
+		printf("SHIP_DEBUG\n"); fflush(stdout);
+//		toggleWindow<ShipDebugWindow>();
+		
+	} else if (action == KeyActions_ImGuiLayer::COLONY_MANAGER) {
+		
+		printf("COLONY_MANAGER\n"); fflush(stdout);
+		
+	} else if (action == KeyActions_ImGuiLayer::SHIP_DESIGNER) {
+		
+		printf("SHIP_DESIGNER\n"); fflush(stdout);
+		
+	} else if (action == KeyActions_ImGuiLayer::RESEARCH) {
+		
+		printf("RESEARCH\n"); fflush(stdout);
+		
+	} else if (action == KeyActions_ImGuiLayer::PROFILER) {
+		
+		printf("PROFILER\n"); fflush(stdout);
 	}
 	
-	throw std::invalid_argument("No ui window of type " + type_name<T>());
-}
-
-template<aUIWindow T>
-void ImGuiLayer::hideWindow() {
-	for (UIWindow* uiWindow : uiWindows) {
-		if (dynamic_cast<T*>(uiWindow)) {
-			uiWindow->visible = false;
-			return;
-		}
-	}
-	
-	throw std::invalid_argument("No ui window of type " + type_name<T>());
+	return false;
 }
 
 bool ImGuiLayer::eventKeyboard(vk2d::KeyboardButton button, int32_t scancode, vk2d::ButtonAction action, vk2d::ModifierKeyFlags modifier_keys) {
@@ -249,6 +284,12 @@ bool ImGuiLayer::eventKeyboard(vk2d::KeyboardButton button, int32_t scancode, vk
 		ImGui::SetCurrentContext(ctx);
 		imGuiGlfw->KeyCallback(nullptr, static_cast<int>(button), static_cast<int>(scancode), static_cast<int>(action), static_cast<int>(modifier_keys));
 		return true;
+	}
+	
+	KeyActions_ImGuiLayer keyBind = KeyMappings::getRaw<KeyActions_ImGuiLayer>(scancode, action, modifier_keys);
+	
+	if (keyBind != KeyActions_ImGuiLayer::NONE) {
+		return keyAction(keyBind);
 	}
 	
 	return false;
@@ -259,6 +300,12 @@ bool ImGuiLayer::eventCharacter(uint32_t character, vk2d::ModifierKeyFlags modif
 		ImGui::SetCurrentContext(ctx);
 		imGuiGlfw->CharCallback(nullptr, static_cast<unsigned int>(character));
 		return true;
+	}
+	
+	KeyActions_ImGuiLayer keyBind = KeyMappings::getTranslated<KeyActions_ImGuiLayer>(character);
+
+	if (keyBind != KeyActions_ImGuiLayer::NONE) {
+		return keyAction(keyBind);
 	}
 	
 	return false;

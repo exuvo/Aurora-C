@@ -100,7 +100,7 @@ void AuroraWindow::render() {
 		window->DrawRectangle(
 			{{x, 0}, {x + 100, 100}},
 			true,
-			vk2d::Colorf::WHITE()
+			vk2d::Colorf::RED()
 		);
 		
 		for (UILayer* layer : layers) {

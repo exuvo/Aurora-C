@@ -11,6 +11,7 @@
 #include "ui/AuroraWindow.hpp"
 #include "ui/StarSystemLayer.hpp"
 #include "ui/ImGuiLayer.hpp"
+#include "ui/KeyMappings.hpp"
 #include "Aurora.hpp"
 
 using namespace std;
@@ -70,6 +71,8 @@ int main(int argc, char **argv) {
 		LOG4CXX_ERROR(log, "failed to create vk2d instance");
 		return 1;
 	}
+	
+	KeyMappings::loadAllDefaults();
 	
 	{
 		auto window = new AuroraWindow();

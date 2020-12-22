@@ -14,6 +14,7 @@
 
 class StarSystem;
 struct CircleComponent;
+class KeyActions_StarSystemLayer;
 
 class StarSystemLayer: public UILayer {
 	public:
@@ -38,6 +39,7 @@ class StarSystemLayer: public UILayer {
 		
 		bool inStrategicView(entt::entity entity, CircleComponent& circle);
 		int getCircleSegments(float radius);
+		bool keyAction(KeyActions_StarSystemLayer action);
 };
 
 

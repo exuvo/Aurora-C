@@ -13,6 +13,7 @@
 #include "galaxy/Galaxy.hpp"
 #include "utils/Math.hpp"
 #include "utils/RenderUtils.hpp"
+#include "ui/KeyMappings.hpp"
 
 StarSystemLayer::StarSystemLayer(AuroraWindow& parentWindow, StarSystem* starSystem): UILayer(parentWindow) {
 	this->starSystem = starSystem;
@@ -233,11 +234,63 @@ int StarSystemLayer::getCircleSegments(float radius) {
 	return std::min(1000, std::max(3, (int) (10 * std::cbrt(radius / zoom))));
 }
 
+bool StarSystemLayer::keyAction(KeyActions_StarSystemLayer action) {
+	
+	if (action == KeyActions_StarSystemLayer::GENERATE_SYSTEM) {
+
+		printf("GENERATE_SYSTEM\n"); fflush(stdout);
+//			StarSystemGeneration(system).generateRandomSystem();
+
+	} else if (action == KeyActions_StarSystemLayer::SPEED_UP) {
+		
+		Player::current->increaseSpeed();
+		return true;
+
+	} else if (action == KeyActions_StarSystemLayer::SPEED_DOWN) {
+
+		Player::current->decreaseSpeed();
+		return true;
+
+	} else if (action == KeyActions_StarSystemLayer::PAUSE) {
+
+		Player::current->pauseSpeed();
+		return true;
+
+	} else if (action == KeyActions_StarSystemLayer::MAP) {
+
+		printf("MAP\n"); fflush(stdout);
+//			window.setMainLayer(GalaxyLayer(window, starSystem));
+
+	} else if (action == KeyActions_StarSystemLayer::ATTACK) {
+
+//			if (Player.current.selection.isNotEmpty()) {
+//				selectedAction = KeyActions_StarSystemLayer::ATTACK;
+//				println("Selected action " + action);
+//			} else {
+//				println("Unable to select action " + action + ", no selection");
+//			}
+	}
+
+	return false;
+}
+
 bool StarSystemLayer::eventKeyboard(vk2d::KeyboardButton button, int32_t scancode, vk2d::ButtonAction action, vk2d::ModifierKeyFlags modifier_keys) {
+	KeyActions_StarSystemLayer keyBind = KeyMappings::getRaw<KeyActions_StarSystemLayer>(scancode, action, modifier_keys);
+	
+	if (keyBind != KeyActions_StarSystemLayer::NONE) {
+		return keyAction(keyBind);
+	}
+
 	return false;
 }
 
 bool StarSystemLayer::eventCharacter(uint32_t character, vk2d::ModifierKeyFlags modifier_keys) {
+	KeyActions_StarSystemLayer keyBind = KeyMappings::getTranslated<KeyActions_StarSystemLayer>(character);
+
+	if (keyBind != KeyActions_StarSystemLayer::NONE) {
+		return keyAction(keyBind);
+	}
+
 	return false;
 }
 

@@ -10,16 +10,19 @@
 
 #include <imgui.h>
 
+class ImGuiLayer;
+
 class UIWindow {
 	public:
-		UIWindow();
-		virtual ~UIWindow();
+		UIWindow(ImGuiLayer& layer): layer(layer) {};
+		virtual ~UIWindow() = default;
 		
-		virtual void render();
+		virtual void render() = 0;
 		
 		bool visible = false;
+		
+	protected:
+		ImGuiLayer& layer;
 };
-
-
 
 #endif /* SRC_UI_UIWINDOW_HPP_ */

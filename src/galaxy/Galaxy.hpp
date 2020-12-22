@@ -79,6 +79,7 @@ class Galaxy {
 		Galaxy(Galaxy&&) = default;
 		
 		void init();
+		void updateSpeed();
 
 	private:
 		LoggerPtr log = Logger::getLogger("aurora.galaxy");

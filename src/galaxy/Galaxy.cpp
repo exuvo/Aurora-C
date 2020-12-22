@@ -18,7 +18,13 @@ void Galaxy::init() {
 		system->init(this);
 	}
 	
-	for (int i = 0; i < 2; i++) {
+	uint32_t cores = std::thread::hardware_concurrency();
+	if (cores < 1) {
+		LOG4CXX_WARN(log, "Unable to determine core count!");
+		cores = 1;
+	}
+	
+	for (uint32_t i = 0; i < cores; i++) {
 		std::thread *workerThread = new std::thread(&Galaxy::starsystemWorker, this);
 		threads.push_back(workerThread);
 	}
@@ -64,7 +70,7 @@ void Galaxy::galaxyWorker() {
 //						println("tickSize $tickSize, speed $speed, diff ${now - lastProcess}, accumulator $accumulator")
 
 					time += tickSize;
-					LOG4CXX_INFO(log, "tick " << time);
+					LOG4CXX_TRACE(log, "tick " << time);
 					updateDay();
 					
 					ProfilerEvents& profilerEvents = workingShadow->profilerEvents;
@@ -245,6 +251,21 @@ void Galaxy::starsystemWorker() {
 			systemIndex = takenWorkCounter++;
 		}
 	}
+}
+
+void Galaxy::updateSpeed() {
+	uint32_t lowestRequestedSpeed = std::numeric_limits<uint32_t>::max();
+	
+	for (Player& player : players) {
+		lowestRequestedSpeed = std::min(lowestRequestedSpeed, player.requestedSpeed);
+	}
+	
+	speed = nanoseconds(lowestRequestedSpeed);
+	
+	if (speed > 0ns) {
+		std::unique_lock<std::mutex> lock(galaxyThreadMutex);
+		galaxyThreadCondvar.notify_one();
+}
 }
 
 int Galaxy::updateDay() {

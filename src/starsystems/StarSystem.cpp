@@ -126,7 +126,7 @@ void StarSystem::changed2<component>(entt::entity entity) { \
 BOOST_PP_SEQ_FOR_EACH(CHANGED_TEMPLATE, ~, SYNCED_COMPONENTS_SEQ)
 
 void StarSystem::update(uint32_t deltaGameTime) {
-	LOG4CXX_INFO(log, "starsystem " << name << " update");
+	LOG4CXX_TRACE(log, "starsystem " << name << " update");
 //	std::this_thread::sleep_for(50ms);
 //	LOG4CXX_INFO(log, "starsystem " << name << " took " << updateTime.count() << "ns");
 //	std::cout << "starsystem " << name << " (" << galacticEntityID << ")" << std::endl;

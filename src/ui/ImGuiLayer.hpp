@@ -12,11 +12,13 @@
 
 #include "ui/UILayer.hpp"
 #include "ui/UIWindow.hpp"
+#include "utils/Utils.hpp"
 
 template<typename T>
 concept aUIWindow = std::is_base_of<UIWindow, T>::value;
 
 class ImGuiGlfw;
+class KeyActions_ImGuiLayer;
 
 class ImGuiLayer: public UILayer {
 	public:
@@ -27,12 +29,47 @@ class ImGuiLayer: public UILayer {
 		void addWindow(UIWindow* uiWindow);
 		void removeWindow(UIWindow* uiWindow);
 		
-		template<aUIWindow T>
-		void showWindow();
+//		template<aUIWindow T>
+//		T& getWindow();
+//		
+//		template<aUIWindow T>
+//		void showWindow();
+//		
+//		template<aUIWindow T>
+//		void hideWindow();
+//		
+//		template<aUIWindow T>
+//		void toggleWindow();
 		
 		template<aUIWindow T>
-		void hideWindow();
+		T& getWindow() {
+			for (UIWindow* uiWindow : uiWindows) {
+				auto casted = dynamic_cast<T*>(uiWindow);
+				if (casted) {
+					return *casted;
+				}
+			}
+			
+			throw std::invalid_argument("No ui window of type " + type_name<T>());
+		}
 		
+		template<aUIWindow T>
+		void showWindow() {
+			getWindow<T>().visible = true;
+		}
+		
+		template<aUIWindow T>
+		void hideWindow() {
+			getWindow<T>().visible = false;
+		}
+		
+		template<aUIWindow T>
+		void toggleWindow() {
+			T& window = getWindow<T>();
+			window.visible = !window.visible;
+		}
+		
+		bool keyAction(KeyActions_ImGuiLayer action);
 		virtual bool eventKeyboard(vk2d::KeyboardButton button, int32_t scancode, vk2d::ButtonAction action, vk2d::ModifierKeyFlags modifier_keys) override;
 		virtual bool eventCharacter(uint32_t character, vk2d::ModifierKeyFlags modifier_keys) override;
 		virtual bool eventMouseButton(vk2d::MouseButton button, vk2d::ButtonAction action, vk2d::ModifierKeyFlags modifier_keys) override;
