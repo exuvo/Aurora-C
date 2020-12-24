@@ -12,8 +12,11 @@
 #include <boost/preprocessor/tuple.hpp>
 #include <boost/preprocessor/seq.hpp>
 
-#include "components/Components.hpp"
 #include "StarSystem.hpp"
+#include "components/Components.hpp"
+#include "starsystems/systems/Systems.hpp"
+#include "utils/quadtree/QuadTreeAABB.hpp"
+#include "utils/quadtree/QuadTreePoint.hpp"
 
 namespace hana = boost::hana;
 
@@ -35,6 +38,10 @@ constexpr auto syncedComponentToIndexMap = hana::make_map(
 
 class ShadowStarSystem {
 	public:
+		ShadowStarSystem(StarSystem* starSystem) {
+			this->starSystem = starSystem;
+		}
+		
 		entt::registry registry;
 		std::vector<bool> added;
 		std::vector<bool> changed;
@@ -43,14 +50,15 @@ class ShadowStarSystem {
 
 		bool quadtreeShipsChanged = false;
 		bool quadtreePlanetoidsChanged = false;
+		
+		QuadtreePoint quadtreeShips = {SpatialPartitioningSystem::MAX, SpatialPartitioningSystem::MAX, SpatialPartitioningSystem::MAX_ELEMENTS, SpatialPartitioningSystem::DEPTH};
+		QuadtreeAABB quadtreePlanetoids = {SpatialPartitioningPlanetoidsSystem::MAX, SpatialPartitioningPlanetoidsSystem::MAX, SpatialPartitioningPlanetoidsSystem::MAX_ELEMENTS, SpatialPartitioningPlanetoidsSystem::DEPTH};
 
 		ProfilerEvents profilerEvents;
 
-		ShadowStarSystem(StarSystem* starSystem) {
-			this->starSystem = starSystem;
-		}
 		
 		void update();
+		EntityReference getEntityReference(entt::entity entity);
 
 	private:
 		StarSystem* starSystem;

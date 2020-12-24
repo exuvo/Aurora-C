@@ -19,6 +19,7 @@ class Galaxy;
 //TODO reflection load these from xml
 struct Settings {
 		struct {
+				float zoomSensititivy = 1.25;
 				bool debugDisableStrategicView = false;
 				bool debugSpatialPartitioning = false;
 				bool debugSpatialPartitioningPlanetoids = false;

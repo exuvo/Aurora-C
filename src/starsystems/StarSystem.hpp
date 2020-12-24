@@ -15,6 +15,7 @@
 #include "log4cxx/logger.h"
 
 #include "starsystems/systems/Scheduler.hpp"
+#include "starsystems/components/IDComponents.hpp"
 #include "utils/Profiling.hpp"
 
 using namespace std::chrono;
@@ -24,6 +25,7 @@ class Command;
 class StarSystem;
 class Galaxy;
 class ShadowStarSystem;
+class Systems;
 
 class StarSystem {
 	public:
@@ -39,6 +41,7 @@ class StarSystem {
 		
 		Galaxy* galaxy = nullptr;
 		entt::registry registry;
+		Systems* systems = nullptr;
 
 		StarSystem(std::string name) {
 			this->name = name;
@@ -65,6 +68,8 @@ class StarSystem {
 		
 		template<typename Component>
 		void deleted(entt::registry&, entt::entity);
+		
+		EntityReference getEntityReference(entt::entity entity);
 		
 	private:
 		LoggerPtr log = Logger::getLogger("aurora.starsystem");

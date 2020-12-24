@@ -9,8 +9,9 @@
 #define SRC_STARSYSTEMS_SYSTEMS_SYSTEMS_HPP_
 
 #include <chrono>
-#include <eigen3/unsupported/Eigen/Polynomials>
 #include <exception>
+//fixme no longer compiles
+//#include <eigen3/unsupported/Eigen/Polynomials>
 
 #include "entt/entt.hpp"
 #include "log4cxx/logger.h"
@@ -18,8 +19,12 @@
 #include "galaxy/Galaxy.hpp"
 #include "starsystems/components/Components.hpp"
 #include "starsystems/systems/Scheduler.hpp"
+#include "utils/quadtree/SmallList.hpp"
 
 using namespace log4cxx;
+
+struct Systems;
+class QuadtreePoint;
 
 template<typename Derived>
 class BaseSystem : public Process<Derived, uint32_t> {
@@ -82,8 +87,6 @@ struct InterceptResult {
 		Vector2l relativeInterceptVelocity;
 };
 
-struct Systems;
-
 class WeaponSystem : public IntervalSystem<WeaponSystem> {
 	public:
 		WeaponSystem(StarSystem* starSystem) : WeaponSystem::IntervalSystem(1s, starSystem) {};
@@ -99,7 +102,7 @@ class WeaponSystem : public IntervalSystem<WeaponSystem> {
 		
 	private:
 		LoggerPtr log = Logger::getLogger("aurora.starsystems.systems.weapon");
-		Eigen::PolynomialSolver<double, 4> polynomialSolver;
+//		Eigen::PolynomialSolver<double, 4> polynomialSolver;
 };
 
 class MovementPreSystem : public IntervalSystem<MovementPreSystem> {
@@ -126,10 +129,52 @@ class MovementSystem : public IntervalSystem<MovementSystem> {
 		WeaponSystem* weaponSystem = nullptr;
 };
 
+class SpatialPartitioningSystem : public IntervalSystem<MovementSystem> {
+	public:
+		SpatialPartitioningSystem(StarSystem* starSystem) : SpatialPartitioningSystem::IntervalSystem(1s, starSystem) {};
+		
+		void init(void*);
+		void update(delta_type delta);
+		static SmallList<entt::entity> query(QuadtreePoint& quadTree, Matrix2l worldCoordinates);
+		
+		static constexpr int32_t SCALE = 2000; // in m , min 1000
+		static constexpr int32_t MAX = std::numeric_limits<int32_t>::max();
+		static constexpr int64_t DESIRED_MIN_SQUARE_SIZE = 100'000'000; // in m
+		static constexpr double RAW_DEPTH = std::log(SCALE * (double) MAX / DESIRED_MIN_SQUARE_SIZE) / std::log(2.0);
+		static constexpr int32_t DEPTH = std::round(RAW_DEPTH);
+		static constexpr int64_t MIN_SQUARE_SIZE = (SCALE * (long) MAX) / std::pow(2, DEPTH);
+		static constexpr int32_t MAX_ELEMENTS = 8;
+		
+	private:
+		LoggerPtr log = Logger::getLogger("aurora.starsystems.systems.spatialpartitioning");
+};
+
+class SpatialPartitioningPlanetoidsSystem : public IntervalSystem<MovementSystem> {
+	public:
+		SpatialPartitioningPlanetoidsSystem(StarSystem* starSystem) : SpatialPartitioningPlanetoidsSystem::IntervalSystem(1s, starSystem) {};
+		
+		void init(void*);
+		void update(delta_type delta);
+		static std::vector<entt::entity> query(QuadtreePoint& quadTree, Matrix2l worldCoordinates);
+		
+		static constexpr int32_t SCALE = 2000; // in m , min 1000
+		static constexpr int32_t MAX = std::numeric_limits<int32_t>::max();
+		static constexpr int64_t DESIRED_MIN_SQUARE_SIZE = 149597870700; // AU in m
+		static constexpr double RAW_DEPTH = std::log(SCALE * (double) MAX / DESIRED_MIN_SQUARE_SIZE) / std::log(2.0);
+		static constexpr int32_t DEPTH = std::round(RAW_DEPTH); // 5
+		static constexpr int64_t MIN_SQUARE_SIZE = (SCALE * (long) MAX) / std::pow(2, DEPTH);
+		static constexpr int32_t MAX_ELEMENTS = 4;
+		
+	private:
+		LoggerPtr log = Logger::getLogger("aurora.starsystems.systems.spatialpartitioningplanetoids");
+};
+
 struct Systems {
 		WeaponSystem* weaponSystem = nullptr;
 		MovementPreSystem* movementPreSystem = nullptr;
 		MovementSystem* movementSystem = nullptr;
+		SpatialPartitioningSystem* spatialPartitioningSystem = nullptr;
+		SpatialPartitioningPlanetoidsSystem* spatialPartitioningPlanetoidsSystem = nullptr;
 };
 
 #endif /* SRC_STARSYSTEMS_SYSTEMS_SYSTEMS_HPP_ */

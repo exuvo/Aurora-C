@@ -34,9 +34,9 @@ void registerComponentListeners(entt::registry& registry, StarSystem* starSystem
 void StarSystem::init(Galaxy* galaxy) {
 	StarSystem::galaxy = galaxy;
 	
-	Systems systems;
+	systems = new Systems();
 	
-	systems.movementPreSystem = scheduler.attach<MovementPreSystem>(this);
+	systems->movementPreSystem = scheduler.attach<MovementPreSystem>(this);
 //	scheduler.attach<ShipPreSystem>(this);
 //	scheduler.attach<TargetingPreSystem>(this);
 //	scheduler.attach<WeaponPreSystem>(this);
@@ -46,11 +46,11 @@ void StarSystem::init(Galaxy* galaxy) {
 //	scheduler.attach<ColonySystem>(this);
 //	scheduler.attach<ShipSystem>(this);
 //	scheduler.attach<MovementPredictedSystem>(this);
-	systems.movementSystem = scheduler.attach<MovementSystem>(this);
+	systems->movementSystem = scheduler.attach<MovementSystem>(this);
 //	scheduler.attach<SolarIrradianceSystem>(this);
 //	scheduler.attach<PassiveSensorSystem>(this);
 //	scheduler.attach<TargetingSystem>(this);
-	systems.weaponSystem = scheduler.attach<WeaponSystem>(this);
+	systems->weaponSystem = scheduler.attach<WeaponSystem>(this);
 //	scheduler.attach<TimedLifeSystem>(this);
 //	scheduler.attach<SpatialPartitioningSystem>(this);
 //	scheduler.attach<SpatialPartitioningPlanetoidsSystem>(this);
@@ -68,6 +68,7 @@ void StarSystem::init(Galaxy* galaxy) {
 	registry.emplace<TextComponent>(e1, "Sun");
 	registry.emplace<TimedMovementComponent>(e1).previous.value.position = {0, 0};
 	registry.emplace<RenderComponent>(e1);
+	registry.emplace<TintComponent>(e1, vk2d::Colorf::YELLOW());
 	registry.emplace<SunComponent>(e1, 1361);
 	registry.emplace<CircleComponent>(e1, 696340000.0f);
 	registry.emplace<MassComponent>(e1, 1.988e30);
@@ -76,6 +77,7 @@ void StarSystem::init(Galaxy* galaxy) {
 	registry.emplace<TextComponent>(e2, "Earth");
 	registry.emplace<TimedMovementComponent>(e2);
 	registry.emplace<RenderComponent>(e2);
+	registry.emplace<TintComponent>(e2, vk2d::Colorf::GREY());
 	registry.emplace<CircleComponent>(e2, 6371000.0f);
 	registry.emplace<MassComponent>(e2, 5.972e24);
 	registry.emplace<OrbitComponent>(e2, e1, 1.0f, 0.0f, -45, 0);
@@ -84,6 +86,7 @@ void StarSystem::init(Galaxy* galaxy) {
 	registry.emplace<TextComponent>(e3, "Moon");
 	registry.emplace<TimedMovementComponent>(e3);
 	registry.emplace<RenderComponent>(e3);
+	registry.emplace<TintComponent>(e3, vk2d::Colorf::BLUE());
 	registry.emplace<CircleComponent>(e3, 1737100.0f);
 //	registry.emplace<MassComponent>(e3, ?);
 	registry.emplace<OrbitComponent>(e3, e2, static_cast<float>(384400.0 / Units::AU), 0.2f, 0, 30);
@@ -94,6 +97,11 @@ void StarSystem::init(Galaxy* galaxy) {
 	registry.emplace<RenderComponent>(e4);
 	registry.emplace<CircleComponent>(e4, 1.0f);
 	registry.emplace<MassComponent>(e4, 1000);
+	registry.emplace<TintComponent>(e4, vk2d::Colorf::RED());
+}
+
+EntityReference StarSystem::getEntityReference(entt::entity entity) {
+	return {this, entity, registry.get<UUIDComponent>(entity).uuid};
 }
 
 template<typename Component>

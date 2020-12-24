@@ -349,20 +349,20 @@ std::optional<InterceptResult> WeaponSystem::getInterceptionPosition3(MovementVa
 				initialGuess = 1.0;
 			}
 			
-			polynomialSolver.compute(coefs);
-			const Eigen::Matrix<std::complex<double>, 4, 1>& complexRoots = polynomialSolver.roots();
+//			polynomialSolver.compute(coefs);
+//			const Eigen::Matrix<std::complex<double>, 4, 1>& complexRoots = polynomialSolver.roots();
 			
 //			const auto complexRoots = polynomialSolver.solveAllComplex(coefs, initialGuess, POLYNOMIAL_MAX_ITERATIONS);
 			
 			std::optional<double> solvedTime = {};
 			
 //			if (complexRoots != null) {
-				for (const std::complex<double>& root : complexRoots) {
-//					println("complex root $root")
-					if (root.imag() == 0.0 && root.real() > 0 && (!solvedTime || root.real() < *solvedTime)) {
-						solvedTime = root.real();
-					}
-				}
+//				for (const std::complex<double>& root : complexRoots) {
+////					println("complex root $root")
+//					if (root.imag() == 0.0 && root.real() > 0 && (!solvedTime || root.real() < *solvedTime)) {
+//						solvedTime = root.real();
+//					}
+//				}
 //			}
 			
 			std::cout << "solvedTime $solvedTime, initialGuess $initialGuess";

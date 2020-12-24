@@ -1,31 +1,22 @@
 
 // *********************************************************************************
-// QuadTree.cpp
+// QuadAABBTree.cpp
 // *********************************************************************************
-#include "QuadTree.hpp"
 #include <utility>
+#include "QuadTreeAABB.hpp"
 
-enum {max_elements = 8};
-
-static void node_insert(Quadtree& tree, const QuadNodeData& node_data, int element);
-
-static int floor_int(float val)
-{
-    return static_cast<int>(val);
-}
-
-static bool intersect(const int ltrb1[4], const int ltrb2[4])
+static bool intersect(const int32_t ltrb1[4], const int32_t ltrb2[4])
 {
   return ltrb2[0] <= ltrb1[2] && ltrb2[2] >= ltrb1[0] &&
          ltrb2[1] <= ltrb1[3] && ltrb2[3] >= ltrb1[1];
 }
 
-void leaf_insert(Quadtree& tree, const QuadNodeData& node_data, int element)
+void QuadtreeAABB::leaf_insert(QuadtreeAABB& tree, const QuadAABBNodeData& node_data, int32_t element)
 {
-    QuadNode* node = &tree.nodes[node_data.index];
+    QuadAABBNode* node = &tree.nodes[node_data.index];
 
     // Insert the element node to the leaf.
-    const QuadEltNode new_elt_node = {node->first_child, element};
+    const QuadAABBEltNode new_elt_node = {node->first_child, element};
     node->first_child = tree.elt_nodes.insert(new_elt_node);
 
     // If the leaf is full, split it.
@@ -60,29 +51,29 @@ void leaf_insert(Quadtree& tree, const QuadNodeData& node_data, int element)
 
         // Transfer the elements in the former leaf node to its new children.
         node->count = -1;
-        for (int j=0; j < elts.size(); ++j)
+        for (uint32_t j=0; j < elts.size(); ++j)
             node_insert(tree, node_data, elts[j]);
     }
     else
         ++node->count;
 }
 
-static QuadNodeData child_data(int mx, int my, int sx, int sy, int index, int depth)
+static QuadAABBNodeData child_data(int32_t mx, int32_t my, int32_t sx, int32_t sy, int32_t index, uint8_t depth)
 {
-    const QuadNodeData cd = {{mx, my, sx, sy}, index, depth};
+    const QuadAABBNodeData cd = {{mx, my, sx, sy}, index, depth};
     return cd;
 }
 
-static QuadNodeList find_leaves(const Quadtree& tree, const QuadNodeData& root, const int rect[4])
+static QuadAABBNodeList find_leaves(const QuadtreeAABB& tree, const QuadAABBNodeData& root, const int32_t rect[4])
 {
-    QuadNodeList leaves, to_process;
+    QuadAABBNodeList leaves, to_process;
     to_process.push_back(root);
     while (to_process.size() > 0)
     {
-        const QuadNodeData nd = to_process.pop_back();
+        const QuadAABBNodeData nd = to_process.pop_back();
 
         // If this node is a leaf, insert it to the list.
-        if (tree.nodes[nd.index].count != -1)
+        if (tree.nodes[nd.index].count != QuadtreeAABB::NOT_LEAF)
             leaves.push_back(nd);
         else
         {
@@ -112,18 +103,18 @@ static QuadNodeList find_leaves(const Quadtree& tree, const QuadNodeData& root, 
     return leaves;
 }
 
-static void node_insert(Quadtree& tree, const QuadNodeData& node_data, int element)
+void QuadtreeAABB::node_insert(QuadtreeAABB& tree, const QuadAABBNodeData& node_data, int32_t element)
 {
     // Find the leaves and insert the element to all the leaves found.
-    const QuadNodeList leaves = find_leaves(tree, node_data, tree.elts[element].ltrb);
-    for (int j=0; j < leaves.size(); ++j)
+    const QuadAABBNodeList leaves = find_leaves(tree, node_data, tree.elts[element].ltrb);
+    for (uint32_t j=0; j < leaves.size(); ++j)
         leaf_insert(tree, leaves[j], element);
 }
 
-Quadtree::Quadtree(int width, int height, int imax_depth):
-    free_node(-1), max_depth(imax_depth)
+QuadtreeAABB::QuadtreeAABB(int32_t width, int32_t height, uint16_t start_max_elements, uint8_t imax_depth): max_depth(imax_depth)
 {
-    const QuadNode root_node = {-1, 0};
+	max_elements = start_max_elements;
+    const QuadAABBNode root_node = {-1, 0};
     nodes.push_back(root_node);
 
     root_rect.size_x = width >> 1;
@@ -132,24 +123,24 @@ Quadtree::Quadtree(int width, int height, int imax_depth):
     root_rect.mid_y = root_rect.size_y;
 }
 
-int Quadtree::insert(int id, float x1, float y1, float x2, float y2)
+int QuadtreeAABB::insert(uint32_t id, int32_t x1, int32_t y1, int32_t x2, int32_t y2)
 {
-    const QuadElt new_elt = {id, {floor_int(x1), floor_int(y1), floor_int(x2), floor_int(y2)}};
+    const QuadAABBElt new_elt = {id, {x1, y1, x2, y2}};
     const int element = elts.insert(new_elt);
     node_insert(*this, root_data(), element);
     return element;
 }
 
-void Quadtree::remove(int element)
+void QuadtreeAABB::remove(int32_t element)
 {
     // Find the leaves.
-    const QuadNodeList leaves = find_leaves(*this, root_data(), elts[element].ltrb);
+    const QuadAABBNodeList leaves = find_leaves(*this, root_data(), elts[element].ltrb);
 
     // For each leaf node, remove the element node.
-    for (int j=0; j < leaves.size(); ++j)
+    for (uint32_t j=0; j < leaves.size(); ++j)
     {
-        const QuadNodeData& nd = leaves[j];
-        QuadNode& node = nodes[nd.index];
+        const QuadAABBNodeData& nd = leaves[j];
+        QuadAABBNode& node = nodes[nd.index];
 
         // Walk the list until we find the element node.
         int* link = &node.first_child;
@@ -172,19 +163,19 @@ void Quadtree::remove(int element)
     elts.erase(element);
 }
 
-SmallList<int> Quadtree::query(float x1, float y1, float x2, float y2, int omit_element)
+SmallList<uint32_t> QuadtreeAABB::query(int32_t x1, int32_t y1, int32_t x2, int32_t y2, int32_t omit_element)
 {
     // Find the leaves.
-    const int rect[4] = {floor_int(x1), floor_int(y1), floor_int(x2), floor_int(y2)};
-    const QuadNodeList leaves = find_leaves(*this, root_data(), rect);
+    const int rect[4] = {x1, y1, x2, y2};
+    const QuadAABBNodeList leaves = find_leaves(*this, root_data(), rect);
 
     // For each leaf node, look for elements that intersect.
-    SmallList<int> elements;
+    SmallList<uint32_t> elements;
     temp.resize(elts.range(), false);
-    for (int j=0; j < leaves.size(); ++j)
+    for (uint32_t j=0; j < leaves.size(); ++j)
     {
-        const QuadNodeData& nd = leaves[j];
-        QuadNode& node = nodes[nd.index];
+        const QuadAABBNodeData& nd = leaves[j];
+        QuadAABBNode& node = nodes[nd.index];
 
         // Walk the list and add elements that intersect.
         int elt_node_index = node.first_child;
@@ -200,33 +191,35 @@ SmallList<int> Quadtree::query(float x1, float y1, float x2, float y2, int omit_
         }
     }
     // Unmark the elements that were inserted.
-    for (int j=0; j < elements.size(); ++j)
+    for (uint32_t j=0; j < elements.size(); ++j)
         temp[elements[j]] = false;
     return elements;
 }
 
-void Quadtree::cleanup()
+bool QuadtreeAABB::cleanup()
 {
+	bool changed = false;
+	
     // Only process the root if it's not a leaf.
     // We use a 'to process' stack to avoid recursion.
     SmallList<int> to_process;
-    if (nodes[0].count == -1)
+    if (nodes[0].count == NOT_LEAF)
         to_process.push_back(0);
 
     while (to_process.size() > 0)
     {
         const int node_index = to_process.pop_back();
-        QuadNode& node = nodes[node_index];
+        QuadAABBNode& node = nodes[node_index];
 
         // Loop through the children.
         int num_empty_leaves = 0;
         for (int j=0; j < 4; ++j)
         {
             const int child_index = node.first_child + j;
-            const QuadNode& child = nodes[child_index];
+            const QuadAABBNode& child = nodes[child_index];
             if (child.count == 0)
                 ++num_empty_leaves;
-            else if (child.count == -1)
+            else if (child.count == NOT_LEAF)
                 to_process.push_back(child_index);
         }
 
@@ -241,12 +234,108 @@ void Quadtree::cleanup()
             // Make this node the new empty leaf.
             node.first_child = -1;
             node.count = 0;
+            
+            changed = true;
         }
     }
+    
+    return changed;
 }
 
-QuadNodeData Quadtree::root_data() const
+bool QuadtreeAABB::cleanupFull()
 {
-    QuadNodeData rd = { root_rect, 0, 0 };
+	bool changed = false;
+	
+    // Only process the root if it's not a leaf.
+    // We use a 'to process' stack to avoid recursion.
+    SmallList<int> to_process;
+    if (nodes[0].count == NOT_LEAF)
+        to_process.push_back(0);
+
+    while (to_process.size() > 0)
+    {
+        const int node_index = to_process.pop_back();
+        QuadAABBNode& node = nodes[node_index];
+
+        int num_empty_leaves = 0;
+        uint16_t num_elements = 0;
+        
+        // Loop through the children.
+        for (int j=0; j < 4; ++j)
+        {
+            const int child_index = node.first_child + j;
+            const QuadAABBNode& child = nodes[child_index];
+            if (child.count == 0) {
+                ++num_empty_leaves;
+            } else if (child.count == NOT_LEAF) {
+                to_process.push_back(child_index);
+                num_elements = -1;
+            } else if (num_elements != NOT_LEAF) {
+							num_elements += child.count;
+						}
+        }
+
+        // If all the children were empty leaves, remove them and
+        // make this node the new empty leaf.
+        if (num_empty_leaves == 4)
+        {
+            // Push all 4 children to the free list.
+            nodes[node.first_child].first_child = free_node;
+            free_node = node.first_child;
+
+            // Make this node the new empty leaf.
+            node.first_child = -1;
+            node.count = 0;
+            
+            changed = true;
+            
+        }  else if (num_elements != NOT_LEAF && num_elements <= max_elements / 2) {
+        	
+        	SmallList<int> elements;
+        	
+					// Consolidate children
+        	for (int j=0; j < 4; ++j) {
+						const int child_index = node.first_child + j;
+						QuadAABBNode& child = nodes[child_index];
+						
+						while (child.first_child != -1) {
+							int eltIdx = child.first_child;
+							QuadAABBEltNode& elt = elt_nodes[eltIdx];
+							child.first_child = elt.next;
+							
+							// Insert element to the transfer list.
+							elements.push_back(elt.element);
+							
+							// Pop off the element node from the leaf and remove it from the qt.
+							elt_nodes.erase(eltIdx);
+						}
+					}
+						
+					assert(num_elements == elements.size());
+					
+					// Push all 4 children to the free list.
+					nodes[node.first_child].first_child = free_node;
+					free_node = node.first_child;
+					
+					node.first_child = -1;
+					node.count = num_elements;
+					
+					// Transfer the elements
+					for (int i = 0; i < num_elements; ++i) {
+						// Insert the element node to the leaf.
+						const QuadAABBEltNode new_elt_node = {node.first_child, elements[i]};
+						node.first_child = elt_nodes.insert(new_elt_node);
+					}
+					
+					changed = true;
+        }
+    }
+    
+    return changed;
+}
+
+QuadAABBNodeData QuadtreeAABB::root_data() const
+{
+    QuadAABBNodeData rd = { root_rect, 0, 0 };
     return rd;
 }

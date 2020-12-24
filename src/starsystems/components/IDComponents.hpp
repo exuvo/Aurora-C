@@ -19,8 +19,13 @@ struct EntityUUID {
 };
 
 struct EntityReference {
+		EntityReference(StarSystem* system, entt::entity entityID, EntityUUID entityUUID) {
+			this->system = system;
+			this->entityID = entt::registry::entity(entityID);
+			this->entityUUID = entityUUID;
+		}
 		StarSystem* system;
-		entt::id_type entityID;
+		entt::entity entityID;
 		EntityUUID entityUUID;
 };
 

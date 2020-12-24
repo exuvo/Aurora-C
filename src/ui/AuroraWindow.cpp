@@ -27,7 +27,7 @@ AuroraWindow::AuroraWindow() {
 	std::cout << "creating window" << std::endl;
 	
 	vk2d::WindowCreateInfo window_create_info{};
-	window_create_info.size = { 512, 512 };
+	window_create_info.size = { 1024, 768 };
 	window_create_info.coordinate_space = vk2d::RenderCoordinateSpace::TEXEL_SPACE_CENTERED;
 	window_create_info.event_handler = this;
 //		window_create_info.fullscreen_monitor = ?

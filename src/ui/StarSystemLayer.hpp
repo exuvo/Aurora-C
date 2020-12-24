@@ -21,7 +21,9 @@ class StarSystemLayer: public UILayer {
 		StarSystemLayer(AuroraWindow& parentWindow, StarSystem* starSystem);
 		virtual ~StarSystemLayer() override;
 		
-		float zoom = 1;
+		float zoom = 1E6;
+		constexpr static float maxZoom = 1E8;
+		int zoomLevel;
 		Vector2l viewOffset {};
 		
 		virtual void render() override;
@@ -37,9 +39,24 @@ class StarSystemLayer: public UILayer {
 		
 		void drawEntities();
 		
+		bool keyAction(KeyActions_StarSystemLayer action);
+		
 		bool inStrategicView(entt::entity entity, CircleComponent& circle);
 		int getCircleSegments(float radius);
-		bool keyAction(KeyActions_StarSystemLayer action);
+		Vector2l toWorldCoordinates(Vector2i screenCordinates);
+		Matrix2l toWorldCoordinates(Matrix2i screenCordinates);
+		
+		Vector2i dragStart {};
+		bool dragSelecting = false;
+		bool dragSelectionPotentialStart = false;
+		Matrix2i getDragSelection();
+		
+		bool movingWindow = false;
+		void* selectedAction = nullptr;
+		
+		bool commandMenuPotentialStart = false;
+		nanoseconds commandMenuPotentialStartTime = 0s;
+		Vector2i commandMenuPotentialStartPos {};
 };
 
 

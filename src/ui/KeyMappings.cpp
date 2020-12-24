@@ -52,6 +52,8 @@ KeyAction KeyMappings::getTranslated<KeyAction>(uint32_t character) { \
 	return KeyAction::NONE; \
 };
 
+//TODO no way to map from keycode back to key https://github.com/glfw/glfw/issues/1502
+
 BOOST_PP_SEQ_FOR_EACH(KEY_ACTIONS_TEMPLATE, ~, KEY_ACTIONS_SEQ)
 
 template<typename KeyAction>

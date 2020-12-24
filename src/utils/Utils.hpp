@@ -72,4 +72,9 @@ bool vectorEraseUnorderedVal(std::vector<T>& vec, const T& value) {
 	return false;
 }
 
+template<typename T>
+void vectorAppend(std::vector<T> a, std::vector<T> b) {
+	a.insert(std::end(a), std::begin(b), std::end(b));
+}
+
 #endif /* SRC_UTILS_UTILS_HPP_ */

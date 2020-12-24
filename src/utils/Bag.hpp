@@ -11,7 +11,7 @@
 #include <vector>
 
 template<typename T>
-class Bag: std::vector<T> {
+class Bag: public std::vector<T> {
 	
 	public:
 		typedef std::vector<T> Vector;

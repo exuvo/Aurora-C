@@ -8,6 +8,7 @@
 #include <cstring>
 #include <cassert>
 #include <new>
+#include <type_traits>
 
 // ---------------------------------------------------------------------------------
 // SmallList
@@ -16,7 +17,9 @@
 /// heap allocations for small lists by using an SBO. T must be trivially
 /// constructible and destructible (for people using C++11 and newer, you
 /// can add a static assertion using type traits to ensure this).
-template <class T>
+
+template <class T, int STACK_SIZE = 128>
+//requires (std::is_trivially_constructible<T>::value)
 class SmallList
 {
 public:
@@ -27,7 +30,8 @@ public:
     SmallList(const SmallList& other);
 
     // Copies the specified list.
-    SmallList& operator=(const SmallList& other);
+    template <int STACK_SIZE2>
+    SmallList& operator=(const SmallList<T, STACK_SIZE2>& other);
 
     // Destroys the list.
     ~SmallList();
@@ -36,13 +40,13 @@ public:
     bool empty() const;
 
     // Returns the number of elements in the list.
-    int size() const;
+    uint32_t size() const;
 
     // Returns the nth element.
-    T& operator[](int n);
+    T& operator[](uint32_t n);
 
     // Returns the nth element in the list.
-    const T& operator[](int n) const;
+    const T& operator[](uint32_t n) const;
 
     // Returns an index to a matching element in the list or -1
     // if the element is not found.
@@ -52,10 +56,10 @@ public:
     void clear();
 
     // Reserves space for n elements.
-    void reserve(int n);
+    void reserve(uint32_t n);
 
     // Resizes the list to contain 'n' elements.
-    void resize(int num, const T& fill = T());
+    void resize(uint32_t num, const T& fill = T());
 
     // Inserts an element to the back of the list.
     void push_back(const T& element);
@@ -71,16 +75,60 @@ public:
 
     // Returns a pointer to the underlying buffer.
     const T* data() const;
-
+    
+    class iterator {
+    	public:
+				iterator(T * ptr): _ptr(ptr){}
+				 
+				 // iterator traits
+				using difference_type = size_t;
+				using value_type = T;
+				using pointer = const T*;
+				using reference = const T&;
+				using iterator_category = std::random_access_iterator_tag;
+					
+				//Pointer like operators
+				inline const T& operator*() const { return *_ptr; }
+				inline const T* operator->() const { return _ptr; }
+				inline T& operator[](difference_type off) const {return _ptr[off];}
+				
+				//Increment / Decrement
+				inline iterator& operator++() { ++_ptr; return *this; }
+				inline iterator operator++(int) { return iterator(++_ptr); }
+				inline iterator& operator--() { --_ptr; return *this; }
+				inline iterator operator--(int) { return iterator(--_ptr); }
+				
+				//Arithmetic
+				inline iterator& operator+=(difference_type off) {_ptr += off; return *this;}
+				inline iterator& operator-=(difference_type off) {_ptr -= off; return *this;}
+				friend inline iterator operator+(const iterator& x, difference_type off) {return iterator(x._ptr + off);}
+				friend inline iterator operator-(const iterator& x, difference_type off) {return iterator(x._ptr - off);}
+				friend inline iterator operator+(difference_type off, const iterator rhs) {rhs._ptr += off; return rhs;}
+				friend inline iterator operator-(difference_type off, const iterator rhs) {rhs._ptr -= off; return rhs;}
+				 
+				//Comparison operators
+				inline bool operator==(const iterator& rhs) const {return _ptr == rhs._ptr;}
+				inline bool operator!=(const iterator& rhs) const {return _ptr != rhs._ptr;}
+				inline bool operator>(const iterator& rhs) const {return _ptr > rhs._ptr;}
+				inline bool operator<(const iterator& rhs) const {return _ptr < rhs._ptr;}
+				inline bool operator>=(const iterator& rhs) const {return _ptr >= rhs._ptr;}
+				inline bool operator<=(const iterator& rhs) const {return _ptr <= rhs._ptr;}
+				
+			 private:
+				 T* _ptr;
+		 };
+    
+    iterator begin() const { return iterator(ld.data); }
+    iterator end() const { return iterator(ld.data + ld.num); }
+    
 private:
-    enum {fixed_cap = 256};
     struct ListData
     {
         ListData();
-        T buf[fixed_cap];
+        T buf[STACK_SIZE];
         T* data;
-        int num;
-        int cap;
+        uint32_t num;
+        uint32_t cap;
     };
     ListData ld;
 };
@@ -102,7 +150,7 @@ public:
     int insert(const T& element);
 
     // Removes the nth element from the free list.
-    void erase(int n);
+    void erase(uint32_t n);
 
     // Removes all elements from the free list.
     void clear();
@@ -111,13 +159,13 @@ public:
     int range() const;
 
     // Returns the nth element.
-    T& operator[](int n);
+    T& operator[](uint32_t n);
 
     // Returns the nth element.
-    const T& operator[](int n) const;
+    const T& operator[](uint32_t n) const;
 
     // Reserves space for n elements.
-    void reserve(int n);
+    void reserve(uint32_t n);
 
     // Swaps the contents of the two lists.
     void swap(FreeList& other);
@@ -135,16 +183,18 @@ private:
 // ---------------------------------------------------------------------------------
 // SmallList Implementation
 // ---------------------------------------------------------------------------------
-template <class T>
-SmallList<T>::ListData::ListData(): data(buf), num(0), cap(fixed_cap) {}
+template <class T, int STACK_SIZE>
+SmallList<T, STACK_SIZE>::ListData::ListData(): data(buf), num(0), cap(STACK_SIZE) {}
 
-template <class T>
-SmallList<T>::SmallList() {}
+template <class T, int STACK_SIZE>
+SmallList<T, STACK_SIZE>::SmallList() {
+	static_assert(std::is_trivially_constructible<T>::value);
+}
 
-template <class T>
-SmallList<T>::SmallList(const SmallList& other)
+template <class T, int STACK_SIZE>
+SmallList<T, STACK_SIZE>::SmallList(const SmallList& other)
 {
-    if (other.ld.cap == fixed_cap)
+    if (other.ld.cap == STACK_SIZE)
     {
         ld = other.ld;
         ld.data = ld.buf;
@@ -152,57 +202,58 @@ SmallList<T>::SmallList(const SmallList& other)
     else
     {
         reserve(other.ld.num);
-        for (int j=0; j < other.size(); ++j)
+        for (uint32_t j=0; j < other.size(); ++j)
             ld.data[j] = other.ld.data[j];
         ld.num = other.ld.num;
         ld.cap = other.ld.cap;
     }
 }
 
-template <class T>
-SmallList<T>& SmallList<T>::operator=(const SmallList<T>& other)
+template <class T, int STACK_SIZE>
+template <int STACK_SIZE2>
+SmallList<T, STACK_SIZE>& SmallList<T, STACK_SIZE>::operator=(const SmallList<T, STACK_SIZE2>& other)
 {
     SmallList(other).swap(*this);
     return *this;
 }
 
-template <class T>
-SmallList<T>::~SmallList()
+template <class T, int STACK_SIZE>
+SmallList<T, STACK_SIZE>::~SmallList()
 {
     if (ld.data != ld.buf)
         free(ld.data);
 }
 
-template <class T>
-bool SmallList<T>::empty() const
+template <class T, int STACK_SIZE>
+bool SmallList<T, STACK_SIZE>::empty() const
 {
     return ld.num == 0;
 }
 
-template <class T>
-int SmallList<T>::size() const
+template <class T, int STACK_SIZE>
+uint32_t SmallList<T, STACK_SIZE>::size() const
 {
     return ld.num;
 }
 
-template <class T>
-T& SmallList<T>::operator[](int n)
+template <class T, int STACK_SIZE>
+T& SmallList<T, STACK_SIZE>::operator[](uint32_t n)
 {
-    assert(n >= 0 && n < ld.num);
+    assert(n < ld.num);
     return ld.data[n];
 }
 
-template <class T>
-const T& SmallList<T>::operator[](int n) const
+template <class T, int STACK_SIZE>
+const T& SmallList<T, STACK_SIZE>::operator[](uint32_t n) const
 {
-    assert(n >= 0 && n < ld.num);
+    assert(n < ld.num);
     return ld.data[n];
 }
 
-template <class T>
-int SmallList<T>::find_index(const T& element) const
+template <class T, int STACK_SIZE>
+int SmallList<T, STACK_SIZE>::find_index(const T& element) const
 {
-    for (int j=0; j < ld.num; ++j)
+    for (uint32_t j=0; j < ld.num; ++j)
     {
         if (ld.data[j] == element)
             return j;
@@ -210,14 +261,14 @@ int SmallList<T>::find_index(const T& element) const
     return -1;
 }
 
-template <class T>
-void SmallList<T>::clear()
+template <class T, int STACK_SIZE>
+void SmallList<T, STACK_SIZE>::clear()
 {
     ld.num = 0;
 }
 
-template <class T>
-void SmallList<T>::reserve(int n) {
+template <class T, int STACK_SIZE>
+void SmallList<T, STACK_SIZE>::reserve(uint32_t n) {
 	if (n > ld.cap) {
 		T *new_mem = static_cast<T*>(malloc(n * sizeof *ld.data));
 		if (!new_mem) throw std::bad_alloc();
@@ -239,35 +290,35 @@ void SmallList<T>::reserve(int n) {
 //	}
 }
 
-template <class T>
-void SmallList<T>::resize(int num, const T& fill)
+template <class T, int STACK_SIZE>
+void SmallList<T, STACK_SIZE>::resize(uint32_t num, const T& fill)
 {
     if (num > ld.cap)
         reserve(num + 1);
     if (num > ld.num)
     {
-        for (int j = ld.num; j < num; ++j)
+        for (uint32_t j = ld.num; j < num; ++j)
             ld.data[j] = fill;
     }
     ld.num = num;
 }
 
-template <class T>
-void SmallList<T>::push_back(const T& element)
+template <class T, int STACK_SIZE>
+void SmallList<T, STACK_SIZE>::push_back(const T& element)
 {
     if (ld.num >= ld.cap)
         reserve(ld.cap * 2);
     ld.data[ld.num++] = element;
 }
 
-template <class T>
-T SmallList<T>::pop_back()
+template <class T, int STACK_SIZE>
+T SmallList<T, STACK_SIZE>::pop_back()
 {
     return ld.data[--ld.num];
 }
 
-template <class T>
-void SmallList<T>::swap(SmallList& other)
+template <class T, int STACK_SIZE>
+void SmallList<T, STACK_SIZE>::swap(SmallList& other)
 {
     ListData& ld1 = ld;
     ListData& ld2 = other.ld;
@@ -285,14 +336,14 @@ void SmallList<T>::swap(SmallList& other)
         ld1.data = ld1.buf;
 }
 
-template <class T>
-T* SmallList<T>::data()
+template <class T, int STACK_SIZE>
+T* SmallList<T, STACK_SIZE>::data()
 {
     return ld.data;
 }
 
-template <class T>
-const T* SmallList<T>::data() const
+template <class T, int STACK_SIZE>
+const T* SmallList<T, STACK_SIZE>::data() const
 {
     return ld.data;
 }
@@ -325,9 +376,9 @@ int FreeList<T>::insert(const T& element)
 }
 
 template <class T>
-void FreeList<T>::erase(int n)
+void FreeList<T>::erase(uint32_t n)
 {
-    assert(n >= 0 && n < data.size());
+    assert(n < data.size());
     data[n].next = first_free;
     first_free = n;
 }
@@ -346,19 +397,19 @@ int FreeList<T>::range() const
 }
 
 template <class T>
-T& FreeList<T>::operator[](int n)
+T& FreeList<T>::operator[](uint32_t n)
 {
     return data[n].element;
 }
 
 template <class T>
-const T& FreeList<T>::operator[](int n) const
+const T& FreeList<T>::operator[](uint32_t n) const
 {
     return data[n].element;
 }
 
 template <class T>
-void FreeList<T>::reserve(int n)
+void FreeList<T>::reserve(uint32_t n)
 {
     data.reserve(n);
 }

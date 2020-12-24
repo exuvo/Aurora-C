@@ -9,6 +9,7 @@
 #include "Aurora.hpp"
 #include "StarSystemLayer.hpp"
 #include "starsystems/StarSystem.hpp"
+#include "starsystems/StarSystemShadow.hpp"
 #include "starsystems/components/Components.hpp"
 #include "galaxy/Galaxy.hpp"
 #include "utils/Math.hpp"
@@ -17,6 +18,8 @@
 
 StarSystemLayer::StarSystemLayer(AuroraWindow& parentWindow, StarSystem* starSystem): UILayer(parentWindow) {
 	this->starSystem = starSystem;
+	
+	zoomLevel = std::log(zoom / std::log(Aurora.settings.render.zoomSensititivy));
 }
 
 StarSystemLayer::~StarSystemLayer() {
@@ -42,7 +45,7 @@ void StarSystemLayer::drawEntities() {
 			if (radius < 1) {
 				window.window->DrawPoint(vectorToVK2D(renderPosition), color, 1);
 			} else {
-//				window.window->DrawEllipse(area, true, getCircleSegments(radius), color);
+				window.window->DrawEllipse(vk2d::Rect2f {renderPosition.x() - radius, renderPosition.y() - radius, renderPosition.x() + radius, renderPosition.y() + radius}, true, getCircleSegments(radius), color);
 			}
 		}
 	}
@@ -57,7 +60,7 @@ void StarSystemLayer::render() {
 		profilerEvents.start("setup");
 		
 		
-	//	val selectedEntityIDs = Player.current.selection.filter { it.system == starSystem && world.entityManager.isActive(it.entityID) && familyAspect.isInterested(it.entityID) }.map { it.entityID };
+	//	val selectedEntityIDs = Player::current->selection.filter { it.starSystem == starSystem && world.entityManager.isActive(it.entityID) && familyAspect.isInterested(it.entityID) }.map { it.entityID };
 	
 		int displaySize = hypot(window.window->GetSize().x, window.window->GetSize().y);
 		
@@ -157,6 +160,14 @@ void StarSystemLayer::render() {
 	//	spriteBatch.end();
 		profilerEvents.end();
 		
+		if (dragSelecting) {
+			profilerEvents.start("drawSelecting");
+			window.window->DrawRectangle({}, false, vk2d::Colorf::WHITE());
+			
+			
+			profilerEvents.end();
+		}
+		
 		profilerEvents.end();
 	}
 	
@@ -209,7 +220,7 @@ void StarSystemLayer::render() {
 //	}
 //	
 //	x += Assets.fontUI.draw(spriteBatch, " ${galaxy.tickSize}", x, y).width
-//	x += Assets.fontUI.draw(spriteBatch, " ${system.updateTimeAverage.toInt() / 1000}us ${galaxyTickrate}t/s", x, y).width
+//	x += Assets.fontUI.draw(spriteBatch, " ${starSystem.updateTimeAverage.toInt() / 1000}us ${galaxyTickrate}t/s", x, y).width
 //	x += Assets.fontUI.draw(spriteBatch, ", ${allSubscription.getEntityCount()}st", x, y).width
 //	
 //	var str = "zoom $zoomLevel"
@@ -221,25 +232,12 @@ void StarSystemLayer::render() {
 //	spriteBatch.end()
 }
 
-bool StarSystemLayer::inStrategicView(entt::entity entity, CircleComponent& circle) {
-	if (Aurora.settings.render.debugDisableStrategicView || zoom == 1.0f) {
-		return false;
-	}
-
-	float radius = circle.radius / 1000;
-	return radius / zoom < 5.0f;
-}
-
-int StarSystemLayer::getCircleSegments(float radius) {
-	return std::min(1000, std::max(3, (int) (10 * std::cbrt(radius / zoom))));
-}
-
 bool StarSystemLayer::keyAction(KeyActions_StarSystemLayer action) {
 	
 	if (action == KeyActions_StarSystemLayer::GENERATE_SYSTEM) {
 
 		printf("GENERATE_SYSTEM\n"); fflush(stdout);
-//			StarSystemGeneration(system).generateRandomSystem();
+//			StarSystemGeneration(starSystem).generateRandomSystem();
 
 	} else if (action == KeyActions_StarSystemLayer::SPEED_UP) {
 		
@@ -263,7 +261,7 @@ bool StarSystemLayer::keyAction(KeyActions_StarSystemLayer action) {
 
 	} else if (action == KeyActions_StarSystemLayer::ATTACK) {
 
-//			if (Player.current.selection.isNotEmpty()) {
+//			if (Player::current->selection.isNotEmpty()) {
 //				selectedAction = KeyActions_StarSystemLayer::ATTACK;
 //				println("Selected action " + action);
 //			} else {
@@ -285,6 +283,7 @@ bool StarSystemLayer::eventKeyboard(vk2d::KeyboardButton button, int32_t scancod
 }
 
 bool StarSystemLayer::eventCharacter(uint32_t character, vk2d::ModifierKeyFlags modifier_keys) {
+	printf("character %c\n", character); fflush(stdout);
 	KeyActions_StarSystemLayer keyBind = KeyMappings::getTranslated<KeyActions_StarSystemLayer>(character);
 
 	if (keyBind != KeyActions_StarSystemLayer::NONE) {
@@ -295,9 +294,247 @@ bool StarSystemLayer::eventCharacter(uint32_t character, vk2d::ModifierKeyFlags 
 }
 
 bool StarSystemLayer::eventMouseButton(vk2d::MouseButton button, vk2d::ButtonAction action, vk2d::ModifierKeyFlags modifier_keys) {
+	
+	if (action == vk2d::ButtonAction::PRESS) {
+		
+		if (!movingWindow && !dragSelecting) {
+			
+			if (button == vk2d::MouseButton::BUTTON_LEFT) {
+				commandMenuPotentialStart = false;
+				
+				{
+					std::unique_lock<LockableBase(std::recursive_mutex)> lock(Aurora.galaxy->shadowLock);
+					
+				}
+				
+			} else if (button == vk2d::MouseButton::BUTTON_MIDDLE) {
+			
+				selectedAction = nullptr;
+				commandMenuPotentialStart = false;
+				movingWindow = true;
+				dragStart = vk2dToVector(window.window->GetCursorPosition()).cast<int32_t>();
+				return true;
+				
+			} else if (button == vk2d::MouseButton::BUTTON_RIGHT) {
+				
+				selectedAction = nullptr;
+				dragSelectionPotentialStart = false;
+
+				commandMenuPotentialStart = true;
+				commandMenuPotentialStartTime = duration_cast<nanoseconds>(steady_clock::now().time_since_epoch());
+				commandMenuPotentialStartPos = vk2dToVector(window.window->GetCursorPosition()).cast<int32_t>();
+			}
+			
+		} else {
+			
+			if (dragSelecting && button != vk2d::MouseButton::BUTTON_LEFT) {
+				dragSelecting = false;
+				return true;
+			}
+
+			if (movingWindow && button != vk2d::MouseButton::BUTTON_MIDDLE) {
+				movingWindow = false;
+				return true;
+			}
+		}
+		
+	} else if (action == vk2d::ButtonAction::RELEASE) {
+		
+		if (movingWindow && button == vk2d::MouseButton::BUTTON_MIDDLE) {
+			movingWindow = false;
+			return true;
+		}
+		
+		if (button == vk2d::MouseButton::BUTTON_LEFT) {
+			if (dragSelecting) {
+				if (Player::current->selection.size() > 0 && window.isKeyPressed(GLFW_KEY_LEFT_SHIFT)) {
+					Player::current->selection.clear();
+					printf("cleared selection\n"); fflush(stdout);
+				}
+	
+				Matrix2i dragSelection = getDragSelection();
+				std::cout << "dragSelection " << dragSelection << std::endl;
+	
+				Matrix2l worldCoordinates = toWorldCoordinates(dragSelection);
+				std::cout << "worldCoordinates " << worldCoordinates << std::endl;
+	
+				std::vector<EntityReference> entitiesInSelection {};
+				
+				{
+					std::unique_lock<LockableBase(std::recursive_mutex)> lock(Aurora.galaxy->shadowLock);
+					
+					SmallList<entt::entity> entities = SpatialPartitioningSystem::query(starSystem->shadow->quadtreeShips, worldCoordinates);
+//					println("testRectangle $testRectangle, entityIDs $entityIDs")
+					
+					for (entt::entity entity : entities) {
+						if (starSystem->shadow->registry.has<TimedMovementComponent, RenderComponent>(entity)) {
+							TimedMovementComponent& movement = starSystem->shadow->registry.get<TimedMovementComponent>(entity);
+							Vector2l position = movement.get(Aurora.galaxy->time).value.position;
+			
+							if (rectagleContains(worldCoordinates, position)) {
+								entitiesInSelection.push_back(starSystem->shadow->getEntityReference(entity));
+							}
+						}
+					}
+				}
+	
+				if (entitiesInSelection.size() > 0) {
+					vectorAppend(Player::current->selection, entitiesInSelection);
+	//				println("drag selected ${entitiesInSelection.size} entities")
+				}
+	
+				dragSelecting = false;
+				return true;
+			}
+	
+			if (dragSelectionPotentialStart) {
+				if (Player::current->selection.size() > 0 && !window.isKeyPressed(GLFW_KEY_LEFT_SHIFT)) {
+					Player::current->selection.clear();
+	//				println("cleared selection")
+				}
+			}
+		}
+		
+		if (button == vk2d::MouseButton::BUTTON_RIGHT && commandMenuPotentialStart) {
+			
+			commandMenuPotentialStart = false;
+			
+//			if (Player::current->selection.isNotEmpty()) {
+//
+//				galaxy.shadowLock.withLock {
+//					val movementFamilyAspect = starSystem.shadow.world.getAspectSubscriptionManager().get(MovementSystem.CAN_ACCELERATE_FAMILY).aspect
+//					val directSelectionSubscription = starSystem.shadow.world.getAspectSubscriptionManager().get(DIRECT_SELECTION_FAMILY)
+//					val renderSystem = starSystem.shadow.world.getSystem(RenderSystem::class.java)
+//					
+//					val selectedEntities = Player::current->selection.filter { entityRef ->
+//						starSystem == entityRef.starSystem && movementFamilyAspect.isInterested(entityRef.entityID)
+//					}
+//	
+//					if (selectedEntities.isNotEmpty()) {
+//						
+//						val shadow = starSystem.shadow
+//						val mouseInGameCoordinates = toWorldCordinates(getMouseInScreenCordinates(screenX, screenY))
+//						val entitiesUnderMouse = IntBag()
+//						val entityIDs = directSelectionSubscription.entities
+//						val testCircle = CircleL()
+//						val zoom = camera.zoom
+//
+//						entityIDs.forEachFast { entityID ->
+//							val position = shadow.movementMapper.get(entityID).get(galaxy.time).value.position
+//							val radius: Float
+//
+//							if (renderSystem.inStrategicView(entityID, zoom)) {
+//
+//								radius = 1000 * zoom * RenderSystem.STRATEGIC_ICON_SIZE / 2
+//
+//							} else {
+//
+//								radius = shadow.circleMapper.get(entityID).radius
+//							}
+//
+//							testCircle.set(position, radius)
+//
+//							if (testCircle.contains(mouseInGameCoordinates)) {
+//								entitiesUnderMouse.add(entityID)
+//							}
+//						}
+//
+//						if (!entitiesUnderMouse.isEmpty) {
+//
+////							println("Issuing move to entity order")
+//
+//							val targetEntityID = entitiesUnderMouse.get(0)
+//							var approachType = ApproachType.BRACHISTOCHRONE
+//
+//							if (Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT)) {
+//								approachType = ApproachType.BALLISTIC
+//							}
+//
+////								println("Queuing move to entity command for $entityRef to $targetEntityID")
+//							Player::current->empire!!.commandQueue.add(EntitiesMoveToEntityCommand(Bag(selectedEntities), shadow.getEntityReference(targetEntityID), approachType))
+//
+//						} else {
+//
+////							println("Issuing move to position order")
+//
+//							val targetPosition = mouseInGameCoordinates
+//							var approachType = ApproachType.BRACHISTOCHRONE
+//
+//							if (Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT)) {
+//								approachType = ApproachType.BALLISTIC
+//							}
+//
+////								println("Queuing move to position command for $entityRef to $targetPosition")
+//							Player::current->empire.commandQueue.add(EntitiesMoveToPositionCommand(Bag(selectedEntities), targetPosition, approachType))
+//						}
+//
+//						return true;
+//					}
+//				}
+//			}
+		}
+	}
+	
 	return false;
 }
 
 bool StarSystemLayer::eventScroll(vk2d::Vector2d scroll) {
 	return false;
 }
+
+Matrix2i StarSystemLayer::getDragSelection() {
+	vk2d::Vector2d cursor = window.window->GetCursorPosition();
+	
+	Matrix2i mat {};
+	
+	if (cursor.x >= dragStart.x()) {
+		mat(0,0) = cursor.x;
+		mat(1,0) = dragStart.x();
+	} else {
+		mat(0,0) = dragStart.x();
+		mat(1,0) = cursor.x;
+	}
+	
+	if (cursor.y >= dragStart.y()) {
+		mat(0,1) = cursor.y;
+		mat(1,1) = dragStart.y();
+	} else {
+		mat(0,1) = dragStart.y();
+		mat(1,1) = cursor.y;
+	}
+	
+	return mat;
+}
+
+bool StarSystemLayer::inStrategicView(entt::entity entity, CircleComponent& circle) {
+	if (Aurora.settings.render.debugDisableStrategicView || zoom == 1.0f) {
+		return false;
+	}
+
+	float radius = circle.radius / 1000;
+	return radius / zoom < 5.0f;
+}
+
+int StarSystemLayer::getCircleSegments(float radius) {
+	return std::min(1000, std::max(3, (int) (10 * std::cbrt(radius / zoom))));
+}
+
+Vector2l StarSystemLayer::toWorldCoordinates(Vector2i screenCoordinates) {
+	Vector2l worldCoordinates = screenCoordinates.cast<int64_t>();
+	worldCoordinates *= zoom;
+	worldCoordinates += viewOffset;
+	worldCoordinates *= 1000; // km to m
+	LOG4CXX_DEBUG(log, worldCoordinates);
+	return worldCoordinates;
+}
+
+Matrix2l StarSystemLayer::toWorldCoordinates(Matrix2i screenCoordinates) {
+	Matrix2l worldCoordinates = screenCoordinates.cast<int64_t>();
+	worldCoordinates *= zoom;
+	worldCoordinates.col(0) += viewOffset;
+	worldCoordinates.col(1) += viewOffset;
+	worldCoordinates *= 1000; // km to m
+	LOG4CXX_DEBUG(log, worldCoordinates);
+	return worldCoordinates;
+}
+

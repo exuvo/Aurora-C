@@ -24,6 +24,11 @@ using Eigen::Vector2f;
 using Eigen::Vector2d;
 typedef Eigen::Matrix<int64_t, 2, 1> Vector2l;
 
+using Eigen::Matrix2i;
+using Eigen::Matrix2f;
+using Eigen::Matrix2d;
+typedef Eigen::Matrix<int64_t, 2, 2> Matrix2l;
+
 template <typename T> inline constexpr
 int signum(T x, std::false_type is_signed) {
     return T(0) < x;
@@ -47,6 +52,15 @@ constexpr double toRadians(double degrees) {
 	return degrees * 0.017453292519943295;
 }
 
+template <typename T>
+bool rectagleContains(const Eigen::Matrix<T, 2, 2>& mat, const Eigen::Matrix<T, 2, 1>& vec) {
+	T x = mat.col(0).x();
+	T y = mat.col(0).y();
+	T width = mat.col(1).x() - x;
+	T height = mat.col(1).y() - y;
+	return x <= vec.x() && x + width >= vec.x() && y <= vec.y() && y + height >= vec.y();
+}
+
 __attribute__((warn_unused_result)) Vector2l vectorsLerp(const Vector2l& a, const Vector2l& b, const uint64_t current, const uint64_t max);
 __attribute__((warn_unused_result)) int64_t vectorsCross(const Vector2l& a, const Vector2l& b);
 __attribute__((warn_unused_result)) double vectorsAngle(const Vector2l& a, const Vector2l& b);
@@ -56,6 +70,7 @@ __attribute__((warn_unused_result)) Vector2l vectorRotate(const Vector2l& a, con
 __attribute__((warn_unused_result)) Vector2d vectorRotate(const Vector2d& a, const double angleRad);
 __attribute__((warn_unused_result)) Vector2l vectorRotateDeg(const Vector2l& a, const double angleDegrees);
 __attribute__((warn_unused_result)) Vector2d vectorRotateDeg(const Vector2d& a, const double angleDegrees);
+
 
 __attribute__((warn_unused_result)) double getPositiveRootOfQuadraticEquation(double a, double b, double c);
 __attribute__((warn_unused_result)) std::optional<double> getPositiveRootOfQuadraticEquationSafe(double a, double b, double c);

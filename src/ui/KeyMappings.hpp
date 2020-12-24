@@ -13,18 +13,6 @@
 
 #include "utils/enum.h"
 
-enum class KeyPressType {
-	Keyboard,
-	Character,
-	Ignore
-};
-
-struct KeyMapping {
-		std::string name;
-		KeyPressType type;
-		int32_t key;
-};
-
 BETTER_ENUM(KeyActions_StarSystemLayer, uint8_t,
     NONE,
 		SPEED_UP,
@@ -71,7 +59,6 @@ class KeyMappings {
 		template<typename T>
 		static T getRaw(int32_t scancode, vk2d::ButtonAction action, vk2d::ModifierKeyFlags modifier_keys);
 
-		//TODO glfw character callback is not actually translated https://github.com/glfw/glfw/issues/1502
 		template<typename T>
 		static T getTranslated(uint32_t character);
 		

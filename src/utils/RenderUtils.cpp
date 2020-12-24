@@ -13,6 +13,22 @@ vk2d::Vector2f vectorToVK2D(Vector2l& vec) {
 	return {vec.x(), vec.y()};
 }
 
+Vector2i vk2dToVector(vk2d::Vector2i& vec) {
+	return {vec.x, vec.y};
+}
+
+Vector2i vk2dToVector(vk2d::Vector2i vec) {
+	return {vec.x, vec.y};
+}
+
+Vector2d vk2dToVector(vk2d::Vector2d& vec) {
+	return {vec.x, vec.y};
+}
+
+Vector2d vk2dToVector(vk2d::Vector2d vec) {
+	return {vec.x, vec.y};
+}
+
 float linearRGBtoSRGB(float color) {
 	if (color <= 0.0031308) {
 		return color * 12.92f;
