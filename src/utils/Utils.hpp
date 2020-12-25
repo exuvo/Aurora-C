@@ -33,20 +33,6 @@ BETTER_ENUM(ThreadPriority, uint8_t,
 
 void setThreadPriority(std::thread& thread, ThreadPriority prio);
 
-template<typename T>
-std::string type_name() {
-	std::string tname = typeid(T).name();
-#if defined(__clang__) || defined(__GNUG__)
-	int status;
-	char* demangled_name = abi::__cxa_demangle(tname.c_str(), NULL, NULL, &status);
-	if (status == 0) {
-		tname = demangled_name;
-		std::free(demangled_name);
-	}
-#endif
-	return tname;
-}
-
 namespace entt {
 	std::ostream& operator<<(std::ostream& os, const entt::entity& e);
 }
@@ -82,5 +68,29 @@ void vectorAppend(std::vector<T> a, std::vector<T> b) {
 
 nanoseconds getNanos();
 milliseconds getMillis();
+
+std::string nanoToString(uint64_t time);
+std::string nanoToMicroString(uint64_t time);
+std::string milliToString(uint64_t time);
+std::string secondsToString(uint64_t time);
+std::string powerToString(uint64_t power);
+std::string capacityToString(uint64_t capacity);
+std::string volumeToString(uint64_t volume);
+std::string massToString(uint64_t mass);
+std::string distanceToString(uint64_t distance);
+std::string daysToRemaining(uint32_t days);
+std::string daysToDate(uint32_t days);
+std::string daysToYear(uint32_t days);
+std::string daysToSubYear(uint32_t days);
+
+std::string demangleTypeName(std::string tname);
+
+template<typename T>
+std::string type_name() {
+	std::string tname = typeid(T).name();
+	return demangleTypeName(tname);
+}
+
+std::string getLastExceptionStacktrace();
 
 #endif /* SRC_UTILS_UTILS_HPP_ */

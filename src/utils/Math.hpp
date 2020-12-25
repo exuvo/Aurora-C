@@ -15,8 +15,19 @@
 #include <eigen3/Eigen/Geometry>
 
 namespace Units {
-		const double AU = 149597870.7; // In km
-		const double C = 299792.458; // In km
+	const double AU = 149597870.7; // In km
+	const double C = 299792.458; // In km
+	const long KILO = 1000;
+	const long MEGA = 1000 * KILO;
+	const long GIGA = 1000 * MEGA;
+	const long TERA = 1000 * GIGA;
+	
+	const long CUBIC_DECIMETRE = 1000;
+	const long CUBIC_METRE     = 1000 * CUBIC_DECIMETRE;
+	
+	const long NANO_MICRO = 1000;
+	const long NANO_MILLI = 1000 * NANO_MICRO;
+	const long NANO_SECOND = 1000 * NANO_MILLI;
 };
 
 using Eigen::Vector2i;
@@ -62,10 +73,14 @@ bool rectagleContains(const Eigen::Matrix<T, 2, 2>& mat, const Eigen::Matrix<T, 
 }
 
 namespace Eigen {
-	std::ostream& operator<<(std::ostream& os, const Vector2i& v);
-	std::ostream& operator<<(std::ostream& os, const Vector2l& v);
-	std::ostream& operator<<(std::ostream& os, const Vector2f& v);
-	std::ostream& operator<<(std::ostream& os, const Vector2d& v);
+	template <typename T>
+	std::ostream& operator<<(std::ostream& os, const Eigen::Matrix<T, 2, 1>& v) {
+		return os << v.x() << "," << v.y();
+	}
+	template <typename T>
+	std::ostream& operator<<(std::ostream& os, const Eigen::Matrix<T, 2, 2>& v) {
+		return os << v(0,0) << "," << v(0,1) << "," << v(1,0) << "," << v(1,1);
+	}
 }
 
 int64_t vectorsCross(const Vector2l& a, const Vector2l& b);

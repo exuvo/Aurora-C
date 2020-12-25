@@ -84,7 +84,7 @@ message("========== Aurora-C ==========")
 find_package(Boost 1.66 REQUIRED) # COMPONENTS
 #find_package(Eigen3 3.3 REQUIRED NO_MODULE) # 3.4 not released yet
 find_package(OpenMP REQUIRED)
-#find_package(fmt REQUIRED)
+find_package(fmt REQUIRED)
 
 file(GLOB_RECURSE SOURCE_FILES CONFIGURE_DEPENDS src/*.cpp)
 #file(GLOB_RECURSE HEADER_FILES "${CMAKE_CURRENT_SOURCE_DIR}/src/*.h")
@@ -104,7 +104,7 @@ target_include_directories(AuroraC PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/lib/asmli
 target_link_libraries(AuroraC PUBLIC tracy_client)
 target_link_libraries(AuroraC PUBLIC EnTT)
 target_link_libraries(AuroraC PUBLIC VK2D)
-#target_link_libraries(AuroraC PUBLIC fmt)
+target_link_libraries(AuroraC PUBLIC fmt)
 target_link_libraries(AuroraC PUBLIC ${Boost_LIBRARIES})
 target_include_directories(AuroraC PUBLIC ${Boost_INCLUDE_DIRS})
 #target_link_libraries(AuroraC PUBLIC Eigen3::Eigen)
@@ -144,11 +144,10 @@ endif()
 
 #target_link_options(AuroraC PRIVATE -)
 
-if(CYGWIN)
-#	set_target_properties(AuroraC PROPERTIES CXX_EXTENSIONS ON) # required on to default POSIX version correctly for wsock32 for inline tracy
 #	set_target_properties(AuroraC PROPERTIES LINK_SEARCH_START_STATIC ON) # manually specified libs
 #	set_target_properties(AuroraC PROPERTIES LINK_SEARCH_END_STATIC ON) # automatic system libs
-elseif(MINGW)
+
+if(MINGW)
 	set(CMAKE_EXE_LINKER_FLAGS "-static-libgcc -static-libstdc++")
 	set(CMAKE_EXE_LINKER_FLAGS "-static") # static all?
 endif()
@@ -157,9 +156,9 @@ target_include_directories(AuroraC PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/lib/tracy
 target_include_directories(AuroraC PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/lib/tracy/client)
 target_include_directories(AuroraC PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/lib/tracy/common)
 
-#if (UNIX)
-#	target_link_libraries(AuroraC PUBLIC ${CMAKE_DL_LIBS})
-#endif()
+if (UNIX AND CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+	target_link_libraries(AuroraC PUBLIC SegFault)
+endif()
 
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)

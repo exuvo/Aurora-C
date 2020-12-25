@@ -71,9 +71,10 @@ class Galaxy {
 		std::vector<Empire> empires;
 		std::vector<Player> players;
 		
-		Galaxy(std::vector<Empire>& empires, std::vector<StarSystem*>& systems) {
+		Galaxy(std::vector<Empire>& empires, std::vector<StarSystem*>& systems, std::vector<Player> players) {
 			Galaxy::empires = std::move(empires);
 			Galaxy::systems = std::move(systems);
+			Galaxy::players = std::move(players);
 		}
 		Galaxy(const Galaxy&) = default;
 		Galaxy(Galaxy&&) = default;

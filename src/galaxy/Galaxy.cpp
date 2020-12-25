@@ -203,7 +203,8 @@ void Galaxy::galaxyWorker() {
 		}
 		
 	} catch (const std::exception &e) {
-		LOG4CXX_ERROR(log, "Exception in galaxy loop" << e.what());
+		std::string stackTrace = getLastExceptionStacktrace();
+		LOG4CXX_ERROR(log, "Exception in galaxy loop" << e.what() << "\n" << stackTrace);
 		speed = 0s;
 	}
 }
@@ -239,7 +240,8 @@ void Galaxy::starsystemWorker() {
 //				system.updateTimeAverage = exponentialAverage(system.updateTime.toDouble(), system.updateTimeAverage, FastMath.min(100.0, (Units.NANO_SECOND / FastMath.abs(galaxy.speed)).toDouble()))
 
 			} catch (const std::exception& e) {
-				LOG4CXX_ERROR(log, "Exception in system update for $system tick ${galaxy.time}" << e.what());
+				std::string stackTrace = getLastExceptionStacktrace();
+				LOG4CXX_ERROR(log, "Exception in system update for $system tick ${galaxy.time}" << e.what() << "\n" << stackTrace);
 				speed = 0s;
 			}
 

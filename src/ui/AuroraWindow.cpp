@@ -103,7 +103,12 @@ void AuroraWindow::render() {
 //		);
 		
 		for (UILayer* layer : layers) {
-			layer->render();
+			try {
+				layer->render();
+			} catch (const std::exception& e) {
+				std::string stackTrace = getLastExceptionStacktrace();
+				LOG4CXX_ERROR(log, "Exception in rendering layer " << demangleTypeName(typeid(*layer).name()) << ": " << e.what() << "\n" << stackTrace);
+			}
 		}
 	}
 	

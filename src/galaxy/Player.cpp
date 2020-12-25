@@ -10,7 +10,7 @@
 #include "utils/Math.hpp"
 #include "galaxy/Galaxy.hpp"
 
-Player* Player::current = new Player("local");
+Player* Player::current = nullptr;
 
 void Player::increaseSpeed() {
 	if (speedIndex < speedSteps.size() - 1) {

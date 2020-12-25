@@ -50,8 +50,10 @@ int main(int argc, char **argv) {
 	vector<StarSystem*> starSystems { new StarSystem("test")};
 //	vector<StarSystem*> starSystems { new StarSystem("a"), new StarSystem("b"), new StarSystem("c"), new StarSystem("d"), new StarSystem("e") };
 	vector<Empire> empires { Empire("player1") };
-	Galaxy* galaxy = new Galaxy(empires, starSystems);
+	vector<Player> players { Player("local") };
+	Galaxy* galaxy = new Galaxy(empires, starSystems, players);
 	Aurora.galaxy = galaxy;
+	Player::current = &galaxy->players[0];
 
 	galaxy->init();
 	
@@ -73,6 +75,15 @@ int main(int argc, char **argv) {
 	}
 	
 	KeyMappings::loadAllDefaults();
+	
+	Aurora.assets.font = Aurora.vk2dInstance->GetResourceManager()->LoadFontResource(std::filesystem::relative("assets/fonts/13pxbus.ttf"), 13, true, '?', 8);
+	Aurora.assets.font5 = Aurora.vk2dInstance->GetResourceManager()->LoadFontResource(std::filesystem::relative("assets/fonts/5pxbus.ttf"), 5, true, '?', 8);
+	Aurora.assets.font6 = Aurora.vk2dInstance->GetResourceManager()->LoadFontResource(std::filesystem::relative("assets/fonts/6pxbus.ttf"), 6, true, '?', 8);
+	Aurora.assets.font7 = Aurora.vk2dInstance->GetResourceManager()->LoadFontResource(std::filesystem::relative("assets/fonts/7pxbus.ttf"), 7, true, '?', 8);
+	Aurora.assets.font8 = Aurora.vk2dInstance->GetResourceManager()->LoadFontResource(std::filesystem::relative("assets/fonts/8pxbus.ttf"), 8, true, '?', 8);
+	Aurora.assets.font9 = Aurora.vk2dInstance->GetResourceManager()->LoadFontResource(std::filesystem::relative("assets/fonts/9pxbus.ttf"), 9, true, '?', 8);
+	Aurora.assets.font11 = Aurora.vk2dInstance->GetResourceManager()->LoadFontResource(std::filesystem::relative("assets/fonts/11pxbus.ttf"), 11, true, '?', 8);
+	Aurora.assets.font13 = Aurora.vk2dInstance->GetResourceManager()->LoadFontResource(std::filesystem::relative("assets/fonts/13pxbus.ttf"), 13, true, '?', 8);
 	
 	{
 		auto window = new AuroraWindow();

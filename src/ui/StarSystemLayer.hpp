@@ -21,7 +21,7 @@ class StarSystemLayer: public UILayer {
 		StarSystemLayer(AuroraWindow& parentWindow, StarSystem* starSystem);
 		virtual ~StarSystemLayer() override;
 		
-		float zoom = 1; // 1E6
+		float zoom = 5E5; // 1E6
 		constexpr static float maxZoom = 1E8;
 		int zoomLevel;
 		Vector2l viewOffset {0,0}; // in m
@@ -50,7 +50,6 @@ class StarSystemLayer: public UILayer {
 		Vector2i getMouseInScreenCordinates();
 		
 		Vector2i dragStart {};
-		bool dragPotentialStart = false;
 		bool dragSelecting = false;
 		bool dragSelectionPotentialStart = false;
 		Matrix2i getDragSelection();
@@ -60,7 +59,10 @@ class StarSystemLayer: public UILayer {
 		
 		bool commandMenuPotentialStart = false;
 		nanoseconds commandMenuPotentialStartTime = 0s;
-		Vector2i commandMenuPotentialStartPos {};
+		
+		milliseconds lastTickrateUpdate;
+		milliseconds galaxyTickrate = 0ms;
+		milliseconds oldGalaxyTime;
 };
 
 

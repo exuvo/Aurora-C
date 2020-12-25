@@ -5,6 +5,7 @@
  *      Author: exuvo
  */
 #include <GLFW/glfw3.h>
+#include <fmt/core.h>
 
 #include "Aurora.hpp"
 #include "StarSystemLayer.hpp"
@@ -19,7 +20,9 @@
 StarSystemLayer::StarSystemLayer(AuroraWindow& parentWindow, StarSystem* starSystem): UILayer(parentWindow) {
 	this->starSystem = starSystem;
 	
-	zoomLevel = std::log(zoom / std::log(Aurora.settings.render.zoomSensitivity));
+	zoomLevel = std::log(zoom) / std::log(Aurora.settings.render.zoomSensitivity);
+	lastTickrateUpdate = getMillis();
+	oldGalaxyTime = milliseconds(Aurora.galaxy->time);
 }
 
 StarSystemLayer::~StarSystemLayer() {
@@ -78,49 +81,38 @@ void StarSystemLayer::render() {
 		viewOffset += (Vector2f{ hDirection, vDirection } * 1000 * zoom).cast<int64_t>();
 	}
 	
-	if (commandMenuPotentialStart && (getMillis() - commandMenuPotentialStartTime > 200ms || vectorDistance(commandMenuPotentialStartPos, getMouseInScreenCordinates()) > 50)) {
+	if (commandMenuPotentialStart && (getMillis() - commandMenuPotentialStartTime > 200ms || vectorDistance(dragStart, getMouseInScreenCordinates()) > 50)) {
 		commandMenuPotentialStart = false;
 		
+		std::cout << "open command menu" << std::endl;
 //		uiScreen.openCommandMenu();
 	}
 	
-	if (dragPotentialStart && vectorDistance(commandMenuPotentialStartPos, getMouseInScreenCordinates()) > 50) {
-		dragPotentialStart = false;
-		
-		
-
-		
+//	if (movingWindowPotentialStart && vectorDistance(dragStart, getMouseInScreenCordinates()) > 50) {
+//		movingWindowPotentialStart = false;
+//		movingWindow = true;
+//		std::cout << "move window start" << std::endl;
+//	}
+	
+	if (dragSelectionPotentialStart && vectorDistance(dragStart, getMouseInScreenCordinates()) > 10) {
+			dragSelectionPotentialStart = false;
+			dragSelecting = true;
+//			std::cout << "drag select start" << std::endl;
 	}
 	
-//	if (dragSelectionPotentialStart) {
-//
-//			val dx = dragX - screenX;
-//			val dy = dragY - screenY;
-//
-//			if (std::sqrt((dx * dx + dy * dy).toDouble()) > 10) {
-//
-//				dragSelectionPotentialStart = false;
-//				dragSelecting = true;
-////				println("drag select start")
-//			}
-//		}
-//	
-//	if (movingWindow) {
-//			var mouseScreenNow = Vector3(screenX.toFloat(), screenY.toFloat(), 0f)
-//			var mouseWorldNow = camera.unproject(mouseScreenNow.cpy())
-//			var mouseWorldBefore = camera.unproject(mouseScreenNow.cpy().add(Vector3((dragX - screenX).toFloat(), (dragY - screenY).toFloat(), 0f)))
-//
-//			var diff = mouseWorldNow.cpy().sub(mouseWorldBefore)
-//
-//			cameraOffset.sub(diff.x.toLong(), diff.y.toLong())
-//
-//			//TODO ensure camera position is always inside the solar system
-//
-//			dragX = screenX;
-//			dragY = screenY;
-//
-//			return true;
-//		}
+	if (movingWindow) {
+		Vector2i mouseScreenNow = getMouseInScreenCordinates();
+		Vector2l mouseWorldNow = toWorldCoordinates(mouseScreenNow);
+		Vector2l mouseWorldBefore = toWorldCoordinates(dragStart);
+
+		Vector2l diff = mouseWorldNow - mouseWorldBefore;
+
+		viewOffset -= diff;
+
+		//TODO ensure camera position is always inside the solar system
+
+		dragStart = mouseScreenNow;
+	}
 	
 	{
 		std::unique_lock<LockableBase(std::recursive_mutex)> lock(Aurora.galaxy->shadowLock);
@@ -246,54 +238,48 @@ void StarSystemLayer::render() {
 		window.window->DrawRectangle(matrixToVK2D(selection), false, vk2d::Colorf::WHITE());
 	}
 	
-//	val now = System.currentTimeMillis()
-//		
-//	if (now - lastTickrateUpdate > 1000) {
-//		lastTickrateUpdate = now
-//		galaxyTickrate = galaxy.time - oldGalaxyTime
-//		oldGalaxyTime = galaxy.time
-//	}
-//	
-//	val spriteBatch = AuroraGame.currentWindow.spriteBatch
-//	val uiCamera = AuroraGame.currentWindow.screenService.uiCamera
-//	
-//	spriteBatch.projectionMatrix = uiCamera.combined
-//	spriteBatch.begin()
-//	
-//	val y = 28f
-//	var x = 4f
-//	x += Assets.fontUI.draw(spriteBatch, "${Units.daysToDate(galaxy.day)} ${Units.secondsToString(galaxy.time)}, ", x, y).width
-//	
+	milliseconds now = getMillis();
+		
+	if (now - lastTickrateUpdate > 1000ms) {
+		lastTickrateUpdate = now;
+		galaxyTickrate = milliseconds(Aurora.galaxy->time) - oldGalaxyTime;
+		oldGalaxyTime = milliseconds(Aurora.galaxy->time);
+	}
+	
+	int y = window.window->GetSize().y / 2 - 10;
+	int x = -(int)(window.window->GetSize().x / 2) + 5;
+	
+//	x += Assets.fontUI.draw(spriteBatch, "${Units.daysToDate(galaxy.day)} ${Units.secondsToString(galaxy.time)}, ", x, y).width;
+	
+	vk2d::Mesh text_mesh = vk2d::GenerateTextMesh(Aurora.assets.font, { x, y }, fmt::format("{} {}", daysToDate(Aurora.galaxy->day), secondsToString(Aurora.galaxy->time)));
+	window.window->DrawMesh(text_mesh);
+//	x += text_mesh.width;
+	
 //	if (galaxy.speed == 0L) {
-//		Assets.fontUI.color = Color.RED
-//		x += Assets.fontUI.draw(spriteBatch, "System Error", x, y).width
-//		Assets.fontUI.color = Color.WHITE
+//		Assets.fontUI.color = Color.RED;
+//		x += Assets.fontUI.draw(spriteBatch, "System Error", x, y).width;
+//		Assets.fontUI.color = Color.WHITE;
 //		
 //	} else if (galaxy.speed < 0L) {
-//		Assets.fontUI.color = Color.GRAY
-//		x += Assets.fontUI.draw(spriteBatch, "speed ${Units.NANO_SECOND / -galaxy.speed}", x, y).width
-//		Assets.fontUI.color = Color.WHITE
+//		Assets.fontUI.color = Color.GRAY;
+//		x += Assets.fontUI.draw(spriteBatch, "speed ${Units.NANO_SECOND / -galaxy.speed}", x, y).width;
+//		Assets.fontUI.color = Color.WHITE;
 //		
 //	} else if (galaxy.speedLimited) {
-//		Assets.fontUI.color = Color.RED
-//		x += Assets.fontUI.draw(spriteBatch, "speed ${Units.NANO_SECOND / galaxy.speed}", x, y).width
-//		Assets.fontUI.color = Color.WHITE
+//		Assets.fontUI.color = Color.RED;
+//		x += Assets.fontUI.draw(spriteBatch, "speed ${Units.NANO_SECOND / galaxy.speed}", x, y).width;
+//		Assets.fontUI.color = Color.WHITE;
 //		
 //	}  else {
-//		x += Assets.fontUI.draw(spriteBatch, "speed ${Units.NANO_SECOND / galaxy.speed}", x, y).width
+//		x += Assets.fontUI.draw(spriteBatch, "speed ${Units.NANO_SECOND / galaxy.speed}", x, y).width;
 //	}
 //	
-//	x += Assets.fontUI.draw(spriteBatch, " ${galaxy.tickSize}", x, y).width
-//	x += Assets.fontUI.draw(spriteBatch, " ${starSystem.updateTimeAverage.toInt() / 1000}us ${galaxyTickrate}t/s", x, y).width
-//	x += Assets.fontUI.draw(spriteBatch, ", ${allSubscription.getEntityCount()}st", x, y).width
-//	
-//	var str = "zoom $zoomLevel"
-//	Assets.fontUI.cache.clear()
-//	val strWidth = Assets.fontUI.cache.addText(str, 0f, 0f) .width
-//	Assets.fontUI.cache.clear()
-//	Assets.fontUI.draw(spriteBatch, str, Gdx.graphics.width - strWidth - 4f, y)
-//	
-//	spriteBatch.end()
+//	x += Assets.fontUI.draw(spriteBatch, " ${galaxy.tickSize}", x, y).width;
+//	x += Assets.fontUI.draw(spriteBatch, " ${starSystem.updateTimeAverage.toInt() / 1000}us ${galaxyTickrate}t/s", x, y).width;
+//	x += Assets.fontUI.draw(spriteBatch, ", ${allSubscription.getEntityCount()}st", x, y).width;
+	
+	text_mesh = vk2d::GenerateTextMesh(Aurora.assets.font, { window.window->GetSize().x / 2 - 35 , y }, fmt::format("zoom {:02}", zoomLevel));
+	window.window->DrawMesh(text_mesh);
 }
 
 bool StarSystemLayer::keyAction(KeyActions_StarSystemLayer action) {
@@ -347,7 +333,7 @@ bool StarSystemLayer::eventKeyboard(vk2d::KeyboardButton button, int32_t scancod
 }
 
 bool StarSystemLayer::eventCharacter(uint32_t character, vk2d::ModifierKeyFlags modifier_keys) {
-	printf("character %c\n", character); fflush(stdout);
+//	printf("character %c\n", character); fflush(stdout);
 	KeyActions_StarSystemLayer keyBind = KeyMappings::getTranslated<KeyActions_StarSystemLayer>(character);
 
 	if (keyBind != KeyActions_StarSystemLayer::NONE) {
@@ -458,9 +444,8 @@ bool StarSystemLayer::eventMouseButton(vk2d::MouseButton button, vk2d::ButtonAct
 //							
 //						} else {
 //
-//							dragSelectPotentialStart = true;
-//							dragX = screenX;
-//							dragY = screenY;
+							dragSelectionPotentialStart = true;
+							dragStart = getMouseInScreenCordinates();
 //
 ////						println("drag select potential dragX $dragX, dragY $dragY")
 //						}
@@ -510,16 +495,16 @@ bool StarSystemLayer::eventMouseButton(vk2d::MouseButton button, vk2d::ButtonAct
 //							}
 //						}
 //					}
-
-					return true;
 				}
+				
+				return true;
 				
 			} else if (button == vk2d::MouseButton::BUTTON_MIDDLE) {
 			
 				selectedAction = nullptr;
 				commandMenuPotentialStart = false;
 				movingWindow = true;
-				dragStart = vk2dToVector(window.window->GetCursorPosition()).cast<int32_t>();
+				dragStart = getMouseInScreenCordinates();
 				return true;
 				
 			} else if (button == vk2d::MouseButton::BUTTON_RIGHT) {
@@ -529,7 +514,7 @@ bool StarSystemLayer::eventMouseButton(vk2d::MouseButton button, vk2d::ButtonAct
 
 				commandMenuPotentialStart = true;
 				commandMenuPotentialStartTime = duration_cast<nanoseconds>(steady_clock::now().time_since_epoch());
-				commandMenuPotentialStartPos = vk2dToVector(window.window->GetCursorPosition()).cast<int32_t>();
+				dragStart = getMouseInScreenCordinates();
 			}
 			
 		} else {
@@ -541,8 +526,6 @@ bool StarSystemLayer::eventMouseButton(vk2d::MouseButton button, vk2d::ButtonAct
 
 			if (movingWindow && button != vk2d::MouseButton::BUTTON_MIDDLE) {
 				movingWindow = false;
-				//TODO
-//				viewOffset = 
 				return true;
 			}
 		}
@@ -560,13 +543,13 @@ bool StarSystemLayer::eventMouseButton(vk2d::MouseButton button, vk2d::ButtonAct
 					Player::current->selection.clear();
 					printf("cleared selection\n"); fflush(stdout);
 				}
-	
+				
 				Matrix2i dragSelection = getDragSelection();
-				std::cout << "dragSelection " << dragSelection << std::endl;
-	
+//				std::cout << "dragSelection " << dragSelection << std::endl;
+				
 				Matrix2l worldCoordinates = toWorldCoordinates(dragSelection);
-				std::cout << "worldCoordinates " << worldCoordinates << std::endl;
-	
+//				std::cout << "worldCoordinates " << worldCoordinates << std::endl;
+				
 				std::vector<EntityReference> entitiesInSelection {};
 				
 				{
@@ -589,7 +572,7 @@ bool StarSystemLayer::eventMouseButton(vk2d::MouseButton button, vk2d::ButtonAct
 	
 				if (entitiesInSelection.size() > 0) {
 					vectorAppend(Player::current->selection, entitiesInSelection);
-	//				println("drag selected ${entitiesInSelection.size} entities")
+					std::cout << "drag selected " << Player::current->selection.size() << " entities" << std::endl;
 				}
 	
 				dragSelecting = false;
@@ -694,14 +677,14 @@ bool StarSystemLayer::eventScroll(vk2d::Vector2d scroll) {
 	}
 
 	// camera.zoom >= 1
-	float newZoom = std::pow(Aurora.settings.render.zoomSensitivity, (double) zoomLevel);
-
-//	std::cout << "zoom:" << newZoom << ", zoomLevel:" << zoomLevel << std::endl;
+	float newZoom = std::pow(Aurora.settings.render.zoomSensitivity, (float) zoomLevel);
 
 	if (newZoom > maxZoom) {
 		newZoom = maxZoom;
-		zoomLevel = (std::log(newZoom) / std::log(Aurora.settings.render.zoomSensitivity));
+		zoomLevel = std::log(newZoom) / std::log(Aurora.settings.render.zoomSensitivity);
 	}
+	
+//	std::cout << "zoom:" << newZoom << ", zoomLevel:" << zoomLevel << std::endl;
 
 	if (scroll.y > 0) {
 		// Det som var under musen innan scroll ska fortsätta vara där efter zoom
@@ -722,24 +705,24 @@ bool StarSystemLayer::eventScroll(vk2d::Vector2d scroll) {
 }
 
 Matrix2i StarSystemLayer::getDragSelection() {
-	vk2d::Vector2d cursor = window.window->GetCursorPosition();
+	Vector2i cursor = getMouseInScreenCordinates();
 	
 	Matrix2i mat {};
 	
-	if (cursor.x >= dragStart.x()) {
-		mat(0,0) = cursor.x;
+	if (cursor.x() >= dragStart.x()) {
+		mat(0,0) = cursor.x();
 		mat(1,0) = dragStart.x();
 	} else {
 		mat(0,0) = dragStart.x();
-		mat(1,0) = cursor.x;
+		mat(1,0) = cursor.x();
 	}
 	
-	if (cursor.y >= dragStart.y()) {
-		mat(0,1) = cursor.y;
+	if (cursor.y() >= dragStart.y()) {
+		mat(0,1) = cursor.y();
 		mat(1,1) = dragStart.y();
 	} else {
 		mat(0,1) = dragStart.y();
-		mat(1,1) = cursor.y;
+		mat(1,1) = cursor.y();
 	}
 	
 	return mat;

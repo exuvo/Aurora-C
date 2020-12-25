@@ -93,21 +93,3 @@ std::optional<double> getPositiveRootOfQuadraticEquationSafe(double a, double b,
 	
 	return (-b + sqrt(tmp)) / (2 * a);
 }
-
-namespace Eigen {
-	std::ostream& operator<<(std::ostream& os, const Vector2i& v) {
-		return os << v.x() << "," << v.y();
-	}
-	
-	std::ostream& operator<<(std::ostream& os, const Vector2l& v) {
-		return os << v.x() << "," << v.y();
-	}
-	
-	std::ostream& operator<<(std::ostream& os, const Vector2f& v) {
-		return os << v.x() << "," << v.y();
-	}
-	
-	std::ostream& operator<<(std::ostream& os, const Vector2d& v) {
-		return os << v.x() << "," << v.y();
-	}
-}
