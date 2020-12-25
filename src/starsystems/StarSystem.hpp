@@ -61,9 +61,7 @@ class StarSystem {
 		
 		template<typename... Component>
 		void changed(entt::entity entity) {
-//			(changed2<Component>(entity), ...);
-			using expand = int[];
-			(void) expand { 0, ((void) changed2<Component>(entity), 0) ... };
+			(changed2<Component>(entity), ...);
 		}
 		
 		template<typename Component>

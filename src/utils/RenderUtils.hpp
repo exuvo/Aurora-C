@@ -14,10 +14,12 @@
 #include "utils/Math.hpp"
 
 __attribute__((warn_unused_result)) vk2d::Vector2f vectorToVK2D(Vector2l& vec);
+__attribute__((warn_unused_result)) vk2d::Vector2f vectorToVK2D(Vector2i& vec);
 __attribute__((warn_unused_result)) Vector2i vk2dToVector(vk2d::Vector2i& vec);
 __attribute__((warn_unused_result)) Vector2i vk2dToVector(vk2d::Vector2i vec);
 __attribute__((warn_unused_result)) Vector2d vk2dToVector(vk2d::Vector2d& vec);
 __attribute__((warn_unused_result)) Vector2d vk2dToVector(vk2d::Vector2d vec);
+__attribute__((warn_unused_result)) vk2d::Rect2f matrixToVK2D(Matrix2i& mat);
 
 float linearRGBtoSRGB(float);
 float sRGBtoLinearRGB(float);

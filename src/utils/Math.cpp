@@ -32,19 +32,32 @@ int64_t vectorsCross(const Vector2l& a, const Vector2l& b) {
 	return x1 * y2 - y1 * x2;
 }
 
-// Returns the angle in radians of this vector (point) relative to the given vector. Angles are towards the positive y-axis. (typically counter-clockwise)
-// https://stackoverflow.com/questions/21483999/using-atan2-to-find-angle-between-two-vectors
-double vectorsAngle(const Vector2l& a, const Vector2l& b) {
-	return atan2(vectorsCross(a, b), a.dot(b));
-}
-
-double vectorAngle(const Vector2l& a) {
-	return atan2(a.y(), a.x());
-}
-
-double vectorLength(const Vector2l& a) {
-//	return hypot(a.x(), a.y());
-	return a.norm();
+/*
+* Errors between -1.5% (on axes) and +7.5% (on lobes) and an average error of +0.043%.
+* From https://gamedev.stackexchange.com/a/69255/142645 and https://www.flipcode.com/archives/Fast_Approximate_Distance_Functions.shtml
+*/
+double vectorDistanceFast(const Vector2l& a, const Vector2l& b) {
+	long dx = std::abs(b.x() - a.x());
+	long dy = std::abs(b.y() - a.y());
+	
+	long min, max;
+	
+	if (dx < dy) {
+		min = dx;
+		max = dy;
+	} else {
+		min = dy;
+		max = dx;
+	}
+	
+	long approx = 1007 * max + 441 * min;
+	
+	if (max < 16 * min) {
+		approx -= 40 * max;
+	}
+	
+	// add 512 for proper rounding
+	return (approx + 512) >> 10; // div 1024
 }
 
 // counter clock wise rotation
@@ -79,4 +92,22 @@ std::optional<double> getPositiveRootOfQuadraticEquationSafe(double a, double b,
 	}
 	
 	return (-b + sqrt(tmp)) / (2 * a);
+}
+
+namespace Eigen {
+	std::ostream& operator<<(std::ostream& os, const Vector2i& v) {
+		return os << v.x() << "," << v.y();
+	}
+	
+	std::ostream& operator<<(std::ostream& os, const Vector2l& v) {
+		return os << v.x() << "," << v.y();
+	}
+	
+	std::ostream& operator<<(std::ostream& os, const Vector2f& v) {
+		return os << v.x() << "," << v.y();
+	}
+	
+	std::ostream& operator<<(std::ostream& os, const Vector2d& v) {
+		return os << v.x() << "," << v.y();
+	}
 }

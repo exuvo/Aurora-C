@@ -4,6 +4,8 @@
 #ifndef QUADTREE_POINT_HPP
 #define QUADTREE_POINT_HPP
 
+#include <stdint.h>
+
 #include "SmallList.hpp"
 
 // Represents a rectangle for the quadtree storing a center and half-size.

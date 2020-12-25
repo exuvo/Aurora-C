@@ -2,11 +2,12 @@
 // ************************************************************************************
 // LGrid.cpp
 // ************************************************************************************
-#include "LooseGrid.hpp"
 #include <cstdlib>
 #include <cfloat>
 #include <utility>
 #include <algorithm>
+
+#include "LooseGrid.hpp"
 
 static int ceil_div(float value, float divisor)
 {
@@ -114,7 +115,7 @@ static void grid_optimize(LGrid* grid)
             new_elt_idxs.push_back(new_elts.insert(*elt));
             lcell->head = elt->next;
         }
-        for (int j=0; j < new_elt_idxs.size(); ++j)
+        for (uint32_t j=0; j < new_elt_idxs.size(); ++j)
         {
             const int new_elt_idx = new_elt_idxs[j];
             new_elts[new_elt_idx].next = lcell->head;
@@ -345,7 +346,7 @@ SmallList<int> lgrid_query(const LGrid* grid, float mx, float my, float hx, floa
 
     // For each loose cell, determine what elements intersect.
     SmallList<int> res;
-    for (int j=0; j < lcell_idxs.size(); ++j)
+    for (uint32_t j=0; j < lcell_idxs.size(); ++j)
     {
         const LGridLooseCell* lcell = &grid->loose.cells[lcell_idxs[j]];
         int elt_idx = lcell->head;
@@ -412,7 +413,7 @@ LGridQuery4 lgrid_query4(const LGrid* grid, const SimdVec4f* mx4, const SimdVec4
         }
 
         // For each loose cell, determine what elements intersect.
-        for (int j=0; j < lcell_idxs.size(); ++j)
+        for (uint32_t j=0; j < lcell_idxs.size(); ++j)
         {
             const LGridLooseCell* lcell = &grid->loose.cells[lcell_idxs[j]];
             int elt_idx = lcell->head;

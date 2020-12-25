@@ -38,7 +38,7 @@ struct TintComponent {
 struct RenderComponent {};
 
 struct CircleComponent {
-		float radius = 1;
+		float radius = 1; // in m
 };
 
 struct StarSystemComponent {
@@ -50,15 +50,16 @@ struct EmpireComponent {
 };
 
 struct MassComponent {
-		double mass = 0;
+		double mass = 0; // In kg
 };
 
+// W/m2 @ 1 AU. https://en.wikipedia.org/wiki/Solar_constant
 struct SunComponent {
 		int32_t solarConstant = 1361;
 };
 
 struct SolarIrradianceComponent {
-		int32_t irradiance = 0;
+		int32_t irradiance = 0; // W/m2
 };
 
 struct TimedLifeComponent {

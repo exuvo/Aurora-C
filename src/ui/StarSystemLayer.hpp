@@ -21,10 +21,10 @@ class StarSystemLayer: public UILayer {
 		StarSystemLayer(AuroraWindow& parentWindow, StarSystem* starSystem);
 		virtual ~StarSystemLayer() override;
 		
-		float zoom = 1E6;
+		float zoom = 1; // 1E6
 		constexpr static float maxZoom = 1E8;
 		int zoomLevel;
-		Vector2l viewOffset {};
+		Vector2l viewOffset {0,0}; // in m
 		
 		virtual void render() override;
 		
@@ -45,8 +45,12 @@ class StarSystemLayer: public UILayer {
 		int getCircleSegments(float radius);
 		Vector2l toWorldCoordinates(Vector2i screenCordinates);
 		Matrix2l toWorldCoordinates(Matrix2i screenCordinates);
+		Vector2i toScreenCoordinates(Vector2l gameCordinates);
+		Matrix2i toScreenCoordinates(Matrix2l gameCordinates);
+		Vector2i getMouseInScreenCordinates();
 		
 		Vector2i dragStart {};
+		bool dragPotentialStart = false;
 		bool dragSelecting = false;
 		bool dragSelectionPotentialStart = false;
 		Matrix2i getDragSelection();

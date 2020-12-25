@@ -91,17 +91,16 @@ void AuroraWindow::render() {
 		return;
 	}
 	
-	float x = duration_cast<milliseconds>(steady_clock::now().time_since_epoch()).count() % (100 + window->GetSize().x) - window->GetSize().x / 2 - 100;
-	
 	{
 		ZoneScopedN("Draw");
 		TracyVkZone(tracyVkCtxs[window->impl->next_image], window->impl->vk_render_command_buffers[window->impl->next_image], "Render");
 		
-		window->DrawRectangle(
-			{{x, 0}, {x + 100, 100}},
-			true,
-			vk2d::Colorf::RED()
-		);
+//		float x = duration_cast<milliseconds>(steady_clock::now().time_since_epoch()).count() % (100 + window->GetSize().x) - window->GetSize().x / 2 - 100;
+//		window->DrawRectangle(
+//			{{x, 0}, {x + 100, 100}},
+//			true,
+//			vk2d::Colorf::RED()
+//		);
 		
 		for (UILayer* layer : layers) {
 			layer->render();
@@ -163,7 +162,7 @@ void AuroraWindow::EventFileDrop(vk2d::Window* window,
 }
 
 void AuroraWindow::EventScroll(vk2d::Window* window, vk2d::Vector2d scroll) {
-	std::cout << "window scroll" << std::endl;
+//	std::cout << "window scroll" << std::endl;
 	for (UILayer* layer : layers) {
 		if (layer->eventScroll(scroll)) return;
 	}

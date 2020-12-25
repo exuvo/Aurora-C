@@ -13,6 +13,10 @@ vk2d::Vector2f vectorToVK2D(Vector2l& vec) {
 	return {vec.x(), vec.y()};
 }
 
+vk2d::Vector2f vectorToVK2D(Vector2i& vec) {
+	return {vec.x(), vec.y()};
+}
+
 Vector2i vk2dToVector(vk2d::Vector2i& vec) {
 	return {vec.x, vec.y};
 }
@@ -27,6 +31,10 @@ Vector2d vk2dToVector(vk2d::Vector2d& vec) {
 
 Vector2d vk2dToVector(vk2d::Vector2d vec) {
 	return {vec.x, vec.y};
+}
+
+vk2d::Rect2f matrixToVK2D(Matrix2i& mat) {
+	return { mat(0,0), mat(0,1), mat(1,0), mat(1,1) };
 }
 
 float linearRGBtoSRGB(float color) {

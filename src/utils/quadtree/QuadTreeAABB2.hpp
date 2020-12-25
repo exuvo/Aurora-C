@@ -4,6 +4,8 @@
 #ifndef QUADTREE_AABB2_HPP
 #define QUADTREE_AABB2_HPP
 
+#include <stdint.h>
+
 #include "SmallList.hpp"
 
 // Represents a rectangle for the quadtree storing a center and half-size.

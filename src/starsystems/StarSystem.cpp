@@ -24,11 +24,7 @@ void registerComponentListener(entt::registry& registry, StarSystem* starSystem)
 
 template<typename ... Component>
 void registerComponentListeners(entt::registry& registry, StarSystem* starSystem) {
-//	(registerComponentListener<Component>(registry, starSystem), ...); // c++ 17
-	
-	// older c++ https://stackoverflow.com/a/17340003/2531250
-	using expand = int[];
-	(void) expand { 0, ((void) registerComponentListener<Component>(registry, starSystem), 0) ... };
+	(registerComponentListener<Component>(registry, starSystem), ...); // c++ 17
 }
 
 void StarSystem::init(Galaxy* galaxy) {
@@ -135,7 +131,6 @@ BOOST_PP_SEQ_FOR_EACH(CHANGED_TEMPLATE, ~, SYNCED_COMPONENTS_SEQ)
 
 void StarSystem::update(uint32_t deltaGameTime) {
 	LOG4CXX_TRACE(log, "starsystem " << name << " update");
-//	std::this_thread::sleep_for(50ms);
 //	LOG4CXX_INFO(log, "starsystem " << name << " took " << updateTime.count() << "ns");
 //	std::cout << "starsystem " << name << " (" << galacticEntityID << ")" << std::endl;
 	

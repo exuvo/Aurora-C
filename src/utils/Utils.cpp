@@ -224,3 +224,11 @@ namespace entt {
 		return os << (uint32_t) entt::registry::entity(e) << ":" << (uint32_t) entt::registry::version(e);
 	}
 }
+
+nanoseconds getNanos() {
+	return duration_cast<nanoseconds>(steady_clock::now().time_since_epoch());
+}
+
+milliseconds getMillis() {
+	return duration_cast<milliseconds>(steady_clock::now().time_since_epoch());
+}

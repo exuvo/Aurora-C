@@ -10,6 +10,9 @@
 
 #include <thread>
 #include <algorithm>
+#include <chrono>
+
+using namespace std::chrono;
 
 #if defined(__clang__) || defined(__GNUG__)
 #include <cxxabi.h>
@@ -76,5 +79,8 @@ template<typename T>
 void vectorAppend(std::vector<T> a, std::vector<T> b) {
 	a.insert(std::end(a), std::begin(b), std::end(b));
 }
+
+nanoseconds getNanos();
+milliseconds getMillis();
 
 #endif /* SRC_UTILS_UTILS_HPP_ */
