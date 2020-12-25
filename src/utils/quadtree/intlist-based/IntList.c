@@ -11,10 +11,11 @@
  * https://creativecommons.org/licenses/by-sa/4.0/
  */
 
-#include "IntList.h"
 #include <stdlib.h>
 #include <string.h>
 #include <assert.h>
+
+#include "IntList.h"
 
 void il_create(IntList* il, int num_fields)
 {

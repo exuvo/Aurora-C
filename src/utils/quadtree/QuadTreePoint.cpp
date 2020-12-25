@@ -5,6 +5,7 @@
 #include <array>
 #include <optional>
 #include <utility>
+
 #include "QuadTreePoint.hpp"
 
 void QuadtreePoint::leaf_insert(QuadtreePoint& tree, const QuadPointNodeData& node_data, int32_t element)

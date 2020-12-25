@@ -4,6 +4,7 @@
 // *********************************************************************************
 #include <array>
 #include <utility>
+
 #include "QuadTreeAABB2.hpp"
 
 static bool intersect(const std::array<int32_t, 4> ltrb1, const std::array<int32_t, 4> ltrb2)

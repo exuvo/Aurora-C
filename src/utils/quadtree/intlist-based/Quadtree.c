@@ -11,8 +11,9 @@
  * https://creativecommons.org/licenses/by-sa/4.0/
  */
 
-#include "Quadtree.h"
 #include <stdlib.h>
+
+#include "Quadtree.h"
 #include "string.h"
 
 enum

@@ -3,6 +3,7 @@
 // QuadAABBTree.cpp
 // *********************************************************************************
 #include <utility>
+
 #include "QuadTreeAABB.hpp"
 
 static bool intersect(const int32_t ltrb1[4], const int32_t ltrb2[4])

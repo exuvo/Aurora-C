@@ -9,6 +9,7 @@
 #include <cassert>
 #include <new>
 #include <type_traits>
+#include <stdint.h>
 
 // ---------------------------------------------------------------------------------
 // SmallList
