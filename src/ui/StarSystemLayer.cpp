@@ -278,7 +278,7 @@ void StarSystemLayer::render() {
 //	x += Assets.fontUI.draw(spriteBatch, " ${starSystem.updateTimeAverage.toInt() / 1000}us ${galaxyTickrate}t/s", x, y).width;
 //	x += Assets.fontUI.draw(spriteBatch, ", ${allSubscription.getEntityCount()}st", x, y).width;
 	
-	text_mesh = vk2d::GenerateTextMesh(Aurora.assets.font, { window.window->GetSize().x / 2 - 35 , y }, fmt::format("zoom {:02}", zoomLevel));
+	text_mesh = vk2d::GenerateTextMesh(Aurora.assets.font, { window.window->GetSize().x / 2 - 40 , y }, fmt::format("zoom {:02}", zoomLevel));
 	window.window->DrawMesh(text_mesh);
 }
 
