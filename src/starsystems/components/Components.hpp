@@ -18,5 +18,8 @@
 #include "SimpleComponents.hpp"
 #include "TimedComponents.hpp"
 #include "StrategicIconComponent.hpp"
+#include "MiscComponents.hpp"
+#include "ShipComponent.hpp"
+#include "MunitionComponents.hpp"
 
 #endif /* SRC_STARSYSTEMS_COMPONENTS_COMPONENTS_HPP_ */

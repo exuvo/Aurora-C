@@ -58,6 +58,9 @@ struct QuadAABBNodeData
 };
 typedef SmallList<QuadAABBNodeData> QuadAABBNodeList;
 
+struct QuadtreeAABB;
+typedef void QuadtreeAABBNodeFunc(QuadtreeAABB* qt, void* user_data, int32_t node, uint8_t depth, int32_t mx, int32_t my, int32_t sx, int32_t sy);
+
 struct QuadtreeAABB
 {
     // Creates a quadtree with the requested extents and max depth.
@@ -71,7 +74,7 @@ struct QuadtreeAABB
     void remove(int32_t element);
 
     // Outputs a list of elements found in the specified rectangle.
-    SmallList<uint32_t> query(int32_t x1, int32_t y1, int32_t x2, int32_t y2, int32_t omit_element);
+    SmallList<uint32_t> query(const std::array<int32_t, 4> rect, int32_t omit_element);
 
     // Return the data for the root node.
     QuadAABBNodeData root_data() const;
@@ -81,6 +84,9 @@ struct QuadtreeAABB
     
     // Cleans up the tree, removing empty leaves and consolidating mostly empty child nodes.
     bool cleanupFull();
+    
+    // Traverses all the nodes in the tree, calling 'branch' for branch nodes and 'leaf' for leaf nodes.
+    void traverse(void* user_data, QuadtreeAABBNodeFunc* branch, QuadtreeAABBNodeFunc* leaf);
 
     // Stores all the nodes in the quadtree. The first node in this
     // sequence is always the root.

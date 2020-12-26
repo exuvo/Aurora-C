@@ -6,6 +6,7 @@
  */
 
 #include <iostream>
+#include <fmt/core.h>
 
 #include "Tracy.hpp"
 
@@ -17,6 +18,11 @@ void Galaxy::init() {
 	for (StarSystem* system : systems) {
 		system->init(this);
 	}
+	
+	updateSpeed();
+	
+	takenWorkCounter = systems.size();
+	completedWorkCounter = systems.size();
 	
 	uint32_t cores = std::thread::hardware_concurrency();
 	if (cores < 1) {
@@ -179,7 +185,8 @@ void Galaxy::galaxyWorker() {
 					nanoseconds sleepTime = speed - accumulator;
 
 					if (sleepTime > 1ms) {
-						std::this_thread::sleep_for(sleepTime - 1ms);
+						std::unique_lock<std::mutex> lock(galaxyThreadMutex);
+						galaxyThreadCondvar.wait_for(lock, sleepTime - 1ms);
 						
 					} else if ((speed - accumulator) / 1us > 10) {
 						std::this_thread::yield();
@@ -210,7 +217,8 @@ void Galaxy::galaxyWorker() {
 }
 
 void Galaxy::starsystemWorker() {
-	tracy::SetThreadName("starsystem-worker");
+	static std::atomic<uint32_t> workerID;
+	tracy::SetThreadName(fmt::format("starsystem-worker-{}", workerID++).c_str());
 	
 	while (!shutdown) {
 		{
@@ -267,7 +275,7 @@ void Galaxy::updateSpeed() {
 	if (speed > 0ns) {
 		std::unique_lock<std::mutex> lock(galaxyThreadMutex);
 		galaxyThreadCondvar.notify_one();
-}
+	}
 }
 
 int Galaxy::updateDay() {

@@ -48,8 +48,8 @@ void StarSystem::init(Galaxy* galaxy) {
 //	scheduler.attach<TargetingSystem>(this);
 	systems->weaponSystem = scheduler.attach<WeaponSystem>(this);
 //	scheduler.attach<TimedLifeSystem>(this);
-//	scheduler.attach<SpatialPartitioningSystem>(this);
-//	scheduler.attach<SpatialPartitioningPlanetoidsSystem>(this);
+	systems->spatialPartitioningSystem = scheduler.attach<SpatialPartitioningSystem>(this);
+	systems->spatialPartitioningPlanetoidsSystem = scheduler.attach<SpatialPartitioningPlanetoidsSystem>(this);
 	
 	scheduler.init(&systems);
 	
@@ -91,9 +91,19 @@ void StarSystem::init(Galaxy* galaxy) {
 	registry.emplace<TextComponent>(e4, "Ship");
 	registry.emplace<TimedMovementComponent>(e4).previous.value.position = vectorRotateDeg(Vector2d{Units::AU * 1000 * 0.9, 0.0}, 45).cast<int64_t>();
 	registry.emplace<RenderComponent>(e4);
+	registry.emplace<ShipComponent>(e4);
 	registry.emplace<CircleComponent>(e4, 1.0f);
 	registry.emplace<MassComponent>(e4, 1000);
 	registry.emplace<TintComponent>(e4, vk2d::Colorf::RED());
+	
+	entt::entity e5 = registry.create();
+	registry.emplace<TextComponent>(e5, "Ship2");
+	registry.emplace<TimedMovementComponent>(e5).previous.value.position = vectorRotateDeg(Vector2d{Units::AU * 1000 * 0.9, 0.0}, 10).cast<int64_t>();
+	registry.emplace<RenderComponent>(e5);
+	registry.emplace<ShipComponent>(e5);
+	registry.emplace<CircleComponent>(e5, 1.0f);
+	registry.emplace<MassComponent>(e5, 1000);
+	registry.emplace<TintComponent>(e5, vk2d::Colorf::GREEN());
 }
 
 EntityReference StarSystem::getEntityReference(entt::entity entity) {

@@ -61,7 +61,7 @@ static QuadPointNodeData child_data(int32_t mx, int32_t my, int32_t sx, int32_t 
     return cd;
 }
 
-static QuadPointNodeList find_leaves(const QuadtreePoint& tree, const QuadPointNodeData& root, std::array<int32_t, 4> rect)
+static QuadPointNodeList find_leaves(const QuadtreePoint& tree, const QuadPointNodeData& root, const std::array<int32_t, 4> rect)
 {
     QuadPointNodeList leaves, to_process;
     to_process.push_back(root);
@@ -145,7 +145,7 @@ static std::optional<QuadPointNodeData> find_leaf(const QuadtreePoint& tree, con
     return leaves[0];
 }
 
-void QuadtreePoint::node_insert(QuadtreePoint& tree, const QuadPointNodeData& node_data, int element)
+void QuadtreePoint::node_insert(QuadtreePoint& tree, const QuadPointNodeData& node_data, int32_t element)
 {
     // Find the leaves and insert the element to all the leaves found.
     const std::optional<QuadPointNodeData> leaf = find_leaf(tree, node_data, tree.elts[element].mx, tree.elts[element].my);
@@ -202,7 +202,7 @@ void QuadtreePoint::remove(int32_t element)
     elts.erase(element);
 }
 
-SmallList<uint32_t> QuadtreePoint::query(const std::array<int, 4> rect, int32_t omit_element)
+SmallList<uint32_t> QuadtreePoint::query(const std::array<int32_t, 4> rect, int32_t omit_element)
 {
     // Find the leaves.
     const QuadPointNodeList leaves = find_leaves(*this, root_data(), rect);
@@ -369,8 +369,37 @@ bool QuadtreePoint::cleanupFull()
     return changed;
 }
 
-QuadPointNodeData QuadtreePoint::root_data() const
-{
+QuadPointNodeData QuadtreePoint::root_data() const {
     QuadPointNodeData rd = { root_rect, 0, 0 };
     return rd;
+}
+
+void QuadtreePoint::traverse(void* user_data, QuadtreePointNodeFunc* branch, QuadtreePointNodeFunc* leaf) {
+	QuadPointNodeList to_process;
+  to_process.push_back(root_data());
+  
+	while (to_process.size() > 0) {
+		const QuadPointNodeData nd = to_process.pop_back();
+		
+		// If this node is a leaf, insert it to the list.
+		if (nodes[nd.index].count == QuadtreePoint::NOT_LEAF) {
+			const int mx = nd.rect.mid_x, my = nd.rect.mid_y;
+			const int sx = nd.rect.size_x, sy = nd.rect.size_y;
+			const int hx = sx >> 1, hy = sy >> 1;
+			const int fc = nodes[nd.index].first_child;
+			const int dp = nd.depth + 1;
+			
+			to_process.push_back(child_data(mx - hx, my - hy, hx, hy, fc + 0, dp));
+			to_process.push_back(child_data(mx + hx, my - hy, hx, hy, fc + 1, dp));
+			to_process.push_back(child_data(mx - hx, my + hy, hx, hy, fc + 2, dp));
+			to_process.push_back(child_data(mx + hx, my + hy, hx, hy, fc + 3, dp));
+			
+			if (branch) {
+				branch(this, user_data, nd.index, nd.depth, nd.rect.mid_x, nd.rect.mid_y, nd.rect.size_x, nd.rect.size_y);
+			}
+			
+		} else if (leaf) {
+			leaf(this, user_data, nd.index, nd.depth, nd.rect.mid_x, nd.rect.mid_y, nd.rect.size_x, nd.rect.size_y);
+		}
+	}
 }

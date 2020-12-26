@@ -9,7 +9,9 @@
 #define SRC_STARSYSTEMS_SYSTEMS_SYSTEMS_HPP_
 
 #include <chrono>
-#include <exception>
+//#include <exception>
+#include <queue>
+#include <deque>
 //fixme no longer compiles
 //#include <eigen3/unsupported/Eigen/Polynomials>
 
@@ -19,12 +21,14 @@
 #include "galaxy/Galaxy.hpp"
 #include "starsystems/components/Components.hpp"
 #include "starsystems/systems/Scheduler.hpp"
-#include "utils/quadtree/SmallList.hpp"
+#include "utils/quadtree/QuadTreeAABB.hpp"
+#include "utils/quadtree/QuadTreePoint.hpp"
 
 using namespace log4cxx;
 
 struct Systems;
 class QuadtreePoint;
+class QuadtreeAABB;
 
 template<typename Derived>
 class BaseSystem : public Process<Derived, uint32_t> {
@@ -129,9 +133,9 @@ class MovementSystem : public IntervalSystem<MovementSystem> {
 		WeaponSystem* weaponSystem = nullptr;
 };
 
-class SpatialPartitioningSystem : public IntervalSystem<MovementSystem> {
+class SpatialPartitioningSystem : public IntervalSystem<SpatialPartitioningSystem> {
 	public:
-		SpatialPartitioningSystem(StarSystem* starSystem) : SpatialPartitioningSystem::IntervalSystem(1s, starSystem) {};
+		SpatialPartitioningSystem(StarSystem* starSystem);
 		
 		void init(void*);
 		void update(delta_type delta);
@@ -145,17 +149,37 @@ class SpatialPartitioningSystem : public IntervalSystem<MovementSystem> {
 		static constexpr int64_t MIN_SQUARE_SIZE = (SCALE * (long) MAX) / std::pow(2, DEPTH);
 		static constexpr int32_t MAX_ELEMENTS = 8;
 		
+		QuadtreePoint tree = {MAX, MAX, MAX_ELEMENTS, DEPTH};
+		
 	private:
 		LoggerPtr log = Logger::getLogger("aurora.starsystems.systems.spatialpartitioning");
+		
+		struct comparator {
+				comparator(SpatialPartitioningSystem* parent): registry(parent->registry) {};
+				entt::registry& registry;
+				bool operator() (entt::entity, entt::entity) const;
+		};
+		
+		std::priority_queue<entt::entity, std::deque<entt::entity>, comparator> updateQueue;
+		std::priority_queue<entt::entity, std::deque<entt::entity>, comparator> removedQueue;
+		
+		entt::observer accelerateObserver;
+		std::vector<entt::entity> addedEntites;
+		std::vector<entt::entity> removedEntites;
+		
+		void inserted(entt::registry &, entt::entity);
+		void removed(entt::registry &, entt::entity);
+		void update(entt::entity);
+		uint64_t updateNextExpectedUpdate(entt::entity, MovementValues&);
 };
 
-class SpatialPartitioningPlanetoidsSystem : public IntervalSystem<MovementSystem> {
+class SpatialPartitioningPlanetoidsSystem : public IntervalSystem<SpatialPartitioningPlanetoidsSystem> {
 	public:
-		SpatialPartitioningPlanetoidsSystem(StarSystem* starSystem) : SpatialPartitioningPlanetoidsSystem::IntervalSystem(1s, starSystem) {};
+		SpatialPartitioningPlanetoidsSystem(StarSystem* starSystem);
 		
 		void init(void*);
 		void update(delta_type delta);
-		static std::vector<entt::entity> query(QuadtreePoint& quadTree, Matrix2l worldCoordinates);
+		static SmallList<entt::entity> query(QuadtreeAABB& quadTree, Matrix2l worldCoordinates);
 		
 		static constexpr int32_t SCALE = 2000; // in m , min 1000
 		static constexpr int32_t MAX = std::numeric_limits<int32_t>::max();
@@ -165,8 +189,27 @@ class SpatialPartitioningPlanetoidsSystem : public IntervalSystem<MovementSystem
 		static constexpr int64_t MIN_SQUARE_SIZE = (SCALE * (long) MAX) / std::pow(2, DEPTH);
 		static constexpr int32_t MAX_ELEMENTS = 4;
 		
+		QuadtreeAABB tree = {MAX, MAX, MAX_ELEMENTS, DEPTH};
+		
 	private:
 		LoggerPtr log = Logger::getLogger("aurora.starsystems.systems.spatialpartitioningplanetoids");
+		
+		struct comparator {
+				comparator(SpatialPartitioningPlanetoidsSystem* parent): registry(parent->registry) {};
+				entt::registry& registry;
+				bool operator() (entt::entity, entt::entity) const;
+		};
+		
+		std::priority_queue<entt::entity, std::deque<entt::entity>, comparator> updateQueue;
+		std::priority_queue<entt::entity, std::deque<entt::entity>, comparator> removedQueue;
+		
+		std::vector<entt::entity> addedEntites;
+		std::vector<entt::entity> removedEntites;
+		
+		void inserted(entt::registry &, entt::entity);
+		void removed(entt::registry &, entt::entity);
+		void update(entt::entity);
+		uint64_t updateNextExpectedUpdate(entt::entity, MovementValues&);
 };
 
 struct Systems {

@@ -127,8 +127,10 @@ QuadtreeAABB2::QuadtreeAABB2(int32_t width, int32_t height, int32_t element_widt
 
     root_rect.size_x = width >> 1;
     root_rect.size_y = height >> 1;
-    root_rect.mid_x = root_rect.size_x;
-    root_rect.mid_y = root_rect.size_y;
+    root_rect.mid_x = 0;
+    root_rect.mid_y = 0;
+//    root_rect.mid_x = root_rect.size_x;
+//    root_rect.mid_y = root_rect.size_y;
     
     element_sx = element_width / 2;
 		element_sy = element_height / 2;
@@ -174,10 +176,9 @@ void QuadtreeAABB2::remove(int32_t element)
     elts.erase(element);
 }
 
-SmallList<uint32_t> QuadtreeAABB2::query(int32_t x1, int32_t y1, int32_t x2, int32_t y2, int32_t omit_element)
+SmallList<uint32_t> QuadtreeAABB2::query(const std::array<int32_t, 4> rect, int32_t omit_element)
 {
     // Find the leaves.
-    const std::array<int, 4> rect = {x1, y1, x2, y2};
     const QuadAABB2NodeList leaves = find_leaves(*this, root_data(), rect);
 
     // For each leaf node, look for elements that intersect.
@@ -349,4 +350,34 @@ QuadAABB2NodeData QuadtreeAABB2::root_data() const
 {
     QuadAABB2NodeData rd = { root_rect, 0, 0 };
     return rd;
+}
+
+void QuadtreeAABB2::traverse(void* user_data, QuadtreeAABB2NodeFunc* branch, QuadtreeAABB2NodeFunc* leaf) {
+	QuadAABB2NodeList to_process;
+  to_process.push_back(root_data());
+  
+	while (to_process.size() > 0) {
+		const QuadAABB2NodeData nd = to_process.pop_back();
+		
+		// If this node is a leaf, insert it to the list.
+		if (nodes[nd.index].count == QuadtreeAABB2::NOT_LEAF) {
+			const int mx = nd.rect.mid_x, my = nd.rect.mid_y;
+			const int sx = nd.rect.size_x, sy = nd.rect.size_y;
+			const int hx = sx >> 1, hy = sy >> 1;
+			const int fc = nodes[nd.index].first_child;
+			const int dp = nd.depth + 1;
+			
+			to_process.push_back(child_data(mx - hx, my - hy, hx, hy, fc + 0, dp));
+			to_process.push_back(child_data(mx + hx, my - hy, hx, hy, fc + 1, dp));
+			to_process.push_back(child_data(mx - hx, my + hy, hx, hy, fc + 2, dp));
+			to_process.push_back(child_data(mx + hx, my + hy, hx, hy, fc + 3, dp));
+			
+			if (branch) {
+				branch(this, user_data, nd.index, nd.depth, nd.rect.mid_x, nd.rect.mid_y, nd.rect.size_x, nd.rect.size_y);
+			}
+			
+		} else if (leaf) {
+			leaf(this, user_data, nd.index, nd.depth, nd.rect.mid_x, nd.rect.mid_y, nd.rect.size_x, nd.rect.size_y);
+		}
+	}
 }

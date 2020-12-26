@@ -56,6 +56,10 @@ struct QuadPointNodeData
 };
 typedef SmallList<QuadPointNodeData> QuadPointNodeList;
 
+// Function signature used for traversing a tree node.
+struct QuadtreePoint;
+typedef void QuadtreePointNodeFunc(QuadtreePoint* qt, void* user_data, int32_t node, uint8_t depth, int32_t mx, int32_t my, int32_t sx, int32_t sy);
+
 struct QuadtreePoint
 {
     // Creates a quadtree with the requested extents and max depth.
@@ -79,6 +83,9 @@ struct QuadtreePoint
     
     // Cleans up the tree, removing empty leaves and consolidating mostly empty child nodes.
     bool cleanupFull();
+    
+    // Traverses all the nodes in the tree, calling 'branch' for branch nodes and 'leaf' for leaf nodes.
+    void traverse(void* user_data, QuadtreePointNodeFunc* branch, QuadtreePointNodeFunc* leaf);
 
     // Stores all the nodes in the quadtree. The first node in this
     // sequence is always the root.

@@ -32,7 +32,7 @@ AuroraWindow::AuroraWindow() {
 	window_create_info.event_handler = this;
 //		window_create_info.fullscreen_monitor = ?
 //		window_create_info.fullscreen_refresh_rate = ?
-//		window_create_info.vsync = ?
+	window_create_info.vsync = false;
 	window = Aurora.vk2dInstance->CreateOutputWindow(window_create_info);
 	check(window, "failed to create window");
 	
@@ -138,7 +138,8 @@ bool AuroraWindow::isKeyPressed(int glfwKey) {
 
 void AuroraWindow::EventMouseButton(vk2d::Window*	window, vk2d::MouseButton	button, vk2d::ButtonAction action,
 		                                vk2d::ModifierKeyFlags modifier_keys) {
-	for (UILayer* layer : layers) {
+	for (auto it = layers.end(); it-- != layers.begin();) {
+		UILayer* layer = *it;
 		if (layer->eventMouseButton(button, action, modifier_keys)) return;
 	}
 }
@@ -168,7 +169,8 @@ void AuroraWindow::EventFileDrop(vk2d::Window* window,
 
 void AuroraWindow::EventScroll(vk2d::Window* window, vk2d::Vector2d scroll) {
 //	std::cout << "window scroll" << std::endl;
-	for (UILayer* layer : layers) {
+	for (auto it = layers.end(); it-- != layers.begin();) {
+		UILayer* layer = *it;
 		if (layer->eventScroll(scroll)) return;
 	}
 }
@@ -188,7 +190,8 @@ void AuroraWindow::EventCharacter(vk2d::Window* window, uint32_t character, vk2d
 		return;
 	}
 	
-	for (UILayer* layer : layers) {
+	for (auto it = layers.end(); it-- != layers.begin();) {
+		UILayer* layer = *it;
 		if (layer->eventCharacter(character, modifier_keys)) return;
 	}
 }
@@ -203,7 +206,8 @@ void AuroraWindow::EventWindowMaximize(vk2d::Window* window, bool maximized) {
 
 void AuroraWindow::EventKeyboard(vk2d::Window* window, vk2d::KeyboardButton button, int32_t scancode,
                                  vk2d::ButtonAction action, vk2d::ModifierKeyFlags modifier_keys) {
-	for (UILayer* layer : layers) {
+	for (auto it = layers.end(); it-- != layers.begin();) {
+		UILayer* layer = *it;
 		if (layer->eventKeyboard(button, scancode, action, modifier_keys)) return;
 	}
 }

@@ -38,6 +38,8 @@ class StarSystemLayer: public UILayer {
 		ProfilerEvents profilerEvents;
 		
 		void drawEntities();
+		void drawSpatialPartitioning();
+		void drawSpatialPartitioningPlanetoids();
 		
 		bool keyAction(KeyActions_StarSystemLayer action);
 		
