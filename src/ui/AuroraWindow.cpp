@@ -32,7 +32,7 @@ AuroraWindow::AuroraWindow() {
 	window_create_info.event_handler = this;
 //		window_create_info.fullscreen_monitor = ?
 //		window_create_info.fullscreen_refresh_rate = ?
-	window_create_info.vsync = false;
+	window_create_info.vsync = true;
 	window = Aurora.vk2dInstance->CreateOutputWindow(window_create_info);
 	check(window, "failed to create window");
 	
@@ -161,6 +161,7 @@ void AuroraWindow::EventWindowFocus(vk2d::Window* window, bool focused) {
 }
 
 void AuroraWindow::EventCursorPosition(vk2d::Window* window, vk2d::Vector2d position) {
+	mousePos = {position.x, position.y};
 }
 
 void AuroraWindow::EventFileDrop(vk2d::Window* window,

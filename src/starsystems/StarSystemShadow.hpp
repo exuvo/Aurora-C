@@ -61,6 +61,7 @@ class ShadowStarSystem {
 
 	private:
 		StarSystem* starSystem;
+		std::vector<bool> tmp;
 };
 
 #endif /* SRC_STARSYSTEMS_STARSYSTEM_SHADOW_HPP_ */

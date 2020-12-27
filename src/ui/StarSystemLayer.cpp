@@ -221,16 +221,10 @@ void StarSystemLayer::render() {
 //		uiScreen.openCommandMenu();
 	}
 	
-//	if (movingWindowPotentialStart && vectorDistance(dragStart, getMouseInScreenCordinates()) > 50) {
-//		movingWindowPotentialStart = false;
-//		movingWindow = true;
-//		std::cout << "move window start" << std::endl;
-//	}
-	
 	if (dragSelectionPotentialStart && vectorDistance(dragStart, getMouseInScreenCordinates()) > 10) {
 			dragSelectionPotentialStart = false;
 			dragSelecting = true;
-//			std::cout << "drag select start" << std::endl;
+//			std::cout << "drag select start " << dragStart << " - " << getMouseInScreenCordinates() << " = " << vectorDistance(dragStart, getMouseInScreenCordinates()) << " ~ " << vectorDistanceFast(dragStart, getMouseInScreenCordinates()) << std::endl;
 	}
 	
 	if (movingWindow) {
@@ -253,7 +247,6 @@ void StarSystemLayer::render() {
 		profilerEvents.start("render");
 		
 		profilerEvents.start("setup");
-		
 		
 	//	val selectedEntityIDs = Player::current->selection.filter { it.starSystem == starSystem && world.entityManager.isActive(it.entityID) && familyAspect.isInterested(it.entityID) }.map { it.entityID };
 	
@@ -336,10 +329,6 @@ void StarSystemLayer::render() {
 			profilerEvents.end();
 		}
 		
-		profilerEvents.start("spriteBatch");
-	//	spriteBatch.projectionMatrix = uiCamera.combined;
-	//	spriteBatch.begin();
-		
 		profilerEvents.start("drawSelectionDetectionStrength");
 	//	drawSelectionDetectionStrength(selectedEntityIDs);
 		profilerEvents.end();
@@ -352,17 +341,6 @@ void StarSystemLayer::render() {
 	//	drawMovementTimes(entityIDs, selectedEntityIDs);
 		profilerEvents.end();
 	
-	//	spriteBatch.end();
-		profilerEvents.end();
-		
-		if (dragSelecting) {
-			profilerEvents.start("drawSelecting");
-			window.window->DrawRectangle({}, false, vk2d::Colorf::WHITE());
-			
-			
-			profilerEvents.end();
-		}
-		
 		profilerEvents.end();
 	}
 	
@@ -379,40 +357,40 @@ void StarSystemLayer::render() {
 		oldGalaxyTime = milliseconds(Aurora.galaxy->time);
 	}
 	
-	int y = window.window->GetSize().y / 2 - 10;
-	int x = -(int)(window.window->GetSize().x / 2) + 5;
+	float y = window.window->GetSize().y / 2 - 10;
+	float x = -(int)(window.window->GetSize().x / 2) + 5;
 	
-//	x += Assets.fontUI.draw(spriteBatch, "${Units.daysToDate(galaxy.day)} ${Units.secondsToString(galaxy.time)}, ", x, y).width;
+//	std::cout << std::endl;
 	
-	vk2d::Mesh text_mesh = vk2d::GenerateTextMesh(Aurora.assets.font, { x, y }, fmt::format("{} {}", daysToDate(Aurora.galaxy->day), secondsToString(Aurora.galaxy->time)));
-	window.window->DrawMesh(text_mesh);
-//	x += text_mesh.width;
+	auto writeText = [&](std::string text, vk2d::Colorf color = vk2d::Colorf::WHITE()){
+		vk2d::Mesh text_mesh = vk2d::GenerateTextMesh(Aurora.assets.font, { x, y }, text, color);
+		window.window->DrawMesh(text_mesh);
+		x += text_mesh.aabb.GetAreaSize().x;
+//		std::cout << "size " << text_mesh.aabb << " " << text_mesh.aabb.GetAreaSize() << std::endl;
+	};
 	
-//	if (galaxy.speed == 0L) {
-//		Assets.fontUI.color = Color.RED;
-//		x += Assets.fontUI.draw(spriteBatch, "System Error", x, y).width;
-//		Assets.fontUI.color = Color.WHITE;
-//		
-//	} else if (galaxy.speed < 0L) {
-//		Assets.fontUI.color = Color.GRAY;
-//		x += Assets.fontUI.draw(spriteBatch, "speed ${Units.NANO_SECOND / -galaxy.speed}", x, y).width;
-//		Assets.fontUI.color = Color.WHITE;
-//		
-//	} else if (galaxy.speedLimited) {
-//		Assets.fontUI.color = Color.RED;
-//		x += Assets.fontUI.draw(spriteBatch, "speed ${Units.NANO_SECOND / galaxy.speed}", x, y).width;
-//		Assets.fontUI.color = Color.WHITE;
-//		
-//	}  else {
-//		x += Assets.fontUI.draw(spriteBatch, "speed ${Units.NANO_SECOND / galaxy.speed}", x, y).width;
-//	}
-//	
-//	x += Assets.fontUI.draw(spriteBatch, " ${galaxy.tickSize}", x, y).width;
-//	x += Assets.fontUI.draw(spriteBatch, " ${starSystem.updateTimeAverage.toInt() / 1000}us ${galaxyTickrate}t/s", x, y).width;
-//	x += Assets.fontUI.draw(spriteBatch, ", ${allSubscription.getEntityCount()}st", x, y).width;
+	writeText(fmt::format("{} {}  ", daysToDate(Aurora.galaxy->day), secondsToString(Aurora.galaxy->time)));
 	
-	text_mesh = vk2d::GenerateTextMesh(Aurora.assets.font, { window.window->GetSize().x / 2 - 40 , y }, fmt::format("zoom {:02}", zoomLevel));
-	window.window->DrawMesh(text_mesh);
+	if (Aurora.galaxy->speed == 0ns) {
+		writeText("System Error", vk2d::Colorf::RED());
+		
+	} else if (Aurora.galaxy->speed.count() < 0) {
+		writeText(fmt::format("speed {}", Units::NANO_SECOND / -Aurora.galaxy->speed.count()), vk2d::Colorf::GREY());
+		
+	} else if (Aurora.galaxy->speedLimited) {
+		writeText(fmt::format("speed {}", Units::NANO_SECOND / Aurora.galaxy->speed.count()), vk2d::Colorf::RED());
+		
+	}  else {
+		writeText(fmt::format("speed {}", Units::NANO_SECOND / Aurora.galaxy->speed.count()));
+	}
+	
+	writeText(fmt::format(" {}", Aurora.galaxy->tickSize));
+	writeText(fmt::format(" {}us {}t/s", (int)(starSystem->updateTimeAverage / 1000), galaxyTickrate.count()));
+	writeText(fmt::format(", {}st", starSystem->registry.alive()));
+	
+	std::string text = fmt::format("zoom {:02}", zoomLevel);
+	vk2d::Vector2f bb = Aurora.assets.font->CalculateRenderedSize(text).GetAreaSize();
+	window.window->DrawMesh(vk2d::GenerateTextMesh(Aurora.assets.font, { window.window->GetSize().x / 2 - bb.x - 4 , y }, text));
 }
 
 bool StarSystemLayer::keyAction(KeyActions_StarSystemLayer action) {
@@ -689,7 +667,7 @@ bool StarSystemLayer::eventMouseButton(vk2d::MouseButton button, vk2d::ButtonAct
 					std::unique_lock<LockableBase(std::recursive_mutex)> lock(Aurora.galaxy->shadowLock);
 					
 					SmallList<entt::entity> entities = SpatialPartitioningSystem::query(starSystem->shadow->quadtreeShips, worldCoordinates);
-//					println("worldCoordinates $worldCoordinates, entities $entities")
+					std::cout << "worldCoordinates " << worldCoordinates << ", entities " << entities << std::endl;
 					
 					for (entt::entity entity : entities) {
 						if (starSystem->shadow->registry.has<TimedMovementComponent, RenderComponent>(entity)) {
@@ -713,6 +691,7 @@ bool StarSystemLayer::eventMouseButton(vk2d::MouseButton button, vk2d::ButtonAct
 			}
 	
 			if (dragSelectionPotentialStart) {
+				dragSelectionPotentialStart = false;
 				if (Player::current->selection.size() > 0 && !window.isKeyPressed(GLFW_KEY_LEFT_SHIFT)) {
 					Player::current->selection.clear();
 	//				println("cleared selection")
@@ -876,10 +855,10 @@ int StarSystemLayer::getCircleSegments(float radius) {
 }
 
 Vector2i StarSystemLayer::getMouseInScreenCordinates() {
-	vk2d::Vector2d cursor = window.window->GetCursorPosition();
+	vk2d::Vector2i cursor = window.mousePos;
 	vk2d::Vector2u windowSize = window.window->GetSize();
 	windowSize /= 2;
-	cursor -= vk2d::Vector2d{ windowSize.x, windowSize.y };
+	cursor -= vk2d::Vector2i{ windowSize.x, windowSize.y };
 	return { cursor.x, cursor.y };
 }
 

@@ -8,9 +8,10 @@
 #include <iostream>
 #include <fmt/core.h>
 
-#include "Tracy.hpp"
+#include <Tracy.hpp>
 
 #include "Galaxy.hpp"
+#include "utils/Math.hpp"
 
 void Galaxy::init() {
 	LOG4CXX_INFO(log, "initializing galaxy");
@@ -40,6 +41,10 @@ void Galaxy::init() {
 
 void Galaxy::galaxyWorker() {
 	tracy::SetThreadName("galaxy-worker");
+	
+	while(galaxyThread == nullptr) { // We must wait for the 
+		std::this_thread::yield();
+	}
 	
 	try {
 		nanoseconds accumulator = speed;
@@ -245,7 +250,7 @@ void Galaxy::starsystemWorker() {
 				system.update(tickSize);
 				system.updateTime = (duration_cast<nanoseconds>(steady_clock::now().time_since_epoch()) - systemUpdateStart);
 
-//				system.updateTimeAverage = exponentialAverage(system.updateTime.toDouble(), system.updateTimeAverage, FastMath.min(100.0, (Units.NANO_SECOND / FastMath.abs(galaxy.speed)).toDouble()))
+				system.updateTimeAverage = exponentialAverage(system.updateTime.count(), system.updateTimeAverage, std::min(100.0, (double)(Units::NANO_SECOND / std::abs(speed.count()))));
 
 			} catch (const std::exception& e) {
 				std::string stackTrace = getLastExceptionStacktrace();
@@ -264,7 +269,7 @@ void Galaxy::starsystemWorker() {
 }
 
 void Galaxy::updateSpeed() {
-	uint32_t lowestRequestedSpeed = std::numeric_limits<uint32_t>::max();
+	int32_t lowestRequestedSpeed = std::numeric_limits<int32_t>::max();
 	
 	for (Player& player : players) {
 		lowestRequestedSpeed = std::min(lowestRequestedSpeed, player.requestedSpeed);

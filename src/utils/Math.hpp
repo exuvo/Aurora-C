@@ -84,7 +84,10 @@ namespace Eigen {
 }
 
 int64_t vectorsCross(const Vector2l& a, const Vector2l& b);
-double vectorDistanceFast(const Vector2l& a, const Vector2l& b);
+float vectorDistanceFast(const Vector2f& a, const Vector2f& b);
+double vectorDistanceFast(const Vector2d& a, const Vector2d& b);
+int32_t vectorDistanceFast(const Vector2i& a, const Vector2i& b);
+int64_t vectorDistanceFast(const Vector2l& a, const Vector2l& b);
 __attribute__((warn_unused_result)) Vector2l vectorsLerp(const Vector2l& a, const Vector2l& b, const uint64_t current, const uint64_t max);
 __attribute__((warn_unused_result)) Vector2l vectorRotate(const Vector2l& a, const double angleRad);
 __attribute__((warn_unused_result)) Vector2d vectorRotate(const Vector2d& a, const double angleRad);
@@ -109,16 +112,18 @@ double vectorLength(const Eigen::Matrix<T, 2, N>& a) {
 	return a.norm();
 }
 
-template<typename T, int N>
-double vectorDistance(const Eigen::Matrix<T, 2, N>& a, const Eigen::Matrix<T, 2, N>& b) {
+template<typename T>
+double vectorDistance(const Eigen::Matrix<T, 2, 1>& a, const Eigen::Matrix<T, 2, 1>& b) {
 //	long x = b.x() - a.x();
 //	long y = b.y() - a.y();
-//	return std::hypot(x, y); // hypot is usually twice as slow as sqrt even with FMA
-	
-	return std::sqrt(a.dot(b));
+//	return std::hypot(x, y); // hypot usually takes twice as long as sqrt even with FMA
+	Eigen::Matrix<T, 2, 1> diff = b - a;
+	return std::sqrt(diff.dot(diff));
 }
 
 double getPositiveRootOfQuadraticEquation(double a, double b, double c);
 std::optional<double> getPositiveRootOfQuadraticEquationSafe(double a, double b, double c);
+
+double exponentialAverage(double newValue, double expAverage, double delay);
 
 #endif /* SRC_UTILS_MATH_HPP_ */

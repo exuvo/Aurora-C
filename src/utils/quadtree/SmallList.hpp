@@ -18,6 +18,7 @@
 /// heap allocations for small lists by using an SBO. T must be trivially
 /// constructible and destructible (for people using C++11 and newer, you
 /// can add a static assertion using type traits to ensure this).
+/// Alternative is boost::small_vector
 
 template <class T, int STACK_SIZE = 128>
 //requires (std::is_trivially_constructible<T>::value)
@@ -423,5 +424,20 @@ void FreeList<T>::swap(FreeList& other)
     first_free = other.first_free;
     other.first_free = temp;
 }
+
+template <class T>
+std::ostream& operator<<(std::ostream& os, const SmallList<T>& list) {
+		bool first = true;
+		for (T t : list) {
+			if (!first) {
+				os << ", ";
+			} else {
+				first = false;
+			}
+			
+			os << t;
+		}
+		return os;
+	}
 
 #endif

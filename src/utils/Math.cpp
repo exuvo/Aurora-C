@@ -33,24 +33,54 @@ int64_t vectorsCross(const Vector2l& a, const Vector2l& b) {
 }
 
 /*
-* Errors between -1.5% (on axes) and +7.5% (on lobes) and an average error of +0.043%.
+* Errors between -5% (on axes) and +3% (on lobes) and an average error of +0.043%.
 * From https://gamedev.stackexchange.com/a/69255/142645 and https://www.flipcode.com/archives/Fast_Approximate_Distance_Functions.shtml
 */
-double vectorDistanceFast(const Vector2l& a, const Vector2l& b) {
-	long dx = std::abs(b.x() - a.x());
-	long dy = std::abs(b.y() - a.y());
+double vectorDistanceFast(const Vector2d& a, const Vector2d& b) {
+	double dx = std::abs(b.x() - a.x());
+	double dy = std::abs(b.y() - a.y());
 	
-	long min, max;
+	return 0.394 * (dx + dy) + 0.554 * std::max(dx, dy);
+}
+
+float vectorDistanceFast(const Vector2f& a, const Vector2f& b) {
+	float dx = std::abs(b.x() - a.x());
+	float dy = std::abs(b.y() - a.y());
 	
-	if (dx < dy) {
-		min = dx;
-		max = dy;
-	} else {
-		min = dy;
-		max = dx;
+	return 0.394f * (dx + dy) + 0.554f * std::max(dx, dy);
+}
+
+/*
+* Errors between -1.5% (on axes) and +7.5% (on lobes) and an average error of ?%.
+* From https://www.flipcode.com/archives/Fast_Approximate_Distance_Functions.shtml
+*/
+int32_t vectorDistanceFast(const Vector2i& a, const Vector2i& b) {
+	int32_t max = std::abs(b.x() - a.x());
+	int32_t min = std::abs(b.y() - a.y());
+	
+	if (min > max) {
+		std::swap(max, min);
 	}
 	
-	long approx = 1007 * max + 441 * min;
+	int32_t approx = 1007 * max + 441 * min;
+	
+	if (max < 16 * min) {
+		approx -= 40 * max;
+	}
+	
+	// add 512 for proper rounding
+	return (approx + 512) >> 10; // div 1024
+}
+
+int64_t vectorDistanceFast(const Vector2l& a, const Vector2l& b) {
+	int64_t max = std::abs(b.x() - a.x());
+	int64_t min = std::abs(b.y() - a.y());
+	
+	if (min > max) {
+		std::swap(max, min);
+	}
+	
+	int64_t approx = 1007 * max + 441 * min;
 	
 	if (max < 16 * min) {
 		approx -= 40 * max;
@@ -92,4 +122,8 @@ std::optional<double> getPositiveRootOfQuadraticEquationSafe(double a, double b,
 	}
 	
 	return (-b + sqrt(tmp)) / (2 * a);
+}
+
+double exponentialAverage(double newValue, double expAverage, double delay) {
+	return newValue + std::pow(std::numbers::e, -1.0 / delay) * (expAverage - newValue);
 }

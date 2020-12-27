@@ -76,14 +76,15 @@ int main(int argc, char **argv) {
 	
 	KeyMappings::loadAllDefaults();
 	
-	Aurora.assets.font = Aurora.vk2dInstance->GetResourceManager()->LoadFontResource(std::filesystem::relative("assets/fonts/13pxbus.ttf"), 13, true, '?', 8);
-	Aurora.assets.font5 = Aurora.vk2dInstance->GetResourceManager()->LoadFontResource(std::filesystem::relative("assets/fonts/5pxbus.ttf"), 5, true, '?', 8);
-	Aurora.assets.font6 = Aurora.vk2dInstance->GetResourceManager()->LoadFontResource(std::filesystem::relative("assets/fonts/6pxbus.ttf"), 6, true, '?', 8);
-	Aurora.assets.font7 = Aurora.vk2dInstance->GetResourceManager()->LoadFontResource(std::filesystem::relative("assets/fonts/7pxbus.ttf"), 7, true, '?', 8);
-	Aurora.assets.font8 = Aurora.vk2dInstance->GetResourceManager()->LoadFontResource(std::filesystem::relative("assets/fonts/8pxbus.ttf"), 8, true, '?', 8);
-	Aurora.assets.font9 = Aurora.vk2dInstance->GetResourceManager()->LoadFontResource(std::filesystem::relative("assets/fonts/9pxbus.ttf"), 9, true, '?', 8);
-	Aurora.assets.font11 = Aurora.vk2dInstance->GetResourceManager()->LoadFontResource(std::filesystem::relative("assets/fonts/11pxbus.ttf"), 11, true, '?', 8);
-	Aurora.assets.font13 = Aurora.vk2dInstance->GetResourceManager()->LoadFontResource(std::filesystem::relative("assets/fonts/13pxbus.ttf"), 13, true, '?', 8);
+	// main font should have fixed width numbers
+	Aurora.assets.font = Aurora.vk2dInstance->GetResourceManager()->LoadFontResource(std::filesystem::relative("assets/fonts/LiberationSans-Regular.ttf"), 18, true, '?');
+	Aurora.assets.font5 = Aurora.vk2dInstance->GetResourceManager()->LoadFontResource(std::filesystem::relative("assets/fonts/5pxbus.ttf"), 5, true, '?');
+	Aurora.assets.font6 = Aurora.vk2dInstance->GetResourceManager()->LoadFontResource(std::filesystem::relative("assets/fonts/6pxbus.ttf"), 6, true, '?');
+	Aurora.assets.font7 = Aurora.vk2dInstance->GetResourceManager()->LoadFontResource(std::filesystem::relative("assets/fonts/7pxbus.ttf"), 7, true, '?');
+	Aurora.assets.font8 = Aurora.vk2dInstance->GetResourceManager()->LoadFontResource(std::filesystem::relative("assets/fonts/8pxbus.ttf"), 8, true, '?');
+	Aurora.assets.font9 = Aurora.vk2dInstance->GetResourceManager()->LoadFontResource(std::filesystem::relative("assets/fonts/9pxbus.ttf"), 9, true, '?');
+	Aurora.assets.font11 = Aurora.vk2dInstance->GetResourceManager()->LoadFontResource(std::filesystem::relative("assets/fonts/11pxbus.ttf"), 11, true, '?');
+	Aurora.assets.font13 = Aurora.vk2dInstance->GetResourceManager()->LoadFontResource(std::filesystem::relative("assets/fonts/13pxbus.ttf"), 13, true, '?');
 	
 	{
 		auto window = new AuroraWindow();

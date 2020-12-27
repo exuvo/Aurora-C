@@ -37,6 +37,7 @@ class AuroraWindow : vk2d::WindowEventHandler {
 		vk2d::Window* window;
 		std::vector<TracyVkCtx> tracyVkCtxs;
 		std::vector<UILayer*> layers;
+		vk2d::Vector2i mousePos;
 		
 	private:
 		LoggerPtr log = Logger::getLogger("aurora.ui.window");

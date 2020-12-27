@@ -28,9 +28,9 @@ class Player {
 		
 		std::string name;
 		Empire* empire = nullptr;
-		std::vector<int32_t> speedSteps = {1, 4, 10, 50, 200, 1000, 5000, 25000, 60000, 180000, 500000};
+		std::vector<int32_t> speedSteps = {1, 4, 10, 50, 200, 1000, 5000, 25000, 60000, 180000, 500000, 1000000, 2000000, 5000000, 10000000};
 		uint8_t speedIndex = 0;
-		uint32_t requestedSpeed = (duration_cast<nanoseconds>(1s) / speedSteps[speedIndex]).count();
+		int32_t requestedSpeed = (duration_cast<nanoseconds>(1s) / speedSteps[speedIndex]).count();
 		std::vector<EntityReference> selection;
 		std::vector<StarSystem*> visibleSystems;
 		static Player* current;

@@ -21,7 +21,7 @@
 				</extensions>
 			</storageModule>
 			<storageModule moduleId="cdtBuildSystem" version="4.0.0">
-				<configuration artifactName="${ProjName}" buildArtefactType="de.marw.cmake.cdt.lsp.buildArtefactType.cmake" buildProperties="org.eclipse.cdt.build.core.buildArtefactType=de.marw.cmake.cdt.lsp.buildArtefactType.cmake,org.eclipse.cdt.build.core.buildType=org.eclipse.cdt.build.core.buildType.debug" description="" id="de.marw.cmake.cdt.lsp.config.debug.1386938686" name="Debug" optionalBuildProperties="org.eclipse.cdt.docker.launcher.containerbuild.property.selectedvolumes=,org.eclipse.cdt.docker.launcher.containerbuild.property.volumes=" parent="de.marw.cmake.cdt.lsp.config.debug">
+				<configuration artifactName="${ProjName}" buildArtefactType="de.marw.cmake.cdt.lsp.buildArtefactType.cmake" buildProperties="org.eclipse.cdt.build.core.buildArtefactType=de.marw.cmake.cdt.lsp.buildArtefactType.cmake,org.eclipse.cdt.build.core.buildType=org.eclipse.cdt.build.core.buildType.debug" description="" id="de.marw.cmake.cdt.lsp.config.debug.1386938686" name="Debug" optionalBuildProperties="org.eclipse.cdt.docker.launcher.containerbuild.property.volumes=,org.eclipse.cdt.docker.launcher.containerbuild.property.selectedvolumes=" parent="de.marw.cmake.cdt.lsp.config.debug">
 					<folderInfo id="de.marw.cmake.cdt.lsp.config.debug.1386938686." name="/" resourcePath="">
 						<toolChain id="de.marw.cmake.cdt.lsp.config.debug.toolChain.1628307930" name="CMake driven" superClass="de.marw.cmake.cdt.lsp.config.debug.toolChain">
 							<targetPlatform id="de.marw.cmake.cdt.lsp.targetPlatform.cmake.542564629" name="Any Platform" superClass="de.marw.cmake.cdt.lsp.targetPlatform.cmake"/>
@@ -110,7 +110,7 @@
 				</extensions>
 			</storageModule>
 			<storageModule moduleId="cdtBuildSystem" version="4.0.0">
-				<configuration artifactName="${ProjName}" buildArtefactType="de.marw.cmake.cdt.lsp.buildArtefactType.cmake" buildProperties="org.eclipse.cdt.build.core.buildArtefactType=de.marw.cmake.cdt.lsp.buildArtefactType.cmake,org.eclipse.cdt.build.core.buildType=org.eclipse.cdt.build.core.buildType.release" description="" id="de.marw.cmake.cdt.lsp.config.release.172108259" name="Release" parent="de.marw.cmake.cdt.lsp.config.release">
+				<configuration artifactName="${ProjName}" buildArtefactType="de.marw.cmake.cdt.lsp.buildArtefactType.cmake" buildProperties="org.eclipse.cdt.build.core.buildArtefactType=de.marw.cmake.cdt.lsp.buildArtefactType.cmake,org.eclipse.cdt.build.core.buildType=org.eclipse.cdt.build.core.buildType.release" description="" id="de.marw.cmake.cdt.lsp.config.release.172108259" name="Release" optionalBuildProperties="" parent="de.marw.cmake.cdt.lsp.config.release">
 					<folderInfo id="de.marw.cmake.cdt.lsp.config.release.172108259." name="/" resourcePath="">
 						<toolChain id="de.marw.cmake.cdt.lsp.config.release.toolChain.1673601025" name="CMake driven" superClass="de.marw.cmake.cdt.lsp.config.release.toolChain">
 							<targetPlatform id="de.marw.cmake.cdt.lsp.targetPlatform.cmake.418866899" name="Any Platform" superClass="de.marw.cmake.cdt.lsp.targetPlatform.cmake"/>
@@ -127,6 +127,15 @@
 				</configuration>
 			</storageModule>
 			<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
+			<storageModule buildDir="build/${ConfigName}" moduleId="de.marw.cdt.cmake.core.settings">
+				<options/>
+				<defs/>
+				<undefs/>
+				<linux command="cmake" generator="Ninja" use-default="true">
+					<defs/>
+					<undefs/>
+				</linux>
+			</storageModule>
 		</cconfiguration>
 	</storageModule>
 	<storageModule moduleId="cdtBuildSystem" version="4.0.0">
