@@ -26,11 +26,12 @@ class StarSystem;
 class Galaxy;
 class ShadowStarSystem;
 class Systems;
+class Empire;
 
 class StarSystem {
 	public:
 		std::string name;
-		entt::id_type galacticEntityID = entt::null;
+		entt::entity galacticEntityID = entt::null;
 		nanoseconds updateTime = 0ns;
 		float updateTimeAverage = 0.0f;
 		
@@ -48,6 +49,9 @@ class StarSystem {
 		}
 		StarSystem(const StarSystem&) = default;
 		StarSystem(StarSystem&&) = default;
+		
+		entt::entity createEnttiy(Empire& empire);
+		void destroyEntity(entt::entity entity);
 		
 		void init(Galaxy* galaxy);
 		void update(uint32_t deltaGameTime);
@@ -71,6 +75,7 @@ class StarSystem {
 		
 	private:
 		LoggerPtr log = Logger::getLogger("aurora.starsystem");
+		uint32_t entityUIDCounter = 0;
 };
 
 #endif /* SRC_STARSYSTEMS_STARSYSTEM_HPP_ */

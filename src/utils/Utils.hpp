@@ -62,7 +62,7 @@ bool vectorEraseUnorderedVal(std::vector<T>& vec, const T& value) {
 }
 
 template<typename T>
-void vectorAppend(std::vector<T> a, std::vector<T> b) {
+void vectorAppend(std::vector<T>& a, const std::vector<T>& b) {
 	a.insert(std::end(a), std::begin(b), std::end(b));
 }
 

@@ -35,7 +35,9 @@ struct TintComponent {
 		vk2d::Colorf color;
 };
 
-struct RenderComponent {};
+struct RenderComponent {
+		char dummy; //entt requires storage in components
+};
 
 struct CircleComponent {
 		float radius = 1; // in m

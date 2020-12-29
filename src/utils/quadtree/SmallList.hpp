@@ -81,8 +81,8 @@ public:
     class iterator {
     	public:
 				iterator(T * ptr): _ptr(ptr){}
-				 
-				 // iterator traits
+				
+				// iterator traits
 				using difference_type = size_t;
 				using value_type = T;
 				using pointer = const T*;
@@ -105,8 +105,8 @@ public:
 				inline iterator& operator-=(difference_type off) {_ptr -= off; return *this;}
 				friend inline iterator operator+(const iterator& x, difference_type off) {return iterator(x._ptr + off);}
 				friend inline iterator operator-(const iterator& x, difference_type off) {return iterator(x._ptr - off);}
-				friend inline iterator operator+(difference_type off, const iterator rhs) {rhs._ptr += off; return rhs;}
-				friend inline iterator operator-(difference_type off, const iterator rhs) {rhs._ptr -= off; return rhs;}
+				friend inline iterator operator+(difference_type off, iterator rhs) {rhs._ptr += off; return rhs;}
+				friend inline iterator operator-(difference_type off, iterator rhs) {rhs._ptr -= off; return rhs;}
 				 
 				//Comparison operators
 				inline bool operator==(const iterator& rhs) const {return _ptr == rhs._ptr;}

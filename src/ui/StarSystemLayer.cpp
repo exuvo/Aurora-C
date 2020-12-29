@@ -363,7 +363,11 @@ void StarSystemLayer::render() {
 //	std::cout << std::endl;
 	
 	auto writeText = [&](std::string text, vk2d::Colorf color = vk2d::Colorf::WHITE()){
-		vk2d::Mesh text_mesh = vk2d::GenerateTextMesh(Aurora.assets.font, { x, y }, text, color);
+		//TODO cache meches based on text hash? calling code location? and Translate cached version
+		vk2d::Mesh text_mesh = vk2d::GenerateTextMesh(Aurora.assets.font, { x, y }, text);
+		if (color != vk2d::Colorf::WHITE()) {
+			text_mesh.SetVertexColor(color);
+		}
 		window.window->DrawMesh(text_mesh);
 		x += text_mesh.aabb.GetAreaSize().x;
 //		std::cout << "size " << text_mesh.aabb << " " << text_mesh.aabb.GetAreaSize() << std::endl;
@@ -650,9 +654,9 @@ bool StarSystemLayer::eventMouseButton(vk2d::MouseButton button, vk2d::ButtonAct
 		
 		if (button == vk2d::MouseButton::BUTTON_LEFT) {
 			if (dragSelecting) {
-				if (Player::current->selection.size() > 0 && window.isKeyPressed(GLFW_KEY_LEFT_SHIFT)) {
+				if (Player::current->selection.size() > 0 && !window.isKeyPressed(GLFW_KEY_LEFT_SHIFT)) {
 					Player::current->selection.clear();
-					printf("cleared selection\n"); fflush(stdout);
+//					printf("cleared selection\n"); fflush(stdout);
 				}
 				
 				Matrix2i dragSelection = getDragSelection();
@@ -667,14 +671,14 @@ bool StarSystemLayer::eventMouseButton(vk2d::MouseButton button, vk2d::ButtonAct
 					std::unique_lock<LockableBase(std::recursive_mutex)> lock(Aurora.galaxy->shadowLock);
 					
 					SmallList<entt::entity> entities = SpatialPartitioningSystem::query(starSystem->shadow->quadtreeShips, worldCoordinates);
-					std::cout << "worldCoordinates " << worldCoordinates << ", entities " << entities << std::endl;
+//					std::cout << "worldCoordinates " << worldCoordinates << ", entities " << entities << std::endl;
 					
 					for (entt::entity entity : entities) {
 						if (starSystem->shadow->registry.has<TimedMovementComponent, RenderComponent>(entity)) {
 							TimedMovementComponent& movement = starSystem->shadow->registry.get<TimedMovementComponent>(entity);
 							Vector2l position = movement.get(Aurora.galaxy->time).value.position;
 			
-							if (rectagleContains(worldCoordinates, position)) {
+							if (rectangleContains(worldCoordinates, position)) {
 								entitiesInSelection.push_back(starSystem->shadow->getEntityReference(entity));
 							}
 						}
@@ -822,19 +826,19 @@ Matrix2i StarSystemLayer::getDragSelection() {
 	Matrix2i mat {};
 	
 	if (cursor.x() >= dragStart.x()) {
-		mat(0,0) = cursor.x();
-		mat(1,0) = dragStart.x();
-	} else {
 		mat(0,0) = dragStart.x();
 		mat(1,0) = cursor.x();
+	} else {
+		mat(0,0) = cursor.x();
+		mat(1,0) = dragStart.x();
 	}
 	
 	if (cursor.y() >= dragStart.y()) {
-		mat(0,1) = cursor.y();
-		mat(1,1) = dragStart.y();
-	} else {
 		mat(0,1) = dragStart.y();
 		mat(1,1) = cursor.y();
+	} else {
+		mat(0,1) = cursor.y();
+		mat(1,1) = dragStart.y();
 	}
 	
 	return mat;

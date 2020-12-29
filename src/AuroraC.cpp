@@ -49,7 +49,7 @@ int main(int argc, char **argv) {
 
 	vector<StarSystem*> starSystems { new StarSystem("test")};
 //	vector<StarSystem*> starSystems { new StarSystem("a"), new StarSystem("b"), new StarSystem("c"), new StarSystem("d"), new StarSystem("e") };
-	vector<Empire> empires { Empire("player1") };
+	vector<Empire> empires { Empire("gaia"), Empire("player1") };
 	vector<Player> players { Player("local") };
 	Galaxy* galaxy = new Galaxy(empires, starSystems, players);
 	Aurora.galaxy = galaxy;

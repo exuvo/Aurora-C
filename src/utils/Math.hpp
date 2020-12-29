@@ -64,11 +64,11 @@ constexpr double toRadians(double degrees) {
 }
 
 template <typename T>
-bool rectagleContains(const Eigen::Matrix<T, 2, 2>& mat, const Eigen::Matrix<T, 2, 1>& vec) {
-	T x = mat.col(0).x();
-	T y = mat.col(0).y();
-	T width = mat.col(1).x() - x;
-	T height = mat.col(1).y() - y;
+bool rectangleContains(const Eigen::Matrix<T, 2, 2>& mat, const Eigen::Matrix<T, 2, 1>& vec) {
+	T x = mat.row(0).x();
+	T y = mat.row(0).y();
+	T width = mat.row(1).x() - x;
+	T height = mat.row(1).y() - y;
 	return x <= vec.x() && x + width >= vec.x() && y <= vec.y() && y + height >= vec.y();
 }
 

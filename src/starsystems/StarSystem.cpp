@@ -10,9 +10,10 @@
 
 #include "Tracy.hpp"
 
-#include "starsystems/systems/Systems.hpp"
 #include "starsystems/StarSystem.hpp"
 #include "starsystems/StarSystemShadow.hpp"
+#include "starsystems/systems/Systems.hpp"
+#include "galaxy/Empire.hpp"
 #include "utils/Math.hpp"
 #include "utils/Utils.hpp"
 
@@ -58,9 +59,10 @@ void StarSystem::init(Galaxy* galaxy) {
 	shadow = new ShadowStarSystem(this);
 	workingShadow = new ShadowStarSystem(this);
 	
-	Empire& empire1 = galaxy->empires[0];
+	Empire& gaia = galaxy->empires[0];
+	Empire& empire1 = galaxy->empires[1];
 	
-	entt::entity e1 = registry.create();
+	entt::entity e1 = createEnttiy(gaia);
 	registry.emplace<TextComponent>(e1, "Sun");
 	registry.emplace<TimedMovementComponent>(e1).previous.value.position = {0, 0};
 	registry.emplace<RenderComponent>(e1);
@@ -69,7 +71,7 @@ void StarSystem::init(Galaxy* galaxy) {
 	registry.emplace<CircleComponent>(e1, 696340000.0f);
 	registry.emplace<MassComponent>(e1, 1.988e30);
 	
-	entt::entity e2 = registry.create();
+	entt::entity e2 = createEnttiy(empire1);
 	registry.emplace<TextComponent>(e2, "Earth");
 	registry.emplace<TimedMovementComponent>(e2);
 	registry.emplace<RenderComponent>(e2);
@@ -78,7 +80,7 @@ void StarSystem::init(Galaxy* galaxy) {
 	registry.emplace<MassComponent>(e2, 5.972e24);
 	registry.emplace<OrbitComponent>(e2, e1, 1.0f, 0.0f, -45, 0);
 	
-	entt::entity e3 = registry.create();
+	entt::entity e3 = createEnttiy(gaia);
 	registry.emplace<TextComponent>(e3, "Moon");
 	registry.emplace<TimedMovementComponent>(e3);
 	registry.emplace<RenderComponent>(e3);
@@ -87,7 +89,7 @@ void StarSystem::init(Galaxy* galaxy) {
 //	registry.emplace<MassComponent>(e3, ?);
 	registry.emplace<OrbitComponent>(e3, e2, static_cast<float>(384400.0 / Units::AU), 0.2f, 0, 30);
 	
-	entt::entity e4 = registry.create();
+	entt::entity e4 = createEnttiy(empire1);
 	registry.emplace<TextComponent>(e4, "Ship");
 	registry.emplace<TimedMovementComponent>(e4).previous.value.position = vectorRotateDeg(Vector2d{Units::AU * 1000 * 0.9, 0.0}, 45).cast<int64_t>();
 	registry.emplace<RenderComponent>(e4);
@@ -96,7 +98,7 @@ void StarSystem::init(Galaxy* galaxy) {
 	registry.emplace<MassComponent>(e4, 1000);
 	registry.emplace<TintComponent>(e4, vk2d::Colorf::RED());
 	
-	entt::entity e5 = registry.create();
+	entt::entity e5 = createEnttiy(empire1);
 	registry.emplace<TextComponent>(e5, "Ship2");
 	registry.emplace<TimedMovementComponent>(e5).previous.value.position = vectorRotateDeg(Vector2d{Units::AU * 1000 * 0.9, 0.0}, 10).cast<int64_t>();
 	registry.emplace<RenderComponent>(e5);
@@ -104,6 +106,27 @@ void StarSystem::init(Galaxy* galaxy) {
 	registry.emplace<CircleComponent>(e5, 1.0f);
 	registry.emplace<MassComponent>(e5, 1000);
 	registry.emplace<TintComponent>(e5, vk2d::Colorf::GREEN());
+	
+	entt::entity e6 = createEnttiy(empire1);
+	registry.emplace<TextComponent>(e6, "Ship3");
+	registry.emplace<TimedMovementComponent>(e6).previous.value.position = vectorRotateDeg(Vector2d{Units::AU * 1000 * 0.9, 0.0}, -180).cast<int64_t>();
+	registry.emplace<RenderComponent>(e6);
+	registry.emplace<ShipComponent>(e6);
+	registry.emplace<CircleComponent>(e6, 1.0f);
+	registry.emplace<MassComponent>(e6, 1000);
+	registry.emplace<TintComponent>(e6, vk2d::Colorf::PURPLE());
+}
+
+entt::entity StarSystem::createEnttiy(Empire& empire) {
+	entt::entity entity = registry.create();
+	registry.emplace<UUIDComponent>(entity, EntityUUID{static_cast<uint8_t>(registry.entity(galacticEntityID)), empire.id, entityUIDCounter++});
+//	history.entityCreated(entityID, world);
+	return entity;
+}
+
+void StarSystem::destroyEntity(entt::entity entity) {
+//	history.entityDestroyed(entityID, world);
+	registry.destroy(entity);
 }
 
 EntityReference StarSystem::getEntityReference(entt::entity entity) {
@@ -131,7 +154,7 @@ template<> \
 void StarSystem::changed2<component>(entt::entity entity) { \
 	LOG4CXX_DEBUG(log, "starsystem " << name << " changed component " << type_name<component>() << " of entity " << entity); \
 /*	BOOST_HANA_CONSTANT_ASSERT_MSG(hana::find(syncedComponentToIndexMap, hana::type_c<component>) != hana::nothing, "missing component mapping"); */ \
-	std::vector<bool>& changedVector = workingShadow->changedComponents[syncedComponentToIndexMap[hana::type_c<component>]]; \
+	BitVector& changedVector = workingShadow->changedComponents[syncedComponentToIndexMap[hana::type_c<component>]]; \
 	uint32_t index = static_cast<uint32_t>(registry.entity(entity)); \
 	changedVector.reserve(index + 1); \
 	changedVector[index] = true; \
@@ -158,7 +181,7 @@ void StarSystem::update(uint32_t deltaGameTime) {
 		
 	} else {
 		workingShadow->changed.clear();
-		for (std::vector<bool>& bitVector : workingShadow->changedComponents) {
+		for (BitVector& bitVector : workingShadow->changedComponents) {
 			bitVector.clear();
 		}
 	}
