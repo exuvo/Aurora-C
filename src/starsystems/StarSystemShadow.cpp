@@ -22,7 +22,7 @@ static entt::entity getEntity(uint32_t entityID) { // No version number
 };
 
 void ShadowStarSystem::update() {
-	ShadowStarSystem* otherShadow = starSystem->shadow;
+	ShadowStarSystem* otherShadow = starSystem.shadow;
 	{
 		uint32_t size = std::max({added.size(), changed.size(), deleted.size(), otherShadow->added.size(), otherShadow->changed.size(), otherShadow->deleted.size()});
 		tmp.reserve(size);
@@ -87,28 +87,32 @@ void ShadowStarSystem::update() {
 	}
 	profilerEvents.end();
 	
-	if (quadtreeShipsChanged || starSystem->shadow->quadtreeShipsChanged) {
+	if (quadtreeShipsChanged || starSystem.shadow->quadtreeShipsChanged) {
 		profilerEvents.start("copy quadtree ships");
-		quadtreeShips = starSystem->systems->spatialPartitioningSystem->tree;
-//		memcpy(&quadtreeShips, &starSystem->systems->spatialPartitioningSystem->tree, sizeof(quadtreeShips));
+		quadtreeShips = starSystem.systems->spatialPartitioningSystem->tree;
 		profilerEvents.end();
 	}
 	
-	if (quadtreePlanetoidsChanged || starSystem->shadow->quadtreePlanetoidsChanged) {
+	if (quadtreePlanetoidsChanged || starSystem.shadow->quadtreePlanetoidsChanged) {
 		profilerEvents.start("copy quadtree planetoids");
-		quadtreePlanetoids = starSystem->systems->spatialPartitioningPlanetoidsSystem->tree;
-//		memcpy(&quadtreePlanetoids, &starSystem->systems->spatialPartitioningPlanetoidsSystem->tree, sizeof(quadtreePlanetoids));
+		quadtreePlanetoids = starSystem.systems->spatialPartitioningPlanetoidsSystem->tree;
+		profilerEvents.end();
+	}
+	
+	if (uuidsChanged || starSystem.shadow->uuidsChanged) {
+		profilerEvents.start("copy uuids map");
+		uuids = starSystem.uuids;
 		profilerEvents.end();
 	}
 }
 
 EntityReference ShadowStarSystem::getEntityReference(entt::entity entity) {
-	return {starSystem, entity, registry.get<UUIDComponent>(entity).uuid};
+	return {&starSystem, entity, registry.get<UUIDComponent>(entity).uuid};
 }
 
 #define ADD_TEMPLATE(r, unused, component) \
 { \
-	component* realComp = starSystem->registry.try_get<component>(realEntity); \
+	component* realComp = starSystem.registry.try_get<component>(realEntity); \
 	if (realComp) { \
 		component& shadowComp = registry.emplace<component>(shadowEntity); \
 		shadowComp = *realComp; \
@@ -116,10 +120,10 @@ EntityReference ShadowStarSystem::getEntityReference(entt::entity entity) {
 }
 
 void ShadowStarSystem::addComponents(uint32_t entityID, entt::entity shadowEntity) {
-	entt::entity realEntity = getCurrentEntity(starSystem->registry, entityID);
+	entt::entity realEntity = getCurrentEntity(starSystem.registry, entityID);
 	
 //	{ // debug
-//		TimedMovementComponent* realComp = starSystem->registry.try_get<TimedMovementComponent>(realEntity);
+//		TimedMovementComponent* realComp = starSystem.registry.try_get<TimedMovementComponent>(realEntity);
 //		if (realComp) {
 //			TimedMovementComponent& shadowComp = registry.emplace<TimedMovementComponent>(shadowEntity);
 //			shadowComp = *realComp;
@@ -132,7 +136,7 @@ void ShadowStarSystem::addComponents(uint32_t entityID, entt::entity shadowEntit
 
 #define UPDATE_TEMPLATE(r, unused, component) \
 if (tmpComponents[syncedComponentToIndexMap[hana::type_c<component>]][entityID]) { \
-	component* realComp = starSystem->registry.try_get<component>(realEntity); \
+	component* realComp = starSystem.registry.try_get<component>(realEntity); \
 	if (realComp) { \
 		component* shadowComp; \
 		if (registry.has<component>(shadowEntity)) { \
@@ -147,6 +151,6 @@ if (tmpComponents[syncedComponentToIndexMap[hana::type_c<component>]][entityID])
 }
 
 void ShadowStarSystem::updateComponents(uint32_t entityID, entt::entity shadowEntity) {
-	entt::entity realEntity = getCurrentEntity(starSystem->registry, entityID);
+	entt::entity realEntity = getCurrentEntity(starSystem.registry, entityID);
 	BOOST_PP_SEQ_FOR_EACH(UPDATE_TEMPLATE, ~, SYNCED_COMPONENTS_SEQ);
 }

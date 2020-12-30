@@ -39,16 +39,18 @@ constexpr auto syncedComponentToIndexMap = hana::make_map(
 
 class ShadowStarSystem {
 	public:
-		ShadowStarSystem(StarSystem* starSystem) {
-			this->starSystem = starSystem;
-		}
+		ShadowStarSystem(StarSystem& starSystem): starSystem(starSystem) {}
 		
+		StarSystem& starSystem;
 		entt::registry registry;
+		std::unordered_map<EntityUUID, entt::entity, EntityUUID::hasher> uuids;
+		
 		BitVector added;
 		BitVector changed;
 		BitVector changedComponents[SYNCED_COMPONENTS_SEQ_SIZE];
 		BitVector deleted;
 
+		bool uuidsChanged = false;
 		bool quadtreeShipsChanged = false;
 		bool quadtreePlanetoidsChanged = false;
 		
@@ -61,7 +63,6 @@ class ShadowStarSystem {
 		EntityReference getEntityReference(entt::entity entity);
 
 	private:
-		StarSystem* starSystem;
 		BitVector tmp;
 		BitVector tmpComponents[SYNCED_COMPONENTS_SEQ_SIZE];
 		

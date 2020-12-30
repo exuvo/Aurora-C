@@ -11,35 +11,40 @@
 #include "entt/entt.hpp"
 
 class StarSystem;
+class ShadowStarSystem;
 
 struct EntityUUID {
-		uint8_t starSystemID;
-		uint8_t empireID;
-		uint32_t entityUID;
-		
-		bool operator==(const EntityUUID& o) const {
-			return starSystemID == o.starSystemID && empireID == o.empireID && entityUID == o.entityUID;
-		}
+	uint8_t starSystemID;
+	uint8_t empireID;
+	uint32_t entityUID;
+
+	bool operator==(const EntityUUID& o) const;
+	
+	static size_t hash(const EntityUUID& e);
+
+	struct hasher {
+		size_t operator()(const EntityUUID& e) const;
+	};
 };
 
 struct EntityReference {
-		EntityReference(StarSystem* system, entt::entity entityID, EntityUUID entityUUID) {
-			this->system = system;
-			this->entityID = entt::registry::entity(entityID);
-			this->entityUUID = entityUUID;
-		}
-		
-		StarSystem* system;
-		entt::entity entityID;
-		EntityUUID entityUUID;
-		
-		bool operator==(const EntityReference& o) const {
-			return system == o.system && entityID == o.entityID && entityUUID == o.entityUUID;
-		}
-		
-		struct hasher {
-			size_t operator()(const EntityReference& e) const;
-		};
+	StarSystem* system;
+	entt::entity entityID;
+	EntityUUID entityUUID;
+
+	EntityReference(StarSystem* system, entt::entity entityID, EntityUUID entityUUID)
+	: system(system), entityID(entityID), entityUUID(entityUUID) {}
+	
+	bool operator==(const EntityReference& o) const;
+	
+	struct hasher {
+		size_t operator()(const EntityReference& e) const;
+	};
+
+	bool isValid(const StarSystem& starSystem) const;
+	bool isValid(const ShadowStarSystem& shadow) const;
+	bool resolveReference(const StarSystem& starSystem);
+	bool resolveReference(const ShadowStarSystem& shadow);
 };
 
 struct UUIDComponent {

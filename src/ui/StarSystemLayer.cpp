@@ -214,6 +214,43 @@ void StarSystemLayer::render() {
 		viewOffset += (Vector2f{ hDirection, vDirection } * 1000 * zoom).cast<int64_t>();
 	}
 	
+	if (tracking) {
+		
+		Vector2l centerOfSelection;
+		
+		{
+			std::unique_lock<LockableBase(std::recursive_mutex)> lock(Aurora.galaxy->shadowLock);
+			
+			for (auto it = Player::current->selection.begin(); it != Player::current->selection.end();) {
+				const EntityReference* ref = &*it++;
+				
+				if (!ref->isValid(*starSystem->shadow)) {
+					EntityReference cpy = *ref;
+					Player::current->selection.erase(*ref);
+					
+					if (!cpy.resolveReference(*starSystem->shadow)) {
+						continue;
+					}
+					
+					ref = &*Player::current->selection.insert(cpy).first;
+				}
+				
+				if (ref->system == starSystem) {
+					TimedMovementComponent movement = starSystem->shadow->registry.get<TimedMovementComponent>(ref->entityID);
+					Vector2l position = movement.get(Aurora.galaxy->time).value.position;
+					centerOfSelection += position;
+				}
+			}
+		}
+		
+		if (Player::current->selection.size() > 0) {
+			centerOfSelection /= Player::current->selection.size();
+			viewOffset = centerOfSelection;
+		} else {
+			tracking = false;
+		}
+	}
+	
 	if (commandMenuPotentialStart && (getMillis() - commandMenuPotentialStartTime > 200ms || vectorDistance(dragStart, getMouseInScreenCordinates()) > 50)) {
 		commandMenuPotentialStart = false;
 		
@@ -238,7 +275,9 @@ void StarSystemLayer::render() {
 
 		//TODO ensure camera position is always inside the solar system
 
-		dragStart = mouseScreenNow;
+		if (!tracking) {
+			dragStart = mouseScreenNow;
+		}
 	}
 	
 	{
@@ -349,6 +388,11 @@ void StarSystemLayer::render() {
 		window.window->DrawRectangle(matrixToVK2D(selection), false, vk2d::Colorf::WHITE());
 	}
 	
+	if (tracking) {
+		vk2d::Mesh text_mesh = vk2d::GenerateTextMesh(Aurora.assets.font, { -50, (int32_t) window.window->GetSize().y / 2 - 30 }, "Tracking");
+		window.window->DrawMesh(text_mesh);
+	}
+	
 	milliseconds now = getMillis();
 		
 	if (now - lastTickrateUpdate > 1000ms) {
@@ -364,7 +408,7 @@ void StarSystemLayer::render() {
 	
 	auto writeText = [&](std::string text, vk2d::Colorf color = vk2d::Colorf::WHITE()){
 		//TODO cache meches based on text hash? calling code location? and Translate cached version
-		vk2d::Mesh text_mesh = vk2d::GenerateTextMesh(Aurora.assets.font, { x, y }, text);
+		vk2d::Mesh text_mesh = vk2d::GenerateTextMesh(Aurora.assets.font, { std::floor(x), std::floor(y) }, text);
 		if (color != vk2d::Colorf::WHITE()) {
 			text_mesh.SetVertexColor(color);
 		}
@@ -432,6 +476,16 @@ bool StarSystemLayer::keyAction(KeyActions_StarSystemLayer action) {
 //			} else {
 //				println("Unable to select action " + action + ", no selection");
 //			}
+	} else if (action == KeyActions_StarSystemLayer::TRACK) {
+		
+		if (tracking) {
+			tracking = false;
+			
+		} else if (Player::current->selection.size() > 0) {
+			tracking = true;
+			printf("tracking selection\n"); fflush(stdout);
+		}
+		
 	}
 	
 	return false;

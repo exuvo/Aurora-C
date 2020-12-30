@@ -71,6 +71,7 @@ void KeyMappings::loadDefaults<KeyActions_StarSystemLayer>() {
 	addRawKeyBind(keyRawMap_KeyActions_StarSystemLayer, KeyActions_StarSystemLayer::PAUSE, GLFW_KEY_SPACE);
 	addRawKeyBind(keyRawMap_KeyActions_StarSystemLayer, KeyActions_StarSystemLayer::MAP, GLFW_KEY_M);
 	addRawKeyBind(keyRawMap_KeyActions_StarSystemLayer, KeyActions_StarSystemLayer::ATTACK, GLFW_KEY_A);
+	addRawKeyBind(keyRawMap_KeyActions_StarSystemLayer, KeyActions_StarSystemLayer::TRACK, GLFW_KEY_T);
 	
 //	keyRawMap_KeyActions_StarSystemLayer.insert({
 //			{GLFW_KEY_KP_ADD, KeyActions_StarSystemLayer::SPEED_UP},

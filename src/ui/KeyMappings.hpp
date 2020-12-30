@@ -20,7 +20,8 @@ BETTER_ENUM(KeyActions_StarSystemLayer, uint8_t,
 		GENERATE_SYSTEM,
 		PAUSE,
 		MAP,
-		ATTACK
+		ATTACK,
+		TRACK
 );
 
 BETTER_ENUM(KeyActions_ImGuiLayer, uint8_t,

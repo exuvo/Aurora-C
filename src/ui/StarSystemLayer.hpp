@@ -62,6 +62,8 @@ class StarSystemLayer: public UILayer {
 		bool commandMenuPotentialStart = false;
 		nanoseconds commandMenuPotentialStartTime = 0s;
 		
+		bool tracking = false;
+		
 		milliseconds lastTickrateUpdate;
 		milliseconds galaxyTickrate = 0ms;
 		milliseconds oldGalaxyTime;

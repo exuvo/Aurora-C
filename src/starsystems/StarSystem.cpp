@@ -56,8 +56,8 @@ void StarSystem::init(Galaxy* galaxy) {
 	
 	registerComponentListeners<SYNCED_COMPONENTS>(registry, this);
 	
-	shadow = new ShadowStarSystem(this);
-	workingShadow = new ShadowStarSystem(this);
+	shadow = new ShadowStarSystem(*this);
+	workingShadow = new ShadowStarSystem(*this);
 	
 	Empire& gaia = galaxy->empires[0];
 	Empire& empire1 = galaxy->empires[1];
@@ -138,6 +138,11 @@ void StarSystem::added(entt::registry& registry, entt::entity entity) {
 	uint32_t index = static_cast<uint32_t>(registry.entity(entity));
 	workingShadow->added.reserve(index + 1);
 	workingShadow->added[index] = true;
+	
+	if constexpr (std::is_same<Component, UUIDComponent>::value) {
+		uuids[registry.get<UUIDComponent>(entity).uuid] = entity;
+		workingShadow->uuidsChanged = true;
+	}
 }
 
 template<typename Component>
@@ -146,6 +151,11 @@ void StarSystem::deleted(entt::registry& registry, entt::entity entity) {
 	uint32_t index = static_cast<uint32_t>(registry.entity(entity));
 	workingShadow->deleted.reserve(index + 1);
 	workingShadow->deleted[index] = true;
+	
+	if constexpr (std::is_same<Component, UUIDComponent>::value) {
+		uuids.erase(registry.get<UUIDComponent>(entity).uuid);
+		workingShadow->uuidsChanged = true;
+	}
 }
 
 #define CHANGED_TEMPLATE(r, unused, component) \

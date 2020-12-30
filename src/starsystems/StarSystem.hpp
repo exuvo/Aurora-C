@@ -10,6 +10,7 @@
 
 #include <chrono>
 #include <boost/circular_buffer.hpp>
+#include <unordered_map>
 
 #include "entt/entt.hpp"
 #include "log4cxx/logger.h"
@@ -71,6 +72,7 @@ class StarSystem {
 		template<typename Component>
 		void deleted(entt::registry&, entt::entity);
 		
+		std::unordered_map<EntityUUID, entt::entity, EntityUUID::hasher> uuids;
 		EntityReference getEntityReference(entt::entity entity);
 		
 	private:
