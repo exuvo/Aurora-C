@@ -66,6 +66,11 @@ void vectorAppend(std::vector<T>& a, const std::vector<T>& b) {
 	a.insert(std::end(a), std::begin(b), std::end(b));
 }
 
+template<typename T, typename H>
+void vectorAppend(std::unordered_set<T, H>& a, const std::vector<T>& b) {
+	a.insert(std::begin(b), std::end(b));
+}
+
 nanoseconds getNanos();
 milliseconds getMillis();
 

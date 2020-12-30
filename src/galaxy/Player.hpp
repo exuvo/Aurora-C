@@ -11,6 +11,7 @@
 #include <string>
 #include <chrono>
 #include <vector>
+#include <unordered_set>
 
 #include <log4cxx/logger.h>
 
@@ -31,7 +32,7 @@ class Player {
 		std::vector<int32_t> speedSteps = {1, 4, 10, 50, 200, 1000, 5000, 25000, 60000, 180000, 500000, 1000000, 2000000, 5000000, 10000000};
 		uint8_t speedIndex = 0;
 		int32_t requestedSpeed = (duration_cast<nanoseconds>(1s) / speedSteps[speedIndex]).count();
-		std::vector<EntityReference> selection;
+		std::unordered_set<EntityReference, EntityReference::hasher> selection;
 		std::vector<StarSystem*> visibleSystems;
 		static Player* current;
 

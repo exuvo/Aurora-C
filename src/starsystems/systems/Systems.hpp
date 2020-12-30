@@ -59,7 +59,7 @@ class DailySystem : public BaseSystem<Derived> {
 			}
 			return false;
 		}
-	private:
+	protected:
 		uint32_t lastDay;
 		uint32_t interval;
 };
@@ -78,7 +78,7 @@ class IntervalSystem : public BaseSystem<Derived> {
 			}
 			return false;
 		}
-	private:
+	protected:
 		uint64_t lastTime;
 		uint32_t interval;
 };
@@ -131,6 +131,35 @@ class MovementSystem : public IntervalSystem<MovementSystem> {
 		LoggerPtr log = Logger::getLogger("aurora.starsystems.systems.movement");
 		void moveTo(entt::entity entity, delta_type delta, TimedMovementComponent& movement, MassComponent& massComponent, ThrustComponent& thrustComponent, Vector2l targetPos, MovementValues* targetMovement, entt::entity targetEntity, ApproachType approach);
 		WeaponSystem* weaponSystem = nullptr;
+};
+
+class OrbitSystem : public IntervalSystem<OrbitSystem> {
+	public:
+		OrbitSystem(StarSystem* starSystem) : OrbitSystem::IntervalSystem(24 * 60 * 60s, starSystem) {};
+		
+		void init(void*);
+		void update(delta_type delta);
+		
+	private:
+		LoggerPtr log = Logger::getLogger("aurora.starsystems.systems.orbits");
+		
+		struct OrbitCache {
+				double orbitalPeriod;
+				double apoapsis;
+				double periapsis;
+				std::vector<Vector2l> orbitPoints;
+		};
+		
+		std::unordered_map<entt::entity, OrbitCache> orbitsCache;
+		std::unordered_map<entt::entity, std::unordered_set<entt::entity>> moonsCache;
+		std::vector<entt::entity> addedEntites;
+		std::vector<entt::entity> removedEntites;
+		
+		void inserted(entt::registry &, entt::entity);
+		void removed(entt::registry &, entt::entity);
+		void update(entt::entity, OrbitComponent& orbit, TimedMovementComponent& movement);
+		double calculateEccentricAnomalyFromMeanAnomaly(OrbitComponent& orbit, double M_meanAnomaly);
+		Vector2l calculateOrbitalPositionFromEccentricAnomaly(OrbitComponent& orbit, double E_eccentricAnomaly);
 };
 
 class SpatialPartitioningSystem : public IntervalSystem<SpatialPartitioningSystem> {

@@ -16,6 +16,10 @@ struct EntityUUID {
 		uint8_t starSystemID;
 		uint8_t empireID;
 		uint32_t entityUID;
+		
+		bool operator==(const EntityUUID& o) const {
+			return starSystemID == o.starSystemID && empireID == o.empireID && entityUID == o.entityUID;
+		}
 };
 
 struct EntityReference {
@@ -24,9 +28,18 @@ struct EntityReference {
 			this->entityID = entt::registry::entity(entityID);
 			this->entityUUID = entityUUID;
 		}
+		
 		StarSystem* system;
 		entt::entity entityID;
 		EntityUUID entityUUID;
+		
+		bool operator==(const EntityReference& o) const {
+			return system == o.system && entityID == o.entityID && entityUUID == o.entityUUID;
+		}
+		
+		struct hasher {
+			size_t operator()(const EntityReference& e) const;
+		};
 };
 
 struct UUIDComponent {

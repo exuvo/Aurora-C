@@ -102,7 +102,7 @@ class BitVector {
 //				friend inline iterator operator-(const iterator& x, difference_type off) {return iterator(x.bv, x.idx - off);}
 //				friend inline iterator operator+(difference_type off, iterator rhs) {rhs.idx += off; return rhs;}
 //				friend inline iterator operator-(difference_type off, iterator rhs) {rhs.idx -= off; return rhs;}
-				 
+				
 				//Comparison operators
 				inline bool operator==(const iterator& rhs) const {return bitIdx == rhs.bitIdx;}
 				inline bool operator!=(const iterator& rhs) const {return bitIdx != rhs.bitIdx;}
@@ -116,7 +116,7 @@ class BitVector {
 					uint32_t longIdx;
 					uint32_t bitIdx;
 					uint64_t val;
-		 };
+		};
 		
 		iterator begin() {
 			uint32_t longIdx = 0;
@@ -144,9 +144,6 @@ class BitVector {
 		static constexpr uint64_t BV(uint32_t index) {
 			return 1 << (index & LONG_MASK);
 		};
-		
 };
-
-
 
 #endif /* SRC_UTILS_BITVECTOR_HPP_ */

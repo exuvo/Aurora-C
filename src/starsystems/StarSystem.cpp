@@ -39,7 +39,7 @@ void StarSystem::init(Galaxy* galaxy) {
 //	scheduler.attach<WeaponPreSystem>(this);
 //	scheduler.attach<PowerPreSystem>(this);
 	
-//	scheduler.attach<OrbitSystem>(this);
+	scheduler.attach<OrbitSystem>(this);
 //	scheduler.attach<ColonySystem>(this);
 //	scheduler.attach<ShipSystem>(this);
 //	scheduler.attach<MovementPredictedSystem>(this);
@@ -86,7 +86,6 @@ void StarSystem::init(Galaxy* galaxy) {
 	registry.emplace<RenderComponent>(e3);
 	registry.emplace<TintComponent>(e3, vk2d::Colorf::BLUE());
 	registry.emplace<CircleComponent>(e3, 1737100.0f);
-//	registry.emplace<MassComponent>(e3, ?);
 	registry.emplace<OrbitComponent>(e3, e2, static_cast<float>(384400.0 / Units::AU), 0.2f, 0, 30);
 	
 	entt::entity e4 = createEnttiy(empire1);

@@ -25,6 +25,11 @@ struct Settings {
 		bool debugSpatialPartitioningPlanetoids = false;
 		bool useShadow = false;
 	} render;
+	struct {
+			struct {
+					bool dotsRepresentSpeed = true;
+			} orbits;
+	} systems;
 };
 
 struct Assets {

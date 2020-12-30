@@ -68,7 +68,7 @@ void StarSystemLayer::drawSpatialPartitioning() {
 	const auto treeScale = SpatialPartitioningSystem::SCALE;
 	
 	struct traverseData {
-			StarSystemLayer* layer;
+		StarSystemLayer* layer;
 	} traverseData { this };
 	
 	QuadtreePointNodeFunc* leaf = [](QuadtreePoint* tree, void* user_data, int32_t node, uint8_t depth, int32_t mx, int32_t my, int32_t sx, int32_t sy) {
@@ -340,7 +340,7 @@ void StarSystemLayer::render() {
 		profilerEvents.start("drawMovementTimes");
 	//	drawMovementTimes(entityIDs, selectedEntityIDs);
 		profilerEvents.end();
-	
+		
 		profilerEvents.end();
 	}
 	
@@ -433,7 +433,7 @@ bool StarSystemLayer::keyAction(KeyActions_StarSystemLayer action) {
 //				println("Unable to select action " + action + ", no selection");
 //			}
 	}
-
+	
 	return false;
 }
 
@@ -443,18 +443,18 @@ bool StarSystemLayer::eventKeyboard(vk2d::KeyboardButton button, int32_t scancod
 	if (keyBind != KeyActions_StarSystemLayer::NONE) {
 		return keyAction(keyBind);
 	}
-
+	
 	return false;
 }
 
 bool StarSystemLayer::eventCharacter(uint32_t character, vk2d::ModifierKeyFlags modifier_keys) {
 //	printf("character %c\n", character); fflush(stdout);
 	KeyActions_StarSystemLayer keyBind = KeyMappings::getTranslated<KeyActions_StarSystemLayer>(character);
-
+	
 	if (keyBind != KeyActions_StarSystemLayer::NONE) {
 		return keyAction(keyBind);
 	}
-
+	
 	return false;
 }
 
@@ -626,7 +626,7 @@ bool StarSystemLayer::eventMouseButton(vk2d::MouseButton button, vk2d::ButtonAct
 				
 				selectedAction = nullptr;
 				dragSelectionPotentialStart = false;
-
+				
 				commandMenuPotentialStart = true;
 				commandMenuPotentialStartTime = duration_cast<nanoseconds>(steady_clock::now().time_since_epoch());
 				dragStart = getMouseInScreenCordinates();
@@ -638,7 +638,7 @@ bool StarSystemLayer::eventMouseButton(vk2d::MouseButton button, vk2d::ButtonAct
 				dragSelecting = false;
 				return true;
 			}
-
+			
 			if (movingWindow && button != vk2d::MouseButton::BUTTON_MIDDLE) {
 				movingWindow = false;
 				return true;
@@ -679,21 +679,21 @@ bool StarSystemLayer::eventMouseButton(vk2d::MouseButton button, vk2d::ButtonAct
 							Vector2l position = movement.get(Aurora.galaxy->time).value.position;
 			
 							if (rectangleContains(worldCoordinates, position)) {
-								entitiesInSelection.push_back(starSystem->shadow->getEntityReference(entity));
+								entitiesInSelection.push_back(starSystem->shadow->getEntityReference(entity)); //TODO avoid duplicates
 							}
 						}
 					}
 				}
-	
+				
 				if (entitiesInSelection.size() > 0) {
 					vectorAppend(Player::current->selection, entitiesInSelection);
 					std::cout << "drag selected " << Player::current->selection.size() << " entities" << std::endl;
 				}
-	
+				
 				dragSelecting = false;
 				return true;
 			}
-	
+			
 			if (dragSelectionPotentialStart) {
 				dragSelectionPotentialStart = false;
 				if (Player::current->selection.size() > 0 && !window.isKeyPressed(GLFW_KEY_LEFT_SHIFT)) {
@@ -708,7 +708,7 @@ bool StarSystemLayer::eventMouseButton(vk2d::MouseButton button, vk2d::ButtonAct
 			commandMenuPotentialStart = false;
 			
 			if (Player::current->selection.size() > 0) {
-
+				
 				std::unique_lock<LockableBase(std::recursive_mutex)> lock(Aurora.galaxy->shadowLock);
 				
 //				val movementFamilyAspect = starSystem.shadow.world.getAspectSubscriptionManager().get(MovementSystem.CAN_ACCELERATE_FAMILY).aspect
@@ -848,7 +848,7 @@ bool StarSystemLayer::inStrategicView(entt::entity entity, CircleComponent& circ
 	if (Aurora.settings.render.debugDisableStrategicView || zoom == 1.0f) {
 		return false;
 	}
-
+	
 	float radius = circle.radius / 1000;
 	return radius / zoom < 5.0f;
 }
