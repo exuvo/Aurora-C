@@ -6,12 +6,12 @@
  */
 
 #include <boost/functional/hash.hpp>
+#include <starsystems/ShadowStarSystem.hpp>
 #include <functional>
 
 #include "Aurora.hpp"
 #include "IDComponents.hpp"
 #include "starsystems/StarSystem.hpp"
-#include "starsystems/StarSystemShadow.hpp"
 
 bool EntityUUID::operator==(const EntityUUID& o) const {
 	return starSystemID == o.starSystemID && empireID == o.empireID && entityUID == o.entityUID;

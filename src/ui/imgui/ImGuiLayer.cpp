@@ -17,11 +17,11 @@
 #include <examples/imgui_impl_vulkan.h>
 
 #include "Aurora.hpp"
-#include "ui/ImGuiLayer.hpp"
-#include "ui/imgui_impl_glfw.h"
+#include "ui/imgui/ImGuiLayer.hpp"
+#include "ui/imgui/imgui_impl_glfw.h"
 #include "ui/KeyMappings.hpp"
-#include "ui/ImGuiDemoWindow.hpp"
-#include "ui/MainDebugWindow.hpp"
+#include "ui/imgui/ImGuiDemoWindow.hpp"
+#include "ui/imgui/MainDebugWindow.hpp"
 #include "utils/dbg.h"
 #include "utils/RenderUtils.hpp"
 #include "utils/Utils.hpp"

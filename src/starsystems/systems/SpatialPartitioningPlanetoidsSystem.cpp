@@ -1,3 +1,5 @@
+#include <starsystems/ShadowStarSystem.hpp>
+
 /*
  * SpatialPartitioningPlanetoidsSystem.cpp
  *
@@ -7,7 +9,6 @@
 
 #include <algorithm>
 
-#include "starsystems/StarSystemShadow.hpp"
 #include "starsystems/systems/Systems.hpp"
 #include "utils/Utils.hpp"
 #include "utils/quadtree/QuadTreeAABB.hpp"

@@ -1,3 +1,5 @@
+#include <starsystems/ShadowStarSystem.hpp>
+
 /*
  * StarSystem.cpp
  *
@@ -11,7 +13,6 @@
 #include "Tracy.hpp"
 
 #include "starsystems/StarSystem.hpp"
-#include "starsystems/StarSystemShadow.hpp"
 #include "starsystems/systems/Systems.hpp"
 #include "galaxy/Empire.hpp"
 #include "utils/Math.hpp"

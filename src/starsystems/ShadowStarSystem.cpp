@@ -6,10 +6,10 @@
  */
 
 #include <fmt/core.h>
+#include <starsystems/ShadowStarSystem.hpp>
 
 #include "starsystems/components/Components.hpp"
 #include "starsystems/StarSystem.hpp"
-#include "starsystems/StarSystemShadow.hpp"
 
 static entt::entity getCurrentEntity(entt::registry& registry, uint32_t entityID) {
 	entt::entity entity = static_cast<entt::entity>(entityID);

@@ -10,7 +10,7 @@
 #include "galaxy/Galaxy.hpp"
 #include "ui/AuroraWindow.hpp"
 #include "ui/StarSystemLayer.hpp"
-#include "ui/ImGuiLayer.hpp"
+#include "ui/imgui/ImGuiLayer.hpp"
 #include "ui/KeyMappings.hpp"
 #include "Aurora.hpp"
 

@@ -6,11 +6,11 @@
  */
 #include <GLFW/glfw3.h>
 #include <fmt/core.h>
+#include <starsystems/ShadowStarSystem.hpp>
 
 #include "Aurora.hpp"
 #include "StarSystemLayer.hpp"
 #include "starsystems/StarSystem.hpp"
-#include "starsystems/StarSystemShadow.hpp"
 #include "starsystems/components/Components.hpp"
 #include "galaxy/Galaxy.hpp"
 #include "utils/Math.hpp"

@@ -11,7 +11,7 @@
 #include <imgui.h>
 
 #include "ui/UILayer.hpp"
-#include "ui/UIWindow.hpp"
+#include "ui/imgui/UIWindow.hpp"
 #include "utils/Utils.hpp"
 
 template<typename T>

@@ -9,8 +9,8 @@
 
 #include "Aurora.hpp"
 #include "MainDebugWindow.hpp"
-#include "ui/ImGuiDemoWindow.hpp"
-#include "ui/ImGuiLayer.hpp"
+#include "ui/imgui/ImGuiDemoWindow.hpp"
+#include "ui/imgui/ImGuiLayer.hpp"
 #include "utils/Utils.hpp"
 
 void MainDebugWindow::render() {

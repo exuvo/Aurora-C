@@ -27,5 +27,4 @@ class UILayer {
 		AuroraWindow& window;
 };
 
-
 #endif /* SRC_UI_UILAYER_H_ */
