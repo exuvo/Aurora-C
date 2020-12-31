@@ -9,12 +9,13 @@
 #define SRC_AURORA_HPP_
 
 #include <vector>
-#include <VK2D.h>
-//#include <examples/imgui_impl_vulkan.h>
-
-#include "ui/AuroraWindow.hpp"
 
 class Galaxy;
+class AuroraWindow;
+namespace vk2d {
+	class Instance;
+	class FontResource;
+}
 
 //TODO reflection load these from xml
 struct Settings {

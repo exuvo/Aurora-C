@@ -16,6 +16,7 @@
 #include "utils/Math.hpp"
 #include "utils/RenderUtils.hpp"
 #include "ui/KeyMappings.hpp"
+#include "ui/RenderCache.hpp"
 
 StarSystemLayer::StarSystemLayer(AuroraWindow& parentWindow, StarSystem* starSystem): UILayer(parentWindow) {
 	this->starSystem = starSystem;
@@ -408,11 +409,13 @@ void StarSystemLayer::render() {
 	
 	auto writeText = [&](std::string text, vk2d::Colorf color = vk2d::Colorf::WHITE()){
 		//TODO cache meches based on text hash? calling code location? and Translate cached version
-		vk2d::Mesh text_mesh = vk2d::GenerateTextMesh(Aurora.assets.font, { std::floor(x), std::floor(y) }, text);
-		if (color != vk2d::Colorf::WHITE()) {
-			text_mesh.SetVertexColor(color);
-		}
+//		vk2d::Mesh text_mesh = vk2d::GenerateTextMesh(Aurora.assets.font, { std::floor(x), std::floor(y) }, text);
+//		if (color != vk2d::Colorf::WHITE()) {
+//			text_mesh.SetVertexColor(color);
+//		}
+		vk2d::Mesh& text_mesh = RenderCache::getTextMeshCallerCentric(Aurora.assets.font, { std::floor(x), std::floor(y) }, text, color, 1);
 		window.window->DrawMesh(text_mesh);
+//		window.window->DrawRectangle(text_mesh.aabb, false, vk2d::Colorf::OLIVE());
 		x += text_mesh.aabb.GetAreaSize().x;
 //		std::cout << "size " << text_mesh.aabb << " " << text_mesh.aabb.GetAreaSize() << std::endl;
 	};
@@ -438,7 +441,7 @@ void StarSystemLayer::render() {
 	
 	std::string text = fmt::format("zoom {:02}", zoomLevel);
 	vk2d::Vector2f bb = Aurora.assets.font->CalculateRenderedSize(text).GetAreaSize();
-	window.window->DrawMesh(vk2d::GenerateTextMesh(Aurora.assets.font, { window.window->GetSize().x / 2 - bb.x - 4 , y }, text));
+	window.window->DrawMesh(RenderCache::getTextMeshCallerCentric(Aurora.assets.font, { window.window->GetSize().x / 2 - bb.x - 4 , y }, text));
 }
 
 bool StarSystemLayer::keyAction(KeyActions_StarSystemLayer action) {
