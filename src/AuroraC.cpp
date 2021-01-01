@@ -98,7 +98,7 @@ int main(int argc, char **argv) {
 	
 	cout <<  "running" << endl;
 
-	uint32_t targetFrameRate = 60;
+	uint32_t targetFrameRate = 120;
 	nanoseconds targetFrameDelay = duration_cast<nanoseconds>(1s) / targetFrameRate;
 	assert(targetFrameDelay > 0ns);
 	
@@ -110,7 +110,15 @@ int main(int argc, char **argv) {
 	while(!Aurora.shutdown){
 		
 		// make each window its own thread? maybe with separate vk2dInstance?
-		if (Aurora.settings.render.vsync) {
+		
+		//TODO time well against vsync using VK_EXT_display_control and VK_EXT_display_surface_counter
+		// https://stackoverflow.com/questions/61031850/how-to-get-the-next-frame-presentation-time-in-vulkan
+		// https://github.com/KhronosGroup/Vulkan-Docs/issues/370
+		// https://www.khronos.org/registry/vulkan/specs/1.2-extensions/man/html/VK_EXT_display_control.html
+		// https://www.khronos.org/registry/vulkan/specs/1.2-extensions/man/html/VK_EXT_display_surface_counter.html
+		// using OpenXR https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#frame-synchronization
+		
+		if (!Aurora.settings.render.vsync) {
 			while (true) {
 				nanoseconds now = getNanos();
 				accumulator += now - lastRun;

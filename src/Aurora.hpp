@@ -20,7 +20,7 @@ namespace vk2d {
 //TODO reflection load these from xml
 struct Settings {
 	struct {
-		bool vsync = true;
+		bool vsync = false;
 		float zoomSensitivity = 1.25;
 		bool debugDisableStrategicView = false;
 		bool debugSpatialPartitioning = false;

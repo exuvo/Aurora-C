@@ -131,7 +131,7 @@ void AuroraWindow::render() {
 		uint32_t milliRenderTimeAverage = (uint64_t) renderTimeAverage / Units::NANO_MILLI;
 		
 		std::string text = fmt::format("{} {:02}.{:02}ms {:02}.{:02}ms, {:02}.{:02}ms", Aurora.fps, milliFrameStartTime, centinanosFrameStartTime, milliFrameTimeAverage, centinanosFrameTimeAverage, milliRenderTimeAverage, centinanosRenderTimeAverage);
-		vk2d::Mesh text_mesh = vk2d::GenerateTextMesh(Aurora.assets.font, { -(int32_t)(window->GetSize().x / 2) + 5, -(int32_t) window->GetSize().y / 2 + 15 }, text);
+		vk2d::Mesh text_mesh = vk2d::GenerateTextMesh(Aurora.assets.font, { -(int32_t)(window->GetSize().x / 2) + 2, -(int32_t) window->GetSize().y / 2 + 15 }, text);
 		window->DrawMesh(text_mesh);
 	}
 	
