@@ -1,6 +1,8 @@
 #include <iostream>
 #include <thread>
 
+#include <Interface/WindowImpl.h>
+
 #include <Tracy.hpp>
 
 #include <log4cxx/logger.h>
@@ -21,6 +23,9 @@ using namespace log4cxx;
 
 AuroraGlobal Aurora;
 
+bool hasVK_EXT_display_control = false;
+bool hasVK_EXT_display_surface_counter = false;
+
 void VK2D_log(vk2d::ReportSeverity severity, std::string_view message) {
 	LoggerPtr log = Logger::getLogger("aurora.ui");
 	
@@ -38,6 +43,35 @@ void VK2D_log(vk2d::ReportSeverity severity, std::string_view message) {
 		LOG4CXX_DEBUG(log, message);
 	}
 }
+
+void VK2D_instance_extensions(const std::vector<VkExtensionProperties>& available_instance_extensions, std::vector<const char*>& instance_extensions) {
+	LoggerPtr log = Logger::getLogger("aurora.ui");
+	
+	for (const VkExtensionProperties& extensionProperties : available_instance_extensions) {
+		if (strcmp(VK_EXT_DISPLAY_SURFACE_COUNTER_EXTENSION_NAME, extensionProperties.extensionName) == 0) {
+			hasVK_EXT_display_surface_counter = true;
+			instance_extensions.push_back(VK_EXT_DISPLAY_SURFACE_COUNTER_EXTENSION_NAME);
+			LOG4CXX_INFO(log, "Vulkan has VK_EXT_display_surface_counter extension");
+			break;
+		}
+	}
+}
+
+void VK2D_device_extensions(const std::vector<VkExtensionProperties>& available_device_extensions, std::vector<const char*>& device_extensions) {
+	LoggerPtr log = Logger::getLogger("aurora.ui");
+	
+	for (const VkExtensionProperties& extensionProperties : available_device_extensions) {
+		if (strcmp(VK_EXT_DISPLAY_CONTROL_EXTENSION_NAME, extensionProperties.extensionName) == 0) {
+			hasVK_EXT_display_control = true;
+			device_extensions.push_back(VK_EXT_DISPLAY_CONTROL_EXTENSION_NAME);
+			LOG4CXX_INFO(log, "Vulkan has VK_EXT_display_control extension");
+			break;
+		}
+	}
+}
+
+PFN_vkGetPhysicalDeviceSurfaceCapabilities2EXT vk_GetPhysicalDeviceSurfaceCapabilities2EXT = VK_NULL_HANDLE;
+//PFN_vkGetSwapchainCounterEXT vk_GetSwapchainCounterEXT = VK_NULL_HANDLE;
 
 int main(int argc, char **argv) {
 	tracy::StartupProfiler();
@@ -69,6 +103,8 @@ int main(int argc, char **argv) {
 //	instance_create_info.engine_name = "";
 //	instance_create_info.engine_version = {0, 0, 0};
 	instance_create_info.report_function = VK2D_log;
+	instance_create_info.instance_extensions_function = VK2D_instance_extensions;
+	instance_create_info.device_extensions_function = VK2D_device_extensions;
 	
 	Aurora.vk2dInstance = vk2d::CreateInstance(instance_create_info).release();
 	
@@ -76,6 +112,14 @@ int main(int argc, char **argv) {
 		LOG4CXX_ERROR(log, "failed to create vk2d instance");
 		return 1;
 	}
+	
+	if (hasVK_EXT_display_surface_counter) {
+		vk_GetPhysicalDeviceSurfaceCapabilities2EXT = (PFN_vkGetPhysicalDeviceSurfaceCapabilities2EXT) vkGetInstanceProcAddr(Aurora.vk2dInstance->impl->GetVulkanInstance(), "vkGetPhysicalDeviceSurfaceCapabilities2EXT");
+	}
+	
+//	if (hasVK_EXT_display_control) {
+//		vk_GetSwapchainCounterEXT = (PFN_vkGetSwapchainCounterEXT) vkGetInstanceProcAddr(Aurora.vk2dInstance->impl->GetVulkanInstance(), "vkGetSwapchainCounterEXT");
+//	}
 	
 	KeyMappings::loadAllDefaults();
 	
@@ -97,7 +141,7 @@ int main(int argc, char **argv) {
 	}
 	
 	cout <<  "running" << endl;
-
+	
 	uint32_t targetFrameRate = 120;
 	nanoseconds targetFrameDelay = duration_cast<nanoseconds>(1s) / targetFrameRate;
 	assert(targetFrameDelay > 0ns);
@@ -158,6 +202,40 @@ int main(int argc, char **argv) {
 			
 			for (AuroraWindow* window : Aurora.windows) {
 				window->render();
+				
+				if (hasVK_EXT_display_surface_counter) {
+					VkSurfaceCapabilities2EXT surfaceCaps {};
+					surfaceCaps.sType = VK_STRUCTURE_TYPE_SURFACE_CAPABILITIES_2_EXT;
+					VkResult res = vk_GetPhysicalDeviceSurfaceCapabilities2EXT(window->window->impl->vk_physical_device, window->window->impl->vk_surface, &surfaceCaps);
+					
+					if (res == VK_SUCCESS) {
+						cout <<  "vsync surface " << surfaceCaps.supportedSurfaceCounters << " ";
+						
+						if (surfaceCaps.supportedSurfaceCounters & VK_SURFACE_COUNTER_VBLANK_EXT) {
+							cout <<  " vblank ext";
+						}
+						
+						cout << endl;
+					} else {
+						LOG4CXX_ERROR(log, "unable to get surface capabilites: " << res);
+					}
+				}
+				
+//				if (hasVK_EXT_display_control) {
+//					
+//					PFN_vkGetSwapchainCounterEXT vk_GetSwapchainCounterEXT = VK_NULL_HANDLE;
+//					// Get device is slightly faster but specific to each device: https://stackoverflow.com/questions/35504545/vulkan-difference-between-vkgetinstanceprocaddress-and-vkgetdeviceprocaddress
+//					vk_GetSwapchainCounterEXT = (PFN_vkGetSwapchainCounterEXT) vkGetDeviceProcAddr(Aurora.vk2dInstance->impl->GetVulkanDevice(), "vkGetSwapchainCounterEXT");
+//					
+//					uint64_t counter;
+//					VkResult res = vk_GetSwapchainCounterEXT(window->window->impl->vk_device, (VkSwapchainKHR)(intptr_t) window->window->impl->next_image, VK_SURFACE_COUNTER_VBLANK_BIT_EXT, &counter);
+//					
+//					if (res == VK_SUCCESS) {
+//						cout <<  "vsync counter " << counter << endl;
+//					} else {
+//						LOG4CXX_ERROR(log, "unable to get vsync counter: " << res);
+//					}
+//				}
 			}
 			
 			for (size_t i=0; i < Aurora.windows.size(); i++) {

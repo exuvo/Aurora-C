@@ -135,7 +135,7 @@ EntityReference StarSystem::getEntityReference(entt::entity entity) {
 
 template<typename Component>
 void StarSystem::added(entt::registry& registry, entt::entity entity) {
-	LOG4CXX_DEBUG(log, "starsystem " << name << " added component " << type_name<Component>() << " to entity " << entity);
+	LOG4CXX_TRACE(log, "starsystem " << name << " added component " << type_name<Component>() << " to entity " << entity);
 	uint32_t index = static_cast<uint32_t>(registry.entity(entity));
 	workingShadow->added.reserve(index + 1);
 	workingShadow->added[index] = true;
@@ -148,7 +148,7 @@ void StarSystem::added(entt::registry& registry, entt::entity entity) {
 
 template<typename Component>
 void StarSystem::deleted(entt::registry& registry, entt::entity entity) {
-	LOG4CXX_DEBUG(log, "starsystem " << name << " deleted component " << type_name<Component>() << " from entity " << entity);
+	LOG4CXX_TRACE(log, "starsystem " << name << " deleted component " << type_name<Component>() << " from entity " << entity);
 	uint32_t index = static_cast<uint32_t>(registry.entity(entity));
 	workingShadow->deleted.reserve(index + 1);
 	workingShadow->deleted[index] = true;
@@ -162,7 +162,7 @@ void StarSystem::deleted(entt::registry& registry, entt::entity entity) {
 #define CHANGED_TEMPLATE(r, unused, component) \
 template<> \
 void StarSystem::changed2<component>(entt::entity entity) { \
-	LOG4CXX_DEBUG(log, "starsystem " << name << " changed component " << type_name<component>() << " of entity " << entity); \
+	LOG4CXX_TRACE(log, "starsystem " << name << " changed component " << type_name<component>() << " of entity " << entity); \
 /*	BOOST_HANA_CONSTANT_ASSERT_MSG(hana::find(syncedComponentToIndexMap, hana::type_c<component>) != hana::nothing, "missing component mapping"); */ \
 	BitVector& changedVector = workingShadow->changedComponents[syncedComponentToIndexMap[hana::type_c<component>]]; \
 	uint32_t index = static_cast<uint32_t>(registry.entity(entity)); \

@@ -56,7 +56,7 @@ void OrbitSystem::update(delta_type delta) {
 
 		// 1 point each day
 		uint32_t points = std::min(std::max((int)(orbitalPeriod / (24 * 60 * 60)), 5), 1000);
-		LOG4CXX_DEBUG(log, "Calculating orbit for new entityID ${getUUID(entityID, world)} using $points points, orbitalPeriod ${orbitalPeriod / (24 * 60 * 60)} days");
+		LOG4CXX_DEBUG(log, "Calculating orbit for new entity " << entityID << " using " << points << " points, orbitalPeriod " << orbitalPeriod / (24 * 60 * 60) << " days");
 		std::vector<Vector2l> orbitPoints = std::vector<Vector2l>(points);
 
 		// If set more dots represent higher speed, else the time between dots is constant
