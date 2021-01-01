@@ -21,7 +21,9 @@ __attribute__((warn_unused_result)) vk2d::Rect2f matrixToVK2D(Matrix2i mat);
 
 float linearRGBtoSRGB(float);
 float sRGBtoLinearRGB(float);
-void toLinearRGB(ImVec4*);
-__attribute__((warn_unused_result)) ImVec4 toLinearRGB(ImVec4);
+vk2d::Colorf linearRGBtoSRGB(vk2d::Colorf);
+vk2d::Colorf sRGBtoLinearRGB(vk2d::Colorf);
+
+void resetVK2dRenderState(vk2d::Window* window);
 
 #endif /* SRC_UTILS_RENDERUTILS_HPP_ */

@@ -22,8 +22,9 @@
 #include "ui/KeyMappings.hpp"
 #include "ui/imgui/ImGuiDemoWindow.hpp"
 #include "ui/imgui/MainDebugWindow.hpp"
+#include "ui/imgui/EmpireOverviewWindow.hpp"
 #include "utils/dbg.h"
-#include "utils/RenderUtils.hpp"
+#include "utils/ImGuiUtils.hpp"
 #include "utils/Utils.hpp"
 
 static int imGuiContexts = 0;
@@ -75,6 +76,7 @@ ImGuiLayer::ImGuiLayer(AuroraWindow& parentWindow): UILayer(parentWindow) {
   
   addWindow(new MainDebugWindow(*this));
   addWindow(new ImGuiDemoWindow(*this));
+  addWindow(new EmpireOverviewWindow(*this));
 }
 
 void ImGuiLayer::initShared(){
@@ -221,22 +223,48 @@ void ImGuiLayer::render() {
 	imGuiGlfw->NewFrame();
 	ImGui::NewFrame();
 	
+	VkCommandBuffer command_buffer = window.window->impl->vk_render_command_buffers[window.window->impl->next_image];
+	
 	// Record ImGui primitives into command buffer
-  {
-  	ZoneScopedN("ImGui");
-  	
-  	for (UIWindow* uiWindow : uiWindows) {
-  		if (uiWindow->visible) {
-  			uiWindow->render();
-  		}
+	{
+		ZoneScopedN("ImGui");
+		
+		for (UIWindow* uiWindow : uiWindows) {
+			if (uiWindow->visible) {
+				uiWindow->render();
+			}
 		}
 		
 		ImGui::Render();
 		ImDrawData* draw_data = ImGui::GetDrawData();
 		
-		TracyVkZone(window.tracyVkCtxs[window.window->impl->next_image], window.window->impl->vk_render_command_buffers[window.window->impl->next_image], "ImGui Render");
-		ImGui_ImplVulkan_RenderDrawData(draw_data, window.window->impl->vk_render_command_buffers[window.window->impl->next_image]);
-  }
+		TracyVkZone(window.tracyVkCtxs[window.window->impl->next_image], command_buffer, "ImGui Render");
+		ImGui_ImplVulkan_RenderDrawData(draw_data, command_buffer);
+	}
+	
+	// Restore render pipeline
+	window.window->impl->previous_pipeline_settings = vk2d::_internal::GraphicsPipelineSettings {};
+	window.window->impl->mesh_buffer->bound_index_buffer_block = nullptr;
+	window.window->impl->mesh_buffer->bound_vertex_buffer_block = nullptr;
+	
+	VkRect2D scissor {
+		{ 0, 0 },
+		window.window->impl->extent
+	};
+	vkCmdSetScissor(
+		command_buffer,
+		0, 1, &scissor
+	);
+	
+	// Window frame data.
+	vkCmdBindDescriptorSets(
+		command_buffer,
+		VK_PIPELINE_BIND_POINT_GRAPHICS,
+		Aurora.vk2dInstance->impl->GetGraphicsPrimaryRenderPipelineLayout(),
+		vk2d::_internal::GRAPHICS_DESCRIPTOR_SET_ALLOCATION_WINDOW_FRAME_DATA,
+		1, &window.window->impl->frame_data_descriptor_set.descriptorSet,
+		0, nullptr
+	);
 }
 
 void ImGuiLayer::addWindow(UIWindow* uiWindow) {

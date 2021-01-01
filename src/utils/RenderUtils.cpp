@@ -7,6 +7,10 @@
 
 #include <math.h>
 
+#include <VK2D.h>
+#include <Interface/InstanceImpl.h>
+#include <Interface/WindowImpl.h>
+
 #include "RenderUtils.hpp"
 
 vk2d::Vector2f vectorToVK2D(Vector2l vec) {
@@ -43,12 +47,52 @@ float sRGBtoLinearRGB(float color){
 	return pow((color + 0.055) / 1.055, 2.4);
 }
 
-void toLinearRGB(ImVec4* vec) {
-	vec->x = sRGBtoLinearRGB(vec->x);
-	vec->y = sRGBtoLinearRGB(vec->y);
-	vec->z = sRGBtoLinearRGB(vec->z);
+vk2d::Colorf linearRGBtoSRGB(vk2d::Colorf c) {
+	return { linearRGBtoSRGB(c.r), linearRGBtoSRGB(c.g), linearRGBtoSRGB(c.b), c.a };
 }
 
-ImVec4 toLinearRGB(ImVec4 vec) {
-	return { sRGBtoLinearRGB(vec.x), sRGBtoLinearRGB(vec.y), sRGBtoLinearRGB(vec.z), vec.w };
+vk2d::Colorf sRGBtoLinearRGB(vk2d::Colorf c) {
+	return { sRGBtoLinearRGB(c.r), sRGBtoLinearRGB(c.g), sRGBtoLinearRGB(c.b), c.a };
+}
+
+void resetVK2dRenderState(vk2d::Window* window) {
+	window->impl->previous_pipeline_settings = vk2d::_internal::GraphicsPipelineSettings {};
+	
+	window->impl->mesh_buffer->bound_index_buffer_block = nullptr;
+	window->impl->mesh_buffer->bound_vertex_buffer_block = nullptr;
+	window->impl->mesh_buffer->bound_transformation_buffer_block = nullptr;
+	window->impl->mesh_buffer->bound_texture_channel_weight_buffer_block = nullptr;
+	
+	VkCommandBuffer command_buffer = window->impl->vk_render_command_buffers[window->impl->next_image];
+	
+	VkViewport viewport {};
+	viewport.x			= 0;
+	viewport.y			= 0;
+	viewport.width		= float( window->impl->extent.width );
+	viewport.height		= float( window->impl->extent.height );
+	viewport.minDepth	= 0.0f;
+	viewport.maxDepth	= 1.0f;
+	vkCmdSetViewport(
+		command_buffer,
+		0, 1, &viewport
+	);
+	
+	VkRect2D scissor {
+		{ 0, 0 },
+		window->impl->extent
+	};
+	vkCmdSetScissor(
+		command_buffer,
+		0, 1, &scissor
+	);
+	
+	// Window frame data.
+	vkCmdBindDescriptorSets(
+		command_buffer,
+		VK_PIPELINE_BIND_POINT_GRAPHICS,
+		window->impl->instance->GetGraphicsPrimaryRenderPipelineLayout(),
+		vk2d::_internal::GRAPHICS_DESCRIPTOR_SET_ALLOCATION_WINDOW_FRAME_DATA,
+		1, &window->impl->frame_data_descriptor_set.descriptorSet,
+		0, nullptr
+	);
 }

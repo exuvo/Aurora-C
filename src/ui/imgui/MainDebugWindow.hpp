@@ -22,5 +22,4 @@ class MainDebugWindow : public UIWindow {
 		float slider = 0;
 };
 
-
 #endif /* SRC_UI_MAINDEBUGWINDOW_HPP_ */

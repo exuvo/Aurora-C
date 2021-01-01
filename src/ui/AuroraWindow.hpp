@@ -9,10 +9,10 @@
 #define SRC_UI_AURORAWINDOW_HPP_
 
 #include <vulkan/vulkan_core.h>
-
 #include <VK2D.h>
-
 #include <log4cxx/logger.h>
+
+#include "utils/Utils.hpp"
 
 using namespace log4cxx;
 
@@ -23,6 +23,9 @@ namespace tracy {
 using TracyVkCtx = tracy::VkCtx*;
 
 class UILayer;
+
+template<typename T>
+concept aUILayer = std::is_base_of<UILayer, T>::value;
 
 class AuroraWindow : vk2d::WindowEventHandler {
 	public:
@@ -39,8 +42,25 @@ class AuroraWindow : vk2d::WindowEventHandler {
 		std::vector<UILayer*> layers;
 		vk2d::Vector2i mousePos;
 		
+		template<aUILayer T>
+		T& getLayer() {
+			for (UILayer* layer : layers) {
+				auto casted = dynamic_cast<T*>(layer);
+				if (casted) {
+					return *casted;
+				}
+			}
+			
+			throw std::invalid_argument("No ui layer of type " + type_name<T>());
+		}
+		
 	private:
 		LoggerPtr log = Logger::getLogger("aurora.ui.window");
+		nanoseconds lastDrawStart = getNanos();
+		nanoseconds frameTime = 0s;
+		nanoseconds renderTime = 0s;
+		double frameTimeAverage = 0;
+		double renderTimeAverage = 0;
 		
 		void EventMouseButton(vk2d::Window*	window, vk2d::MouseButton	button, vk2d::ButtonAction action,
 		                                    vk2d::ModifierKeyFlags modifier_keys) override;

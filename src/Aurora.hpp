@@ -20,6 +20,7 @@ namespace vk2d {
 //TODO reflection load these from xml
 struct Settings {
 	struct {
+		bool vsync = true;
 		float zoomSensitivity = 1.25;
 		bool debugDisableStrategicView = false;
 		bool debugSpatialPartitioning = false;
@@ -52,6 +53,7 @@ struct AuroraGlobal {
 	std::vector<AuroraWindow*> windows;
 	bool shutdown = false;
 	vk2d::Instance* vk2dInstance;
+	uint16_t fps;
 //		struct ImGui_ImplVulkan_InitInfo imGuiImpl; // For docking branch
 };
 

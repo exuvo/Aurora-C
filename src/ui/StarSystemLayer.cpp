@@ -390,7 +390,7 @@ void StarSystemLayer::render() {
 	}
 	
 	if (tracking) {
-		vk2d::Mesh text_mesh = vk2d::GenerateTextMesh(Aurora.assets.font, { -50, (int32_t) window.window->GetSize().y / 2 - 30 }, "Tracking");
+		vk2d::Mesh& text_mesh = RenderCache::getTextMeshCallerCentric(Aurora.assets.font, { -50, (int32_t) window.window->GetSize().y / 2 - 30 }, "Tracking");
 		window.window->DrawMesh(text_mesh);
 	}
 	

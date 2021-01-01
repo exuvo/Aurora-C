@@ -6,9 +6,10 @@
  */
 
 #include <iostream>
+#include <fmt/core.h>
 
-#include "Tracy.hpp"
-#include "TracyVulkan.hpp"
+#include <Tracy.hpp>
+#include <TracyVulkan.hpp>
 
 #include <VK2D.h>
 #include <Interface/InstanceImpl.h>
@@ -17,8 +18,10 @@
 #include "Aurora.hpp"
 #include "ui/AuroraWindow.hpp"
 #include "ui/UILayer.hpp"
+#include "ui/RenderCache.hpp"
 #include "utils/dbg.h"
 #include "utils/Utils.hpp"
+#include "utils/Math.hpp"
 
 using namespace std::chrono;
 
@@ -32,7 +35,7 @@ AuroraWindow::AuroraWindow() {
 	window_create_info.event_handler = this;
 //		window_create_info.fullscreen_monitor = ?
 //		window_create_info.fullscreen_refresh_rate = ?
-	window_create_info.vsync = true;
+	window_create_info.vsync = Aurora.settings.render.vsync;
 	window = Aurora.vk2dInstance->CreateOutputWindow(window_create_info);
 	check(window, "failed to create window");
 	
@@ -85,7 +88,14 @@ AuroraWindow::~AuroraWindow() {
 }
 
 void AuroraWindow::render() {
+	nanoseconds now = getNanos();
+	frameTime = now - lastDrawStart;
+	lastDrawStart = now;
+	
+	frameTimeAverage = exponentialAverage(frameTime.count(), frameTimeAverage, 15.0);
+	
 	ZoneScoped;
+	
 	if(!window->BeginRender()) {
 		LOG4CXX_ERROR(log, "Error rendering window begin");
 		return;
@@ -110,12 +120,29 @@ void AuroraWindow::render() {
 				LOG4CXX_ERROR(log, "Exception in rendering layer " << demangleTypeName(typeid(*layer).name()) << ": " << e.what() << "\n" << stackTrace);
 			}
 		}
+		
+		uint32_t centinanosFrameStartTime = (frameTime.count() / 10000) % 100;
+		uint32_t milliFrameStartTime = frameTime.count() / Units::NANO_MILLI;
+		
+		uint32_t centinanosFrameTimeAverage = ((uint64_t) frameTimeAverage / 10000) % 100;
+		uint32_t milliFrameTimeAverage = (uint64_t) frameTimeAverage / Units::NANO_MILLI;
+		
+		uint32_t centinanosRenderTimeAverage = ((uint64_t) renderTimeAverage / 10000) % 100;
+		uint32_t milliRenderTimeAverage = (uint64_t) renderTimeAverage / Units::NANO_MILLI;
+		
+		std::string text = fmt::format("{} {:02}.{:02}ms {:02}.{:02}ms, {:02}.{:02}ms", Aurora.fps, milliFrameStartTime, centinanosFrameStartTime, milliFrameTimeAverage, centinanosFrameTimeAverage, milliRenderTimeAverage, centinanosRenderTimeAverage);
+		vk2d::Mesh text_mesh = vk2d::GenerateTextMesh(Aurora.assets.font, { -(int32_t)(window->GetSize().x / 2) + 5, -(int32_t) window->GetSize().y / 2 + 15 }, text);
+		window->DrawMesh(text_mesh);
 	}
 	
 	if(!window->EndRender()) {
 		LOG4CXX_ERROR(log, "Error rendering window end");
 		return;
 	}
+	
+	renderTime = getNanos() - now;
+	renderTimeAverage = exponentialAverage(renderTime.count(), renderTimeAverage, 10.0);
+	
 	FrameMark
 }
 

@@ -69,6 +69,4 @@ class StarSystemLayer: public UILayer {
 		milliseconds oldGalaxyTime;
 };
 
-
-
 #endif /* SRC_UI_STARSYSTEMLAYER_HPP_ */

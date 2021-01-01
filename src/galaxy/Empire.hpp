@@ -9,6 +9,7 @@
 #define SRC_GALAXY_EMPIRE_HPP_
 
 #include <boost/circular_buffer.hpp>
+#include <VK2D.h>
 
 #include "galaxy/Commands.hpp"
 
@@ -16,6 +17,7 @@ class Empire {
 	public:
 		uint8_t id = 0;
 		std::string name;
+		vk2d::Colorf color = vk2d::Colorf::WHITE();
 		boost::circular_buffer<Command*> commandQueue {128}; // For local player and ai
 		
 		Empire(std::string aName) {

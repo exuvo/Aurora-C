@@ -24,7 +24,9 @@ AuroraGlobal Aurora;
 void VK2D_log(vk2d::ReportSeverity severity, std::string_view message) {
 	LoggerPtr log = Logger::getLogger("aurora.ui");
 	
-	if (severity == vk2d::ReportSeverity::CRITICAL_ERROR || severity == vk2d::ReportSeverity::DEVICE_LOST) {
+	if (severity == vk2d::ReportSeverity::CRITICAL_ERROR) {
+		LOG4CXX_FATAL(log, message);
+	} else if (severity == vk2d::ReportSeverity::DEVICE_LOST) {
 		LOG4CXX_FATAL(log, message);
 	} else if (severity == vk2d::ReportSeverity::NON_CRITICAL_ERROR) {
 		LOG4CXX_ERROR(log, message);
@@ -54,6 +56,7 @@ int main(int argc, char **argv) {
 	Galaxy* galaxy = new Galaxy(empires, starSystems, players);
 	Aurora.galaxy = galaxy;
 	Player::current = &galaxy->players[0];
+	Player::current->empire = &galaxy->empires[1];
 
 	galaxy->init();
 	
@@ -95,45 +98,49 @@ int main(int argc, char **argv) {
 	
 	cout <<  "running" << endl;
 
-	uint32_t frameRate = 60;
-	nanoseconds frameDelay = duration_cast<nanoseconds>(1s) / frameRate;
-	assert(frameDelay > 0ns);
+	uint32_t targetFrameRate = 60;
+	nanoseconds targetFrameDelay = duration_cast<nanoseconds>(1s) / targetFrameRate;
+	assert(targetFrameDelay > 0ns);
 	
 	nanoseconds accumulator = 0s;
-	nanoseconds lastRun = duration_cast<nanoseconds>(steady_clock::now().time_since_epoch());
+	nanoseconds lastRun = getNanos();
+	uint16_t frames = 0;
+	nanoseconds frameCounterStart = lastRun;
 	
-	while(!Aurora.shutdown){ 
+	while(!Aurora.shutdown){
 		
 		// make each window its own thread? maybe with separate vk2dInstance?
-		while (true) {
-			nanoseconds now = duration_cast<nanoseconds>(steady_clock::now().time_since_epoch());
-			accumulator += now - lastRun;
-			lastRun = now;
-			
-			if (accumulator >= frameDelay) {
-				accumulator -= frameDelay;
+		if (Aurora.settings.render.vsync) {
+			while (true) {
+				nanoseconds now = getNanos();
+				accumulator += now - lastRun;
+				lastRun = now;
 				
-				if (accumulator > frameDelay) {
-					accumulator = accumulator % frameDelay;
-				}
-				
-				break;
-				
-			} else if (Aurora.shutdown) {
-				break;
-				
-			} else {
-				
-				milliseconds sleepTime = duration_cast<milliseconds>(frameDelay - accumulator);
-				
-				if (sleepTime >= 10ms) {
-					std::this_thread::sleep_for(5ms);
+				if (accumulator >= targetFrameDelay) {
+					accumulator -= targetFrameDelay;
 					
-				} else if (sleepTime > 1ms) {
-					std::this_thread::sleep_for(sleepTime - 1ms);
+					if (accumulator > targetFrameDelay) {
+						accumulator = accumulator % targetFrameDelay;
+					}
+					
+					break;
+					
+				} else if (Aurora.shutdown) {
+					break;
 					
 				} else {
-					std::this_thread::yield();
+					
+					milliseconds sleepTime = duration_cast<milliseconds>(targetFrameDelay - accumulator);
+					
+					if (sleepTime >= 10ms) {
+						std::this_thread::sleep_for(8ms);
+						
+					} else if (sleepTime > 1ms) {
+						std::this_thread::sleep_for(sleepTime - 1ms);
+						
+					} else {
+						std::this_thread::yield();
+					}
 				}
 			}
 		}
@@ -158,6 +165,15 @@ int main(int argc, char **argv) {
 		} catch (const std::exception& e) {
 			LOG4CXX_ERROR(log, "Exception in update: " << e.what());
 		}
+		
+		nanoseconds now = getNanos();
+		if (now - frameCounterStart >= 1s) {
+			Aurora.fps = frames;
+			frames = 0;
+			frameCounterStart = now;
+		}
+		
+		frames++;
 	}
 	
 	cout << "shutdown" << flush;

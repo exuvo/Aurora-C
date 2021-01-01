@@ -29,17 +29,9 @@ class ImGuiLayer: public UILayer {
 		void addWindow(UIWindow* uiWindow);
 		void removeWindow(UIWindow* uiWindow);
 		
-//		template<aUIWindow T>
-//		T& getWindow();
-//		
-//		template<aUIWindow T>
-//		void showWindow();
-//		
-//		template<aUIWindow T>
-//		void hideWindow();
-//		
-//		template<aUIWindow T>
-//		void toggleWindow();
+		AuroraWindow& getMainWindow() {
+			return window;
+		}
 		
 		template<aUIWindow T>
 		T& getWindow() {
