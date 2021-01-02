@@ -254,50 +254,19 @@ target_link_libraries(AuroraC PRIVATE ${Log4Cxx_LIBRARIES} ${APRUTIL_LIBRARIES} 
 # Assest
 ################
 
-# Move fonts
-file(GLOB         # Select all fonts
-  FONT_FILES 
-  "${PROJECT_SOURCE_DIR}/assets/fonts/*.*"
-)
-file(GLOB         # Select all moved fonts
-  MOVED_FONT_FILES 
-)
-
-file(MAKE_DIRECTORY "${PROJECT_SOURCE_DIR}/build/assets/fonts/")
-
-foreach(file ${FONT_FILES})
-  get_filename_component(file_name ${file} NAME)
-  set(source_font_path "${PROJECT_SOURCE_DIR}/assets/fonts/${file_name}")
-  set(moved_font_path "${PROJECT_SOURCE_DIR}/build/assets/fonts/${file_name}")
-  list(APPEND MOVED_FONT_FILES ${moved_font_path})
-  add_custom_command(
-    OUTPUT ${moved_font_path}
-    COMMENT "Moving font: ${file_name}"
-    COMMAND cp ${source_font_path} ${moved_font_path}
-    DEPENDS ${source_font_path}
-  )
-endforeach(file ${FONT_FILES})
-
-add_custom_target(Font_Dependencies DEPENDS ${MOVED_FONT_FILES})
-add_dependencies(AuroraC Font_Dependencies)
+add_custom_target(symlink_assets ALL COMMAND ${CMAKE_COMMAND} -E create_symlink "${PROJECT_SOURCE_DIR}/assets" "${PROJECT_BINARY_DIR}/assets")
+add_dependencies(AuroraC symlink_assets)
 
 ################
 
 # Compile shaders
-file(GLOB         # Select all shaders
-    SHADER_FILES 
-    "${PROJECT_SOURCE_DIR}/assets/shaders/*.*"
-)
-file(GLOB         # Select all compiled shaders
-  COMPILED_SHADER_FILES 
-)
-
-file(MAKE_DIRECTORY "${PROJECT_SOURCE_DIR}/build/assets/shaders/")
+file(GLOB SHADER_FILES CONFIGURE_DEPENDS "${PROJECT_SOURCE_DIR}/assets/shaders/*.*")
+set(COMPILED_SHADER_FILES "")
 
 foreach(file ${SHADER_FILES})
   get_filename_component(file_name ${file} NAME)
   set(source_shader_path "${PROJECT_SOURCE_DIR}/assets/shaders/${file_name}")
-  set(compiled_shader_path "${PROJECT_SOURCE_DIR}/build/assets/shaders/${file_name}.spv")
+  set(compiled_shader_path "${PROJECT_SOURCE_DIR}/assets/compiledshaders/${file_name}.spv")
   list(APPEND COMPILED_SHADER_FILES ${compiled_shader_path})
   add_custom_command(
     OUTPUT ${compiled_shader_path}
@@ -305,12 +274,11 @@ foreach(file ${SHADER_FILES})
     COMMAND glslangValidator -o ${compiled_shader_path} -V ${source_shader_path}
     WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}/assets/shaders/"
     DEPENDS ${source_shader_path}
-    )
-endforeach(file ${SHADER_FILES})
+  )
+endforeach()
 
 add_custom_target(Shader_Dependencies DEPENDS ${COMPILED_SHADER_FILES})
-find_program(glslangValidator REQUIRED)
+#find_program(glslangValidator REQUIRED)
 add_dependencies(AuroraC Shader_Dependencies)
-
 
 #depends stuff

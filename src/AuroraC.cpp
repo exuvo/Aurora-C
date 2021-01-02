@@ -102,7 +102,7 @@ int main(int argc, char **argv) {
 	tracy::StartupProfiler();
 	tracy::SetThreadName("startup");
 
-	log4cxx::xml::DOMConfigurator::configure("log4j.xml");
+	log4cxx::xml::DOMConfigurator::configure("assets/log4j.xml");
 	LoggerPtr log = Logger::getLogger("aurora");
 	LOG4CXX_FATAL(log, "### Starting ###");
 
