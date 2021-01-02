@@ -97,5 +97,6 @@ std::string type_name() {
 }
 
 std::string getLastExceptionStacktrace();
+std::string getCurrentStacktrace();
 
 #endif /* SRC_UTILS_UTILS_HPP_ */

@@ -16,6 +16,13 @@
 #include "ui/KeyMappings.hpp"
 #include "Aurora.hpp"
 
+#define GLFW_EXPOSE_NATIVE_X11 true
+#include <GLFW/glfw3native.h>
+
+#include <vulkan/vulkan_core.h>
+#include <vulkan/vulkan_xlib.h>
+#include <vulkan/vulkan_xlib_xrandr.h>
+
 using namespace std;
 using namespace log4cxx;
 
@@ -26,14 +33,16 @@ AuroraGlobal Aurora;
 bool hasVK_EXT_display_control = false;
 bool hasVK_EXT_display_surface_counter = false;
 bool hasVK_KHR_display = false;
+bool hasVK_EXT_acquire_xlib_display = false;
+bool hasVK_EXT_direct_mode_display = false;
 
 void VK2D_log(vk2d::ReportSeverity severity, std::string_view message) {
 	LoggerPtr log = Logger::getLogger("aurora.ui");
 	
 	if (severity == vk2d::ReportSeverity::CRITICAL_ERROR) {
-		LOG4CXX_FATAL(log, message);
+		LOG4CXX_FATAL(log, message << endl << getCurrentStacktrace());
 	} else if (severity == vk2d::ReportSeverity::DEVICE_LOST) {
-		LOG4CXX_FATAL(log, message);
+		LOG4CXX_FATAL(log, message << endl << getCurrentStacktrace());
 	} else if (severity == vk2d::ReportSeverity::NON_CRITICAL_ERROR) {
 		LOG4CXX_ERROR(log, message);
 	} else if (severity == vk2d::ReportSeverity::WARNING || severity == vk2d::ReportSeverity::PERFORMANCE_WARNING) {
@@ -58,6 +67,16 @@ void VK2D_instance_extensions(const std::vector<VkExtensionProperties>& availabl
 			hasVK_KHR_display = true;
 			instance_extensions.push_back(VK_KHR_DISPLAY_EXTENSION_NAME);
 			LOG4CXX_INFO(log, "Vulkan has VK_KHR_display extension");
+			
+		} else if (strcmp(VK_EXT_ACQUIRE_XLIB_DISPLAY_EXTENSION_NAME, extensionProperties.extensionName) == 0) {
+			hasVK_EXT_acquire_xlib_display = true;
+			instance_extensions.push_back(VK_EXT_ACQUIRE_XLIB_DISPLAY_EXTENSION_NAME);
+			LOG4CXX_INFO(log, "Vulkan has VK_EXT_acquire_xlib_display extension");
+			
+		} else if (strcmp(VK_EXT_DIRECT_MODE_DISPLAY_EXTENSION_NAME, extensionProperties.extensionName) == 0) {
+			hasVK_EXT_direct_mode_display = true;
+			instance_extensions.push_back(VK_EXT_DIRECT_MODE_DISPLAY_EXTENSION_NAME);
+			LOG4CXX_INFO(log, "Vulkan has VK_EXT_direct_mode_display extension");
 		}
 	}
 }
@@ -77,6 +96,10 @@ void VK2D_device_extensions(const std::vector<VkExtensionProperties>& available_
 
 PFN_vkGetPhysicalDeviceSurfaceCapabilities2EXT vk_GetPhysicalDeviceSurfaceCapabilities2EXT = VK_NULL_HANDLE;
 //PFN_vkGetSwapchainCounterEXT vk_GetSwapchainCounterEXT = VK_NULL_HANDLE;
+PFN_vkGetRandROutputDisplayEXT vk_GetRandROutputDisplayEXT = VK_NULL_HANDLE;
+
+std::thread* vsyncThread = nullptr;
+void vsyncWorker(VkDisplayKHR vkDisplay);
 
 int main(int argc, char **argv) {
 	tracy::StartupProfiler();
@@ -126,6 +149,10 @@ int main(int argc, char **argv) {
 //		vk_GetSwapchainCounterEXT = (PFN_vkGetSwapchainCounterEXT) vkGetInstanceProcAddr(Aurora.vk2dInstance->impl->GetVulkanInstance(), "vkGetSwapchainCounterEXT");
 //	}
 	
+	if (hasVK_EXT_acquire_xlib_display) {
+		vk_GetRandROutputDisplayEXT = (PFN_vkGetRandROutputDisplayEXT) vkGetInstanceProcAddr(Aurora.vk2dInstance->impl->GetVulkanInstance(), "vkGetRandROutputDisplayEXT");
+	}
+	
 	KeyMappings::loadAllDefaults();
 	
 	// main font should have fixed width numbers
@@ -139,6 +166,8 @@ int main(int argc, char **argv) {
 	Aurora.assets.font13 = Aurora.vk2dInstance->GetResourceManager()->LoadFontResource(std::filesystem::relative("assets/fonts/13pxbus.ttf"), 13, true, '?');
 	
 	VkFence vsyncFence = VK_NULL_HANDLE;
+//	VkDisplayKHR vkDisplay {};
+	
 	{
 		auto window = new AuroraWindow();
 		window->setMainLayer(new StarSystemLayer(*window, galaxy->systems[0]));
@@ -167,6 +196,75 @@ int main(int argc, char **argv) {
 			hasVK_EXT_display_surface_counter = false;
 		}
 		
+		if (hasVK_EXT_acquire_xlib_display) {
+			
+			Display* x11Display = glfwGetX11Display();
+			
+			if (x11Display == nullptr) {
+				LOG4CXX_ERROR(log, "x11Display null");
+			} else {
+			
+				GLFWmonitor* glfwMonitor = glfwGetWindowMonitor(window->window->impl->glfw_window);
+				
+				if (glfwMonitor == nullptr) {
+					cout <<  "glfwGetWindowMonitor null" << endl;
+					glfwMonitor = glfwGetPrimaryMonitor();
+				}
+				
+				if (glfwMonitor == nullptr) {
+					LOG4CXX_ERROR(log, "glfwMonitor null");
+				} else {
+				
+					RROutput x11RandRoutputID = glfwGetX11Monitor(glfwMonitor);
+					VkDisplayKHR vkDisplay {};
+					
+					auto res = vk_GetRandROutputDisplayEXT(Aurora.vk2dInstance->impl->GetVulkanPhysicalDevice(), x11Display, x11RandRoutputID, &vkDisplay);
+					if (res == VK_SUCCESS) {
+						cout <<  "current X11 vkDisplay " << vkDisplay << endl;
+						
+						vsyncThread = new std::thread(vsyncWorker, vkDisplay);
+						
+//						VkFenceCreateInfo fence_create_info {};
+//						fence_create_info.sType		= VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
+//						fence_create_info.pNext		= nullptr;
+//						fence_create_info.flags		= 0;
+//					
+//						res = vkCreateFence(
+//							Aurora.vk2dInstance->impl->GetVulkanDevice(),
+//							&fence_create_info,
+//							nullptr,
+//							&vsyncFence
+//						);
+//						if (res != VK_SUCCESS ) {
+//							LOG4CXX_ERROR(log, "unable to create vsync fence: " << res);
+//							return false;
+//						}
+//						
+//						PFN_vkRegisterDisplayEventEXT vk_RegisterDisplayEventEXT = VK_NULL_HANDLE;
+//						vk_RegisterDisplayEventEXT = (PFN_vkRegisterDisplayEventEXT) vkGetDeviceProcAddr(Aurora.vk2dInstance->impl->GetVulkanDevice(), "vkRegisterDisplayEventEXT");
+//						
+//						VkDisplayEventInfoEXT displayEventInfo {};
+//						displayEventInfo.sType = VK_STRUCTURE_TYPE_DISPLAY_EVENT_INFO_EXT;
+//						displayEventInfo.displayEvent = VK_DISPLAY_EVENT_TYPE_FIRST_PIXEL_OUT_EXT;
+//						
+//						res = vk_RegisterDisplayEventEXT(window->window->impl->vk_device, vkDisplay, &displayEventInfo, nullptr, &vsyncFence);
+//						
+//						if (res == VK_SUCCESS) {
+//							cout <<  "registered vsync event"<< endl;
+//						} else {
+//							LOG4CXX_ERROR(log, "unable to register vsync listener: " << res);
+//							
+//							vkDestroyFence(Aurora.vk2dInstance->impl->GetVulkanDevice(), vsyncFence, nullptr);
+//							vsyncFence = VK_NULL_HANDLE;
+//						}
+						
+					} else {
+						LOG4CXX_ERROR(log, "unable to get current X11 display: " << res);
+					}
+				}
+			}
+		}
+		
 		if (hasVK_EXT_display_control && hasVK_KHR_display) {
 			
 			uint32_t displays = 0;
@@ -185,36 +283,46 @@ int main(int argc, char **argv) {
 					LOG4CXX_ERROR(log, "unable to get displayProperties: " << res);
 				}
 				
-				VkFenceCreateInfo fence_create_info {};
-				fence_create_info.sType		= VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
-				fence_create_info.pNext		= nullptr;
-				fence_create_info.flags		= 0;
-			
-				res = vkCreateFence(
-					Aurora.vk2dInstance->impl->GetVulkanDevice(),
-					&fence_create_info,
-					nullptr,
-					&vsyncFence
-				);
-				if (res != VK_SUCCESS ) {
-					LOG4CXX_ERROR(log, "unable to create vsync fence: " << res);
-					return false;
+				if (vsyncThread == nullptr) {
+					vsyncThread = new std::thread(vsyncWorker, displayProperties[0].display);
 				}
 				
-				PFN_vkRegisterDisplayEventEXT vk_RegisterDisplayEventEXT = VK_NULL_HANDLE;
-				vk_RegisterDisplayEventEXT = (PFN_vkRegisterDisplayEventEXT) vkGetDeviceProcAddr(Aurora.vk2dInstance->impl->GetVulkanDevice(), "vkRegisterDisplayEventEXT");
-				
-				VkDisplayEventInfoEXT displayEventInfo {};
-				displayEventInfo.sType = VK_STRUCTURE_TYPE_DISPLAY_EVENT_INFO_EXT;
-				displayEventInfo.displayEvent = VK_DISPLAY_EVENT_TYPE_FIRST_PIXEL_OUT_EXT;
-				
-				res = vk_RegisterDisplayEventEXT(window->window->impl->vk_device, displayProperties[0].display, &displayEventInfo, nullptr, &vsyncFence);
-				
-				if (res == VK_SUCCESS) {
-					cout <<  "registered vsync event"<< endl;
-				} else {
-					LOG4CXX_ERROR(log, "unable to get vsync counter: " << res);
-				}
+//				if (vsyncFence == VK_NULL_HANDLE) {
+//					
+//					VkFenceCreateInfo fence_create_info {};
+//					fence_create_info.sType		= VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
+//					fence_create_info.pNext		= nullptr;
+//					fence_create_info.flags		= 0;
+//				
+//					res = vkCreateFence(
+//						Aurora.vk2dInstance->impl->GetVulkanDevice(),
+//						&fence_create_info,
+//						nullptr,
+//						&vsyncFence
+//					);
+//					if (res != VK_SUCCESS ) {
+//						LOG4CXX_ERROR(log, "unable to create vsync fence: " << res);
+//						return false;
+//					}
+//					
+//					PFN_vkRegisterDisplayEventEXT vk_RegisterDisplayEventEXT = VK_NULL_HANDLE;
+//					vk_RegisterDisplayEventEXT = (PFN_vkRegisterDisplayEventEXT) vkGetDeviceProcAddr(Aurora.vk2dInstance->impl->GetVulkanDevice(), "vkRegisterDisplayEventEXT");
+//					
+//					VkDisplayEventInfoEXT displayEventInfo {};
+//					displayEventInfo.sType = VK_STRUCTURE_TYPE_DISPLAY_EVENT_INFO_EXT;
+//					displayEventInfo.displayEvent = VK_DISPLAY_EVENT_TYPE_FIRST_PIXEL_OUT_EXT;
+//					
+//					res = vk_RegisterDisplayEventEXT(window->window->impl->vk_device, displayProperties[0].display, &displayEventInfo, nullptr, &vsyncFence);
+//					
+//					if (res == VK_SUCCESS) {
+//						cout <<  "registered vsync event"<< endl;
+//					} else {
+//						LOG4CXX_ERROR(log, "unable to get vsync counter: " << res);
+//						
+//						vkDestroyFence(Aurora.vk2dInstance->impl->GetVulkanDevice(), vsyncFence, nullptr);
+//						vsyncFence = VK_NULL_HANDLE;
+//					}
+//				}
 			}
 		}
 	}
@@ -242,6 +350,64 @@ int main(int argc, char **argv) {
 		
 		if (!Aurora.settings.render.vsync) {
 			while (true) {
+				
+//				{
+//					if (vsyncFence != VK_NULL_HANDLE) {
+//						auto res = vkWaitForFences(Aurora.vk2dInstance->impl->GetVulkanDevice(), 1, &vsyncFence, VK_TRUE, 1000);
+//							
+//						if (res == VK_SUCCESS) {
+//			//						cout <<  "vsync signaled " << endl;
+//							cout <<  "vs ";
+//							
+//							vkDestroyFence(Aurora.vk2dInstance->impl->GetVulkanDevice(), vsyncFence, nullptr);
+//							vsyncFence = VK_NULL_HANDLE;
+//							
+//						} else if (res == VK_TIMEOUT ) {
+//			//						cout <<  "vsync not signaled " << endl;
+//							cout <<  "!vs ";
+//							
+//						} else {
+//							LOG4CXX_ERROR(log, "unable to get vsync fence status: " << res);
+//						}
+//					}
+//					
+//					if (vsyncFence == VK_NULL_HANDLE) {
+//						
+//						VkFenceCreateInfo fence_create_info {};
+//						fence_create_info.sType		= VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
+//						fence_create_info.pNext		= nullptr;
+//						fence_create_info.flags		= 0;
+//					
+//						auto res = vkCreateFence(
+//							Aurora.vk2dInstance->impl->GetVulkanDevice(),
+//							&fence_create_info,
+//							nullptr,
+//							&vsyncFence
+//						);
+//						if (res != VK_SUCCESS ) {
+//							LOG4CXX_ERROR(log, "unable to create vsync fence: " << res);
+//						}
+//						
+//						static PFN_vkRegisterDisplayEventEXT vk_RegisterDisplayEventEXT = VK_NULL_HANDLE;
+//						if (vk_RegisterDisplayEventEXT == VK_NULL_HANDLE) {
+//							vk_RegisterDisplayEventEXT = (PFN_vkRegisterDisplayEventEXT) vkGetDeviceProcAddr(Aurora.vk2dInstance->impl->GetVulkanDevice(), "vkRegisterDisplayEventEXT");
+//						}
+//						
+//						VkDisplayEventInfoEXT displayEventInfo {};
+//						displayEventInfo.sType = VK_STRUCTURE_TYPE_DISPLAY_EVENT_INFO_EXT;
+//						displayEventInfo.displayEvent = VK_DISPLAY_EVENT_TYPE_FIRST_PIXEL_OUT_EXT;
+//						
+//						res = vk_RegisterDisplayEventEXT(Aurora.vk2dInstance->impl->GetVulkanDevice(), vkDisplay, &displayEventInfo, nullptr, &vsyncFence);
+//						
+//						if (res == VK_SUCCESS) {
+//							cout <<  "registered vsync event"<< endl;
+//							
+//						} else {
+//							LOG4CXX_ERROR(log, "unable to register vsync listener: " << res);
+//						}
+//					}
+//				}
+				
 				nanoseconds now = getNanos();
 				accumulator += now - lastRun;
 				lastRun = now;
@@ -299,25 +465,25 @@ int main(int argc, char **argv) {
 				}
 			}
 			
-			if (vsyncFence != VK_NULL_HANDLE) {
-				
-				auto res = vkGetFenceStatus(Aurora.vk2dInstance->impl->GetVulkanDevice(), vsyncFence);
-				
-				if (res == VK_SUCCESS) {
-					cout <<  "vsync signaled " << endl;
-					
-					res = vkResetFences(Aurora.vk2dInstance->impl->GetVulkanDevice(), 1, &vsyncFence);
-					if (res != VK_SUCCESS) {
-						LOG4CXX_ERROR(log, "unable resetting vsync fence: " << res);
-					}
-					
-				} else if (res == VK_NOT_READY) {
-					cout <<  "vsync not signaled " << endl;
-					
-				} else {
-					LOG4CXX_ERROR(log, "unable get vsync fence status: " << res);
-				}
-			}
+//			if (vsyncFence != VK_NULL_HANDLE) {
+//				
+//				auto res = vkGetFenceStatus(Aurora.vk2dInstance->impl->GetVulkanDevice(), vsyncFence);
+//				
+//				if (res == VK_SUCCESS) {
+//					cout <<  "vsync signaled " << endl;
+//					
+//					res = vkResetFences(Aurora.vk2dInstance->impl->GetVulkanDevice(), 1, &vsyncFence);
+//					if (res != VK_SUCCESS) {
+//						LOG4CXX_ERROR(log, "unable resetting vsync fence: " << res);
+//					}
+//					
+//				} else if (res == VK_NOT_READY) {
+//					cout <<  "vsync not signaled " << endl;
+//					
+//				} else {
+//					LOG4CXX_ERROR(log, "unable get vsync fence status: " << res);
+//				}
+//			}
 			
 			for (size_t i=0; i < Aurora.windows.size(); i++) {
 				AuroraWindow* window = Aurora.windows[i];
@@ -356,9 +522,111 @@ int main(int argc, char **argv) {
 	if (Aurora.galaxy != nullptr) {
 		Aurora.galaxy->galaxyThread->join();
 	}
+	
+	if (vsyncThread != nullptr) {
+		vsyncThread->join();
+		delete vsyncThread;
+	}
 
 	tracy::ShutdownProfiler();
 	exit(0);
+}
+
+#include <malloc.h>
+
+nanoseconds lastVsync = getNanos();
+void vsyncWorker(VkDisplayKHR vkDisplay) {
+	
+//	cout <<  "vsync thread started" << endl;
+	
+	LoggerPtr log = Logger::getLogger("aurora");
+	VkFence vsyncFence = VK_NULL_HANDLE;
+	PFN_vkRegisterDisplayEventEXT vk_RegisterDisplayEventEXT = (PFN_vkRegisterDisplayEventEXT) vkGetDeviceProcAddr(Aurora.vk2dInstance->impl->GetVulkanDevice(), "vkRegisterDisplayEventEXT");
+	
+//	VkAllocationCallbacks allocator { nullptr, 
+//		[](void* pUserData, size_t size, size_t alignment, VkSystemAllocationScope allocationScope){
+//			printf("vk allocate: size: %lu, alignment: %lu, allocationScope: %d", size, alignment, allocationScope);
+//			void* ptr = malloc(size); // Rely on mallocs natural 16 alignment on 64bit OS
+////			void* ptr = aligned_alloc(size, alignment);
+//			memset(ptr, 0, size);
+//			printf(", return 0x%p \n", ptr);
+//			return ptr;  
+//		},
+//		[](void* pUserData, void* pOriginal, size_t size, size_t alignment, VkSystemAllocationScope allocationScope){
+//			printf("vk reallocate: size %lu, alignment %lu, allocationScope %d \n", size, alignment, allocationScope);
+//			return realloc(pOriginal, size);
+//		}, 
+//		[](void* pUserData, void* pMemory){
+//			printf("vk free: 0x%p\n", pMemory);
+//			free(pMemory);
+//		},
+//		[](void* pUserData, size_t size, VkInternalAllocationType allocationType, VkSystemAllocationScope allocationScope){
+//			
+//		},
+//		[](void* pUserData, size_t size, VkInternalAllocationType allocationType, VkSystemAllocationScope allocationScope){
+//			
+//		}
+//	};
+	
+	while (!Aurora.shutdown) {
+		std::this_thread::sleep_for(100ms);
+		lastVsync = getNanos();
+		
+		VkFenceCreateInfo fence_create_info {};
+		fence_create_info.sType		= VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
+		fence_create_info.pNext		= nullptr;
+		fence_create_info.flags		= 0;
+		
+		// Has to be recreated every vsync register according to https://github.com/KhronosGroup/Vulkan-Docs/issues/370#issuecomment-325702314
+		VkResult res = vkCreateFence(
+			Aurora.vk2dInstance->impl->GetVulkanDevice(),
+			&fence_create_info,
+			nullptr,
+			&vsyncFence
+		);
+		if (res != VK_SUCCESS ) {
+			LOG4CXX_ERROR(log, "unable to create vsync fence: " << res);
+			return;
+		}
+		
+		VkDisplayEventInfoEXT displayEventInfo {};
+		displayEventInfo.sType = VK_STRUCTURE_TYPE_DISPLAY_EVENT_INFO_EXT;
+		displayEventInfo.displayEvent = VK_DISPLAY_EVENT_TYPE_FIRST_PIXEL_OUT_EXT;
+		
+		res = vk_RegisterDisplayEventEXT(Aurora.vk2dInstance->impl->GetVulkanDevice(), vkDisplay, &displayEventInfo, nullptr, &vsyncFence);
+//		res = vk_RegisterDisplayEventEXT(Aurora.vk2dInstance->impl->GetVulkanDevice(), vkDisplay, &displayEventInfo, &allocator, &vsyncFence);
+		
+		if (res == VK_SUCCESS) {
+			cout <<  "registered vsync event"<< endl;
+			
+			res = vkWaitForFences(Aurora.vk2dInstance->impl->GetVulkanDevice(), 1, &vsyncFence, VK_TRUE, duration_cast<nanoseconds>(250ms).count());
+			
+//			vkDestroyFence(Aurora.vk2dInstance->impl->GetVulkanDevice(), vsyncFence, nullptr);
+//			vsyncFence = VK_NULL_HANDLE;
+			
+			if (res == VK_SUCCESS) {
+				nanoseconds now = getNanos();
+				cout <<  "vsync signaled " << duration_cast<milliseconds>(now - lastVsync).count() << endl;
+				lastVsync = now;
+				
+			} else if (res == VK_TIMEOUT ) {
+				cout <<  "vsync not signaled " << duration_cast<milliseconds>(getNanos() - lastVsync).count() << endl;
+				
+			} else {
+				LOG4CXX_ERROR(log, "unable to get vsync fence status: " << res);
+				return;
+			}
+			
+		} else {
+			LOG4CXX_ERROR(log, "unable to register vsync listener: " << res);
+			
+			if (res != VK_ERROR_OUT_OF_HOST_MEMORY) { // Crashes
+				vkDestroyFence(Aurora.vk2dInstance->impl->GetVulkanDevice(), vsyncFence, nullptr);
+			}
+			vsyncFence = VK_NULL_HANDLE;
+			return;
+		}
+	}
 }
 
 void* operator new(std::size_t count) {

@@ -212,6 +212,7 @@ void Galaxy::galaxyWorker() {
 		
 		for (std::thread* thread : threads) {
 			thread->join();
+			delete thread;
 		}
 		
 	} catch (const std::exception &e) {

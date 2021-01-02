@@ -424,7 +424,7 @@ std::string demangleTypeName(std::string tname) {
 #include <boost/stacktrace.hpp>
 
 namespace {
-  void * last_frames[20];
+  void* last_frames[20];
   size_t last_size = 0;
   std::string exception_name;
 }
@@ -449,6 +449,19 @@ std::string getLastExceptionStacktrace() {
   }
   
 //  free(names);
+  return ss.str();
+}
+
+std::string getCurrentStacktrace() {
+	void* frames[10];
+  size_t size = backtrace(frames, ARRAY_LEN(frames));
+	
+  std::stringstream ss;
+  
+  for (size_t i=0; i < size; i++) {
+  	ss << boost::stacktrace::to_string(boost::stacktrace::frame(frames[i])) << std::endl;
+  }
+  
   return ss.str();
 }
 

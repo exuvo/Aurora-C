@@ -52,8 +52,9 @@ if(EXISTS "${PROJECT_SOURCE_DIR}/.git" AND NOT EXISTS "${PROJECT_SOURCE_DIR}/lib
 	endif()
 endif()
 
+set(GLFW_USE_WAYLAND OFF)
 set(VK2D_BUILD_DOCS OFF)
-set(VK2D_DEBUG OFF)
+set(VK2D_ENABLE_LIBRARY_DEBUG_FEATURES OFF)
 set(VK2D_BUILD_TESTS OFF)
 set(VK2D_BUILD_EXAMPLES OFF)
 set(VK2D_BUILD_STATIC_LIBRARY ON)
@@ -111,7 +112,7 @@ target_include_directories(AuroraC PUBLIC ${Boost_INCLUDE_DIRS})
 #TODO makes wrong path?, expects root folder named eigen3 ex /usr/include/eigen3/Eigen /usr/include/eigen3/unsupported/Eigen, somehow still works for parts of it?
 target_include_directories(AuroraC PUBLIC "lib/eigen" "lib/eigen/unsupported") # 3.4 is not released yet so we have to include it ourselves
 target_link_libraries(AuroraC PUBLIC OpenMP::OpenMP_CXX)
-target_link_libraries(AuroraC PUBLIC imgui-vulkan) # imgui-glfw
+target_link_libraries(AuroraC PUBLIC imgui-vulkan)
 
 target_precompile_headers(AuroraC PRIVATE "src/PreCompileHeader.h")
 
