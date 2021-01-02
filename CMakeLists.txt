@@ -254,6 +254,7 @@ target_link_libraries(AuroraC PRIVATE ${Log4Cxx_LIBRARIES} ${APRUTIL_LIBRARIES} 
 # Assest
 ################
 
+# Move fonts
 file(GLOB         # Select all fonts
   FONT_FILES 
   "${PROJECT_SOURCE_DIR}/assets/fonts/*.*"
@@ -282,15 +283,34 @@ add_dependencies(AuroraC Font_Dependencies)
 
 ################
 
-#file(GLOB         # Select all shaders
-#    SHADER_FILES 
-#    "${PROJECT_SOURCE_DIR}/shaders/*.*"
-#)
-#file(GLOB         # Select all compiled shaders
-#  COMPILED_SHADER_FILES 
-#)
+# Compile shaders
+file(GLOB         # Select all shaders
+    SHADER_FILES 
+    "${PROJECT_SOURCE_DIR}/assets/shaders/*.*"
+)
+file(GLOB         # Select all compiled shaders
+  COMPILED_SHADER_FILES 
+)
 
+file(MAKE_DIRECTORY "${PROJECT_SOURCE_DIR}/build/assets/shaders/")
 
+foreach(file ${SHADER_FILES})
+  get_filename_component(file_name ${file} NAME)
+  set(source_shader_path "${PROJECT_SOURCE_DIR}/assets/shaders/${file_name}")
+  set(compiled_shader_path "${PROJECT_SOURCE_DIR}/build/assets/shaders/${file_name}.spv")
+  list(APPEND COMPILED_SHADER_FILES ${compiled_shader_path})
+  add_custom_command(
+    OUTPUT ${compiled_shader_path}
+    COMMENT "Creating ${file_name}.spv"
+    COMMAND glslangValidator -o ${compiled_shader_path} -V ${source_shader_path}
+    WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}/assets/shaders/"
+    DEPENDS ${source_shader_path}
+    )
+endforeach(file ${SHADER_FILES})
+
+add_custom_target(Shader_Dependencies DEPENDS ${COMPILED_SHADER_FILES})
+find_program(glslangValidator REQUIRED)
+add_dependencies(AuroraC Shader_Dependencies)
 
 
 #depends stuff
