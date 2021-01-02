@@ -25,6 +25,7 @@ AuroraGlobal Aurora;
 
 bool hasVK_EXT_display_control = false;
 bool hasVK_EXT_display_surface_counter = false;
+bool hasVK_KHR_display = false;
 
 void VK2D_log(vk2d::ReportSeverity severity, std::string_view message) {
 	LoggerPtr log = Logger::getLogger("aurora.ui");
@@ -52,6 +53,11 @@ void VK2D_instance_extensions(const std::vector<VkExtensionProperties>& availabl
 			hasVK_EXT_display_surface_counter = true;
 			instance_extensions.push_back(VK_EXT_DISPLAY_SURFACE_COUNTER_EXTENSION_NAME);
 			LOG4CXX_INFO(log, "Vulkan has VK_EXT_display_surface_counter extension");
+			
+		} else if (strcmp(VK_KHR_DISPLAY_EXTENSION_NAME, extensionProperties.extensionName) == 0) {
+			hasVK_KHR_display = true;
+			instance_extensions.push_back(VK_KHR_DISPLAY_EXTENSION_NAME);
+			LOG4CXX_INFO(log, "Vulkan has VK_KHR_display extension");
 			break;
 		}
 	}
@@ -133,17 +139,90 @@ int main(int argc, char **argv) {
 	Aurora.assets.font11 = Aurora.vk2dInstance->GetResourceManager()->LoadFontResource(std::filesystem::relative("assets/fonts/11pxbus.ttf"), 11, true, '?');
 	Aurora.assets.font13 = Aurora.vk2dInstance->GetResourceManager()->LoadFontResource(std::filesystem::relative("assets/fonts/13pxbus.ttf"), 13, true, '?');
 	
+	VkFence vsyncFence = VK_NULL_HANDLE;
 	{
 		auto window = new AuroraWindow();
 		window->setMainLayer(new StarSystemLayer(*window, galaxy->systems[0]));
 		window->addLayer(new ImGuiLayer(*window));
 		Aurora.windows.push_back(window);
+		
+		if (hasVK_EXT_display_surface_counter) {
+			
+			VkSurfaceCapabilities2EXT surfaceCaps {};
+			surfaceCaps.sType = VK_STRUCTURE_TYPE_SURFACE_CAPABILITIES_2_EXT;
+			
+			VkResult res = vk_GetPhysicalDeviceSurfaceCapabilities2EXT(window->window->impl->vk_physical_device, window->window->impl->vk_surface, &surfaceCaps);
+			
+			if (res == VK_SUCCESS) {
+				cout <<  "vsync surface " << surfaceCaps.supportedSurfaceCounters << " ";
+				
+				if (surfaceCaps.supportedSurfaceCounters & VK_SURFACE_COUNTER_VBLANK_EXT) {
+					cout <<  " vblank ext";
+				}
+				
+				cout << endl;
+			} else {
+				LOG4CXX_ERROR(log, "unable to get surface capabilites: " << res);
+			}
+			
+			hasVK_EXT_display_surface_counter = false;
+		}
+		
+		if (hasVK_EXT_display_control && hasVK_KHR_display) {
+			
+			uint32_t displays = 0;
+			auto res = vkGetPhysicalDeviceDisplayPropertiesKHR(Aurora.vk2dInstance->impl->GetVulkanPhysicalDevice(), &displays, nullptr);
+			
+			if (res == VK_SUCCESS) {
+				cout <<  "displays " << displays << endl;
+			} else {
+				LOG4CXX_ERROR(log, "unable to get displays: " << res);
+			}
+			
+			if (displays > 0) {
+				std::vector<VkDisplayPropertiesKHR> displayProperties (displays);
+				res = vkGetPhysicalDeviceDisplayPropertiesKHR(Aurora.vk2dInstance->impl->GetVulkanPhysicalDevice(), &displays, displayProperties.data());
+				if (res != VK_SUCCESS) {
+					LOG4CXX_ERROR(log, "unable to get displayProperties: " << res);
+				}
+				
+				VkFenceCreateInfo fence_create_info {};
+				fence_create_info.sType		= VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
+				fence_create_info.pNext		= nullptr;
+				fence_create_info.flags		= 0;
+			
+				res = vkCreateFence(
+					Aurora.vk2dInstance->impl->GetVulkanDevice(),
+					&fence_create_info,
+					nullptr,
+					&vsyncFence
+				);
+				if (res != VK_SUCCESS ) {
+					LOG4CXX_ERROR(log, "unable to create vsync fence: " << res);
+					return false;
+				}
+				
+				PFN_vkRegisterDisplayEventEXT vk_RegisterDisplayEventEXT = VK_NULL_HANDLE;
+				vk_RegisterDisplayEventEXT = (PFN_vkRegisterDisplayEventEXT) vkGetDeviceProcAddr(Aurora.vk2dInstance->impl->GetVulkanDevice(), "vkRegisterDisplayEventEXT");
+				
+				VkDisplayEventInfoEXT displayEventInfo {};
+				displayEventInfo.sType = VK_STRUCTURE_TYPE_DISPLAY_EVENT_INFO_EXT;
+				displayEventInfo.displayEvent = VK_DISPLAY_EVENT_TYPE_FIRST_PIXEL_OUT_EXT;
+				
+				res = vk_RegisterDisplayEventEXT(window->window->impl->vk_device, displayProperties[0].display, &displayEventInfo, nullptr, &vsyncFence);
+				
+				if (res == VK_SUCCESS) {
+					cout <<  "registered vsync event"<< endl;
+				} else {
+					LOG4CXX_ERROR(log, "unable to get vsync counter: " << res);
+				}
+			}
+		}
 	}
 	
 	cout <<  "running" << endl;
 	
-	uint32_t targetFrameRate = 120;
-	nanoseconds targetFrameDelay = duration_cast<nanoseconds>(1s) / targetFrameRate;
+	nanoseconds targetFrameDelay = duration_cast<nanoseconds>(1s) / Aurora.settings.render.targetFrameRate;
 	assert(targetFrameDelay > 0ns);
 	
 	nanoseconds accumulator = 0s;
@@ -203,39 +282,42 @@ int main(int argc, char **argv) {
 			for (AuroraWindow* window : Aurora.windows) {
 				window->render();
 				
-				if (hasVK_EXT_display_surface_counter) {
-					VkSurfaceCapabilities2EXT surfaceCaps {};
-					surfaceCaps.sType = VK_STRUCTURE_TYPE_SURFACE_CAPABILITIES_2_EXT;
-					VkResult res = vk_GetPhysicalDeviceSurfaceCapabilities2EXT(window->window->impl->vk_physical_device, window->window->impl->vk_surface, &surfaceCaps);
+				if (hasVK_EXT_display_control) {
+					
+					// vkGetDeviceProcAddr is slightly faster but specific to each device: https://stackoverflow.com/questions/35504545/vulkan-difference-between-vkgetinstanceprocaddress-and-vkgetdeviceprocaddress
+					PFN_vkGetSwapchainCounterEXT vk_GetSwapchainCounterEXT = VK_NULL_HANDLE;
+					vk_GetSwapchainCounterEXT = (PFN_vkGetSwapchainCounterEXT) vkGetDeviceProcAddr(Aurora.vk2dInstance->impl->GetVulkanDevice(), "vkGetSwapchainCounterEXT");
+					
+					uint64_t counter;
+					VkResult res = vk_GetSwapchainCounterEXT(window->window->impl->vk_device, window->window->impl->vk_swapchain, VK_SURFACE_COUNTER_VBLANK_BIT_EXT, &counter);
 					
 					if (res == VK_SUCCESS) {
-						cout <<  "vsync surface " << surfaceCaps.supportedSurfaceCounters << " ";
-						
-						if (surfaceCaps.supportedSurfaceCounters & VK_SURFACE_COUNTER_VBLANK_EXT) {
-							cout <<  " vblank ext";
-						}
-						
-						cout << endl;
+						cout <<  "vsync counter " << counter << endl;
 					} else {
-						LOG4CXX_ERROR(log, "unable to get surface capabilites: " << res);
+						LOG4CXX_ERROR(log, "unable to get vsync counter: " << res);
+						hasVK_EXT_display_control = false;
 					}
 				}
+			}
+			
+			if (vsyncFence != VK_NULL_HANDLE) {
 				
-//				if (hasVK_EXT_display_control) {
-//					
-//					PFN_vkGetSwapchainCounterEXT vk_GetSwapchainCounterEXT = VK_NULL_HANDLE;
-//					// Get device is slightly faster but specific to each device: https://stackoverflow.com/questions/35504545/vulkan-difference-between-vkgetinstanceprocaddress-and-vkgetdeviceprocaddress
-//					vk_GetSwapchainCounterEXT = (PFN_vkGetSwapchainCounterEXT) vkGetDeviceProcAddr(Aurora.vk2dInstance->impl->GetVulkanDevice(), "vkGetSwapchainCounterEXT");
-//					
-//					uint64_t counter;
-//					VkResult res = vk_GetSwapchainCounterEXT(window->window->impl->vk_device, (VkSwapchainKHR)(intptr_t) window->window->impl->next_image, VK_SURFACE_COUNTER_VBLANK_BIT_EXT, &counter);
-//					
-//					if (res == VK_SUCCESS) {
-//						cout <<  "vsync counter " << counter << endl;
-//					} else {
-//						LOG4CXX_ERROR(log, "unable to get vsync counter: " << res);
-//					}
-//				}
+				auto res = vkGetFenceStatus(Aurora.vk2dInstance->impl->GetVulkanDevice(), vsyncFence);
+				
+				if (res == VK_SUCCESS) {
+					cout <<  "vsync signaled " << endl;
+					
+					res = vkResetFences(Aurora.vk2dInstance->impl->GetVulkanDevice(), 1, &vsyncFence);
+					if (res != VK_SUCCESS) {
+						LOG4CXX_ERROR(log, "unable resetting vsync fence: " << res);
+					}
+					
+				} else if (res == VK_NOT_READY) {
+					cout <<  "vsync not signaled " << endl;
+					
+				} else {
+					LOG4CXX_ERROR(log, "unable get vsync fence status: " << res);
+				}
 			}
 			
 			for (size_t i=0; i < Aurora.windows.size(); i++) {

@@ -21,6 +21,7 @@ namespace vk2d {
 struct Settings {
 	struct {
 		bool vsync = false;
+		uint16_t targetFrameRate = 120;
 		float zoomSensitivity = 1.25;
 		bool debugDisableStrategicView = false;
 		bool debugSpatialPartitioning = false;
