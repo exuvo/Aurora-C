@@ -454,7 +454,7 @@ int main(int argc, char **argv) {
 					vk_GetSwapchainCounterEXT = (PFN_vkGetSwapchainCounterEXT) vkGetDeviceProcAddr(Aurora.vk2dInstance->impl->GetVulkanDevice(), "vkGetSwapchainCounterEXT");
 					
 					uint64_t counter;
-					VkResult res = vk_GetSwapchainCounterEXT(window->window->impl->vk_device, window->window->impl->vk_swapchain, VK_SURFACE_COUNTER_VBLANK_BIT_EXT, &counter);
+					VkResult res = vk_GetSwapchainCounterEXT(window->window->impl->vk_device, window->window->impl->vk_swapchain, VK_SURFACE_COUNTER_VBLANK_EXT, &counter);
 					
 					if (res == VK_SUCCESS) {
 						cout <<  "vsync counter " << counter << endl;
