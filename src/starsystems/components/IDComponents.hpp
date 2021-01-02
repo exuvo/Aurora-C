@@ -32,6 +32,8 @@ struct EntityReference {
 	entt::entity entityID;
 	EntityUUID entityUUID;
 
+	EntityReference(): system(nullptr), entityID(entt::null), entityUUID() {}
+	
 	EntityReference(StarSystem* system, entt::entity entityID, EntityUUID entityUUID)
 	: system(system), entityID(entityID), entityUUID(entityUUID) {}
 	

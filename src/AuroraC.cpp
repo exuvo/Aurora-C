@@ -26,8 +26,6 @@
 using namespace std;
 using namespace log4cxx;
 
-//TODO Port simulation, test performance
-
 AuroraGlobal Aurora;
 
 bool hasVK_EXT_display_control = false;
@@ -95,7 +93,6 @@ void VK2D_device_extensions(const std::vector<VkExtensionProperties>& available_
 }
 
 PFN_vkGetPhysicalDeviceSurfaceCapabilities2EXT vk_GetPhysicalDeviceSurfaceCapabilities2EXT = VK_NULL_HANDLE;
-//PFN_vkGetSwapchainCounterEXT vk_GetSwapchainCounterEXT = VK_NULL_HANDLE;
 PFN_vkGetRandROutputDisplayEXT vk_GetRandROutputDisplayEXT = VK_NULL_HANDLE;
 
 std::thread* vsyncThread = nullptr;
@@ -144,10 +141,6 @@ int main(int argc, char **argv) {
 	if (hasVK_EXT_display_surface_counter) {
 		vk_GetPhysicalDeviceSurfaceCapabilities2EXT = (PFN_vkGetPhysicalDeviceSurfaceCapabilities2EXT) vkGetInstanceProcAddr(Aurora.vk2dInstance->impl->GetVulkanInstance(), "vkGetPhysicalDeviceSurfaceCapabilities2EXT");
 	}
-	
-//	if (hasVK_EXT_display_control) {
-//		vk_GetSwapchainCounterEXT = (PFN_vkGetSwapchainCounterEXT) vkGetInstanceProcAddr(Aurora.vk2dInstance->impl->GetVulkanInstance(), "vkGetSwapchainCounterEXT");
-//	}
 	
 	if (hasVK_EXT_acquire_xlib_display) {
 		vk_GetRandROutputDisplayEXT = (PFN_vkGetRandROutputDisplayEXT) vkGetInstanceProcAddr(Aurora.vk2dInstance->impl->GetVulkanInstance(), "vkGetRandROutputDisplayEXT");
@@ -224,40 +217,6 @@ int main(int argc, char **argv) {
 						
 						vsyncThread = new std::thread(vsyncWorker, vkDisplay);
 						
-//						VkFenceCreateInfo fence_create_info {};
-//						fence_create_info.sType		= VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
-//						fence_create_info.pNext		= nullptr;
-//						fence_create_info.flags		= 0;
-//					
-//						res = vkCreateFence(
-//							Aurora.vk2dInstance->impl->GetVulkanDevice(),
-//							&fence_create_info,
-//							nullptr,
-//							&vsyncFence
-//						);
-//						if (res != VK_SUCCESS ) {
-//							LOG4CXX_ERROR(log, "unable to create vsync fence: " << res);
-//							return false;
-//						}
-//						
-//						PFN_vkRegisterDisplayEventEXT vk_RegisterDisplayEventEXT = VK_NULL_HANDLE;
-//						vk_RegisterDisplayEventEXT = (PFN_vkRegisterDisplayEventEXT) vkGetDeviceProcAddr(Aurora.vk2dInstance->impl->GetVulkanDevice(), "vkRegisterDisplayEventEXT");
-//						
-//						VkDisplayEventInfoEXT displayEventInfo {};
-//						displayEventInfo.sType = VK_STRUCTURE_TYPE_DISPLAY_EVENT_INFO_EXT;
-//						displayEventInfo.displayEvent = VK_DISPLAY_EVENT_TYPE_FIRST_PIXEL_OUT_EXT;
-//						
-//						res = vk_RegisterDisplayEventEXT(window->window->impl->vk_device, vkDisplay, &displayEventInfo, nullptr, &vsyncFence);
-//						
-//						if (res == VK_SUCCESS) {
-//							cout <<  "registered vsync event"<< endl;
-//						} else {
-//							LOG4CXX_ERROR(log, "unable to register vsync listener: " << res);
-//							
-//							vkDestroyFence(Aurora.vk2dInstance->impl->GetVulkanDevice(), vsyncFence, nullptr);
-//							vsyncFence = VK_NULL_HANDLE;
-//						}
-						
 					} else {
 						LOG4CXX_ERROR(log, "unable to get current X11 display: " << res);
 					}
@@ -286,43 +245,6 @@ int main(int argc, char **argv) {
 				if (vsyncThread == nullptr) {
 					vsyncThread = new std::thread(vsyncWorker, displayProperties[0].display);
 				}
-				
-//				if (vsyncFence == VK_NULL_HANDLE) {
-//					
-//					VkFenceCreateInfo fence_create_info {};
-//					fence_create_info.sType		= VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
-//					fence_create_info.pNext		= nullptr;
-//					fence_create_info.flags		= 0;
-//				
-//					res = vkCreateFence(
-//						Aurora.vk2dInstance->impl->GetVulkanDevice(),
-//						&fence_create_info,
-//						nullptr,
-//						&vsyncFence
-//					);
-//					if (res != VK_SUCCESS ) {
-//						LOG4CXX_ERROR(log, "unable to create vsync fence: " << res);
-//						return false;
-//					}
-//					
-//					PFN_vkRegisterDisplayEventEXT vk_RegisterDisplayEventEXT = VK_NULL_HANDLE;
-//					vk_RegisterDisplayEventEXT = (PFN_vkRegisterDisplayEventEXT) vkGetDeviceProcAddr(Aurora.vk2dInstance->impl->GetVulkanDevice(), "vkRegisterDisplayEventEXT");
-//					
-//					VkDisplayEventInfoEXT displayEventInfo {};
-//					displayEventInfo.sType = VK_STRUCTURE_TYPE_DISPLAY_EVENT_INFO_EXT;
-//					displayEventInfo.displayEvent = VK_DISPLAY_EVENT_TYPE_FIRST_PIXEL_OUT_EXT;
-//					
-//					res = vk_RegisterDisplayEventEXT(window->window->impl->vk_device, displayProperties[0].display, &displayEventInfo, nullptr, &vsyncFence);
-//					
-//					if (res == VK_SUCCESS) {
-//						cout <<  "registered vsync event"<< endl;
-//					} else {
-//						LOG4CXX_ERROR(log, "unable to get vsync counter: " << res);
-//						
-//						vkDestroyFence(Aurora.vk2dInstance->impl->GetVulkanDevice(), vsyncFence, nullptr);
-//						vsyncFence = VK_NULL_HANDLE;
-//					}
-//				}
 			}
 		}
 	}
@@ -341,73 +263,8 @@ int main(int argc, char **argv) {
 		
 		// make each window its own thread? maybe with separate vk2dInstance?
 		
-		//TODO time well against vsync using VK_EXT_display_control and VK_EXT_display_surface_counter
-		// https://stackoverflow.com/questions/61031850/how-to-get-the-next-frame-presentation-time-in-vulkan
-		// https://github.com/KhronosGroup/Vulkan-Docs/issues/370
-		// https://www.khronos.org/registry/vulkan/specs/1.2-extensions/man/html/VK_EXT_display_control.html
-		// https://www.khronos.org/registry/vulkan/specs/1.2-extensions/man/html/VK_EXT_display_surface_counter.html
-		// using OpenXR https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#frame-synchronization
-		
 		if (!Aurora.settings.render.vsync) {
 			while (true) {
-				
-//				{
-//					if (vsyncFence != VK_NULL_HANDLE) {
-//						auto res = vkWaitForFences(Aurora.vk2dInstance->impl->GetVulkanDevice(), 1, &vsyncFence, VK_TRUE, 1000);
-//							
-//						if (res == VK_SUCCESS) {
-//			//						cout <<  "vsync signaled " << endl;
-//							cout <<  "vs ";
-//							
-//							vkDestroyFence(Aurora.vk2dInstance->impl->GetVulkanDevice(), vsyncFence, nullptr);
-//							vsyncFence = VK_NULL_HANDLE;
-//							
-//						} else if (res == VK_TIMEOUT ) {
-//			//						cout <<  "vsync not signaled " << endl;
-//							cout <<  "!vs ";
-//							
-//						} else {
-//							LOG4CXX_ERROR(log, "unable to get vsync fence status: " << res);
-//						}
-//					}
-//					
-//					if (vsyncFence == VK_NULL_HANDLE) {
-//						
-//						VkFenceCreateInfo fence_create_info {};
-//						fence_create_info.sType		= VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
-//						fence_create_info.pNext		= nullptr;
-//						fence_create_info.flags		= 0;
-//					
-//						auto res = vkCreateFence(
-//							Aurora.vk2dInstance->impl->GetVulkanDevice(),
-//							&fence_create_info,
-//							nullptr,
-//							&vsyncFence
-//						);
-//						if (res != VK_SUCCESS ) {
-//							LOG4CXX_ERROR(log, "unable to create vsync fence: " << res);
-//						}
-//						
-//						static PFN_vkRegisterDisplayEventEXT vk_RegisterDisplayEventEXT = VK_NULL_HANDLE;
-//						if (vk_RegisterDisplayEventEXT == VK_NULL_HANDLE) {
-//							vk_RegisterDisplayEventEXT = (PFN_vkRegisterDisplayEventEXT) vkGetDeviceProcAddr(Aurora.vk2dInstance->impl->GetVulkanDevice(), "vkRegisterDisplayEventEXT");
-//						}
-//						
-//						VkDisplayEventInfoEXT displayEventInfo {};
-//						displayEventInfo.sType = VK_STRUCTURE_TYPE_DISPLAY_EVENT_INFO_EXT;
-//						displayEventInfo.displayEvent = VK_DISPLAY_EVENT_TYPE_FIRST_PIXEL_OUT_EXT;
-//						
-//						res = vk_RegisterDisplayEventEXT(Aurora.vk2dInstance->impl->GetVulkanDevice(), vkDisplay, &displayEventInfo, nullptr, &vsyncFence);
-//						
-//						if (res == VK_SUCCESS) {
-//							cout <<  "registered vsync event"<< endl;
-//							
-//						} else {
-//							LOG4CXX_ERROR(log, "unable to register vsync listener: " << res);
-//						}
-//					}
-//				}
-				
 				nanoseconds now = getNanos();
 				accumulator += now - lastRun;
 				lastRun = now;
@@ -465,26 +322,6 @@ int main(int argc, char **argv) {
 				}
 			}
 			
-//			if (vsyncFence != VK_NULL_HANDLE) {
-//				
-//				auto res = vkGetFenceStatus(Aurora.vk2dInstance->impl->GetVulkanDevice(), vsyncFence);
-//				
-//				if (res == VK_SUCCESS) {
-//					cout <<  "vsync signaled " << endl;
-//					
-//					res = vkResetFences(Aurora.vk2dInstance->impl->GetVulkanDevice(), 1, &vsyncFence);
-//					if (res != VK_SUCCESS) {
-//						LOG4CXX_ERROR(log, "unable resetting vsync fence: " << res);
-//					}
-//					
-//				} else if (res == VK_NOT_READY) {
-//					cout <<  "vsync not signaled " << endl;
-//					
-//				} else {
-//					LOG4CXX_ERROR(log, "unable get vsync fence status: " << res);
-//				}
-//			}
-			
 			for (size_t i=0; i < Aurora.windows.size(); i++) {
 				AuroraWindow* window = Aurora.windows[i];
 				
@@ -532,7 +369,12 @@ int main(int argc, char **argv) {
 	exit(0);
 }
 
-#include <malloc.h>
+//TODO time well against vsync using VK_EXT_display_control and VK_EXT_display_surface_counter
+		// https://stackoverflow.com/questions/61031850/how-to-get-the-next-frame-presentation-time-in-vulkan
+		// https://github.com/KhronosGroup/Vulkan-Docs/issues/370
+		// https://www.khronos.org/registry/vulkan/specs/1.2-extensions/man/html/VK_EXT_display_control.html
+		// https://www.khronos.org/registry/vulkan/specs/1.2-extensions/man/html/VK_EXT_display_surface_counter.html
+		// using OpenXR https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#frame-synchronization
 
 nanoseconds lastVsync = getNanos();
 void vsyncWorker(VkDisplayKHR vkDisplay) {

@@ -8,8 +8,8 @@
 #ifndef SRC_GALAXY_SHIPHULL_HPP_
 #define SRC_GALAXY_SHIPHULL_HPP_
 
-
-
-
+struct ShipHull {
+	
+};
 
 #endif /* SRC_GALAXY_SHIPHULL_HPP_ */

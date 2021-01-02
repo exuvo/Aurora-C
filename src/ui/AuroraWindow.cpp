@@ -30,8 +30,10 @@ AuroraWindow::AuroraWindow() {
 	std::cout << "creating window" << std::endl;
 	
 	vk2d::WindowCreateInfo window_create_info{};
+	window_create_info.title = "Aurora C";
 	window_create_info.size = { 1024, 768 };
-	window_create_info.coordinate_space = vk2d::RenderCoordinateSpace::TEXEL_SPACE_CENTERED;
+	window_create_info.coordinate_space = vk2d::RenderCoordinateSpace::TEXEL_SPACE_CENTERED; //fixme blurry text with uneven window height/width
+//	window_create_info.coordinate_space = vk2d::RenderCoordinateSpace::TEXEL_SPACE;
 	window_create_info.event_handler = this;
 //		window_create_info.fullscreen_monitor = ?
 //		window_create_info.fullscreen_refresh_rate = ?
@@ -131,7 +133,9 @@ void AuroraWindow::render() {
 		uint32_t milliRenderTimeAverage = (uint64_t) renderTimeAverage / Units::NANO_MILLI;
 		
 		std::string text = fmt::format("{} {:02}.{:02}ms {:02}.{:02}ms, {:02}.{:02}ms", Aurora.fps, milliFrameStartTime, centinanosFrameStartTime, milliFrameTimeAverage, centinanosFrameTimeAverage, milliRenderTimeAverage, centinanosRenderTimeAverage);
-		vk2d::Mesh text_mesh = vk2d::GenerateTextMesh(Aurora.assets.font, { -(int32_t)(window->GetSize().x / 2) + 2, -(int32_t) window->GetSize().y / 2 + 15 }, text);
+		vk2d::Vector2f xy = { -(int32_t)(window->GetSize().x / 2) + 2, -(int32_t) window->GetSize().y / 2 + 15 };
+//		vk2d::Vector2f xy = { 15, 15 };
+		vk2d::Mesh text_mesh = vk2d::GenerateTextMesh(Aurora.assets.font, xy, text);
 		window->DrawMesh(text_mesh);
 	}
 	

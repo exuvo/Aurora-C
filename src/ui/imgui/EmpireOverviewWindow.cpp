@@ -8,6 +8,7 @@
 #include <imgui.h>
 #include <imgui_internal.h>
 
+#include "Aurora.hpp"
 #include "ui/imgui/ImGuiLayer.hpp"
 #include "galaxy/Player.hpp"
 #include "starsystems/StarSystem.hpp"
@@ -15,6 +16,8 @@
 #include "EmpireOverviewWindow.hpp"
 #include "utils/RenderUtils.hpp"
 #include "utils/ImGuiUtils.hpp"
+
+#include "starsystems/components/ColonyComponents.hpp"
 
 void EmpireOverviewWindow::render() {
 	ImGuiStyle& style = ImGui::GetStyle();
@@ -66,7 +69,7 @@ void EmpireOverviewWindow::render() {
 			inlineIcons.clear();
 			
 			for (StarSystem* system : Player::current->visibleSystems) {
-				if (ImGui::TreeNodeEx(std::to_string((entt::id_type)system->galacticEntityID).c_str(), ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_NoTreePushOnOpen, system->name.c_str())) {
+				if (ImGui::TreeNodeEx(std::to_string((entt::id_type) system->galacticEntityID).c_str(), ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_NoTreePushOnOpen, system->name.c_str())) {
 					
 					ShadowStarSystem& shadow = *system->shadow;
 					
@@ -127,50 +130,61 @@ void EmpireOverviewWindow::render() {
 //							window->DrawList.AddImage(icon.baseTexture->getTexture().textureObjectHandle, bb.Min + 1, bb.Max - 1, ImVec2(icon.baseTexture->u, icon.baseTexture->v), ImVec2(icon.baseTexture->u2, icon.baseTexture->v2), ImGui::GetColorU32(ImVec4(color.r, color.g, color.g, color.a)));
 //						}
 					};
-//					
-//					val systemColonies = empire.colonies.filter { ref -> ref.system == system }
-//					
-//					group {
-//						window->dc.layoutType = LayoutType.Horizontal
-//						pushStyleVar(StyleVar.ItemSpacing, ImVec2(0,0))
+					
+					std::unique_lock<LockableBase(std::recursive_mutex)> lock(Aurora.galaxy->shadowLock);
+					
+					std::vector<EntityReference> systemColonies(empire->colonies.size());
+					
+					for (EntityReference& ref : empire->colonies) {
+						if (ref.system == system) {
+							systemColonies.push_back(ref);
+						}
+					}
+					
+					ImGui::BeginGroup();
+					{
+//						window->dc.layoutType = LayoutType.Horizontal;
+//						pushStyleVar(StyleVar.ItemSpacing, ImVec2(0,0));
 //						
-//						systemColonies.forEachFast { colonyRef ->
+						for (EntityReference& colonyRef : systemColonies) {
+							
+							entt::entity entityID = colonyRef.entityID;
+							
+							NameComponent* nameC = shadow.registry.try_get<NameComponent>(entityID);
+							ColonyComponent& colony = shadow.registry.get<ColonyComponent>(entityID);
+							StrategicIconComponent& icon = shadow.registry.get<StrategicIconComponent>(entityID);
 //							
-//							val entityID = colonyRef.entityID
-//							
-//							val name = nameMapper.get(entityID)?.name
-//							val colony = colonyMapper.get(entityID)
-//							val icon = strategicIconMapper.get(entityID)
-//							
-//							drawIcon(entityID, icon, isSelected(entityID, system))
+//							drawIcon(entityID, icon, isSelected(entityID, system));
 //							
 //							if (isItemHovered()) {
-//								popStyleVar()
+//								popStyleVar();
 //								tooltip {
-//									textUnformatted("$name")
-//									textUnformatted("Population: ${colony.population}")
+//									textUnformatted("$name");
+//									textUnformatted("Population: ${colony.population}");
 //								}
-//								pushStyleVar(StyleVar.ItemSpacing, ImVec2(0,0))
+//								pushStyleVar(StyleVar.ItemSpacing, ImVec2(0,0));
 //							}
 //							
 //							if (isItemClicked()) {
 //								if (Player.current.selection.isNotEmpty() && !Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT)) {
-//									Player.current.selection.clear()
+//									Player.current.selection.clear();
 //								}
 //								
-//								Player.current.selection.add(shadow.getEntityReference(entityID))
+//								Player.current.selection.add(shadow.getEntityReference(entityID));
 //							}
 //							
 //							if (window->dc.cursorPos.x + 17 > windowContentRegionWidth) {
-//								newLine()
+//								newLine();
 //							}
-//						}
-//						
-//						popStyleVar()
-//						window->dc.layoutType = LayoutType.Vertical
-//					}
-//					
-//					group {
+						}
+						
+//						popStyleVar();
+//						window->dc.layoutType = LayoutType.Vertical;
+//						ImGui::EndGroup();
+					}
+					
+					ImGui::BeginGroup();
+					{
 //						window->dc.layoutType = LayoutType.Horizontal
 //						pushStyleVar(StyleVar.ItemSpacing, ImVec2(0,0))
 //						
@@ -264,9 +278,10 @@ void EmpireOverviewWindow::render() {
 //						
 //						popStyleVar()
 //						window->dc.layoutType = LayoutType.Vertical
-//					}
-//					
-//					//TODO show other factions
+						ImGui::EndGroup();
+					}
+					
+					//TODO show other factions
 				}
 			}
 		}

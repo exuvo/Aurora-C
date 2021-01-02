@@ -19,6 +19,8 @@ class Empire {
 		std::string name;
 		vk2d::Colorf color = vk2d::Colorf::WHITE();
 		boost::circular_buffer<Command*> commandQueue {128}; // For local player and ai
+		std::vector<EntityReference> colonies;
+		std::vector<EntityReference> stations;
 		
 		Empire(std::string aName) {
 			name = aName;
