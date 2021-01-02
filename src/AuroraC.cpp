@@ -58,7 +58,6 @@ void VK2D_instance_extensions(const std::vector<VkExtensionProperties>& availabl
 			hasVK_KHR_display = true;
 			instance_extensions.push_back(VK_KHR_DISPLAY_EXTENSION_NAME);
 			LOG4CXX_INFO(log, "Vulkan has VK_KHR_display extension");
-			break;
 		}
 	}
 }
