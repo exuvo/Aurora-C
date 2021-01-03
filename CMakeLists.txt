@@ -254,7 +254,12 @@ target_link_libraries(AuroraC PRIVATE ${Log4Cxx_LIBRARIES} ${APRUTIL_LIBRARIES} 
 # Assest
 ################
 
-add_custom_target(symlink_assets ALL COMMAND ${CMAKE_COMMAND} -E create_symlink "${PROJECT_SOURCE_DIR}/assets" "${PROJECT_BINARY_DIR}/assets")
+add_custom_command(
+	OUTPUT "${PROJECT_BINARY_DIR}/assets"
+	COMMENT "Symlinking assets"
+	COMMAND ${CMAKE_COMMAND} -E create_symlink "${PROJECT_SOURCE_DIR}/assets" "${PROJECT_BINARY_DIR}/assets"
+)
+add_custom_target(symlink_assets DEPENDS "${PROJECT_BINARY_DIR}/assets")
 add_dependencies(AuroraC symlink_assets)
 
 ################
