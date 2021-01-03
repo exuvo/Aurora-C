@@ -25,6 +25,8 @@
 #include "utils/Utils.hpp"
 #include "utils/Math.hpp"
 
+#include "ui/shaderAPI/ShaderAPI.hpp"
+
 using namespace std::chrono;
 
 AuroraWindow::AuroraWindow() {
@@ -138,10 +140,16 @@ void AuroraWindow::render() {
 		window->DrawMesh(text_mesh);
 	}
 	
+	// HERE Temp render
+	shaderAPI::ShaderAPI tempClass = shaderAPI::ShaderAPI{window->impl->instance->GetVulkanInstance(), window->impl->vk_device, window->impl->vk_physical_device, window->impl->vk_render_pass, window->impl->extent};
+	tempClass.draw(window->impl->vk_render_command_buffers[window->impl->next_image]);
+
 	if(!window->EndRender()) {
 		LOG4CXX_ERROR(log, "Error rendering window end");
 		return;
 	}
+
+	tempClass.clear();
 	
 	renderTime = getNanos() - now;
 	renderTimeAverage = exponentialAverage(renderTime.count(), renderTimeAverage, 10.0);
