@@ -85,6 +85,10 @@ struct ShipyardModification {
 	bool operator==(const ShipyardModification& o) const {
 		return this == &o;
 	}
+	
+	fun getCost(shipyard: Shipyard): Long
+	fun complete(shipyard: Shipyard)
+	fun getDescription(): String
 };
 
 struct ShipyardModifications {
@@ -103,9 +107,15 @@ struct Shipyard {
 	std::vector<ShipyardSlipway> slipways;
 	
 	ShipyardModification* modificationActivity = nullptr;
+	uint32_t modificationRate = 1000; // kg per hour
+	uint64_t modificationProgress = 0;
 	
 	Shipyard(ShipyardLocation* location, ShipyardType* type): location(location), type(type) {
 		buildRate = location->baseBuildrate;
+		
+		if (location == ShipyardLocations::TERRESTIAL) {
+			fuelCostPerMass = 1.0;
+		}
 	};
 };
 
