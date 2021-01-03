@@ -17,6 +17,8 @@
 #include "galaxy/Resources.hpp"
 #include "galaxy/ShipHull.hpp"
 
+struct Shipyard;
+
 struct Building {
 	std::string name;
 	std::map<Resource, uint64_t> cost;
@@ -79,22 +81,52 @@ struct ShipyardTypes {
 	static inline constexpr ShipyardType MILITARY { "MIL", 150 };
 };
 
-struct ShipyardModification {
+struct ShipyardModificationEnum {
 	const char name[16];
 	
-	bool operator==(const ShipyardModification& o) const {
+	bool operator==(const ShipyardModificationEnum& o) const {
 		return this == &o;
 	}
-	
-	fun getCost(shipyard: Shipyard): Long
-	fun complete(shipyard: Shipyard)
-	fun getDescription(): String
 };
 
 struct ShipyardModifications {
-	static inline constexpr ShipyardModification RETOOL { "Retool" };
-	static inline constexpr ShipyardModification EXPAND_CAPACITY { "Expand capacity" };
-	static inline constexpr ShipyardModification ADD_SLIPWAY { "Add slipway" };
+	static inline constexpr ShipyardModificationEnum RETOOL { "Retool" };
+	static inline constexpr ShipyardModificationEnum EXPAND_CAPACITY { "Expand capacity" };
+	static inline constexpr ShipyardModificationEnum ADD_SLIPWAY { "Add slipway" };
+};
+
+struct ShipyardModification {
+	virtual ~ShipyardModification() = default;
+	
+	virtual uint64_t getCost(Shipyard& shipyard) = 0;
+	virtual void complete(Shipyard& shipyard) = 0;
+	virtual std::string getDescription() = 0;
+};
+
+class ShipyardModificationExpandCapacity: public ShipyardModification {
+	uint64_t addedCapacity;
+	
+	ShipyardModificationExpandCapacity(uint64_t addedCapacity): addedCapacity(addedCapacity) {};
+	
+	virtual uint64_t getCost(Shipyard& shipyard);
+	virtual void complete(Shipyard& shipyard);
+	virtual std::string getDescription();
+};
+
+class ShipyardModificationRetool: public ShipyardModification {
+	ShipHull& assignedHull; 
+	
+	ShipyardModificationRetool(ShipHull& assignedHull): assignedHull(assignedHull) {};
+	
+	virtual uint64_t getCost(Shipyard& shipyard);
+	virtual void complete(Shipyard& shipyard);
+	virtual std::string getDescription();
+};
+
+class ShipyardModificationAddSlipway: public ShipyardModification {
+	virtual uint64_t getCost(Shipyard& shipyard);
+	virtual void complete(Shipyard& shipyard);
+	virtual std::string getDescription();
 };
 
 struct Shipyard {
@@ -113,7 +145,7 @@ struct Shipyard {
 	Shipyard(ShipyardLocation* location, ShipyardType* type): location(location), type(type) {
 		buildRate = location->baseBuildrate;
 		
-		if (location == ShipyardLocations::TERRESTIAL) {
+		if (location == &ShipyardLocations::TERRESTIAL) {
 			fuelCostPerMass = 1.0;
 		}
 	};

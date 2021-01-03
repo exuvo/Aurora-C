@@ -33,6 +33,8 @@ class StarSystemLayer: public UILayer {
 		virtual bool eventMouseButton(vk2d::MouseButton button, vk2d::ButtonAction action, vk2d::ModifierKeyFlags modifier_keys) override;
 		virtual bool eventScroll(vk2d::Vector2d scroll) override;
 		
+		StarSystem* getStarSystem() { return starSystem; };
+		
 	private:
 		StarSystem* starSystem;
 		ProfilerEvents profilerEvents;

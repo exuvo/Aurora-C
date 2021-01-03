@@ -18,6 +18,8 @@
 #include "Aurora.hpp"
 #include "ui/AuroraWindow.hpp"
 #include "ui/UILayer.hpp"
+#include "ui/StarSystemLayer.hpp"
+#include "ui/imgui/ImGuiLayer.hpp"
 #include "ui/RenderCache.hpp"
 #include "utils/dbg.h"
 #include "utils/Utils.hpp"
@@ -32,8 +34,7 @@ AuroraWindow::AuroraWindow() {
 	vk2d::WindowCreateInfo window_create_info{};
 	window_create_info.title = "Aurora C";
 	window_create_info.size = { 1024, 768 };
-	window_create_info.coordinate_space = vk2d::RenderCoordinateSpace::TEXEL_SPACE_CENTERED; //fixme blurry text with uneven window height/width
-//	window_create_info.coordinate_space = vk2d::RenderCoordinateSpace::TEXEL_SPACE;
+	window_create_info.coordinate_space = vk2d::RenderCoordinateSpace::TEXEL_SPACE;
 	window_create_info.event_handler = this;
 //		window_create_info.fullscreen_monitor = ?
 //		window_create_info.fullscreen_refresh_rate = ?
@@ -133,9 +134,7 @@ void AuroraWindow::render() {
 		uint32_t milliRenderTimeAverage = (uint64_t) renderTimeAverage / Units::NANO_MILLI;
 		
 		std::string text = fmt::format("{} {:02}.{:02}ms {:02}.{:02}ms, {:02}.{:02}ms", Aurora.fps, milliFrameStartTime, centinanosFrameStartTime, milliFrameTimeAverage, centinanosFrameTimeAverage, milliRenderTimeAverage, centinanosRenderTimeAverage);
-		vk2d::Vector2f xy = { -(int32_t)(window->GetSize().x / 2) + 2, -(int32_t) window->GetSize().y / 2 + 15 };
-//		vk2d::Vector2f xy = { 15, 15 };
-		vk2d::Mesh text_mesh = vk2d::GenerateTextMesh(Aurora.assets.font, xy, text);
+		vk2d::Mesh text_mesh = vk2d::GenerateTextMesh(Aurora.assets.font, { 2, 15 }, text);
 		window->DrawMesh(text_mesh);
 	}
 	
@@ -218,7 +217,10 @@ void AuroraWindow::EventWindowClose(vk2d::Window* window) {
 
 void AuroraWindow::EventCharacter(vk2d::Window* window, uint32_t character, vk2d::ModifierKeyFlags modifier_keys) {
 	if (character == 'n') {
-		Aurora.windows.push_back(new AuroraWindow());
+		AuroraWindow* window = new AuroraWindow();
+		window->setMainLayer(new StarSystemLayer(*window, getLayer<StarSystemLayer>().getStarSystem()));
+		window->addLayer(new ImGuiLayer(*window));
+		Aurora.windows.push_back(window);
 		return;
 	}
 	

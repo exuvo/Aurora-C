@@ -390,7 +390,7 @@ void StarSystemLayer::render() {
 	}
 	
 	if (tracking) {
-		vk2d::Mesh& text_mesh = RenderCache::getTextMeshCallerCentric(Aurora.assets.font, { -50, (int32_t) window.window->GetSize().y / 2 - 30 }, "Tracking");
+		vk2d::Mesh& text_mesh = RenderCache::getTextMeshCallerCentric(Aurora.assets.font, { window.window->GetSize().x / 2 - 50, window.window->GetSize().y - 30 }, "Tracking");
 		window.window->DrawMesh(text_mesh);
 	}
 	
@@ -402,8 +402,8 @@ void StarSystemLayer::render() {
 		oldGalaxyTime = milliseconds(Aurora.galaxy->time);
 	}
 	
-	float y = window.window->GetSize().y / 2 - 10;
-	float x = -(int)(window.window->GetSize().x / 2) + 5;
+	float y = window.window->GetSize().y - 10;
+	float x = 5;
 	
 //	std::cout << std::endl;
 	
@@ -441,7 +441,7 @@ void StarSystemLayer::render() {
 	
 	std::string text = fmt::format("zoom {:02}", zoomLevel);
 	vk2d::Vector2f bb = Aurora.assets.font->CalculateRenderedSize(text).GetAreaSize();
-	window.window->DrawMesh(RenderCache::getTextMeshCallerCentric(Aurora.assets.font, { window.window->GetSize().x / 2 - bb.x - 4 , y }, text));
+	window.window->DrawMesh(RenderCache::getTextMeshCallerCentric(Aurora.assets.font, { window.window->GetSize().x - bb.x - 4 , y }, text));
 }
 
 bool StarSystemLayer::keyAction(KeyActions_StarSystemLayer action) {
@@ -860,7 +860,7 @@ bool StarSystemLayer::eventScroll(vk2d::Vector2d scroll) {
 //	std::cout << "zoom:" << newZoom << ", zoomLevel:" << zoomLevel << std::endl;
 
 	if (scroll.y > 0) {
-		// Det som var under musen innan scroll ska fortsätta vara där efter zoom
+		// Det som var under pekaren innan scroll ska fortsätta vara där efter zoom
 		// http://stackoverflow.com/questions/932141/zooming-an-object-based-on-mouse-position
 
 		Vector2l diff = viewOffset - toWorldCoordinates(getMouseInScreenCordinates());
@@ -917,19 +917,25 @@ int StarSystemLayer::getCircleSegments(float radius) {
 
 Vector2i StarSystemLayer::getMouseInScreenCordinates() {
 	vk2d::Vector2i cursor = window.mousePos;
-	vk2d::Vector2u windowSize = window.window->GetSize();
-	windowSize /= 2;
-	cursor -= vk2d::Vector2i{ windowSize.x, windowSize.y };
 	return { cursor.x, cursor.y };
 }
 
 Vector2l StarSystemLayer::toWorldCoordinates(Vector2i screenCoordinates) {
 	Vector2d worldCoordinates = screenCoordinates.cast<double>();
+	
+	vk2d::Vector2u windowSize = window.window->GetSize() / 2;
+	worldCoordinates -= Vector2d{ windowSize.x, windowSize.y };
+	
 	worldCoordinates *= 1000 * zoom; // km to m
 	return worldCoordinates.cast<int64_t>() + viewOffset;
 }
 
 Matrix2l StarSystemLayer::toWorldCoordinates(Matrix2i screenCoordinates) {
+	vk2d::Vector2u windowSize = window.window->GetSize() / 2;
+	Matrix2i windowSizeMat;
+	windowSizeMat << windowSize.x, windowSize.y, windowSize.x, windowSize.y;
+	screenCoordinates -= windowSizeMat;
+	
 	Matrix2d worldCoordinates = screenCoordinates.cast<double>();
 	worldCoordinates *= 1000 * zoom; // km to m
 	Matrix2l worldCoordinates2 = worldCoordinates.cast<int64_t>();
@@ -940,16 +946,24 @@ Matrix2l StarSystemLayer::toWorldCoordinates(Matrix2i screenCoordinates) {
 
 Vector2i StarSystemLayer::toScreenCoordinates(Vector2l gameCordinates){
 	gameCordinates -= viewOffset;
-	Vector2d gameCordinates2 = gameCordinates.cast<double>();
-	gameCordinates2 /= zoom * 1000; // m to km
-	return gameCordinates2.cast<int32_t>();
+	Vector2d screenCordinates = gameCordinates.cast<double>();
+	screenCordinates /= zoom * 1000; // m to km
+	
+	vk2d::Vector2u windowSize = window.window->GetSize() / 2;
+	screenCordinates += Vector2d{ windowSize.x, windowSize.y };
+	return screenCordinates.cast<int32_t>();
 }
 
 Matrix2i StarSystemLayer::toScreenCoordinates(Matrix2l gameCordinates){
 	gameCordinates.row(0) -= viewOffset;
 	gameCordinates.row(1) -= viewOffset;
-	Matrix2d gameCordinates2 = gameCordinates.cast<double>();
-	gameCordinates2 /= zoom * 1000; // m to km
-	return gameCordinates2.cast<int32_t>();
+	Matrix2d screenCordinates = gameCordinates.cast<double>();
+	screenCordinates /= zoom * 1000; // m to km
+	
+	vk2d::Vector2u windowSize = window.window->GetSize() / 2;
+	Matrix2d windowSizeMat;
+	windowSizeMat << windowSize.x, windowSize.y, windowSize.x, windowSize.y;
+	screenCordinates += windowSizeMat;
+	return screenCordinates.cast<int32_t>();
 }
 

@@ -21,6 +21,6 @@
 #include "MiscComponents.hpp"
 #include "ShipComponent.hpp"
 #include "MunitionComponents.hpp"
-//#include "ColonyComponents.hpp"
+#include "ColonyComponents.hpp"
 
 #endif /* SRC_STARSYSTEMS_COMPONENTS_COMPONENTS_HPP_ */

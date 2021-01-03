@@ -17,8 +17,6 @@
 #include "utils/RenderUtils.hpp"
 #include "utils/ImGuiUtils.hpp"
 
-#include "starsystems/components/ColonyComponents.hpp"
-
 void EmpireOverviewWindow::render() {
 	ImGuiStyle& style = ImGui::GetStyle();
 	float itemSpaceX = style.ItemSpacing.x;
