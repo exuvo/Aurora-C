@@ -13,7 +13,7 @@
 #include "MovementComponents.hpp"
 #include "utils/Math.hpp"
 
-// In m, cm/s, cm/s�
+// In m, cm/s, cm/s²
 struct MovementValues {
 		Vector2l position;
 		Vector2l velocity;

@@ -44,7 +44,7 @@ class StarSystem {
 		Galaxy* galaxy = nullptr;
 		entt::registry registry;
 		Systems* systems = nullptr;
-
+		
 		StarSystem(std::string name) {
 			this->name = name;
 		}
@@ -75,9 +75,12 @@ class StarSystem {
 		std::unordered_map<EntityUUID, entt::entity, EntityUUID::hasher> uuids;
 		EntityReference getEntityReference(entt::entity entity);
 		
+		
 	private:
 		LoggerPtr log = Logger::getLogger("aurora.starsystem");
 		uint32_t entityUIDCounter = 0;
 };
+
+std::ostream& operator<<(std::ostream& os, const StarSystem& s);
 
 #endif /* SRC_STARSYSTEMS_STARSYSTEM_HPP_ */

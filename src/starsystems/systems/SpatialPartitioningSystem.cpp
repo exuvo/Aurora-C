@@ -17,7 +17,7 @@ bool SpatialPartitioningSystem::comparator::operator() (entt::entity a, entt::en
 	SpatialPartitioningComponent& partitioningA = registry.get<SpatialPartitioningComponent>(a);
 	SpatialPartitioningComponent& partitioningB = registry.get<SpatialPartitioningComponent>(b);
  
-	return partitioningA.nextExpectedUpdate < partitioningB.nextExpectedUpdate;
+	return partitioningA.nextExpectedUpdate > partitioningB.nextExpectedUpdate;
 }
 
 SpatialPartitioningSystem::SpatialPartitioningSystem(StarSystem* starSystem)

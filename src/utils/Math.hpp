@@ -117,7 +117,7 @@ double vectorDistance(const Eigen::Matrix<T, 2, 1>& a, const Eigen::Matrix<T, 2,
 //	long x = b.x() - a.x();
 //	long y = b.y() - a.y();
 //	return std::hypot(x, y); // hypot usually takes twice as long as sqrt even with FMA
-	Eigen::Matrix<T, 2, 1> diff = b - a;
+	Eigen::Matrix<double, 2, 1> diff = (b - a).template cast<double>();
 	return std::sqrt(diff.dot(diff));
 }
 

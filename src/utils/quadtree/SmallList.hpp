@@ -65,6 +65,9 @@ public:
 
     // Inserts an element to the back of the list.
     void push_back(const T& element);
+    
+    template<int STACK_SIZE2>
+    void append(const SmallList<T, STACK_SIZE2>& list);
 
     /// Pops an element off the back of the list.
     T pop_back();
@@ -311,6 +314,15 @@ void SmallList<T, STACK_SIZE>::push_back(const T& element)
     if (ld.num >= ld.cap)
         reserve(ld.cap * 2);
     ld.data[ld.num++] = element;
+}
+
+template <class T, int STACK_SIZE>
+template <int STACK_SIZE2>
+void SmallList<T, STACK_SIZE>::append(const SmallList<T, STACK_SIZE2>& list)
+{
+	for (T t : list) {
+		push_back(t);
+	}
 }
 
 template <class T, int STACK_SIZE>

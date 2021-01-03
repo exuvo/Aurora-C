@@ -8,6 +8,7 @@
  */
 
 #include <algorithm>
+#include <fmt/core.h>
 
 #include "starsystems/systems/Systems.hpp"
 #include "utils/Utils.hpp"
@@ -17,7 +18,7 @@ bool SpatialPartitioningPlanetoidsSystem::comparator::operator() (entt::entity a
 	SpatialPartitioningPlanetoidsComponent& partitioningA = registry.get<SpatialPartitioningPlanetoidsComponent>(a);
 	SpatialPartitioningPlanetoidsComponent& partitioningB = registry.get<SpatialPartitioningPlanetoidsComponent>(b);
  
-	return partitioningA.nextExpectedUpdate < partitioningB.nextExpectedUpdate;
+	return partitioningA.nextExpectedUpdate > partitioningB.nextExpectedUpdate;
 }
 
 SpatialPartitioningPlanetoidsSystem::SpatialPartitioningPlanetoidsSystem(StarSystem* starSystem)
@@ -49,8 +50,11 @@ void SpatialPartitioningPlanetoidsSystem::removed(entt::registry& registry, entt
 }
 
 void SpatialPartitioningPlanetoidsSystem::update(entt::entity entityID) {
-	MovementValues movement = registry.get<TimedMovementComponent>(entityID).get(galaxy.time).value;
-	uint64_t nextExpectedUpdate = updateNextExpectedUpdate(entityID, movement);
+	TimedMovementComponent movementComponent = registry.get<TimedMovementComponent>(entityID);
+	MovementValues movement = movementComponent.get(galaxy.time).value;
+	CircleComponent& circle = registry.get<CircleComponent>(entityID);
+	
+	uint64_t nextExpectedUpdate = updateNextExpectedUpdate(entityID, movement, circle);
 	
 	if (!registry.has<SpatialPartitioningPlanetoidsComponent>(entityID)) {
 		registry.emplace<SpatialPartitioningPlanetoidsComponent>(entityID);
@@ -64,13 +68,7 @@ void SpatialPartitioningPlanetoidsSystem::update(entt::entity entityID) {
 		updateQueue.push(entityID);
 	}
 	
-	uint64_t radius = 1;
-	
-	CircleComponent* circle = registry.try_get<CircleComponent>(entityID);
-	
-	if (circle) {
-		radius = circle->radius / SCALE;
-	}
+	uint64_t radius = circle.radius / SCALE;
 	
 	uint64_t x = movement.position.x() / SCALE; // + MAX/2
 	uint64_t y = movement.position.y() / SCALE; // + MAX/2
@@ -91,39 +89,29 @@ void SpatialPartitioningPlanetoidsSystem::update(entt::entity entityID) {
 	profilerEvents.end();
 }
 
-uint64_t SpatialPartitioningPlanetoidsSystem::updateNextExpectedUpdate(entt::entity entityID, MovementValues& movement) {
+uint64_t SpatialPartitioningPlanetoidsSystem::updateNextExpectedUpdate(entt::entity entityID, MovementValues& movement, CircleComponent circle) {
 	uint64_t nextExpectedUpdate = galaxy.time;
 		
 	if (!movement.velocity.isZero()) {
-	
-		//TODO val distance = distance from edge of smallest quadtree square
 		
-////			// at^2 + vt = distance
-//			val a: Double = movement.acceleration.len()
-//			val b: Double = movement.velocity.len()
-//			val c: Double = -0.001 * Units.AU * 1000
-//
-//			val t: Double
-//
-//			if (a == 0.0) {
-//				t = -c / b
-//			} else {
-//				t = WeaponSystem.getPositiveRootOfQuadraticEquation(a, b, c)
-//			}
-//
-//			println("entityID $entityID: t $t a $a b $b c $c")
-//
-//			nextExpectedUpdate += maxOf(1, t.toLong())
-		nextExpectedUpdate += 10 * 60;
+		uint32_t delay = 0.1 * (100.0 * circle.radius) / movement.velocity.norm();
+		
+//		std::cout << "entityID " << entityID << ": delay " << delay << std::endl; 
+		
+		if (delay == 0) {
+			delay = 1;
+		}
+		
+		nextExpectedUpdate += delay;
 
 	} else {
 		nextExpectedUpdate = 0;
 	}
 	
 	if (nextExpectedUpdate == 0) {
-//			println("entityID $entityID: nextExpectedUpdate $nextExpectedUpdate")
+//		std::cout << "entityID " << entityID << ": nextExpectedUpdate " << nextExpectedUpdate << std::endl; 
 	} else {
-//			println("entityID $entityID: nextExpectedUpdate +${nextExpectedUpdate - galaxy.time}")
+//		std::cout << "entityID " << entityID << ": nextExpectedUpdate " << nextExpectedUpdate - galaxy.time << std::endl;
 	}
 	
 	return nextExpectedUpdate;
@@ -162,15 +150,15 @@ void SpatialPartitioningPlanetoidsSystem::update(delta_type delta) {
 				
 				SpatialPartitioningPlanetoidsComponent& partitioning = registry.get<SpatialPartitioningPlanetoidsComponent>(entityID);
 				
-//				println("eval $entityID ${partitioning.nextExpectedUpdate}")
+//				std::cout << "eval " << entityID << " " << partitioning.nextExpectedUpdate << std::endl;
 				
 				if (galaxy.time >= partitioning.nextExpectedUpdate) {
 				
-//					println("process $entityID ${partitioning.nextExpectedUpdate}")
+//					std::cout << "process " << entityID << " " << partitioning.nextExpectedUpdate << std::endl;
 					
 					updateQueue.pop();
 					
-					profilerEvents.start("update $entityID");
+					profilerEvents.start(fmt::format("update {}", entityID));
 					update(entityID);
 					profilerEvents.end();
 					

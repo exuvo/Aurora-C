@@ -34,6 +34,7 @@ void MainDebugWindow::render() {
 //				if (ImGui::MenuItem("DrawWeaponRangesWithoutShader", "", Aurora.settings.render..debugDrawWeaponRangesWithoutShader)) {
 //					Aurora.settings.render..debugDrawWeaponRangesWithoutShader = !Aurora.settings.render..debugDrawWeaponRangesWithoutShader;
 //				}
+				ImGui::MenuItem("useShadow", "", &Aurora.settings.render.useShadow, true);
 				ImGui::MenuItem("debugSpatialPartitioning", "", &Aurora.settings.render.debugSpatialPartitioning, true);
 				ImGui::MenuItem("debugSpatialPartitioningPlanetoids", "", &Aurora.settings.render.debugSpatialPartitioningPlanetoids, true);
 				ImGui::EndMenu();

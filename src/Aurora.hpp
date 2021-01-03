@@ -26,7 +26,7 @@ struct Settings {
 		bool debugDisableStrategicView = false;
 		bool debugSpatialPartitioning = false;
 		bool debugSpatialPartitioningPlanetoids = false;
-		bool useShadow = false;
+		bool useShadow = true;
 	} render;
 	struct {
 			struct {

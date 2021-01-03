@@ -163,9 +163,11 @@ void StarSystem::deleted(entt::registry& registry, entt::entity entity) {
 template<> \
 void StarSystem::changed2<component>(entt::entity entity) { \
 	LOG4CXX_TRACE(log, "starsystem " << name << " changed component " << type_name<component>() << " of entity " << entity); \
+	uint32_t index = static_cast<uint32_t>(registry.entity(entity)); \
+	workingShadow->changed.reserve(index + 1); \
+	workingShadow->changed[index] = true; \
 /*	BOOST_HANA_CONSTANT_ASSERT_MSG(hana::find(syncedComponentToIndexMap, hana::type_c<component>) != hana::nothing, "missing component mapping"); */ \
 	BitVector& changedVector = workingShadow->changedComponents[syncedComponentToIndexMap[hana::type_c<component>]]; \
-	uint32_t index = static_cast<uint32_t>(registry.entity(entity)); \
 	changedVector.reserve(index + 1); \
 	changedVector[index] = true; \
 };
@@ -245,3 +247,6 @@ void StarSystem::update(uint32_t deltaGameTime) {
 	profilerEvents.end();
 }
 
+std::ostream& operator<<(std::ostream& os, const StarSystem& s) {
+	return os << s.name << " (" << s.galacticEntityID << ")";
+}

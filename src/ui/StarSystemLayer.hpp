@@ -21,8 +21,10 @@ class StarSystemLayer: public UILayer {
 		StarSystemLayer(AuroraWindow& parentWindow, StarSystem* starSystem);
 		virtual ~StarSystemLayer() override;
 		
+		static constexpr float STRATEGIC_ICON_SIZE = 24;
+		
 		float zoom = 5E5; // 1E6
-		constexpr static float maxZoom = 1E8;
+		static constexpr float maxZoom = 1E8;
 		int zoomLevel;
 		Vector2l viewOffset {0,0}; // in m
 		
@@ -58,7 +60,7 @@ class StarSystemLayer: public UILayer {
 		bool dragSelectionPotentialStart = false;
 		Matrix2i getDragSelection();
 		
-		bool movingWindow = false;
+		bool movingView = false;
 		void* selectedAction = nullptr;
 		
 		bool commandMenuPotentialStart = false;

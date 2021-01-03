@@ -115,3 +115,6 @@ bool EntityReference::resolveReference(const ShadowStarSystem& shadow) {
 	return false;
 }
 
+std::ostream& operator<<(std::ostream& os, const EntityReference& ref) {
+	return os << ref.entityID << " in " << *ref.system;
+}

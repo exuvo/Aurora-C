@@ -99,4 +99,21 @@ std::string type_name() {
 std::string getLastExceptionStacktrace();
 std::string getCurrentStacktrace();
 
+
+template <typename T>
+std::ostream& operator<< (std::ostream& out, const std::vector<T>& v) {
+	if ( !v.empty() ) {
+		out << '[';
+		for (auto it = v.cbegin(); it != v.cend(); it++) {
+			if (it != v.cbegin()) {
+				out << ", ";
+			}
+			const auto& e = *it;
+			out << e;
+		}
+		out << "]";
+	}
+	return out;
+}
+
 #endif /* SRC_UTILS_UTILS_HPP_ */

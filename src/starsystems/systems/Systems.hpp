@@ -238,7 +238,7 @@ class SpatialPartitioningPlanetoidsSystem : public IntervalSystem<SpatialPartiti
 		void inserted(entt::registry &, entt::entity);
 		void removed(entt::registry &, entt::entity);
 		void update(entt::entity);
-		uint64_t updateNextExpectedUpdate(entt::entity, MovementValues&);
+		uint64_t updateNextExpectedUpdate(entt::entity, MovementValues&, CircleComponent circle);
 };
 
 struct Systems {

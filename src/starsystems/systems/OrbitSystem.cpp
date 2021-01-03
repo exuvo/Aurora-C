@@ -136,10 +136,9 @@ void OrbitSystem::update(entt::entity entityID, OrbitComponent& orbit, TimedMove
 	TimedValue<MovementValues> parentMovementToday = parentMovement.get(today);
 	Vector2l parentPosition = parentMovementToday.value.position;
 	
-	Vector2l& position = movement.previous.value.position;
+	Vector2l& positionToday = movement.previous.value.position;
 	
-	position = parentPosition + relativePosition;
-	Vector2l newVelocity = position;
+	positionToday = parentPosition + relativePosition;
 	
 	movement.previous.time = today;
 	
@@ -150,13 +149,13 @@ void OrbitSystem::update(entt::entity entityID, OrbitComponent& orbit, TimedMove
 	TimedValue<MovementValues> parentMovementTomorrow = parentMovement.get(tomorrow);
 	parentPosition = parentMovementTomorrow.value.position;
 	
-	Vector2l tmpPosition = parentPosition + relativePosition;
+	Vector2l positionTomorrow = parentPosition + relativePosition;
 	
-	newVelocity -= tmpPosition;
-	newVelocity *= 100.0 / interval;
+	Vector2l newVelocity = positionTomorrow - positionToday;
+	newVelocity = (newVelocity.cast<double>() * 100.0 / interval).cast<int64_t>();
 	movement.previous.value.velocity = newVelocity;
 	
-	movement.setPrediction(MovementValues(tmpPosition, newVelocity, Vector2l()), tomorrow);
+	movement.setPrediction(MovementValues(positionTomorrow, newVelocity, Vector2l()), tomorrow);
 	
 	starSystem.changed<TimedMovementComponent>(entityID);
 }

@@ -8,7 +8,7 @@
 #ifndef SRC_STARSYSTEMS_COMPONENTS_IDCOMPONENTS_HPP_
 #define SRC_STARSYSTEMS_COMPONENTS_IDCOMPONENTS_HPP_
 
-#include "entt/entt.hpp"
+#include <entt/entt.hpp>
 
 class StarSystem;
 class ShadowStarSystem;
@@ -42,12 +42,14 @@ struct EntityReference {
 	struct hasher {
 		size_t operator()(const EntityReference& e) const;
 	};
-
+	
 	bool isValid(const StarSystem& starSystem) const;
 	bool isValid(const ShadowStarSystem& shadow) const;
 	bool resolveReference(const StarSystem& starSystem);
 	bool resolveReference(const ShadowStarSystem& shadow);
 };
+
+std::ostream& operator<<(std::ostream& os, const EntityReference& ref);
 
 struct UUIDComponent {
 		EntityUUID uuid;

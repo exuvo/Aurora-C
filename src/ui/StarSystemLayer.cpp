@@ -30,18 +30,27 @@ StarSystemLayer::~StarSystemLayer() {
 }
 
 void StarSystemLayer::drawEntities() {
-	auto view = starSystem->registry.view<TimedMovementComponent, RenderComponent, CircleComponent>();
+	
+	entt::registry* registry;
+	
+	if (Aurora.settings.render.useShadow) {
+		registry = &starSystem->shadow->registry;
+	} else {
+		registry = &starSystem->registry;
+	}
+	
+	auto view = registry->view<TimedMovementComponent, RenderComponent, CircleComponent>();
 	
 	for (entt::entity entity : view) {
 		CircleComponent& circle = view.get<CircleComponent>(entity);
 		
-		if (!starSystem->registry.has<StrategicIconComponent>(entity) || !inStrategicView(entity, circle)) {
+		if (!registry->has<StrategicIconComponent>(entity) || !inStrategicView(entity, circle)) {
 
 			TimedMovementComponent& movement = view.get<TimedMovementComponent>(entity);
 			Vector2l position = movement.get(Aurora.galaxy->time).value.position;
 			Vector2i renderPosition = toScreenCoordinates(position);
 
-			TintComponent* tintComponent = starSystem->registry.try_get<TintComponent>(entity);
+			TintComponent* tintComponent = registry->try_get<TintComponent>(entity);
 			vk2d::Colorf color = tintComponent != nullptr ? tintComponent->color : vk2d::Colorf::WHITE();
 //			shapeRenderer.color = sRGBtoLinearRGB(Color(tintComponent?.color ?: Color.WHITE))
 
@@ -230,6 +239,7 @@ void StarSystemLayer::render() {
 					Player::current->selection.erase(*ref);
 					
 					if (!cpy.resolveReference(*starSystem->shadow)) {
+						std::cout << "Removed invalid entity reference " << cpy << std::endl;
 						continue;
 					}
 					
@@ -265,7 +275,7 @@ void StarSystemLayer::render() {
 //			std::cout << "drag select start " << dragStart << " - " << getMouseInScreenCordinates() << " = " << vectorDistance(dragStart, getMouseInScreenCordinates()) << " ~ " << vectorDistanceFast(dragStart, getMouseInScreenCordinates()) << std::endl;
 	}
 	
-	if (movingWindow) {
+	if (movingView) {
 		Vector2i mouseScreenNow = getMouseInScreenCordinates();
 		Vector2l mouseWorldNow = toWorldCoordinates(mouseScreenNow);
 		Vector2l mouseWorldBefore = toWorldCoordinates(dragStart);
@@ -484,9 +494,13 @@ bool StarSystemLayer::keyAction(KeyActions_StarSystemLayer action) {
 		if (tracking) {
 			tracking = false;
 			
+			if (movingView) {
+				dragStart = getMouseInScreenCordinates();
+			}
+			
 		} else if (Player::current->selection.size() > 0) {
 			tracking = true;
-			printf("tracking selection\n"); fflush(stdout);
+//			printf("tracking selection\n"); fflush(stdout);
 		}
 		
 	}
@@ -519,7 +533,7 @@ bool StarSystemLayer::eventMouseButton(vk2d::MouseButton button, vk2d::ButtonAct
 	
 	if (action == vk2d::ButtonAction::PRESS) {
 		
-		if (!movingWindow && !dragSelecting) {
+		if (!movingView && !dragSelecting) {
 			
 			if (button == vk2d::MouseButton::BUTTON_LEFT) {
 				commandMenuPotentialStart = false;
@@ -530,46 +544,44 @@ bool StarSystemLayer::eventMouseButton(vk2d::MouseButton button, vk2d::ButtonAct
 //					val directSelectionSubscription = system.shadow.world.getAspectSubscriptionManager().get(DIRECT_SELECTION_FAMILY)
 //					val weaponFamilyAspect = system.shadow.world.getAspectSubscriptionManager().get(WEAPON_FAMILY).aspect
 //					val renderSystem = system.shadow.world.getSystem(RenderSystem::class.java)
-//					
-//					val shadow = system.shadow
-//					val mouseInGameCoordinates = toWorldCordinates(getMouseInScreenCordinates(screenX, screenY))
-//					val entitiesUnderMouse = Bag<EntityReference>()
-//					val testCircle = CircleL()
-//					val zoom = camera.zoom
-////						val entityIDs = directSelectionSubscription.entities
-//					val entityIDs = SpatialPartitioningSystem.query(system.shadow.quadtreeShips,
-//							mouseInGameCoordinates.x - 1, mouseInGameCoordinates.y - 1,
-//							mouseInGameCoordinates.x + 1, mouseInGameCoordinates.y + 1)
-//					
-//					entityIDs.addAll(SpatialPartitioningPlanetoidsSystem.query(system.shadow.quadtreePlanetoids,
-//							mouseInGameCoordinates.x - 1, mouseInGameCoordinates.y - 1,
-//							mouseInGameCoordinates.x + 1, mouseInGameCoordinates.y + 1))
-//					
-////						println("entityIDs $entityIDs")
-//					
-//					// Exact check first
-//					entityIDs.forEachFast { entityID ->
-//						if (directSelectionSubscription.aspect.isInterested(entityID)) {
-//							val position = shadow.movementMapper.get(entityID).get(galaxy.time).value.position
-//							val radius: Float
-//
-//							if (renderSystem.inStrategicView(entityID, zoom)) {
-//
-//								radius = 1000 * zoom * RenderSystem.STRATEGIC_ICON_SIZE / 2
-//
-//							} else {
-//
-//								radius = shadow.circleMapper.get(entityID).radius
-//							}
-//
-//							testCircle.set(position, radius)
-//
-//							if (testCircle.contains(mouseInGameCoordinates)) {
-//								entitiesUnderMouse.add(system.getEntityReference(entityID))
-//							}
-//						}
-//					}
-//
+					
+					Vector2l mouseInGameCoordinates = toWorldCoordinates(getMouseInScreenCordinates());
+//					std::cout << "mouseInGameCoordinates " << mouseInGameCoordinates << " getMouseInScreenCordinates " << getMouseInScreenCordinates() << std::endl;
+					Matrix2l queryMatrix;
+					queryMatrix << mouseInGameCoordinates.x() - 1, mouseInGameCoordinates.y() - 1, mouseInGameCoordinates.x() + 1, mouseInGameCoordinates.y() + 1;
+	
+					std::vector<EntityReference> entitiesUnderMouse {};
+//						val entityIDs = directSelectionSubscription.entities
+					SmallList<entt::entity> entities = SpatialPartitioningSystem::query(starSystem->shadow->quadtreeShips, queryMatrix);
+					SmallList<entt::entity> entitiesPlanetoids = SpatialPartitioningPlanetoidsSystem::query(starSystem->shadow->quadtreePlanetoids, queryMatrix);
+					
+//					std::cout << "entities " << entities << " entitiesPlanetoids " << entitiesPlanetoids << std::endl;
+					entities.append(entitiesPlanetoids);
+					
+					// Exact check first
+					for (entt::entity entity : entities) {
+						if (starSystem->shadow->registry.has<TimedMovementComponent, RenderComponent, CircleComponent>(entity)) {
+							TimedMovementComponent& movementComponent = starSystem->shadow->registry.get<TimedMovementComponent>(entity);
+							CircleComponent& circleComponent = starSystem->shadow->registry.get<CircleComponent>(entity);
+							Vector2l position = movementComponent.get(Aurora.galaxy->time).value.position;
+							float radiusInM;
+
+							if (inStrategicView(entity, circleComponent)) {
+
+								radiusInM = 1000 * zoom * STRATEGIC_ICON_SIZE / 2;
+
+							} else {
+
+								radiusInM = circleComponent.radius;
+							}
+							
+//							std::cout << "dist " << vectorDistance(position, mouseInGameCoordinates) << " <= " << radiusInM << " pos " << position << std::endl;
+							if (vectorDistance(position, mouseInGameCoordinates) <= radiusInM) {
+								entitiesUnderMouse.push_back(starSystem->shadow->getEntityReference(entity));
+							}
+						}
+					}
+
 //					// Lenient check if empty
 //					if (entitiesUnderMouse.isEmpty()) {
 //						entityIDs.forEachFast { entityID ->
@@ -601,26 +613,27 @@ bool StarSystemLayer::eventMouseButton(vk2d::MouseButton button, vk2d::ButtonAct
 ////							println("strict selected ${entitiesUnderMouse.size()} entities")
 //					}
 //
-//					if (selectedAction == null) {
-//
-//						if (entitiesUnderMouse.isNotEmpty()) {
-//
-//							dragSelectPotentialStart = false;
-//
-//							if (Player.current.selection.isNotEmpty() && !Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT)) {
-//								Player.current.selection.clear()
-////								println("cleared selection")
-//							}
-//
-//							Player.current.selection.addAll(entitiesUnderMouse)
-//							
-//						} else {
+					if (selectedAction == nullptr) {
+
+						if (entitiesUnderMouse.size() > 0) {
+
+							dragSelectionPotentialStart = false;
+
+							if (Player::current->selection.size() > 0 && !window.isKeyPressed(GLFW_KEY_LEFT_SHIFT)) {
+								Player::current->selection.clear();
+								printf("cleared selection\n");
+							}
+							
+							std::cout << "added " << entitiesUnderMouse << " to selection" << std::endl;
+							vectorAppend(Player::current->selection, entitiesUnderMouse);
+							
+						} else {
 //
 							dragSelectionPotentialStart = true;
 							dragStart = getMouseInScreenCordinates();
-//
-////						println("drag select potential dragX $dragX, dragY $dragY")
-//						}
+
+//							println("drag select potential dragX $dragX, dragY $dragY")
+						}
 //
 //					} else if (selectedAction == KeyActions_StarSystemScreen.ATTACK) {
 //						selectedAction = null
@@ -666,7 +679,7 @@ bool StarSystemLayer::eventMouseButton(vk2d::MouseButton button, vk2d::ButtonAct
 //								}
 //							}
 //						}
-//					}
+					}
 				}
 				
 				return true;
@@ -675,7 +688,7 @@ bool StarSystemLayer::eventMouseButton(vk2d::MouseButton button, vk2d::ButtonAct
 			
 				selectedAction = nullptr;
 				commandMenuPotentialStart = false;
-				movingWindow = true;
+				movingView = true;
 				dragStart = getMouseInScreenCordinates();
 				return true;
 				
@@ -696,16 +709,16 @@ bool StarSystemLayer::eventMouseButton(vk2d::MouseButton button, vk2d::ButtonAct
 				return true;
 			}
 			
-			if (movingWindow && button != vk2d::MouseButton::BUTTON_MIDDLE) {
-				movingWindow = false;
+			if (movingView && button != vk2d::MouseButton::BUTTON_MIDDLE) {
+				movingView = false;
 				return true;
 			}
 		}
 		
 	} else if (action == vk2d::ButtonAction::RELEASE) {
 		
-		if (movingWindow && button == vk2d::MouseButton::BUTTON_MIDDLE) {
-			movingWindow = false;
+		if (movingView && button == vk2d::MouseButton::BUTTON_MIDDLE) {
+			movingView = false;
 			return true;
 		}
 		
@@ -902,12 +915,13 @@ Matrix2i StarSystemLayer::getDragSelection() {
 }
 
 bool StarSystemLayer::inStrategicView(entt::entity entity, CircleComponent& circle) {
-	if (Aurora.settings.render.debugDisableStrategicView || zoom == 1.0f) {
-		return false;
-	}
-	
-	float radius = circle.radius / 1000;
-	return radius / zoom < 5.0f;
+	return false;
+//	if (Aurora.settings.render.debugDisableStrategicView || zoom == 1.0f) {
+//		return false;
+//	}
+//	
+//	float radius = circle.radius / 1000;
+//	return radius / zoom < 5.0f;
 }
 
 // radius in screen space radius
