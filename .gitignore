@@ -4,3 +4,4 @@ build
 /log.log
 /log.vulcan
 /imgui.ini
+/assets/compiledshaders/*.spv
