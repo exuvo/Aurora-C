@@ -15,6 +15,7 @@
 #include "ui/imgui/ImGuiLayer.hpp"
 #include "ui/KeyMappings.hpp"
 #include "Aurora.hpp"
+#include "ui/ShaderTestLayer.hpp"
 
 #define GLFW_EXPOSE_NATIVE_X11 true
 #include <GLFW/glfw3native.h>
@@ -165,6 +166,7 @@ int main(int argc, char **argv) {
 		auto window = new AuroraWindow();
 		window->setMainLayer(new StarSystemLayer(*window, galaxy->systems[0]));
 		window->addLayer(new ImGuiLayer(*window));
+		window->addLayer(new ShaderTestLayer(*window));
 		Aurora.windows.push_back(window);
 		
 		if (hasVK_EXT_display_surface_counter) {

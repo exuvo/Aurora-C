@@ -19,13 +19,12 @@
 #include "ui/AuroraWindow.hpp"
 #include "ui/UILayer.hpp"
 #include "ui/StarSystemLayer.hpp"
+#include "ui/ShaderTestLayer.hpp"
 #include "ui/imgui/ImGuiLayer.hpp"
 #include "ui/RenderCache.hpp"
 #include "utils/dbg.h"
 #include "utils/Utils.hpp"
 #include "utils/Math.hpp"
-
-#include "ui/shaderAPI/ShaderAPI.hpp"
 
 using namespace std::chrono;
 
@@ -140,17 +139,11 @@ void AuroraWindow::render() {
 		window->DrawMesh(text_mesh);
 	}
 	
-	// HERE Temp render
-	shaderAPI::ShaderAPI tempClass = shaderAPI::ShaderAPI{window->impl->instance->GetVulkanInstance(), window->impl->vk_device, window->impl->vk_physical_device, window->impl->vk_render_pass, window->impl->extent};
-	tempClass.draw(window->impl->vk_render_command_buffers[window->impl->next_image]);
-
 	if(!window->EndRender()) {
 		LOG4CXX_ERROR(log, "Error rendering window end");
 		return;
 	}
 
-	tempClass.clear();
-	
 	renderTime = getNanos() - now;
 	renderTimeAverage = exponentialAverage(renderTime.count(), renderTimeAverage, 10.0);
 	
@@ -228,6 +221,7 @@ void AuroraWindow::EventCharacter(vk2d::Window* window, uint32_t character, vk2d
 		AuroraWindow* window = new AuroraWindow();
 		window->setMainLayer(new StarSystemLayer(*window, getLayer<StarSystemLayer>().getStarSystem()));
 		window->addLayer(new ImGuiLayer(*window));
+		window->addLayer(new ShaderTestLayer(*window));
 		Aurora.windows.push_back(window);
 		return;
 	}

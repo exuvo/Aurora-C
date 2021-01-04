@@ -9,7 +9,6 @@
 #define SRC_UI_EMPIREOVERVIEWPOSTLAYER_HPP_
 
 #include "ui/UILayer.hpp"
-#include "ui/imgui/EmpireOverviewWindow.hpp"
 
 class EmpireOverviewPostLayer: public UILayer {
 	public:
