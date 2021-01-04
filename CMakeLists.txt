@@ -113,6 +113,7 @@ target_include_directories(AuroraC PUBLIC ${Boost_INCLUDE_DIRS})
 target_include_directories(AuroraC PUBLIC "lib/eigen" "lib/eigen/unsupported") # 3.4 is not released yet so we have to include it ourselves
 target_link_libraries(AuroraC PUBLIC OpenMP::OpenMP_CXX)
 target_link_libraries(AuroraC PUBLIC imgui-vulkan)
+target_link_libraries(AuroraC PUBLIC glslang glslang-default-resource-limits OGLCompiler OSDependent SPIRV SPVRemapper) #HLSL
 
 target_precompile_headers(AuroraC PRIVATE "src/PreCompileHeader.h")
 
@@ -261,30 +262,3 @@ add_custom_command(
 )
 add_custom_target(symlink_assets DEPENDS "${PROJECT_BINARY_DIR}/assets")
 add_dependencies(AuroraC symlink_assets)
-
-################
-
-# Compile shaders
-file(GLOB SHADER_FILES CONFIGURE_DEPENDS "${PROJECT_SOURCE_DIR}/assets/shaders/*.*")
-set(COMPILED_SHADER_FILES "")
-
-foreach(afile ${SHADER_FILES})
-	get_filename_component(file_name ${afile} NAME)
-	set(source_shader_path "${PROJECT_SOURCE_DIR}/assets/shaders/${file_name}")
-	set(compiled_shader_path "${PROJECT_SOURCE_DIR}/assets/compiledshaders/${file_name}.spv")
-	list(APPEND COMPILED_SHADER_FILES ${compiled_shader_path})
-	add_custom_command(
-		OUTPUT ${compiled_shader_path}
-		COMMENT "Creating ${file_name}.spv"
-		COMMAND glslangValidator -o ${compiled_shader_path} -V ${source_shader_path}
-		WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}/assets/shaders/"
-		DEPENDS ${source_shader_path}
-	)
-	message("source_shader_path ${source_shader_path}")
-	message("compiled_shader_path ${compiled_shader_path}")
-	message("COMPILED_SHADER_FILES ${COMPILED_SHADER_FILES}")
-endforeach()
-
-add_custom_target(Shader_Dependencies DEPENDS "${COMPILED_SHADER_FILES}")
-#find_program(glslangValidator REQUIRED)
-add_dependencies(AuroraC Shader_Dependencies)

@@ -9,8 +9,12 @@
 #define SRC_UI_RENDERCACHE_HPP_
 
 #include <unordered_map>
+#include <filesystem>
 
 #include <VK2D.h>
+#include <System/ShaderInterface.h>
+
+#include <entt/entt.hpp>
 #include "log4cxx/logger.h"
 
 using namespace log4cxx;
@@ -24,7 +28,16 @@ public:
 	static vk2d::Mesh& getTextMeshCallerCentric(vk2d::FontResource* font, vk2d::Vector2f position, std::string text,
 	                                            vk2d::Colorf color = vk2d::Colorf::WHITE(), uint8_t stackDepth = 0);
 	
+	static vk2d::_internal::GraphicsShaderProgram& getShader(entt::hashed_string path);
+	
+	static void clear();
+	
 private:
+	static inline LoggerPtr log = Logger::getLogger("aurora.render.cache");
+	static inline LoggerPtr shaderLog = Logger::getLogger("aurora.render.cache.shader");
+	
+	static VkShaderModule createShaderModule(std::string name);
+	
 	static vk2d::Mesh& getTextMesh(size_t hash, vk2d::FontResource* font,vk2d::Vector2f position, std::string text,
 	                       vk2d::Colorf color = vk2d::Colorf::WHITE());
 	
@@ -42,7 +55,8 @@ private:
 		}
 	};
 	
-	inline static std::unordered_map<size_t, TextCacheEntry, noop_hasher> textCache;
+	static inline std::unordered_map<size_t, TextCacheEntry, noop_hasher> textCache;
+	static inline std::unordered_map<entt::hashed_string::hash_type, vk2d::_internal::GraphicsShaderProgram> shaderCache;
 };
 
 #endif /* SRC_UI_RENDERCACHE_HPP_ */

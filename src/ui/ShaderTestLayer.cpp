@@ -22,6 +22,7 @@
 #include "Aurora.hpp"
 #include "ShaderTestLayer.hpp"
 #include "utils/Math.hpp"
+#include "ui/RenderCache.hpp"
 
 struct Vertex {
 	Vector2f pos = {};
@@ -108,6 +109,27 @@ void ShaderTestLayer::render() {
 	window.window->impl->previous_pipeline_settings = vk2d::_internal::GraphicsPipelineSettings {};
 	window.window->impl->mesh_buffer->bound_vertex_buffer_block = nullptr;
 	window.window->impl->mesh_buffer->bound_index_buffer_block = nullptr;
+	
+	VkViewport viewport {};
+	viewport.x			= 0;
+	viewport.y			= 0;
+	viewport.width		= float( window.window->impl->extent.width );
+	viewport.height		= float( window.window->impl->extent.height );
+	viewport.minDepth	= 0.0f;
+	viewport.maxDepth	= 1.0f;
+	vkCmdSetViewport(
+		commandBuffer,
+		0, 1, &viewport
+	);
+	
+	VkRect2D scissor {
+		{ 0, 0 },
+		window.window->impl->extent
+	};
+	vkCmdSetScissor(
+		commandBuffer,
+		0, 1, &scissor
+	);
 }
 
 //Helper functions!
@@ -213,22 +235,24 @@ void ShaderTestLayer::createVulkanIndexBuffer() {
 }
 
 void ShaderTestLayer::createGraphicsPipeline() {
-	auto vertShaderCode = readFile("assets/compiledshaders/shader.vert.spv");
-	auto fragShaderCode = readFile("assets/compiledshaders/shader.frag.spv");
+//	auto vertShaderCode = readFile("assets/compiledshaders/shader.vert.spv");
+//	auto fragShaderCode = readFile("assets/compiledshaders/shader.frag.spv");
+//	
+//	VkShaderModule vertShaderModule = createShaderModule(vertShaderCode, logicalDevice);
+//	VkShaderModule fragShaderModule = createShaderModule(fragShaderCode, logicalDevice);
 	
-	VkShaderModule vertShaderModule = createShaderModule(vertShaderCode, logicalDevice);
-	VkShaderModule fragShaderModule = createShaderModule(fragShaderCode, logicalDevice);
+	vk2d::_internal::GraphicsShaderProgram& shader = RenderCache::getShader("shader"_hs);
 	
 	VkPipelineShaderStageCreateInfo vertShaderStageInfo { };
 	vertShaderStageInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
 	vertShaderStageInfo.stage = VK_SHADER_STAGE_VERTEX_BIT;
-	vertShaderStageInfo.module = vertShaderModule;
+	vertShaderStageInfo.module = shader.vertex;
 	vertShaderStageInfo.pName = "main";
 	
 	VkPipelineShaderStageCreateInfo fragShaderStageInfo { };
 	fragShaderStageInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
 	fragShaderStageInfo.stage = VK_SHADER_STAGE_FRAGMENT_BIT;
-	fragShaderStageInfo.module = fragShaderModule;
+	fragShaderStageInfo.module = shader.fragment;
 	fragShaderStageInfo.pName = "main";
 	
 	VkPipelineShaderStageCreateInfo shaderStages[] = { vertShaderStageInfo, fragShaderStageInfo };
@@ -327,9 +351,9 @@ void ShaderTestLayer::createGraphicsPipeline() {
 	!= VK_SUCCESS) {
 		throw std::runtime_error("failed to create graphics pipeline!");
 	}
-	
-	vkDestroyShaderModule(logicalDevice, fragShaderModule, nullptr);
-	vkDestroyShaderModule(logicalDevice, vertShaderModule, nullptr);
+//	
+//	vkDestroyShaderModule(logicalDevice, fragShaderModule, nullptr);
+//	vkDestroyShaderModule(logicalDevice, vertShaderModule, nullptr);
 }
 
 
