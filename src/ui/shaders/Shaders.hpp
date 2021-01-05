@@ -12,11 +12,18 @@
 //#include "DiskShader.hpp"
 //#include "PointShader.hpp"
 
+class AuroraWindow;
+
 class Shaders {
-	static void init();
-//	static inline CircleShader circle;
-//	static inline DiskShader disk;
-//	static inline PointShader point;
+public:
+	Shaders(AuroraWindow* window);
+	~Shaders();
+	
+	AuroraWindow& window;
+	
+//	CircleShader circle;
+//	DiskShader disk;
+//	PointShader point;
 };
 
 #endif /* SRC_UI_SHADERS_SHADERS_HPP_ */

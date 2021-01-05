@@ -28,7 +28,9 @@
 
 using namespace std::chrono;
 
-AuroraWindow::AuroraWindow(StarSystem* starSystem) {
+AuroraWindow::AuroraWindow(StarSystem* starSystem)
+: shaders(this)
+{
 	std::cout << "creating window" << std::endl;
 	this->starSystem = starSystem;
 	

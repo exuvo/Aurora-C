@@ -13,6 +13,7 @@
 #include <System/QueueResolver.h>
 #include <log4cxx/logger.h>
 
+#include "ui/shaders/Shaders.hpp"
 #include "utils/Utils.hpp"
 #include "utils/Profiling.hpp"
 #include "utils/Math.hpp"
@@ -52,6 +53,7 @@ class AuroraWindow : vk2d::WindowEventHandler {
 		
 		StarSystem* starSystem;
 		ProfilerEvents profilerEvents;
+		Shaders shaders;
 		
 		VkInstance vk_instance;
 		VkDevice vk_device;
