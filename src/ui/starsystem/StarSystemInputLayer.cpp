@@ -49,7 +49,7 @@ void StarSystemInputLayer::render() {
 	
 	if (tracking) {
 		
-		Vector2l centerOfSelection {};
+		Vector2l centerOfSelection = { 0,0 };
 		
 		{
 			std::unique_lock<LockableBase(std::mutex)> lock(Aurora.galaxy->shadowLock);

@@ -28,11 +28,6 @@ StarSystemStatusLayer::~StarSystemStatusLayer() {
 
 __attribute__((always_inline))
 static inline void writeText(AuroraWindow& window, float& x, float& y, std::string text, vk2d::Colorf color = vk2d::Colorf::WHITE()) {
-		//TODO cache meches based on text hash? calling code location? and Translate cached version
-//		vk2d::Mesh text_mesh = vk2d::GenerateTextMesh(Aurora.assets.font, { std::floor(x), std::floor(y) }, text);
-//		if (color != vk2d::Colorf::WHITE()) {
-//			text_mesh.SetVertexColor(color);
-//		}
 		vk2d::Mesh& text_mesh = RenderCache::getTextMeshCallerCentric(Aurora.assets.font, { std::floor(x), std::floor(y) }, text, color);
 		window.window->DrawMesh(text_mesh);
 //		window.window->DrawRectangle(text_mesh.aabb, false, vk2d::Colorf::OLIVE());
