@@ -18,7 +18,7 @@
 #include "Aurora.hpp"
 #include "ui/AuroraWindow.hpp"
 #include "ui/UILayer.hpp"
-#include "ui/StarSystemLayer.hpp"
+#include "ui/starsystem/StarSystemLayer.hpp"
 #include "ui/ShaderTestLayer.hpp"
 #include "ui/imgui/ImGuiLayer.hpp"
 #include "ui/RenderCache.hpp"
@@ -28,8 +28,9 @@
 
 using namespace std::chrono;
 
-AuroraWindow::AuroraWindow() {
+AuroraWindow::AuroraWindow(StarSystem* starSystem) {
 	std::cout << "creating window" << std::endl;
+	this->starSystem = starSystem;
 	
 	vk2d::WindowCreateInfo window_create_info{};
 	window_create_info.title = "Aurora C";
@@ -142,15 +143,19 @@ void AuroraWindow::render() {
 	//			true,
 	//			vk2d::Colorf::RED()
 	//		);
-			
+			profilerEvents.clear();
+			profilerEvents.start("layers");
 			for (UILayer* layer : layers) {
+				profilerEvents.start(demangleTypeName(typeid(*layer).name()));
 				try {
 					layer->render();
 				} catch (const std::exception& e) {
 					std::string stackTrace = getLastExceptionStacktrace();
 					LOG4CXX_ERROR(log, "Exception in rendering layer " << demangleTypeName(typeid(*layer).name()) << ": " << e.what() << "\n" << stackTrace);
 				}
+				profilerEvents.end();
 			}
+			profilerEvents.end();
 			
 			uint32_t centinanosFrameStartTime = (frameTime.count() / 10000) % 100;
 			uint32_t milliFrameStartTime = frameTime.count() / Units::NANO_MILLI;
@@ -280,8 +285,8 @@ void AuroraWindow::EventWindowClose(vk2d::Window* window) {
 
 void AuroraWindow::EventCharacter(vk2d::Window* window, uint32_t character, vk2d::ModifierKeyFlags modifier_keys) {
 	if (character == 'n') {
-		AuroraWindow* window = new AuroraWindow();
-		window->setMainLayer(new StarSystemLayer(*window, getLayer<StarSystemLayer>().getStarSystem()));
+		AuroraWindow* window = new AuroraWindow(starSystem);
+		addStarSystemLayers(*window);
 		window->addLayer(new ImGuiLayer(*window));
 		window->addLayer(new ShaderTestLayer(*window));
 		Aurora.windows.push_back(window);

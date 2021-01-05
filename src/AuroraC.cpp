@@ -11,7 +11,7 @@
 
 #include "galaxy/Galaxy.hpp"
 #include "ui/AuroraWindow.hpp"
-#include "ui/StarSystemLayer.hpp"
+#include "ui/starsystem/StarSystemLayer.hpp"
 #include "ui/imgui/ImGuiLayer.hpp"
 #include "ui/KeyMappings.hpp"
 #include "Aurora.hpp"
@@ -39,9 +39,11 @@ void VK2D_log(vk2d::ReportSeverity severity, std::string_view message) {
 	LoggerPtr log = Logger::getLogger("aurora.ui");
 	
 	if (severity == vk2d::ReportSeverity::CRITICAL_ERROR) {
-		LOG4CXX_FATAL(log, message << endl << getCurrentStacktrace());
+//		LOG4CXX_FATAL(log, message << endl << getCurrentStacktrace());
+		LOG4CXX_FATAL(log, message << endl);
 	} else if (severity == vk2d::ReportSeverity::DEVICE_LOST) {
-		LOG4CXX_FATAL(log, message << endl << getCurrentStacktrace());
+//		LOG4CXX_FATAL(log, message << endl << getCurrentStacktrace());
+		LOG4CXX_FATAL(log, message << endl);
 	} else if (severity == vk2d::ReportSeverity::NON_CRITICAL_ERROR) {
 		LOG4CXX_ERROR(log, message);
 	} else if (severity == vk2d::ReportSeverity::WARNING || severity == vk2d::ReportSeverity::PERFORMANCE_WARNING) {
@@ -163,8 +165,8 @@ int main(int argc, char **argv) {
 //	VkDisplayKHR vkDisplay {};
 	
 	{
-		auto window = new AuroraWindow();
-		window->setMainLayer(new StarSystemLayer(*window, galaxy->systems[0]));
+		auto window = new AuroraWindow(galaxy->systems[0]);
+		addStarSystemLayers(*window);
 		window->addLayer(new ImGuiLayer(*window));
 		window->addLayer(new ShaderTestLayer(*window));
 		Aurora.windows.push_back(window);

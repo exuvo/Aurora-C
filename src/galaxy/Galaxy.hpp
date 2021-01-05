@@ -59,7 +59,7 @@ class Galaxy {
 		std::mutex galaxyThreadMutex;
 		std::condition_variable galaxyThreadCondvar;
 		ShadowGalaxy* shadow = new ShadowGalaxy(this);
-		TracyLockable(std::recursive_mutex, shadowLock);
+		TracyLockable(std::mutex, shadowLock);
 		ProfilerEvents renderProfilerEvents;
 		
 		uint64_t time = 0; // seconds

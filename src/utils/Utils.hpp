@@ -99,7 +99,6 @@ std::string type_name() {
 std::string getLastExceptionStacktrace();
 std::string getCurrentStacktrace();
 
-
 template <typename T>
 std::ostream& operator<< (std::ostream& out, const std::vector<T>& v) {
 	if ( !v.empty() ) {

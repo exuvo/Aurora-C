@@ -129,7 +129,7 @@ void EmpireOverviewWindow::render() {
 //						}
 					};
 					
-					std::unique_lock<LockableBase(std::recursive_mutex)> lock(Aurora.galaxy->shadowLock);
+					std::unique_lock<LockableBase(std::mutex)> lock(Aurora.galaxy->shadowLock);
 					
 					std::vector<EntityReference> systemColonies(empire->colonies.size());
 					

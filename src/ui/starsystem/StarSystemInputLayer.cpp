@@ -1,205 +1,28 @@
 /*
- * StarSystemLayer.cpp
+ * StarSystemInputLayer.cpp
  *
  *  Created on: Dec 17, 2020
  *      Author: exuvo
  */
 #include <GLFW/glfw3.h>
 #include <fmt/core.h>
-#include <starsystems/ShadowStarSystem.hpp>
 
 #include "Aurora.hpp"
-#include "StarSystemLayer.hpp"
+#include "StarSystemInputLayer.hpp"
 #include "starsystems/StarSystem.hpp"
+#include "starsystems/ShadowStarSystem.hpp"
 #include "starsystems/components/Components.hpp"
 #include "galaxy/Galaxy.hpp"
-#include "utils/Math.hpp"
-#include "utils/RenderUtils.hpp"
 #include "ui/KeyMappings.hpp"
-#include "ui/RenderCache.hpp"
 
-StarSystemLayer::StarSystemLayer(AuroraWindow& parentWindow, StarSystem* starSystem): UILayer(parentWindow) {
-	this->starSystem = starSystem;
-	
+StarSystemInputLayer::StarSystemInputLayer(AuroraWindow& parentWindow): StarSystemLayer(parentWindow) {
 	zoomLevel = std::log(zoom) / std::log(Aurora.settings.render.zoomSensitivity);
-	lastTickrateUpdate = getMillis();
-	oldGalaxyTime = milliseconds(Aurora.galaxy->time);
 }
 
-StarSystemLayer::~StarSystemLayer() {
+StarSystemInputLayer::~StarSystemInputLayer() {
 }
 
-void StarSystemLayer::drawEntities() {
-	
-	entt::registry* registry;
-	
-	if (Aurora.settings.render.useShadow) {
-		registry = &starSystem->shadow->registry;
-	} else {
-		registry = &starSystem->registry;
-	}
-	
-	auto view = registry->view<TimedMovementComponent, RenderComponent, CircleComponent>();
-	
-	for (entt::entity entity : view) {
-		CircleComponent& circle = view.get<CircleComponent>(entity);
-		
-		if (!registry->has<StrategicIconComponent>(entity) || !inStrategicView(entity, circle)) {
-
-			TimedMovementComponent& movement = view.get<TimedMovementComponent>(entity);
-			Vector2l position = movement.get(Aurora.galaxy->time).value.position;
-			Vector2i renderPosition = toScreenCoordinates(position);
-
-			TintComponent* tintComponent = registry->try_get<TintComponent>(entity);
-			vk2d::Colorf color = tintComponent != nullptr ? tintComponent->color : vk2d::Colorf::WHITE();
-//			shapeRenderer.color = sRGBtoLinearRGB(Color(tintComponent?.color ?: Color.WHITE))
-
-			
-			float radius = std::max(1.0f, circle.radius / 1000) / zoom;
-//			std::cout << "draw entity: pos " << position << ", rpos " << renderPosition << ", radius " << radius << std::endl; 
-			if (radius <= 0.5) {
-				window.window->DrawPoint(vectorToVK2D(renderPosition), color, 1);
-			} else {
-				window.window->DrawEllipse(vk2d::Rect2f {renderPosition.x() - radius, renderPosition.y() - radius, renderPosition.x() + radius, renderPosition.y() + radius}, true, getCircleSegments(radius), color);
-			}
-		}
-	}
-}
-
-void StarSystemLayer::drawSpatialPartitioning() {
-	QuadtreePoint* tree;
-	
-	if (Aurora.settings.render.useShadow) {
-		tree = &starSystem->shadow->quadtreeShips;
-	} else {
-		tree = &starSystem->systems->spatialPartitioningSystem->tree;
-	}
-	
-	const auto treeScale = SpatialPartitioningSystem::SCALE;
-	
-	struct traverseData {
-		StarSystemLayer* layer;
-	} traverseData { this };
-	
-	QuadtreePointNodeFunc* leaf = [](QuadtreePoint* tree, void* user_data, int32_t node, uint8_t depth, int32_t mx, int32_t my, int32_t sx, int32_t sy) {
-//		std::cout << "leaf node " << node << ", depth " << (uint32_t) depth << ", " << mx << " " << my << " " << sx << " " << sy << std::endl;
-		struct traverseData* data = (struct traverseData*) user_data;
-		StarSystemLayer* layer = data->layer;
-		
-		int64_t x1 = mx - sx;
-		int64_t y1 = my - sy;
-		int64_t x2 = mx + sx;
-		int64_t y2 = my + sy;
-		
-		Matrix2l pos{};
-		pos << x1, y1, x2, y2;
-		pos *= treeScale;
-		layer->window.window->DrawRectangle(matrixToVK2D(layer->toScreenCoordinates(pos)), false, vk2d::Colorf::YELLOW());
-		
-		auto& enodes = tree->elt_nodes;
-		auto& elts = tree->elts;
-		
-		int32_t enodeIdx = tree->nodes[node].first_child;
-		
-		while (enodeIdx != -1) {
-			auto elementIdx = enodes[enodeIdx].element;
-			enodeIdx = enodes[enodeIdx].next;
-			
-			auto entityID = elts[elementIdx].id;
-			auto x = elts[elementIdx].mx;
-			auto y = elts[elementIdx].my;
-
-//					println("entity $entityID $l $t $r $b")
-			
-			pos << x, y, x, y;
-			pos *= treeScale;
-			auto screenPos = layer->toScreenCoordinates(pos);
-			screenPos.row(0).array() -= 1;
-			screenPos.row(1).array() += 1;
-			layer->window.window->DrawRectangle(matrixToVK2D(screenPos), false, vk2d::Colorf::TEAL());
-		}
-	};
-	
-	QuadtreePointNodeFunc* branch = [](QuadtreePoint* tree, void* user_data, int32_t node, uint8_t depth, int32_t mx, int32_t my, int32_t sx, int32_t sy) {
-		struct traverseData* traverseData = (struct traverseData*) user_data;
-//				println("branch node $node, depth $depth, $mx $my $sx $sy")
-//				shapeRenderer.color = sRGBtoLinearRGB(Color.TEAL)
-//				shapeRenderer.rect((scale * (mx - sx - max2) - cameraOffset.x).toFloat(),
-//				                   (scale * (my - sy - max2) - cameraOffset.y).toFloat(),
-//				                   (2 * scale * sx).toFloat(),
-//				                   (2 * scale * sy).toFloat())
-	};
-	
-	tree->traverse(&traverseData, branch, leaf);
-}
-
-void StarSystemLayer::drawSpatialPartitioningPlanetoids() {
-	QuadtreeAABB* tree;
-	
-	if (Aurora.settings.render.useShadow) {
-		tree = &starSystem->shadow->quadtreePlanetoids;
-	} else {
-		tree = &starSystem->systems->spatialPartitioningPlanetoidsSystem->tree;
-	}
-	
-	const auto treeScale = SpatialPartitioningPlanetoidsSystem::SCALE;
-	
-	struct traverseData {
-			StarSystemLayer* layer;
-	} traverseData { this };
-	
-	QuadtreeAABBNodeFunc* leaf = [](QuadtreeAABB* tree, void* user_data, int32_t node, uint8_t depth, int32_t mx, int32_t my, int32_t sx, int32_t sy) {
-//		std::cout << "leaf node " << node << ", depth " << (uint32_t) depth << ", " << mx << " " << my << " " << sx << " " << sy << std::endl;
-		struct traverseData* data = (struct traverseData*) user_data;
-		StarSystemLayer* layer = data->layer;
-		
-		int64_t x1 = mx - sx;
-		int64_t y1 = my - sy;
-		int64_t x2 = mx + sx;
-		int64_t y2 = my + sy;
-		
-		Matrix2l pos{};
-		pos << x1, y1, x2, y2;
-		pos *= treeScale;
-		layer->window.window->DrawRectangle(matrixToVK2D(layer->toScreenCoordinates(pos)), false, vk2d::Colorf::YELLOW());
-		
-		auto& enodes = tree->elt_nodes;
-		auto& elts = tree->elts;
-		
-		int32_t enodeIdx = tree->nodes[node].first_child;
-		
-		while (enodeIdx != -1) {
-			auto elementIdx = enodes[enodeIdx].element;
-			enodeIdx = enodes[enodeIdx].next;
-			
-			auto entityID = elts[elementIdx].id;
-			auto l = elts[elementIdx].ltrb[0];
-			auto t = elts[elementIdx].ltrb[1];
-			auto r = elts[elementIdx].ltrb[2];
-			auto b = elts[elementIdx].ltrb[3];
-
-//					println("entity $entityID $l $t $r $b")
-			
-			pos << l, t, r, b;
-			pos *= treeScale;
-			layer->window.window->DrawRectangle(matrixToVK2D(layer->toScreenCoordinates(pos)), false, vk2d::Colorf::TEAL());
-		}
-	};
-	
-	QuadtreeAABBNodeFunc* branch = [](QuadtreeAABB* tree, void* user_data, int32_t node, uint8_t depth, int32_t mx, int32_t my, int32_t sx, int32_t sy) {
-		struct traverseData* traverseData = (struct traverseData*) user_data;
-//				println("branch node $node, depth $depth, $mx $my $sx $sy")
-//				shapeRenderer.color = sRGBtoLinearRGB(Color.TEAL)
-//				shapeRenderer.rect((scale * (mx - sx - max2) - cameraOffset.x).toFloat(),
-//				                   (scale * (my - sy - max2) - cameraOffset.y).toFloat(),
-//				                   (2 * scale * sx).toFloat(),
-//				                   (2 * scale * sy).toFloat())
-	};
-	
-	tree->traverse(&traverseData, branch, leaf);
-}
-
-void StarSystemLayer::render() {
+void StarSystemInputLayer::render() {
 	
 	int hDirection = 0;
 	int vDirection = 0;
@@ -226,10 +49,10 @@ void StarSystemLayer::render() {
 	
 	if (tracking) {
 		
-		Vector2l centerOfSelection;
+		Vector2l centerOfSelection {};
 		
 		{
-			std::unique_lock<LockableBase(std::recursive_mutex)> lock(Aurora.galaxy->shadowLock);
+			std::unique_lock<LockableBase(std::mutex)> lock(Aurora.galaxy->shadowLock);
 			
 			for (auto it = Player::current->selection.begin(); it != Player::current->selection.end();) {
 				const EntityReference* ref = &*it++;
@@ -290,171 +113,9 @@ void StarSystemLayer::render() {
 			dragStart = mouseScreenNow;
 		}
 	}
-	
-	{
-		std::unique_lock<LockableBase(std::recursive_mutex)> lock(Aurora.galaxy->shadowLock);
-		profilerEvents.clear();
-		profilerEvents.start("render");
-		
-		profilerEvents.start("setup");
-		
-	//	val selectedEntityIDs = Player::current->selection.filter { it.starSystem == starSystem && world.entityManager.isActive(it.entityID) && familyAspect.isInterested(it.entityID) }.map { it.entityID };
-	
-		int displaySize = hypot(window.window->GetSize().x, window.window->GetSize().y);
-		
-		profilerEvents.end();
-		
-	//		gravSystem.render(viewport, cameraOffset);
-		
-		//TODO dont interpolate new positions if timeDiff * velocity is not noticable at current zoom level
-		
-		profilerEvents.start("drawDetections");
-	//	drawDetections(entityIDs);
-		profilerEvents.end();
-	
-		if (window.isKeyPressed(GLFW_KEY_C)) {
-			profilerEvents.start("drawSelectionDetectionZones");
-	//		drawSelectionDetectionZones(selectedEntityIDs);
-			profilerEvents.end();
-		}
-		
-		if (window.isKeyPressed(GLFW_KEY_LEFT_SHIFT)) {
-			profilerEvents.start("drawOrders");
-	//		drawOrders();
-			profilerEvents.end();
-		}
-		
-		profilerEvents.start("renderOrbits");
-	//	renderOrbits(cameraOffset);
-		profilerEvents.end();
-		
-		profilerEvents.start("drawWeaponRanges");
-	//	drawWeaponRanges(entityIDs, selectedEntityIDs);
-		profilerEvents.end();
-		
-		profilerEvents.start("drawEntities");
-		drawEntities();
-		profilerEvents.end();
-		
-		profilerEvents.start("drawEntityCenters");
-	//	drawEntityCenters(entityIDs);
-		profilerEvents.end();
-		
-		profilerEvents.start("drawProjectiles");
-	//	drawProjectiles();
-		profilerEvents.end();
-		
-		profilerEvents.start("drawTimedMovement");
-	//	drawTimedMovement(entityIDs, selectedEntityIDs);
-		profilerEvents.end();
-		
-		profilerEvents.start("drawSelections");
-	//	drawSelections(selectedEntityIDs);
-		profilerEvents.end();
-		
-		profilerEvents.start("drawSelectionMoveTargets");
-	//	drawSelectionMoveTargets(selectedEntityIDs);
-		profilerEvents.end();
-		
-		//TODO draw selection weapon ranges
-		profilerEvents.start("drawAttackTargets");
-	//	drawAttackTargets(selectedEntityIDs);
-		profilerEvents.end();
-	
-	//	spriteBatch.projectionMatrix = viewport.camera.combined;
-		
-		profilerEvents.start("drawStrategicEntities");
-	//	drawStrategicEntities(entityIDs);
-		profilerEvents.end();
-		
-		if (Aurora.settings.render.debugSpatialPartitioning) {
-			profilerEvents.start("drawSpatialPartitioning");
-			drawSpatialPartitioning();
-			profilerEvents.end();
-		}
-		
-		if (Aurora.settings.render.debugSpatialPartitioningPlanetoids) {
-			profilerEvents.start("drawSpatialPartitioningPlanetoids");
-			drawSpatialPartitioningPlanetoids();
-			profilerEvents.end();
-		}
-		
-		profilerEvents.start("drawSelectionDetectionStrength");
-	//	drawSelectionDetectionStrength(selectedEntityIDs);
-		profilerEvents.end();
-		
-		profilerEvents.start("drawNames");
-	//	drawNames(entityIDs);
-		profilerEvents.end();
-		
-		profilerEvents.start("drawMovementTimes");
-	//	drawMovementTimes(entityIDs, selectedEntityIDs);
-		profilerEvents.end();
-		
-		profilerEvents.end();
-	}
-	
-	if (dragSelecting) {
-		Matrix2i selection = getDragSelection();
-		window.window->DrawRectangle(matrixToVK2D(selection), false, vk2d::Colorf::WHITE());
-	}
-	
-	if (tracking) {
-		vk2d::Mesh& text_mesh = RenderCache::getTextMeshCallerCentric(Aurora.assets.font, { window.window->GetSize().x / 2 - 50, window.window->GetSize().y - 30 }, "Tracking");
-		window.window->DrawMesh(text_mesh);
-	}
-	
-	milliseconds now = getMillis();
-		
-	if (now - lastTickrateUpdate > 1000ms) {
-		lastTickrateUpdate = now;
-		galaxyTickrate = milliseconds(Aurora.galaxy->time) - oldGalaxyTime;
-		oldGalaxyTime = milliseconds(Aurora.galaxy->time);
-	}
-	
-	float y = window.window->GetSize().y - 10;
-	float x = 5;
-	
-//	std::cout << std::endl;
-	
-	auto writeText = [&](std::string text, vk2d::Colorf color = vk2d::Colorf::WHITE()){
-		//TODO cache meches based on text hash? calling code location? and Translate cached version
-//		vk2d::Mesh text_mesh = vk2d::GenerateTextMesh(Aurora.assets.font, { std::floor(x), std::floor(y) }, text);
-//		if (color != vk2d::Colorf::WHITE()) {
-//			text_mesh.SetVertexColor(color);
-//		}
-		vk2d::Mesh& text_mesh = RenderCache::getTextMeshCallerCentric(Aurora.assets.font, { std::floor(x), std::floor(y) }, text, color, 1);
-		window.window->DrawMesh(text_mesh);
-//		window.window->DrawRectangle(text_mesh.aabb, false, vk2d::Colorf::OLIVE());
-		x += text_mesh.aabb.GetAreaSize().x;
-//		std::cout << "size " << text_mesh.aabb << " " << text_mesh.aabb.GetAreaSize() << std::endl;
-	};
-	
-	writeText(fmt::format("{} {}  ", daysToDate(Aurora.galaxy->day), secondsToString(Aurora.galaxy->time)));
-	
-	if (Aurora.galaxy->speed == 0ns) {
-		writeText("System Error", vk2d::Colorf::RED());
-		
-	} else if (Aurora.galaxy->speed.count() < 0) {
-		writeText(fmt::format("speed {}", Units::NANO_SECOND / -Aurora.galaxy->speed.count()), vk2d::Colorf::GREY());
-		
-	} else if (Aurora.galaxy->speedLimited) {
-		writeText(fmt::format("speed {}", Units::NANO_SECOND / Aurora.galaxy->speed.count()), vk2d::Colorf::RED());
-		
-	}  else {
-		writeText(fmt::format("speed {}", Units::NANO_SECOND / Aurora.galaxy->speed.count()));
-	}
-	
-	writeText(fmt::format(" {}", Aurora.galaxy->tickSize));
-	writeText(fmt::format(" {}us {}t/s", (int)(starSystem->updateTimeAverage / 1000), galaxyTickrate.count()));
-	writeText(fmt::format(", {}st", starSystem->registry.alive()));
-	
-	std::string text = fmt::format("zoom {:02}", zoomLevel);
-	vk2d::Vector2f bb = Aurora.assets.font->CalculateRenderedSize(text).GetAreaSize();
-	window.window->DrawMesh(RenderCache::getTextMeshCallerCentric(Aurora.assets.font, { window.window->GetSize().x - bb.x - 4 , y }, text));
 }
 
-bool StarSystemLayer::keyAction(KeyActions_StarSystemLayer action) {
+bool StarSystemInputLayer::keyAction(KeyActions_StarSystemLayer action) {
 	
 	if (action == KeyActions_StarSystemLayer::GENERATE_SYSTEM) {
 
@@ -508,7 +169,7 @@ bool StarSystemLayer::keyAction(KeyActions_StarSystemLayer action) {
 	return false;
 }
 
-bool StarSystemLayer::eventKeyboard(vk2d::KeyboardButton button, int32_t scancode, vk2d::ButtonAction action, vk2d::ModifierKeyFlags modifier_keys) {
+bool StarSystemInputLayer::eventKeyboard(vk2d::KeyboardButton button, int32_t scancode, vk2d::ButtonAction action, vk2d::ModifierKeyFlags modifier_keys) {
 	KeyActions_StarSystemLayer keyBind = KeyMappings::getRaw<KeyActions_StarSystemLayer>(scancode, action, modifier_keys);
 	
 	if (keyBind != KeyActions_StarSystemLayer::NONE) {
@@ -518,7 +179,7 @@ bool StarSystemLayer::eventKeyboard(vk2d::KeyboardButton button, int32_t scancod
 	return false;
 }
 
-bool StarSystemLayer::eventCharacter(uint32_t character, vk2d::ModifierKeyFlags modifier_keys) {
+bool StarSystemInputLayer::eventCharacter(uint32_t character, vk2d::ModifierKeyFlags modifier_keys) {
 //	printf("character %c\n", character); fflush(stdout);
 	KeyActions_StarSystemLayer keyBind = KeyMappings::getTranslated<KeyActions_StarSystemLayer>(character);
 	
@@ -529,7 +190,7 @@ bool StarSystemLayer::eventCharacter(uint32_t character, vk2d::ModifierKeyFlags 
 	return false;
 }
 
-bool StarSystemLayer::eventMouseButton(vk2d::MouseButton button, vk2d::ButtonAction action, vk2d::ModifierKeyFlags modifier_keys) {
+bool StarSystemInputLayer::eventMouseButton(vk2d::MouseButton button, vk2d::ButtonAction action, vk2d::ModifierKeyFlags modifier_keys) {
 	
 	if (action == vk2d::ButtonAction::PRESS) {
 		
@@ -539,7 +200,7 @@ bool StarSystemLayer::eventMouseButton(vk2d::MouseButton button, vk2d::ButtonAct
 				commandMenuPotentialStart = false;
 				
 				{
-					std::unique_lock<LockableBase(std::recursive_mutex)> lock(Aurora.galaxy->shadowLock);
+					std::unique_lock<LockableBase(std::mutex)> lock(Aurora.galaxy->shadowLock);
 					
 //					val directSelectionSubscription = system.shadow.world.getAspectSubscriptionManager().get(DIRECT_SELECTION_FAMILY)
 //					val weaponFamilyAspect = system.shadow.world.getAspectSubscriptionManager().get(WEAPON_FAMILY).aspect
@@ -738,7 +399,7 @@ bool StarSystemLayer::eventMouseButton(vk2d::MouseButton button, vk2d::ButtonAct
 				std::vector<EntityReference> entitiesInSelection {};
 				
 				{
-					std::unique_lock<LockableBase(std::recursive_mutex)> lock(Aurora.galaxy->shadowLock);
+					std::unique_lock<LockableBase(std::mutex)> lock(Aurora.galaxy->shadowLock);
 					
 					SmallList<entt::entity> entities = SpatialPartitioningSystem::query(starSystem->shadow->quadtreeShips, worldCoordinates);
 //					std::cout << "worldCoordinates " << worldCoordinates << ", entities " << entities << std::endl;
@@ -779,7 +440,7 @@ bool StarSystemLayer::eventMouseButton(vk2d::MouseButton button, vk2d::ButtonAct
 			
 			if (Player::current->selection.size() > 0) {
 				
-				std::unique_lock<LockableBase(std::recursive_mutex)> lock(Aurora.galaxy->shadowLock);
+				std::unique_lock<LockableBase(std::mutex)> lock(Aurora.galaxy->shadowLock);
 				
 //				val movementFamilyAspect = starSystem.shadow.world.getAspectSubscriptionManager().get(MovementSystem.CAN_ACCELERATE_FAMILY).aspect
 //				val directSelectionSubscription = starSystem.shadow.world.getAspectSubscriptionManager().get(DIRECT_SELECTION_FAMILY)
@@ -856,7 +517,7 @@ bool StarSystemLayer::eventMouseButton(vk2d::MouseButton button, vk2d::ButtonAct
 	return false;
 }
 
-bool StarSystemLayer::eventScroll(vk2d::Vector2d scroll) {
+bool StarSystemInputLayer::eventScroll(vk2d::Vector2d scroll) {
 	zoomLevel -= scroll.y;
 	if (zoomLevel < 0) {
 		zoomLevel = 0;
@@ -890,7 +551,7 @@ bool StarSystemLayer::eventScroll(vk2d::Vector2d scroll) {
 	return true;
 }
 
-Matrix2i StarSystemLayer::getDragSelection() {
+Matrix2i StarSystemInputLayer::getDragSelection() {
 	Vector2i cursor = getMouseInScreenCordinates();
 	
 	Matrix2i mat {};
@@ -913,71 +574,3 @@ Matrix2i StarSystemLayer::getDragSelection() {
 	
 	return mat;
 }
-
-bool StarSystemLayer::inStrategicView(entt::entity entity, CircleComponent& circle) {
-	return false;
-//	if (Aurora.settings.render.debugDisableStrategicView || zoom == 1.0f) {
-//		return false;
-//	}
-//	
-//	float radius = circle.radius / 1000;
-//	return radius / zoom < 5.0f;
-}
-
-// radius in screen space radius
-int StarSystemLayer::getCircleSegments(float radius) {
-	return std::min(1000, std::max(3, (int) (9 * std::cbrt(radius))));
-}
-
-Vector2i StarSystemLayer::getMouseInScreenCordinates() {
-	vk2d::Vector2i cursor = window.mousePos;
-	return { cursor.x, cursor.y };
-}
-
-Vector2l StarSystemLayer::toWorldCoordinates(Vector2i screenCoordinates) {
-	Vector2d worldCoordinates = screenCoordinates.cast<double>();
-	
-	vk2d::Vector2u windowSize = window.window->GetSize() / 2;
-	worldCoordinates -= Vector2d{ windowSize.x, windowSize.y };
-	
-	worldCoordinates *= 1000 * zoom; // km to m
-	return worldCoordinates.cast<int64_t>() + viewOffset;
-}
-
-Matrix2l StarSystemLayer::toWorldCoordinates(Matrix2i screenCoordinates) {
-	vk2d::Vector2u windowSize = window.window->GetSize() / 2;
-	Matrix2i windowSizeMat;
-	windowSizeMat << windowSize.x, windowSize.y, windowSize.x, windowSize.y;
-	screenCoordinates -= windowSizeMat;
-	
-	Matrix2d worldCoordinates = screenCoordinates.cast<double>();
-	worldCoordinates *= 1000 * zoom; // km to m
-	Matrix2l worldCoordinates2 = worldCoordinates.cast<int64_t>();
-	worldCoordinates2.row(0) += viewOffset;
-	worldCoordinates2.row(1) += viewOffset;
-	return worldCoordinates2;
-}
-
-Vector2i StarSystemLayer::toScreenCoordinates(Vector2l gameCordinates){
-	gameCordinates -= viewOffset;
-	Vector2d screenCordinates = gameCordinates.cast<double>();
-	screenCordinates /= zoom * 1000; // m to km
-	
-	vk2d::Vector2u windowSize = window.window->GetSize() / 2;
-	screenCordinates += Vector2d{ windowSize.x, windowSize.y };
-	return screenCordinates.cast<int32_t>();
-}
-
-Matrix2i StarSystemLayer::toScreenCoordinates(Matrix2l gameCordinates){
-	gameCordinates.row(0) -= viewOffset;
-	gameCordinates.row(1) -= viewOffset;
-	Matrix2d screenCordinates = gameCordinates.cast<double>();
-	screenCordinates /= zoom * 1000; // m to km
-	
-	vk2d::Vector2u windowSize = window.window->GetSize() / 2;
-	Matrix2d windowSizeMat;
-	windowSizeMat << windowSize.x, windowSize.y, windowSize.x, windowSize.y;
-	screenCordinates += windowSizeMat;
-	return screenCordinates.cast<int32_t>();
-}
-

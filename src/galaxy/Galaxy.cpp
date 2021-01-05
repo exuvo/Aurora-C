@@ -134,7 +134,7 @@ void Galaxy::galaxyWorker() {
 					
 					profilerEvents.start("shadows lock");
 					{
-						std::unique_lock<LockableBase(std::recursive_mutex)> lock(shadowLock);
+						std::unique_lock<LockableBase(std::mutex)> lock(shadowLock);
 						profilerEvents.start("promote shadows");
 						for (StarSystem* system : systems) {
 							auto oldShadowWorld = system->shadow;

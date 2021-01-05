@@ -14,6 +14,8 @@
 #include <log4cxx/logger.h>
 
 #include "utils/Utils.hpp"
+#include "utils/Profiling.hpp"
+#include "utils/Math.hpp"
 
 using namespace log4cxx;
 
@@ -24,13 +26,14 @@ namespace tracy {
 using TracyVkCtx = tracy::VkCtx*;
 
 class UILayer;
+class StarSystem;
 
 template<typename T>
 concept aUILayer = std::is_base_of<UILayer, T>::value;
 
 class AuroraWindow : vk2d::WindowEventHandler {
 	public:
-		AuroraWindow();
+		AuroraWindow(StarSystem* starSystem);
 		virtual ~AuroraWindow();
 		
 		void render();
@@ -43,6 +46,12 @@ class AuroraWindow : vk2d::WindowEventHandler {
 		std::vector<TracyVkCtx> tracyVkCtxs;
 		std::vector<UILayer*> layers;
 		vk2d::Vector2i mousePos;
+		
+		float zoom = 5E5; // 1E6
+		Vector2l viewOffset {0,0}; // in m
+		
+		StarSystem* starSystem;
+		ProfilerEvents profilerEvents;
 		
 		VkInstance vk_instance;
 		VkDevice vk_device;

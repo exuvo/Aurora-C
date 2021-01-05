@@ -22,4 +22,10 @@
 			<provider-reference id="de.marw.cmake.cdt.language.settings.providers.BuiltinsCompileCommandsJsonParser" ref="shared-provider"/>
 		</extension>
 	</configuration>
+	<configuration id="de.marw.cmake.cdt.lsp.config.release.172108259.1994569768" name="ReleaseWithDebug">
+		<extension point="org.eclipse.cdt.core.LanguageSettingsProvider">
+			<provider-reference id="de.marw.cmake.cdt.language.settings.providers.CompileCommandsJsonParser" ref="shared-provider"/>
+			<provider-reference id="de.marw.cmake.cdt.language.settings.providers.BuiltinsCompileCommandsJsonParser" ref="shared-provider"/>
+		</extension>
+	</configuration>
 </project>

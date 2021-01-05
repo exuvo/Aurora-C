@@ -277,19 +277,9 @@ vk2d::Mesh& RenderCache::getTextMesh(vk2d::FontResource* font, vk2d::Vector2f po
 }
 
 vk2d::Mesh& RenderCache::getTextMeshCallerCentric(vk2d::FontResource* font, vk2d::Vector2f position, std::string text,
-                                                  vk2d::Colorf color, uint8_t stackDepth) {
+                                                  vk2d::Colorf color) {
 	
-	uintptr_t retAddr;
-	
-	if (stackDepth == 0) {
-		retAddr = (uintptr_t) __builtin_return_address(0);
-		
-	} else if (stackDepth == 1) {
-		retAddr = (uintptr_t) __builtin_return_address(1);
-		
-	} else {
-		throw std::invalid_argument("stackDepth > 1");
-	}
+	uintptr_t retAddr = (uintptr_t) __builtin_return_address(0);
 	
 	size_t hash = 13 * retAddr;
 //	std::cout << "hash " << hash << std::endl;

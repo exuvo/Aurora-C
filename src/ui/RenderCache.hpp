@@ -24,9 +24,9 @@ public:
 	
 	static vk2d::Mesh& getTextMesh(vk2d::FontResource* font,vk2d::Vector2f position, std::string text,
 	                       vk2d::Colorf color = vk2d::Colorf::WHITE());
-	// Use stackDepth=1 if calling from a helper function
+	// do not call from a helper function
 	static vk2d::Mesh& getTextMeshCallerCentric(vk2d::FontResource* font, vk2d::Vector2f position, std::string text,
-	                                            vk2d::Colorf color = vk2d::Colorf::WHITE(), uint8_t stackDepth = 0);
+	                                            vk2d::Colorf color = vk2d::Colorf::WHITE());
 	
 	static vk2d::_internal::GraphicsShaderProgram& getShader(entt::hashed_string path);
 	
