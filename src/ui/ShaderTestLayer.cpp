@@ -7,8 +7,6 @@
 
 #include <array>
 #include <vector>
-#include <fstream>
-#include <iostream>
 #include <stdexcept>
 #include <vector>
 #include <cstring>
@@ -60,10 +58,10 @@ struct UniformBufferObject {
 };
 
 const std::vector<Vertex> vertices = {
-	{{-0.5f, -0.5f}, {1.0f, 0.0f, 0.0f}},
-	{{ 0.5f, -0.5f}, {0.0f, 1.0f, 0.0f}},
-	{{ 0.5f,  0.5f}, {0.0f, 0.0f, 1.0f}},
-	{{-0.5f,  0.5f}, {1.0f, 1.0f, 1.0f}}};
+	{{160.0f, 20.0f}, {1.0f, 0.0f, 0.0f}},
+	{{190.0f, 20.0f}, {0.0f, 1.0f, 0.0f}},
+	{{190.0f, 50.1f}, {0.0f, 0.0f, 1.0f}},
+	{{160.0f, 50.1f}, {1.0f, 1.0f, 1.0f}}};
 
 const std::vector<uint32_t> indices = { 0, 1, 2, 2, 3, 0 };
 
@@ -100,9 +98,20 @@ void ShaderTestLayer::render() {
 	vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline);
 	
 	VkDeviceSize offsets[] = { 0 };
-	
 	vkCmdBindVertexBuffers(commandBuffer, 0, 1, &vertexBuffer, offsets);
 	vkCmdBindIndexBuffer(commandBuffer, indexBuffer, 0, VK_INDEX_TYPE_UINT32);
+	
+	{
+		float scale[2];
+		scale[0] = 2.0f / window.window->impl->extent.width;
+		scale[1] = 2.0f / window.window->impl->extent.height;
+		float translate[2];
+		translate[0] = -1.0f;
+		translate[1] = -1.0f;
+		vkCmdPushConstants(commandBuffer, pipelineLayout, VK_SHADER_STAGE_VERTEX_BIT, sizeof(float) * 0, sizeof(float) * 2, scale);
+		vkCmdPushConstants(commandBuffer, pipelineLayout, VK_SHADER_STAGE_VERTEX_BIT, sizeof(float) * 2, sizeof(float) * 2, translate);
+	}
+	
 	vkCmdDrawIndexed(commandBuffer, static_cast<uint32_t>(indices.size()), 1, 0, 0, 0);
 	
 	// Restore VK2D render pipeline
@@ -133,39 +142,6 @@ void ShaderTestLayer::render() {
 }
 
 //Helper functions!
-
-std::vector<char> readFile(const std::string& filename) {
-	std::ifstream file(filename, std::ios::ate | std::ios::binary);
-	
-	if (!file.is_open()) {
-		std::cout << "unable to open: " << filename << "\n";
-		throw std::runtime_error("failed to open file!");
-	}
-	
-	size_t fileSize = (size_t) file.tellg();
-	std::vector<char> buffer(fileSize);
-	
-	file.seekg(0);
-	file.read(buffer.data(), fileSize);
-	
-	file.close();
-	
-	return buffer;
-}
-
-VkShaderModule createShaderModule(const std::vector<char>& code, VkDevice device) {
-	VkShaderModuleCreateInfo createInfo { };
-	createInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
-	createInfo.codeSize = code.size();
-	createInfo.pCode = reinterpret_cast<const uint32_t*>(code.data());
-	
-	VkShaderModule shaderModule;
-	if (vkCreateShaderModule(device, &createInfo, nullptr, &shaderModule) != VK_SUCCESS) {
-		throw std::runtime_error("failed to create shader module!");
-	}
-	
-	return shaderModule;
-}
 
 uint32_t findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties, VkPhysicalDevice physicalDevice) {
 	VkPhysicalDeviceMemoryProperties memProperties;
@@ -235,12 +211,6 @@ void ShaderTestLayer::createVulkanIndexBuffer() {
 }
 
 void ShaderTestLayer::createGraphicsPipeline() {
-//	auto vertShaderCode = readFile("assets/compiledshaders/shader.vert.spv");
-//	auto fragShaderCode = readFile("assets/compiledshaders/shader.frag.spv");
-//	
-//	VkShaderModule vertShaderModule = createShaderModule(vertShaderCode, logicalDevice);
-//	VkShaderModule fragShaderModule = createShaderModule(fragShaderCode, logicalDevice);
-	
 	vk2d::_internal::GraphicsShaderProgram& shader = RenderCache::getShader("shader"_hs);
 	
 	VkPipelineShaderStageCreateInfo vertShaderStageInfo { };

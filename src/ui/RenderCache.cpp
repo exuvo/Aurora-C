@@ -24,7 +24,6 @@
 #include "RenderCache.hpp"
 #include "Aurora.hpp"
 
-
 VkShaderModule RenderCache::createShaderModule(std::string name) {
 	
 	if (!std::filesystem::exists("cache/shaders")) {
@@ -54,6 +53,8 @@ VkShaderModule RenderCache::createShaderModule(std::string name) {
 	}
 	
 	if (compileShader) {
+		LOG4CXX_INFO(log, "compiling shader " << name);
+		
 		size_t size = std::filesystem::file_size(sourcePath);
 		char* code = (char*) malloc(size);
 		
@@ -177,7 +178,6 @@ VkShaderModule RenderCache::createShaderModule(std::string name) {
 			outStream.write((char*) &d, 4);
 		}
 		
-//		outStream.write(spirv.data(), spirv.size());
 		outStream.close();
 		
 		glslang::FinalizeProcess();

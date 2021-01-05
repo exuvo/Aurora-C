@@ -113,7 +113,7 @@ void OrbitSystem::update(delta_type delta) {
 
 void OrbitSystem::update(entt::entity entityID, OrbitComponent& orbit, TimedMovementComponent& movement) {
 	uint64_t today = galaxy.time;
-	uint64_t dayLength = 24 * 60 * 60;
+	uint64_t dayLength = interval;
 	uint64_t tomorrow = today + dayLength;
 	
 	OrbitCache& orbitCache = orbitsCache[entityID];
