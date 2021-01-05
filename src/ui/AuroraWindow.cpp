@@ -29,7 +29,6 @@
 using namespace std::chrono;
 
 AuroraWindow::AuroraWindow() {
-	
 	std::cout << "creating window" << std::endl;
 	
 	vk2d::WindowCreateInfo window_create_info{};
@@ -43,9 +42,20 @@ AuroraWindow::AuroraWindow() {
 	window = Aurora.vk2dInstance->CreateOutputWindow(window_create_info);
 	check(window, "failed to create window");
 	
+	vk_instance = window->impl->instance->GetVulkanInstance();
+	vk_device = window->impl->vk_device;
+	vk_physical_device = window->impl->vk_physical_device;
+	vk_render_pass = window->impl->vk_render_pass;
+	vk_extent = window->impl->extent;
+	vk_command_buffer = window->impl->vk_render_command_buffers[0];
+	vk_render_queue = window->impl->primary_render_queue;
+	vk_transfer_queue = Aurora.vk2dInstance->impl->GetPrimaryTransferQueue();
+	vk_pipeline_cache = Aurora.vk2dInstance->impl->GetGraphicsPipelineCache();
+	vk_command_pool = window->impl->vk_command_pool;
+	
 	for (size_t i = 0; i < window->impl->vk_render_command_buffers.size(); i++) {
-		TracyVkCtx tmp = TracyVkContext(Aurora.vk2dInstance->impl->GetVulkanPhysicalDevice(),
-		                                Aurora.vk2dInstance->impl->GetVulkanDevice(),
+		TracyVkCtx tmp = TracyVkContext(vk_physical_device,
+		                                vk_device,
 		                                Aurora.vk2dInstance->impl->GetPrimaryRenderQueue().GetQueue(),
 		                                window->impl->vk_render_command_buffers[i]);
 		tracyVkCtxs.push_back(tmp);
@@ -99,53 +109,71 @@ void AuroraWindow::render() {
 	frameTimeAverage = exponentialAverage(frameTime.count(), frameTimeAverage, 15.0);
 	
 	ZoneScoped;
-	
-	if(!window->BeginRender()) {
-		LOG4CXX_ERROR(log, "Error rendering window begin");
-		return;
-	}
-	
-	{
-		ZoneScopedN("Draw");
-		TracyVkZone(tracyVkCtxs[window->impl->next_image], window->impl->vk_render_command_buffers[window->impl->next_image], "Render");
+
+	if (!window->IsIconified()) {
+		bool should_reconstruct = window->impl->should_reconstruct;
 		
-//		float x = duration_cast<milliseconds>(steady_clock::now().time_since_epoch()).count() % (100 + window->GetSize().x) - window->GetSize().x / 2 - 100;
-//		window->DrawRectangle(
-//			{{x, 0}, {x + 100, 100}},
-//			true,
-//			vk2d::Colorf::RED()
-//		);
+		if(!window->BeginRender()) {
+			LOG4CXX_ERROR(log, "Error rendering: window begin returned false");
+			return;
+		}
 		
-		for (UILayer* layer : layers) {
-			try {
-				layer->render();
-			} catch (const std::exception& e) {
-				std::string stackTrace = getLastExceptionStacktrace();
-				LOG4CXX_ERROR(log, "Exception in rendering layer " << demangleTypeName(typeid(*layer).name()) << ": " << e.what() << "\n" << stackTrace);
+		vk_command_buffer = window->impl->vk_render_command_buffers[window->impl->next_image];
+		
+		if (should_reconstruct) {
+			vk_extent = window->impl->extent; // Gets updated in WindowImpl::ReCreateSwapchain() with no call to EventWindowSize
+//			vk_render_queue = window->impl->primary_render_queue;
+//			vk_transfer_queue = Aurora.vk2dInstance->impl->GetPrimaryTransferQueue();
+//			vk_pipeline_cache = Aurora.vk2dInstance->impl->GetGraphicsPipelineCache();
+//			vk_command_pool = window->impl->vk_command_pool;
+	
+			for (UILayer* layer : layers) {
+				layer->eventResized();
 			}
 		}
 		
-		uint32_t centinanosFrameStartTime = (frameTime.count() / 10000) % 100;
-		uint32_t milliFrameStartTime = frameTime.count() / Units::NANO_MILLI;
+		{
+			ZoneScopedN("Draw");
+			TracyVkZone(tracyVkCtxs[window->impl->next_image], window->impl->vk_render_command_buffers[window->impl->next_image], "Render");
+			
+	//		float x = duration_cast<milliseconds>(steady_clock::now().time_since_epoch()).count() % (100 + window->GetSize().x) - window->GetSize().x / 2 - 100;
+	//		window->DrawRectangle(
+	//			{{x, 0}, {x + 100, 100}},
+	//			true,
+	//			vk2d::Colorf::RED()
+	//		);
+			
+			for (UILayer* layer : layers) {
+				try {
+					layer->render();
+				} catch (const std::exception& e) {
+					std::string stackTrace = getLastExceptionStacktrace();
+					LOG4CXX_ERROR(log, "Exception in rendering layer " << demangleTypeName(typeid(*layer).name()) << ": " << e.what() << "\n" << stackTrace);
+				}
+			}
+			
+			uint32_t centinanosFrameStartTime = (frameTime.count() / 10000) % 100;
+			uint32_t milliFrameStartTime = frameTime.count() / Units::NANO_MILLI;
+			
+			uint32_t centinanosFrameTimeAverage = ((uint64_t) frameTimeAverage / 10000) % 100;
+			uint32_t milliFrameTimeAverage = (uint64_t) frameTimeAverage / Units::NANO_MILLI;
+			
+			uint32_t centinanosRenderTimeAverage = ((uint64_t) renderTimeAverage / 10000) % 100;
+			uint32_t milliRenderTimeAverage = (uint64_t) renderTimeAverage / Units::NANO_MILLI;
+			
+			std::string text = fmt::format("{} {:02}.{:02}ms {:02}.{:02}ms, {:02}.{:02}ms", Aurora.fps, milliFrameStartTime, centinanosFrameStartTime, milliFrameTimeAverage, centinanosFrameTimeAverage, milliRenderTimeAverage, centinanosRenderTimeAverage);
+			vk2d::Mesh text_mesh = vk2d::GenerateTextMesh(Aurora.assets.font, { 2, 15 }, text);
+			window->DrawMesh(text_mesh);
+		}
 		
-		uint32_t centinanosFrameTimeAverage = ((uint64_t) frameTimeAverage / 10000) % 100;
-		uint32_t milliFrameTimeAverage = (uint64_t) frameTimeAverage / Units::NANO_MILLI;
-		
-		uint32_t centinanosRenderTimeAverage = ((uint64_t) renderTimeAverage / 10000) % 100;
-		uint32_t milliRenderTimeAverage = (uint64_t) renderTimeAverage / Units::NANO_MILLI;
-		
-		std::string text = fmt::format("{} {:02}.{:02}ms {:02}.{:02}ms, {:02}.{:02}ms", Aurora.fps, milliFrameStartTime, centinanosFrameStartTime, milliFrameTimeAverage, centinanosFrameTimeAverage, milliRenderTimeAverage, centinanosRenderTimeAverage);
-		vk2d::Mesh text_mesh = vk2d::GenerateTextMesh(Aurora.assets.font, { 2, 15 }, text);
-		window->DrawMesh(text_mesh);
-	}
+		if (!window->EndRender()) {
+			LOG4CXX_ERROR(log, "Error rendering: window end returned false");
+			return;
+		}
 	
-	if(!window->EndRender()) {
-		LOG4CXX_ERROR(log, "Error rendering window end");
-		return;
+		renderTime = getNanos() - now;
+		renderTimeAverage = exponentialAverage(renderTime.count(), renderTimeAverage, 10.0);
 	}
-
-	renderTime = getNanos() - now;
-	renderTimeAverage = exponentialAverage(renderTime.count(), renderTimeAverage, 10.0);
 	
 	FrameMark
 }
@@ -160,6 +188,40 @@ void AuroraWindow::setMainLayer(UILayer* layer) {
 	} else {
 		delete layers[0];
 		layers[0] = layer;
+	}
+}
+
+void AuroraWindow::restore_VK2D_render(bool viewportAndScissor, bool windowFrameData) {
+	window->impl->previous_pipeline_settings = vk2d::_internal::GraphicsPipelineSettings {};
+	window->impl->mesh_buffer->bound_vertex_buffer_block = nullptr;
+	window->impl->mesh_buffer->bound_index_buffer_block = nullptr;
+	
+	if (viewportAndScissor) {
+		VkViewport viewport {};
+		viewport.x = 0;
+		viewport.y = 0;
+		viewport.width  = (float) vk_extent.width;
+		viewport.height = (float) vk_extent.height;
+		viewport.minDepth	= 0.0f;
+		viewport.maxDepth	= 1.0f;
+		vkCmdSetViewport(vk_command_buffer, 0, 1, &viewport);
+		
+		VkRect2D scissor {
+			{ 0, 0 },
+			vk_extent
+		};
+		vkCmdSetScissor(vk_command_buffer, 0, 1, &scissor);
+	}
+	
+	if (windowFrameData) {
+		vkCmdBindDescriptorSets(
+			vk_command_buffer,
+			VK_PIPELINE_BIND_POINT_GRAPHICS,
+			Aurora.vk2dInstance->impl->GetGraphicsPrimaryRenderPipelineLayout(),
+			vk2d::_internal::GRAPHICS_DESCRIPTOR_SET_ALLOCATION_WINDOW_FRAME_DATA,
+			1, &window->impl->frame_data_descriptor_set.descriptorSet,
+			0, nullptr
+		);
 	}
 }
 
@@ -234,6 +296,7 @@ void AuroraWindow::EventCharacter(vk2d::Window* window, uint32_t character, vk2d
 
 void AuroraWindow::EventWindowSize(vk2d::Window* window, vk2d::Vector2u size) {
 //	std::cout << "window resize" << std::endl;
+	vk_extent = window->impl->extent;
 }
 
 void AuroraWindow::EventWindowMaximize(vk2d::Window* window, bool maximized) {

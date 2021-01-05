@@ -21,6 +21,7 @@ class UILayer {
 		virtual bool eventScroll(vk2d::Vector2d scroll) { return false; };
 		virtual bool eventCharacter(uint32_t character, vk2d::ModifierKeyFlags modifier_keys) { return false; };
 		virtual bool eventKeyboard(vk2d::KeyboardButton button, int32_t scancode, vk2d::ButtonAction action, vk2d::ModifierKeyFlags modifier_keys) { return false; };
+		virtual void eventResized() {};
 		
 	protected:
 		LoggerPtr log = Logger::getLogger("aurora.ui.layer");

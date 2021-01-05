@@ -10,6 +10,7 @@
 
 #include <vulkan/vulkan_core.h>
 #include <VK2D.h>
+#include <System/QueueResolver.h>
 #include <log4cxx/logger.h>
 
 #include "utils/Utils.hpp"
@@ -36,11 +37,23 @@ class AuroraWindow : vk2d::WindowEventHandler {
 		void addLayer(UILayer* layer);
 		void setMainLayer(UILayer* layer);
 		bool isKeyPressed(int glfwKey);
+		void restore_VK2D_render(bool viewportAndScissor, bool windowFrameData);
 		
 		vk2d::Window* window;
 		std::vector<TracyVkCtx> tracyVkCtxs;
 		std::vector<UILayer*> layers;
 		vk2d::Vector2i mousePos;
+		
+		VkInstance vk_instance;
+		VkDevice vk_device;
+		VkPhysicalDevice vk_physical_device;
+		VkRenderPass vk_render_pass;
+		VkExtent2D vk_extent;
+		VkCommandBuffer vk_command_buffer;
+		vk2d::_internal::ResolvedQueue vk_render_queue;
+		vk2d::_internal::ResolvedQueue vk_transfer_queue;
+		VkPipelineCache vk_pipeline_cache;
+		VkCommandPool vk_command_pool;
 		
 		template<aUILayer T>
 		T& getLayer() {

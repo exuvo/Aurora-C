@@ -18,15 +18,9 @@ class ShaderTestLayer: public UILayer {
 		virtual ~ShaderTestLayer() override;
 		
 		virtual void render() override;
+		virtual void eventResized() override;
 		
 	private:
-		VkInstance instance = VK_NULL_HANDLE;
-		VkDevice logicalDevice = VK_NULL_HANDLE;
-		VkPhysicalDevice physicalDevice = VK_NULL_HANDLE;
-	
-		VkRenderPass renderPass = VK_NULL_HANDLE;
-		VkExtent2D windowSize = VkExtent2D { };
-	
 		VkPipelineLayout pipelineLayout = VK_NULL_HANDLE;
 		VkPipeline graphicsPipeline = VK_NULL_HANDLE;
 	

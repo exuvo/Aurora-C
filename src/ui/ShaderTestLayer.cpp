@@ -14,8 +14,6 @@
 #include <vulkan/vulkan.h>
 
 #include <VK2D.h>
-#include <Interface/InstanceImpl.h>
-#include <Interface/WindowImpl.h>
 
 #include "Aurora.hpp"
 #include "ShaderTestLayer.hpp"
@@ -66,45 +64,60 @@ const std::vector<Vertex> vertices = {
 const std::vector<uint32_t> indices = { 0, 1, 2, 2, 3, 0 };
 
 ShaderTestLayer::ShaderTestLayer(AuroraWindow& parentWindow): UILayer(parentWindow) {
-	instance = window.window->impl->instance->GetVulkanInstance();
-	logicalDevice = window.window->impl->vk_device;
-	physicalDevice = window.window->impl->vk_physical_device;
-	renderPass = window.window->impl->vk_render_pass;
-	windowSize = window.window->impl->extent;
-	
 	createVulkanIndexBuffer();
 	createVulkanVertexBuffer();
+	createGraphicsPipeline();
+}
+
+void ShaderTestLayer::eventResized() {
+	cleanupResizing();
 	createGraphicsPipeline();
 }
 
 ShaderTestLayer::~ShaderTestLayer() {
 	cleanupResizing();
 	
-	vkDestroyBuffer(logicalDevice, indexBuffer, nullptr);
-	vkFreeMemory(logicalDevice, indexBufferMemory, nullptr);
+	vkDestroyBuffer(window.vk_device, indexBuffer, nullptr);
+	vkFreeMemory(window.vk_device, indexBufferMemory, nullptr);
 	
-	vkDestroyBuffer(logicalDevice, vertexBuffer, nullptr);
-	vkFreeMemory(logicalDevice, vertexBufferMemory, nullptr);
+	vkDestroyBuffer(window.vk_device, vertexBuffer, nullptr);
+	vkFreeMemory(window.vk_device, vertexBufferMemory, nullptr);
 }
 
 void ShaderTestLayer::cleanupResizing() {
-	vkDestroyPipeline(logicalDevice, graphicsPipeline, nullptr);
-	vkDestroyPipelineLayout(logicalDevice, pipelineLayout, nullptr);
+	vkDestroyPipeline(window.vk_device, graphicsPipeline, nullptr);
+	vkDestroyPipelineLayout(window.vk_device, pipelineLayout, nullptr);
 }
 
 void ShaderTestLayer::render() {
-	VkCommandBuffer commandBuffer = window.window->impl->vk_render_command_buffers[window.window->impl->next_image];
+	VkCommandBuffer commandBuffer = window.vk_command_buffer;
 	
 	vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline);
 	
+	VkBuffer vertex_buffers[1] = { vertexBuffer };
 	VkDeviceSize offsets[] = { 0 };
-	vkCmdBindVertexBuffers(commandBuffer, 0, 1, &vertexBuffer, offsets);
+	vkCmdBindVertexBuffers(commandBuffer, 0, 1, vertex_buffers, offsets);
 	vkCmdBindIndexBuffer(commandBuffer, indexBuffer, 0, VK_INDEX_TYPE_UINT32);
+	
+//	VkViewport viewport {};
+//	viewport.x = 0;
+//	viewport.y = 0;
+//	viewport.width  = (float) window.vk_extent.width;
+//	viewport.height = (float) window.vk_extent.height;
+//	viewport.minDepth	= 0.0f;
+//	viewport.maxDepth	= 1.0f;
+//	vkCmdSetViewport(commandBuffer, 0, 1, &viewport);
+	
+//	VkRect2D scissor {
+//		{ 0, 0 },
+//		window.vk_extent
+//	};
+//	vkCmdSetScissor(commandBuffer, 0, 1, &scissor);
 	
 	{
 		float scale[2];
-		scale[0] = 2.0f / window.window->impl->extent.width;
-		scale[1] = 2.0f / window.window->impl->extent.height;
+		scale[0] = 2.0f / window.vk_extent.width;
+		scale[1] = 2.0f / window.vk_extent.height;
 		float translate[2];
 		translate[0] = -1.0f;
 		translate[1] = -1.0f;
@@ -114,31 +127,12 @@ void ShaderTestLayer::render() {
 	
 	vkCmdDrawIndexed(commandBuffer, static_cast<uint32_t>(indices.size()), 1, 0, 0, 0);
 	
+	window.restore_VK2D_render(false, false);
+	
 	// Restore VK2D render pipeline
-	window.window->impl->previous_pipeline_settings = vk2d::_internal::GraphicsPipelineSettings {};
-	window.window->impl->mesh_buffer->bound_vertex_buffer_block = nullptr;
-	window.window->impl->mesh_buffer->bound_index_buffer_block = nullptr;
-	
-	VkViewport viewport {};
-	viewport.x			= 0;
-	viewport.y			= 0;
-	viewport.width		= float( window.window->impl->extent.width );
-	viewport.height		= float( window.window->impl->extent.height );
-	viewport.minDepth	= 0.0f;
-	viewport.maxDepth	= 1.0f;
-	vkCmdSetViewport(
-		commandBuffer,
-		0, 1, &viewport
-	);
-	
-	VkRect2D scissor {
-		{ 0, 0 },
-		window.window->impl->extent
-	};
-	vkCmdSetScissor(
-		commandBuffer,
-		0, 1, &scissor
-	);
+//	window.window->impl->previous_pipeline_settings = vk2d::_internal::GraphicsPipelineSettings {};
+//	window.window->impl->mesh_buffer->bound_vertex_buffer_block = nullptr;
+//	window.window->impl->mesh_buffer->bound_index_buffer_block = nullptr;
 }
 
 //Helper functions!
@@ -189,12 +183,12 @@ void ShaderTestLayer::createVulkanVertexBuffer() {
 	
 	createBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
 	             VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, vertexBuffer,
-	             vertexBufferMemory, logicalDevice, physicalDevice);
+	             vertexBufferMemory, window.vk_device, window.vk_physical_device);
 	
 	void* data;
-	vkMapMemory(logicalDevice, vertexBufferMemory, 0, bufferSize, 0, &data);
+	vkMapMemory(window.vk_device, vertexBufferMemory, 0, bufferSize, 0, &data);
 	memcpy(data, vertices.data(), (size_t) bufferSize);
-	vkUnmapMemory(logicalDevice, vertexBufferMemory);
+	vkUnmapMemory(window.vk_device, vertexBufferMemory);
 }
 
 void ShaderTestLayer::createVulkanIndexBuffer() {
@@ -202,12 +196,12 @@ void ShaderTestLayer::createVulkanIndexBuffer() {
 	
 	createBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
 	             VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, indexBuffer,
-	             indexBufferMemory, logicalDevice, physicalDevice);
+	             indexBufferMemory, window.vk_device, window.vk_physical_device);
 	
 	void* data;
-	vkMapMemory(logicalDevice, indexBufferMemory, 0, bufferSize, 0, &data);
+	vkMapMemory(window.vk_device, indexBufferMemory, 0, bufferSize, 0, &data);
 	memcpy(data, indices.data(), (size_t) bufferSize);
-	vkUnmapMemory(logicalDevice, indexBufferMemory);
+	vkUnmapMemory(window.vk_device, indexBufferMemory);
 }
 
 void ShaderTestLayer::createGraphicsPipeline() {
@@ -224,8 +218,6 @@ void ShaderTestLayer::createGraphicsPipeline() {
 	fragShaderStageInfo.stage = VK_SHADER_STAGE_FRAGMENT_BIT;
 	fragShaderStageInfo.module = shader.fragment;
 	fragShaderStageInfo.pName = "main";
-	
-	VkPipelineShaderStageCreateInfo shaderStages[] = { vertShaderStageInfo, fragShaderStageInfo };
 	
 	VkPipelineVertexInputStateCreateInfo vertexInputInfo { };
 	vertexInputInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
@@ -246,21 +238,27 @@ void ShaderTestLayer::createGraphicsPipeline() {
 	VkViewport viewport { };
 	viewport.x = 0.0f;
 	viewport.y = 0.0f;
-	viewport.width = (float) windowSize.width;
-	viewport.height = (float) windowSize.height;
+	viewport.width = (float) window.vk_extent.width;
+	viewport.height = (float) window.vk_extent.height;
 	viewport.minDepth = 0.0f;
 	viewport.maxDepth = 1.0f;
 	
 	VkRect2D scissor { };
 	scissor.offset = { 0, 0 };
-	scissor.extent = windowSize;
+	scissor.extent = window.vk_extent;
 	
 	VkPipelineViewportStateCreateInfo viewportState { };
 	viewportState.sType = VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO;
 	viewportState.viewportCount = 1;
-	viewportState.pViewports = &viewport;
 	viewportState.scissorCount = 1;
+	viewportState.pViewports = &viewport;
 	viewportState.pScissors = &scissor;
+	
+//	VkDynamicState dynamic_states[2] = { VK_DYNAMIC_STATE_VIEWPORT, VK_DYNAMIC_STATE_SCISSOR };
+//	VkPipelineDynamicStateCreateInfo dynamic_state = { };
+//	dynamic_state.sType = VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO;
+//	dynamic_state.dynamicStateCount = (uint32_t) ARRAY_LEN(dynamic_states);
+//	dynamic_state.pDynamicStates = dynamic_states;
 	
 	VkPipelineRasterizationStateCreateInfo rasterizer { };
 	rasterizer.sType = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;
@@ -293,14 +291,23 @@ void ShaderTestLayer::createGraphicsPipeline() {
 	colorBlending.blendConstants[2] = 0.0f;
 	colorBlending.blendConstants[3] = 0.0f;
 	
+	// Constants: we are using 'vec2 offset' and 'vec2 scale' instead of a full 3d projection matrix
+	VkPushConstantRange push_constants[1] = {};
+	push_constants[0].stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
+	push_constants[0].offset = sizeof(float) * 0;
+	push_constants[0].size = sizeof(float) * 4;
+	
 	VkPipelineLayoutCreateInfo pipelineLayoutInfo { };
 	pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
 	pipelineLayoutInfo.setLayoutCount = 0;
-	pipelineLayoutInfo.pushConstantRangeCount = 0;
+	pipelineLayoutInfo.pushConstantRangeCount = 1;
+	pipelineLayoutInfo.pPushConstantRanges = push_constants;
 	
-	if (vkCreatePipelineLayout(logicalDevice, &pipelineLayoutInfo, nullptr, &pipelineLayout) != VK_SUCCESS) {
+	if (vkCreatePipelineLayout(window.vk_device, &pipelineLayoutInfo, nullptr, &pipelineLayout) != VK_SUCCESS) {
 		throw std::runtime_error("failed to create pipeline layout!");
 	}
+	
+	VkPipelineShaderStageCreateInfo shaderStages[] = { vertShaderStageInfo, fragShaderStageInfo };
 	
 	VkGraphicsPipelineCreateInfo pipelineInfo { };
 	pipelineInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
@@ -313,17 +320,14 @@ void ShaderTestLayer::createGraphicsPipeline() {
 	pipelineInfo.pMultisampleState = &multisampling;
 	pipelineInfo.pColorBlendState = &colorBlending;
 	pipelineInfo.layout = pipelineLayout;
-	pipelineInfo.renderPass = renderPass;
+	pipelineInfo.renderPass = window.vk_render_pass;
 	pipelineInfo.subpass = 0;
 	pipelineInfo.basePipelineHandle = VK_NULL_HANDLE;
+//	pipelineInfo.pDynamicState = &dynamic_state;
 	
-	if (vkCreateGraphicsPipelines(logicalDevice, VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &graphicsPipeline)
-	!= VK_SUCCESS) {
+	if (vkCreateGraphicsPipelines(window.vk_device, VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &graphicsPipeline) != VK_SUCCESS) {
 		throw std::runtime_error("failed to create graphics pipeline!");
 	}
-//	
-//	vkDestroyShaderModule(logicalDevice, fragShaderModule, nullptr);
-//	vkDestroyShaderModule(logicalDevice, vertShaderModule, nullptr);
 }
 
 

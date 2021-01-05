@@ -9,7 +9,6 @@
 #include "TracyVulkan.hpp"
 
 #include <VK2D.h>
-#include <Interface/InstanceImpl.h>
 #include <Interface/WindowImpl.h>
 
 #include <imgui.h>
@@ -108,17 +107,17 @@ void ImGuiLayer::initShared(){
 			pool_info.poolSizeCount = (uint32_t)IM_ARRAYSIZE(pool_sizes);
 			pool_info.pPoolSizes = pool_sizes;
 			
-			auto result = vkCreateDescriptorPool(Aurora.vk2dInstance->impl->GetVulkanDevice(), &pool_info, nullptr, &vk_descriptorPool);
+			auto result = vkCreateDescriptorPool(window.vk_device, &pool_info, nullptr, &vk_descriptorPool);
 			check(result == VK_SUCCESS, "error creating descriptor pool: " << result);
 		}
 		
 		ImGui_ImplVulkan_InitInfo init_info = { };
-		init_info.Instance = Aurora.vk2dInstance->impl->GetVulkanInstance();
-		init_info.PhysicalDevice = Aurora.vk2dInstance->impl->GetVulkanPhysicalDevice();
-		init_info.Device = Aurora.vk2dInstance->impl->GetVulkanDevice();
-		init_info.Queue = Aurora.vk2dInstance->impl->GetPrimaryRenderQueue().GetQueue(); // or secondary_render_queue
-		init_info.QueueFamily = Aurora.vk2dInstance->impl->GetPrimaryRenderQueue().GetQueueFamilyIndex();
-		init_info.PipelineCache = Aurora.vk2dInstance->impl->GetGraphicsPipelineCache();
+		init_info.Instance = window.vk_instance;
+		init_info.PhysicalDevice = window.vk_physical_device;
+		init_info.Device = window.vk_device;
+		init_info.Queue = window.vk_render_queue.GetQueue(); // or secondary_render_queue
+		init_info.QueueFamily = window.vk_render_queue.GetQueueFamilyIndex();
+		init_info.PipelineCache = window.vk_pipeline_cache;
 		init_info.DescriptorPool = vk_descriptorPool;
 		init_info.Allocator = nullptr;
 		init_info.MinImageCount = 2; // Seems to be unused
@@ -129,14 +128,14 @@ void ImGuiLayer::initShared(){
 			}
 		};
 		
-		initImGuiVulkan = ImGui_ImplVulkan_Init(&init_info, window.window->impl->vk_render_pass);
+		initImGuiVulkan = ImGui_ImplVulkan_Init(&init_info, window.vk_render_pass);
 		check(initImGuiVulkan, "failed to init ImGui vulkan");
 		
 		// Upload Fonts
 		{
 			// Use any command queue
-			VkCommandPool command_pool = window.window->impl->vk_command_pool;
-			VkCommandBuffer command_buffer = window.window->impl->vk_render_command_buffers[window.window->impl->next_image];
+			VkCommandPool command_pool = window.vk_command_pool;
+			VkCommandBuffer command_buffer = window.vk_command_buffer;
 			
 			auto result = vkResetCommandPool(init_info.Device, command_pool, 0);
 			check(result == VK_SUCCESS, "cannot reset command pool for fonts: " << result);
@@ -198,7 +197,7 @@ ImGuiLayer::~ImGuiLayer() {
 			ImGui_ImplVulkan_Shutdown();
 			
 			if (vk_descriptorPool != VK_NULL_HANDLE) {
-				vkDestroyDescriptorPool(Aurora.vk2dInstance->impl->GetVulkanDevice(), vk_descriptorPool, nullptr);
+				vkDestroyDescriptorPool(window.vk_device, vk_descriptorPool, nullptr);
 				vk_descriptorPool = VK_NULL_HANDLE;
 			}
 		}
@@ -223,7 +222,7 @@ void ImGuiLayer::render() {
 	imGuiGlfw->NewFrame();
 	ImGui::NewFrame();
 	
-	VkCommandBuffer command_buffer = window.window->impl->vk_render_command_buffers[window.window->impl->next_image];
+	VkCommandBuffer command_buffer = window.vk_command_buffer;
 	
 	// Record ImGui primitives into command buffer
 	{
@@ -242,29 +241,31 @@ void ImGuiLayer::render() {
 		ImGui_ImplVulkan_RenderDrawData(draw_data, command_buffer);
 	}
 	
+	window.restore_VK2D_render(true, true);
+	
 	// Restore render pipeline
-	window.window->impl->previous_pipeline_settings = vk2d::_internal::GraphicsPipelineSettings {};
-	window.window->impl->mesh_buffer->bound_index_buffer_block = nullptr;
-	window.window->impl->mesh_buffer->bound_vertex_buffer_block = nullptr;
-	
-	VkRect2D scissor {
-		{ 0, 0 },
-		window.window->impl->extent
-	};
-	vkCmdSetScissor(
-		command_buffer,
-		0, 1, &scissor
-	);
-	
-	// Window frame data.
-	vkCmdBindDescriptorSets(
-		command_buffer,
-		VK_PIPELINE_BIND_POINT_GRAPHICS,
-		Aurora.vk2dInstance->impl->GetGraphicsPrimaryRenderPipelineLayout(),
-		vk2d::_internal::GRAPHICS_DESCRIPTOR_SET_ALLOCATION_WINDOW_FRAME_DATA,
-		1, &window.window->impl->frame_data_descriptor_set.descriptorSet,
-		0, nullptr
-	);
+//	window.window->impl->previous_pipeline_settings = vk2d::_internal::GraphicsPipelineSettings {};
+//	window.window->impl->mesh_buffer->bound_index_buffer_block = nullptr;
+//	window.window->impl->mesh_buffer->bound_vertex_buffer_block = nullptr;
+//	
+//	VkRect2D scissor {
+//		{ 0, 0 },
+//		window.window->impl->extent
+//	};
+//	vkCmdSetScissor(
+//		command_buffer,
+//		0, 1, &scissor
+//	);
+//	
+//	// Window frame data.
+//	vkCmdBindDescriptorSets(
+//		command_buffer,
+//		VK_PIPELINE_BIND_POINT_GRAPHICS,
+//		Aurora.vk2dInstance->impl->GetGraphicsPrimaryRenderPipelineLayout(),
+//		vk2d::_internal::GRAPHICS_DESCRIPTOR_SET_ALLOCATION_WINDOW_FRAME_DATA,
+//		1, &window.window->impl->frame_data_descriptor_set.descriptorSet,
+//		0, nullptr
+//	);
 }
 
 void ImGuiLayer::addWindow(UIWindow* uiWindow) {
