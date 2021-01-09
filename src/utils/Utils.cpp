@@ -418,6 +418,11 @@ std::string demangleTypeName(std::string tname) {
 	return {tname};
 }
 
+std::string type_name(const void* ptr) {
+	std::string tname = typeid(ptr).name();
+	return demangleTypeName(tname);
+}
+
 // https://stackoverflow.com/questions/11665829/how-can-i-print-stack-trace-for-caught-exceptions-in-c-code-injection-in-c/11674810#11674810
 #if not defined NDEBUG && __unix__ && defined __GNUC__ 
 #include <dlfcn.h>

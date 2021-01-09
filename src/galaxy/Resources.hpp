@@ -30,6 +30,7 @@ struct Resource {
 	}
 };
 
+// Always store these in pointers, otherwise comparisons will fail
 struct Resources {
 	// No storage requirements
 	//TODO types for buildings, spaceship hull, laser, railguns, missile explosives, armor
@@ -51,7 +52,9 @@ struct Resources {
 	// Requires temperature control and atmosphere
 	static inline constexpr Resource LIFE_SUPPORT { 0.8 }; // Food, Water, Air
 	
-	static inline constexpr Resource ALL[] { GENERIC, METAL_LIGHT, METAL_CONDUCTIVE };
+	static inline constexpr Resource ALL[] { GENERIC, METAL_LIGHT, METAL_CONDUCTIVE, SEMICONDUCTORS, RARE_EARTH,
+	                                         MAINTENANCE_SUPPLIES, MISSILES, SABOTS, NUCLEAR_FISSION, NUCLEAR_WASTE,
+	                                         NUCLEAR_FUSION, ROCKET_FUEL, LIFE_SUPPORT };
 };
 
 struct CargoType {
@@ -64,6 +67,7 @@ struct CargoType {
 	}
 };
 
+// Always store these in pointers, otherwise comparisons will fail
 struct CargoTypes {
 	static inline const CargoType NORMAL {{Resources::MAINTENANCE_SUPPLIES, Resources::GENERIC, Resources::METAL_LIGHT, Resources::METAL_CONDUCTIVE, Resources::SEMICONDUCTORS, Resources::RARE_EARTH}};
 	static inline const CargoType AMMUNITION {{Resources::MISSILES, Resources::SABOTS}};

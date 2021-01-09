@@ -17,3 +17,7 @@ std::string ShipHull::toString() const {
 //	
 //	return "$name ${Units.daysToYear(parentHull.designDay)}-${Units.daysToSubYear(designDay)}";
 }
+
+std::ostream& operator<< (std::ostream& out, const ShipHull& hull) {
+	return out << hull.toString();
+}

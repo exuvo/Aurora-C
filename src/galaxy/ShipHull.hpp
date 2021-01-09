@@ -11,10 +11,17 @@
 #include <string>
 #include <fmt/format.h>
 
-struct ShipHull {
+class ShipHull {
+public:
+	
+	
 	
 	std::string toString() const;
+	
+private:
 };
+
+std::ostream& operator<< (std::ostream& out, const ShipHull& hull);
 
 template <>
 struct fmt::formatter<ShipHull> {

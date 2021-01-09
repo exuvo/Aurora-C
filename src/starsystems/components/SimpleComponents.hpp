@@ -70,4 +70,14 @@ struct TimedLifeComponent {
 
 struct AsteroidComponent {};
 
+struct CrewComponent {
+	uint16_t alive;
+	uint16_t dead;
+	uint8_t morale; // 100 normal
+};
+
+struct HeatComponent {
+	uint32_t temperature; // In kelvin
+};
+
 #endif /* SRC_STARSYSTEMS_COMPONENTS_SIMPLECOMPONENTS_HPP_ */

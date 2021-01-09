@@ -23,6 +23,7 @@ using namespace std::chrono;
 #include "utils/enum.h"
 
 #define ARRAY_LEN(x) (sizeof(x) / sizeof(x[0]))
+#define ARRAY_LENGTH(x) ARRAY_LEN(x)
 
 BETTER_ENUM(ThreadPriority, uint8_t,
 		LOW,
@@ -95,6 +96,8 @@ std::string type_name() {
 	std::string tname = typeid(T).name();
 	return demangleTypeName(tname);
 }
+
+std::string type_name(const void* ptr);
 
 std::string getLastExceptionStacktrace();
 std::string getCurrentStacktrace();
