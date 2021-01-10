@@ -11,14 +11,20 @@
 #include <string>
 #include <fmt/format.h>
 
-class ShipHull {
-public:
-	
-	
+#include "starsystems/components/StrategicIconComponent.hpp"
+
+struct HullClass {
+	std::string name;
+	std::string code;
+};
+
+struct ShipHull {
+	std::string name;
+	HullClass* hullClass;
+	StrategicIcon icon;
 	
 	std::string toString() const;
-	
-private:
+	static inline constexpr double LengthToDiameterRatio = 2.0;
 };
 
 std::ostream& operator<< (std::ostream& out, const ShipHull& hull);

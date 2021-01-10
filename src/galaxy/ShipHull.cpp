@@ -9,9 +9,7 @@
 
 std::string ShipHull::toString() const {
 	return "";
-//	val parentHull = parentHull;
-//	
-//	if (parentHull == null) {
+//	if (parentHull == nullptr) {
 //		return "$name ${Units.daysToYear(designDay)}";
 //	}
 //	
