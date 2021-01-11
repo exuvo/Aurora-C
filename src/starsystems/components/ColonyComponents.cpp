@@ -8,6 +8,7 @@
 #include <fmt/core.h>
 
 #include "ColonyComponents.hpp"
+#include "galaxy/ShipHull.hpp"
 #include "utils/Utils.hpp"
 
 uint64_t ShipyardModificationExpandCapacity::getCost(Shipyard& shipyard) {

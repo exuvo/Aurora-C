@@ -9,20 +9,53 @@
 #define SRC_GALAXY_SHIPHULL_HPP_
 
 #include <string>
+#include <vector>
+#include <map>
+#include <unordered_map>
 #include <fmt/format.h>
 
+#include "galaxy/ShipParts.hpp"
 #include "starsystems/components/StrategicIconComponent.hpp"
+#include "starsystems/components/PowerComponent.hpp"
+#include "starsystems/components/ColonyComponents.hpp"
+
+struct MunitionHull;
 
 struct HullClass {
 	std::string name;
 	std::string code;
 };
 
-struct ShipHull {
+struct ArmorLayer {
 	std::string name;
-	HullClass* hullClass;
+	uint8_t blockHP;
+	uint16_t energyPerDamage;
+};
+
+struct ShipHull {
+	std::string name = "";
+	HullClass* hullClass = nullptr;
+	ShipHull* parentHull = nullptr;
+	std::vector<ShipHull*> derivatives;
 	StrategicIcon icon;
+	uint32_t designDay = 0;
+	bool locked = false;
+	bool obsolete = false;
+	const ShipyardType* requiredShipYardType = &ShipyardTypes::CIVILIAN;
+	std::string comment = "";
+	std::vector<Part*> parts;
+	std::vector<ArmorLayer*> armorLayers; // Each layer is 1 centimetre of armor
+	std::unordered_map<Resource*, uint64_t> preferredCargo;
+	std::map<MunitionHull*, uint32_t> preferredMunitions;
+	std::unordered_map<PartIndex<WeaponPart>, MunitionHull*> preferredPartMunitions;
+	const PowerScheme* powerScheme = &PowerSchemes::SOLAR_BATTERY_REACTOR;
+	std::unordered_map<PartIndex<TargetingComputer>, std::vector<PartIndex<WeaponPart>>> defaultWeaponAssignments;
 	
+	std::vector<PartIndex<Shield>> shields;
+	std::vector<PartIndex<ThrustingPart>> thrusters;
+	std::vector<PartIndex<TargetingComputer>> targetingComputers;
+	
+	void calculateCachedValues();
 	std::string toString() const;
 	static inline constexpr double LengthToDiameterRatio = 2.0;
 };

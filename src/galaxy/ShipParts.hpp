@@ -54,7 +54,7 @@ BETTER_ENUM(PartType, uint8_t,
 struct Part {
 	std::string name;
 	uint32_t designDay;
-	std::map<Resource, uint64_t> cost;
+	std::map<Resource*, uint64_t> cost;
 	uint32_t mass; // In kg
 	uint32_t volume; // In cm3
 	uint16_t types;
@@ -70,34 +70,52 @@ struct Part {
 
 bool operator &(const Part& part, PartType type);
 
+template<class partType = Part>
+struct PartIndex {
+	uint16_t idx;
+	
+	PartIndex(uint16_t idx): idx(idx) {}
+	
+	template<class other>
+	PartIndex(PartIndex<other> p): idx(p.idx) {}
+	
+	inline uint16_t operator() () const {
+		return idx;
+	}
+	
+	inline operator uint16_t () const {
+		return idx;
+	}
+};
+
 struct ContainerPart {
 	uint32_t capacity;
-	CargoType cargoType;
+	const CargoType* cargoType;
 	
-	ContainerPart(Part* part, uint32_t capacity, CargoType cargoType)
+	ContainerPart(Part* part, uint32_t capacity, const CargoType* cargoType)
 	: capacity(capacity), cargoType(cargoType) {
 		part->types |= PartType::Container;
 	};
 };
 
 struct CargoContainerPart: public ContainerPart {
-	CargoContainerPart(Part* part, uint32_t capacity): ContainerPart(part, capacity, CargoTypes::NORMAL) {};
+	CargoContainerPart(Part* part, uint32_t capacity): ContainerPart(part, capacity, &CargoTypes::NORMAL) {};
 };
 
 struct FuelContainerPart: public ContainerPart {
-	FuelContainerPart(Part* part, uint32_t capacity): ContainerPart(part, capacity, CargoTypes::FUEL) {};
+	FuelContainerPart(Part* part, uint32_t capacity): ContainerPart(part, capacity, &CargoTypes::FUEL) {};
 };
 
 struct LifeSupportContainerPart: public ContainerPart {
-	LifeSupportContainerPart(Part* part, uint32_t capacity): ContainerPart(part, capacity, CargoTypes::LIFE_SUPPORT) {};
+	LifeSupportContainerPart(Part* part, uint32_t capacity): ContainerPart(part, capacity, &CargoTypes::LIFE_SUPPORT) {};
 };
 
 struct AmmoContainerPart: public ContainerPart {
-	AmmoContainerPart(Part* part, uint32_t capacity): ContainerPart(part, capacity, CargoTypes::AMMUNITION) {};
+	AmmoContainerPart(Part* part, uint32_t capacity): ContainerPart(part, capacity, &CargoTypes::AMMUNITION) {};
 };
 
 struct NuclearContainerPart: public ContainerPart {
-	NuclearContainerPart(Part* part, uint32_t capacity): ContainerPart(part, capacity, CargoTypes::NUCLEAR) {};
+	NuclearContainerPart(Part* part, uint32_t capacity): ContainerPart(part, capacity, &CargoTypes::NUCLEAR) {};
 };
 
 struct FueledPart {

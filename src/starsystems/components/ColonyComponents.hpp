@@ -15,9 +15,9 @@
 #include <numeric>
 
 #include "galaxy/Resources.hpp"
-#include "galaxy/ShipHull.hpp"
 
 struct Shipyard;
+struct ShipHull;
 
 struct Building {
 	std::string name;

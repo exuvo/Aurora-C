@@ -14,7 +14,7 @@ class TextureRegion;
 // Icon shape/outline
 struct StrategicIconBase {
 	const char path[32];
-	const uint64_t massLimit; // In nm
+	const uint64_t massLimit;
 	
 	bool operator==(const StrategicIconBase& o) const {
 		return this == &o;
