@@ -11,6 +11,9 @@
 #include <stdint.h>
 #include <vector>
 #include <array>
+#include <algorithm>
+
+#include "utils/Utils.hpp"
 
 // Density in g/cm³.  1 g/cm³ = 1000 kg/m³
 constexpr uint32_t densityToVolume(float density) {
@@ -52,9 +55,28 @@ struct Resources {
 	// Requires temperature control and atmosphere
 	static inline constexpr Resource LIFE_SUPPORT { 0.8 }; // Food, Water, Air
 	
-	static inline constexpr Resource ALL[] { GENERIC, METAL_LIGHT, METAL_CONDUCTIVE, SEMICONDUCTORS, RARE_EARTH,
-	                                         MAINTENANCE_SUPPLIES, MISSILES, SABOTS, NUCLEAR_FISSION, NUCLEAR_WASTE,
-	                                         NUCLEAR_FUSION, ROCKET_FUEL, LIFE_SUPPORT };
+	static inline constexpr const Resource* ALL[] { &GENERIC, &METAL_LIGHT, &METAL_CONDUCTIVE, &SEMICONDUCTORS, &RARE_EARTH,
+	                                         &MAINTENANCE_SUPPLIES, &MISSILES, &SABOTS, &NUCLEAR_FISSION, &NUCLEAR_WASTE,
+	                                         &NUCLEAR_FUSION, &ROCKET_FUEL, &LIFE_SUPPORT };
+};
+
+struct ResourcePnt {
+	uint8_t idx = 0;
+	
+	constexpr ResourcePnt(uint8_t idx): idx(idx) {};
+	constexpr ResourcePnt(Resource* resource) {
+		auto itr = std::find(Resources::ALL, Resources::ALL + ARRAY_LENGTH(Resources::ALL), resource);
+		
+		if (itr != std::end(Resources::ALL)) {
+			idx = itr - Resources::ALL;
+		} else {
+			throw std::invalid_argument("Invalid resource pointer");
+		}
+	}
+	
+	const Resource* operator -> () {
+		return Resources::ALL[idx];
+	}
 };
 
 struct CargoType {
