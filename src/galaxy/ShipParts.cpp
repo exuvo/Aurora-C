@@ -21,17 +21,16 @@ bool operator &(const Part& part, PartType type) {
 }
 
 void Part::calculateCachedValues() {
-	mass = std::accumulate(cost.begin(), cost.end(), 0l, [](uint64_t sum, const std::pair<ResourcePnt, uint64_t>& pair) {
-		return sum + pair.second;
-	});
+	mass =  std::accumulate(cost, cost + Resources::size, 0l);
 	
 	if (mass == 0) {
 		mass = 1;
 	}
 	
-	volume = std::accumulate(cost.begin(), cost.end(), 0l, [](uint64_t sum, const std::pair<ResourcePnt, uint64_t>& pair) {
-		return sum + pair.second * pair.first->specificVolume;
-	});
+	volume = 0;
+	for (size_t i=0; i < (size_t)(cost + Resources::size); i++) {
+		volume += cost[i] * ResourcePnt(i)->specificVolume;
+	}
 	
 	if (volume == 0) {
 		volume = 1;

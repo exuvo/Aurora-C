@@ -9,8 +9,6 @@
 #define SRC_STARSYSTEMS_COMPONENTS_COLONYCOMPONENTS_HPP_
 
 #include <stdint.h>
-#include <map>
-#include <unordered_map>
 #include <string>
 #include <numeric>
 
@@ -21,24 +19,20 @@ struct ShipHull;
 
 struct Building {
 	std::string name;
-	std::map<ResourcePnt, uint64_t> cost;
+	uint64_t cost[Resources::size];
 };
 
 struct ShipyardSlipway {
 	ShipHull* hull;
-	std::map<ResourcePnt, uint64_t> hullCost;
-	std::map<ResourcePnt, uint64_t> usedResources;
+	uint64_t hullCost[Resources::size];
+	uint64_t usedResources[Resources::size];
 	
 	uint64_t totalUsedResources() {
-		return std::accumulate(usedResources.begin(), usedResources.end(), 0l, [](uint64_t sum, const auto& pair){
-			return sum + pair.second;
-		});
+		return std::accumulate(usedResources, usedResources + Resources::size, 0l);
 	}
 	
 	uint64_t totalCost() {
-		return std::accumulate(hullCost.begin(), hullCost.end(), 0l, [](uint64_t sum, const auto& pair){
-			return sum + pair.second;
-		});
+		return std::accumulate(hullCost, hullCost + Resources::size, 0l);
 	}
 	
 	uint32_t progress() {
@@ -161,8 +155,8 @@ struct PlanetComponent {
 	uint16_t atmosphericDensity = 1225; // g/m³ at 1013.25 hPa (abs) and 15°C
 	uint8_t atmospheBreathability = 100; // percentage
 	uint16_t temperature = 20; // celcius
-	std::map<Resource, uint64_t> minableResources;
-	std::map<Resource, uint32_t> resourceAccessibility;
+	uint64_t minableResources[Resources::size];
+	uint32_t resourceAccessibility[Resources::size];
 };
 
 struct ColonyComponent {

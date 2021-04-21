@@ -9,8 +9,6 @@
 #define SRC_GALAXY_SHIPPARTS_HPP_
 
 #include <string>
-#include <map>
-#include <unordered_map>
 #include <fmt/format.h>
 
 #include "galaxy/Resources.hpp"
@@ -37,7 +35,7 @@ struct BeamWavelengths {
 	static inline constexpr BeamWavelength ALL[] { Microwaves, Infrared, VisibleLight, Ultraviolet, Xrays };
 };
 
-BETTER_ENUM(PartType, uint8_t,
+BETTER_ENUM(PartType, uint8_t, // Used as bit index
 	Container,
 	Fueled,
 	FuelWaste,
@@ -54,7 +52,7 @@ BETTER_ENUM(PartType, uint8_t,
 struct Part {
 	std::string name;
 	uint32_t designDay;
-	std::map<ResourcePnt, uint64_t> cost;
+	uint64_t cost[Resources::size];
 	uint32_t mass; // In kg
 	uint32_t volume; // In cm3
 	uint16_t types;
@@ -94,7 +92,7 @@ struct ContainerPart {
 	
 	ContainerPart(Part* part, uint32_t capacity, const CargoType* cargoType)
 	: capacity(capacity), cargoType(cargoType) {
-		part->types |= PartType::Container;
+		part->types |= 1 << PartType::Container;
 	};
 };
 
@@ -125,7 +123,7 @@ struct FueledPart {
 	
 	FueledPart(Part* part, const ResourcePnt fuel, uint32_t fuelConsumption, uint32_t fuelTime)
 	: fuel(fuel), fuelConsumption(fuelConsumption), fuelTime(fuelTime) {
-		part->types |= PartType::Fueled;
+		part->types |= 1 << PartType::Fueled;
 	}
 };
 
@@ -133,7 +131,7 @@ struct FuelWastePart {
 	const ResourcePnt waste;
 	
 	FuelWastePart(Part* part, const ResourcePnt waste): waste(waste) {
-		part->types |= PartType::FuelWaste;
+		part->types |= 1 << PartType::FuelWaste;
 	}
 };
 
@@ -141,7 +139,7 @@ struct PoweringPart {
 	uint32_t power; // W/s
 	
 	PoweringPart(Part* part, uint32_t power): power(power) {
-		part->types |= PartType::Powering;
+		part->types |= 1 << PartType::Powering;
 	}
 };
 
@@ -149,7 +147,7 @@ struct PoweredPart {
 	uint32_t powerConsumption; // W/s
 	
 	PoweredPart(Part* part, uint32_t powerConsumption): powerConsumption(powerConsumption) {
-		part->types |= PartType::Powered;
+		part->types |= 1 << PartType::Powered;
 	}
 };
 
@@ -157,14 +155,14 @@ struct ChargedPart {
 	uint64_t capacity; // Ws
 	
 	ChargedPart(Part* part, uint64_t capacity): capacity(capacity) {
-		part->types |= PartType::Charged;
+		part->types |= 1 << PartType::Charged;
 	}
 };
 
 struct HeatingPart {
 	
 	HeatingPart(Part* part) {
-		part->types |= PartType::Heating;
+		part->types |= 1 << PartType::Heating;
 	}
 };
 
@@ -176,7 +174,7 @@ struct AmmunitionPart {
 	
 	AmmunitionPart(Part* part, const ResourcePnt ammunitionType, uint8_t magazineSize, uint16_t reloadTime, uint8_t ammunitionSize)
 	: ammunitionType(ammunitionType), magazineSize(magazineSize), reloadTime(reloadTime), ammunitionSize(ammunitionSize) {
-		part->types |= PartType::Ammunnition;
+		part->types |= 1 << PartType::Ammunnition;
 	}
 };
 
@@ -184,14 +182,14 @@ struct ThrustingPart {
 	uint32_t thrust; // In N
 	
 	ThrustingPart(Part* part, uint32_t thrust): thrust(thrust) {
-		part->types |= PartType::Thrusting;
+		part->types |= 1 << PartType::Thrusting;
 	}
 };
 
 struct WeaponPart {
 	
 	WeaponPart(Part* part) {
-		part->types |= PartType::Weapon;
+		part->types |= 1 << PartType::Weapon;
 	}
 };
 
@@ -213,7 +211,7 @@ struct SolarPanel: Part, PoweringPart {
 struct Reactor: PoweringPart, FueledPart {
 	Reactor(Part* part, uint32_t power, const ResourcePnt fuel, uint32_t fuelTime)
 	: PoweringPart(part, power), FueledPart(part, fuel, 1, fuelTime) {
-		part->types |= PartType::Reactor;
+		part->types |= 1 << PartType::Reactor;
 	}
 };
 

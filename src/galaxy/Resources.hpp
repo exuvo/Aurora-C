@@ -58,6 +58,8 @@ struct Resources {
 	static inline constexpr const Resource* ALL[] { &GENERIC, &METAL_LIGHT, &METAL_CONDUCTIVE, &SEMICONDUCTORS, &RARE_EARTH,
 	                                         &MAINTENANCE_SUPPLIES, &MISSILES, &SABOTS, &NUCLEAR_FISSION, &NUCLEAR_WASTE,
 	                                         &NUCLEAR_FUSION, &ROCKET_FUEL, &LIFE_SUPPORT };
+	
+	static inline constexpr const size_t size = ARRAY_LENGTH(ALL);
 };
 
 struct ResourcePnt {
@@ -76,6 +78,10 @@ struct ResourcePnt {
 	
 	const Resource* operator -> () const {
 		return Resources::ALL[idx];
+	}
+	
+	operator uint8_t () const {
+		return idx;
 	}
 };
 
@@ -98,6 +104,7 @@ struct CargoTypes {
 	static inline const CargoType NUCLEAR {{Resources::NUCLEAR_FISSION, Resources::NUCLEAR_WASTE, Resources::NUCLEAR_FUSION}};
 	
 	static inline const CargoType* ALL[] { &NORMAL, &AMMUNITION, &FUEL, &LIFE_SUPPORT, &NUCLEAR };
+	static inline constexpr const size_t size = ARRAY_LENGTH(ALL);
 };
 
 struct CargoPnt {
@@ -116,6 +123,10 @@ struct CargoPnt {
 	
 	const CargoType* operator -> () const {
 		return CargoTypes::ALL[idx];
+	}
+	
+	operator uint8_t () const {
+		return idx;
 	}
 };
 
