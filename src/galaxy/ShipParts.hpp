@@ -54,7 +54,7 @@ BETTER_ENUM(PartType, uint8_t,
 struct Part {
 	std::string name;
 	uint32_t designDay;
-	std::map<Resource*, uint64_t> cost;
+	std::map<ResourcePnt, uint64_t> cost;
 	uint32_t mass; // In kg
 	uint32_t volume; // In cm3
 	uint16_t types;
@@ -119,20 +119,20 @@ struct NuclearContainerPart: public ContainerPart {
 };
 
 struct FueledPart {
-	const Resource* fuel;
+	const ResourcePnt fuel;
 	uint32_t fuelConsumption; // kg per fuelTime
 	uint32_t fuelTime; // seconds of full usage for each kg
 	
-	FueledPart(Part* part, const Resource* fuel, uint32_t fuelConsumption, uint32_t fuelTime)
+	FueledPart(Part* part, const ResourcePnt fuel, uint32_t fuelConsumption, uint32_t fuelTime)
 	: fuel(fuel), fuelConsumption(fuelConsumption), fuelTime(fuelTime) {
 		part->types |= PartType::Fueled;
 	}
 };
 
 struct FuelWastePart {
-	const Resource* waste;
+	const ResourcePnt waste;
 	
-	FuelWastePart(Part* part, const Resource* waste): waste(waste) {
+	FuelWastePart(Part* part, const ResourcePnt waste): waste(waste) {
 		part->types |= PartType::FuelWaste;
 	}
 };
@@ -169,12 +169,12 @@ struct HeatingPart {
 };
 
 struct AmmunitionPart {
-	const Resource* ammunitionType;
+	const ResourcePnt ammunitionType;
 	uint8_t magazineSize;
 	uint16_t reloadTime;
 	uint8_t ammunitionSize; // In cm radius
 	
-	AmmunitionPart(Part* part, const Resource* ammunitionType, uint8_t magazineSize, uint16_t reloadTime, uint8_t ammunitionSize)
+	AmmunitionPart(Part* part, const ResourcePnt ammunitionType, uint8_t magazineSize, uint16_t reloadTime, uint8_t ammunitionSize)
 	: ammunitionType(ammunitionType), magazineSize(magazineSize), reloadTime(reloadTime), ammunitionSize(ammunitionSize) {
 		part->types |= PartType::Ammunnition;
 	}
@@ -211,7 +211,7 @@ struct SolarPanel: Part, PoweringPart {
 };
 
 struct Reactor: PoweringPart, FueledPart {
-	Reactor(Part* part, uint32_t power, const Resource* fuel, uint32_t fuelTime)
+	Reactor(Part* part, uint32_t power, const ResourcePnt fuel, uint32_t fuelTime)
 	: PoweringPart(part, power), FueledPart(part, fuel, 1, fuelTime) {
 		part->types |= PartType::Reactor;
 	}
@@ -250,7 +250,7 @@ struct ElectricalThruster: Part, ThrustingPart, PoweredPart {
 };
 
 struct FueledThruster: Part, ThrustingPart, FueledPart {
-	FueledThruster(uint32_t thrust, uint32_t fuelConsumption, const Resource* fuel)
+	FueledThruster(uint32_t thrust, uint32_t fuelConsumption, const ResourcePnt fuel)
 	: ThrustingPart(this, thrust), FueledPart(this, fuel, fuelConsumption, 1) {}
 };
 

@@ -11,12 +11,12 @@
 #include <vector>
 
 #include "galaxy/ShipParts.hpp"
+#include "galaxy/Resources.hpp"
 #include "utils/enum.h"
 
-struct Resource;
 struct ArmorLayer;
 
-BETTER_ENUM(DamagePattern, uint8_t, 
+BETTER_ENUM(DamagePattern, uint8_t,
   KINETIC, EXPLOSIVE, LASER
 )
 
@@ -39,7 +39,7 @@ struct MunitionPartIndex {
 };
 
 struct MunitionHull {
-	Resource* storageType;
+	ResourcePnt storageType;
 	std::string name;
 	uint32_t designDay = 0;
 	bool locked;

@@ -64,7 +64,7 @@ struct ResourcePnt {
 	uint8_t idx = 0;
 	
 	constexpr ResourcePnt(uint8_t idx): idx(idx) {};
-	constexpr ResourcePnt(Resource* resource) {
+	constexpr ResourcePnt(const Resource* resource) {
 		auto itr = std::find(Resources::ALL, Resources::ALL + ARRAY_LENGTH(Resources::ALL), resource);
 		
 		if (itr != std::end(Resources::ALL)) {
@@ -74,7 +74,7 @@ struct ResourcePnt {
 		}
 	}
 	
-	const Resource* operator -> () {
+	const Resource* operator -> () const {
 		return Resources::ALL[idx];
 	}
 };
@@ -97,7 +97,26 @@ struct CargoTypes {
 	static inline const CargoType LIFE_SUPPORT {{Resources::LIFE_SUPPORT}};
 	static inline const CargoType NUCLEAR {{Resources::NUCLEAR_FISSION, Resources::NUCLEAR_WASTE, Resources::NUCLEAR_FUSION}};
 	
-	static inline const CargoType ALL[] { NORMAL, AMMUNITION, FUEL, LIFE_SUPPORT, NUCLEAR };
+	static inline const CargoType* ALL[] { &NORMAL, &AMMUNITION, &FUEL, &LIFE_SUPPORT, &NUCLEAR };
+};
+
+struct CargoPnt {
+	uint8_t idx = 0;
+	
+	constexpr CargoPnt(uint8_t idx): idx(idx) {};
+	constexpr CargoPnt(const CargoType* cargoType) {
+		auto itr = std::find(CargoTypes::ALL, CargoTypes::ALL + ARRAY_LENGTH(CargoTypes::ALL), cargoType);
+		
+		if (itr != std::end(CargoTypes::ALL)) {
+			idx = itr - CargoTypes::ALL;
+		} else {
+			throw std::invalid_argument("Invalid CargoType pointer");
+		}
+	}
+	
+	const CargoType* operator -> () const {
+		return CargoTypes::ALL[idx];
+	}
 };
 
 #endif /* SRC_GALAXY_RESOURCES_HPP_ */

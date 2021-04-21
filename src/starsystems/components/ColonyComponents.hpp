@@ -21,13 +21,13 @@ struct ShipHull;
 
 struct Building {
 	std::string name;
-	std::map<Resource, uint64_t> cost;
+	std::map<ResourcePnt, uint64_t> cost;
 };
 
 struct ShipyardSlipway {
 	ShipHull* hull;
-	std::map<Resource, uint64_t> hullCost;
-	std::map<Resource, uint64_t> usedResources;
+	std::map<ResourcePnt, uint64_t> hullCost;
+	std::map<ResourcePnt, uint64_t> usedResources;
 	
 	uint64_t totalUsedResources() {
 		return std::accumulate(usedResources.begin(), usedResources.end(), 0l, [](uint64_t sum, const auto& pair){

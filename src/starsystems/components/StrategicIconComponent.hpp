@@ -44,10 +44,10 @@ struct StrategicIconsBase {
 	static inline constexpr StrategicIconBase MINE { "strategic/mine", 0 };
 	static inline constexpr StrategicIconBase NONE { "strategic/unknown1", 0 };
 	
-	static inline constexpr StrategicIconBase ALL[] { GIGANTIC, MASSIVE, HUGE, LARGE, MEDIUM,
-	                                                  SMALL, TINY, BOMBER, FIGHTER, COLONY,
-	                                                  OUTPOST, STARBASE, FORTRESS, ASTEROID1,
-	                                                  ASTEROID2, MINE, NONE };
+	static inline constexpr const StrategicIconBase* ALL[] { &GIGANTIC, &MASSIVE, &HUGE, &LARGE, &MEDIUM,
+	                                                  &SMALL, &TINY, &BOMBER, &FIGHTER, &COLONY,
+	                                                  &OUTPOST, &STARBASE, &FORTRESS, &ASTEROID1,
+	                                                  &ASTEROID2, &MINE, &NONE };
 };
 
 struct StrategicIconCenter {
@@ -74,9 +74,9 @@ struct StrategicIconsCenter {
 	static inline constexpr StrategicIconCenter BRACKETS2 { "strategic/cBrackets2" };
 	static inline constexpr StrategicIconCenter NONE { "strategic/cUnknown" };
 	
-	static inline constexpr StrategicIconCenter ALL[] { RAILGUN1, RAILGUN2, LASER1, LASER2, MISSILE1,
-	                                                  MISSILE2, MISSILE3, MISSILE4, THREE, INTEL,
-	                                                  HEALING_CIRCLE, BRACKETS1, BRACKETS2, NONE};
+	static inline constexpr const StrategicIconCenter* ALL[] { &RAILGUN1, &RAILGUN2, &LASER1, &LASER2, &MISSILE1,
+	                                                  &MISSILE2, &MISSILE3, &MISSILE4, &THREE, &INTEL,
+	                                                  &HEALING_CIRCLE, &BRACKETS1, &BRACKETS2, &NONE};
 };
 
 struct StrategicIcon {
