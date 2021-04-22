@@ -50,24 +50,30 @@ struct MunitionHull {
 	uint32_t volume; // cm³
 	
 	virtual ~MunitionHull() = default;
-	virtual void calculateCachedValues() = 0;
+	virtual void calculateValues() = 0;
 };
 
 struct SimpleMunitionHull: MunitionHull {
-	uint8_t health;
+	uint8_t health = 0;
 	DamagePattern damagePattern = DamagePattern::KINETIC;
 	
-	//TODO port
-	virtual void calculateCachedValues() override;
+	virtual void calculateValues() override;
 };
 
 struct AdvancedMunitionHull: MunitionHull {
 	std::vector<Part*> parts;
 	std::vector<ArmorLayer*> armorLayers; // Each layer is 1 centimetre of armor
 	std::vector<MunitionPartIndex<ThrustingPart>> thrusters;
+	uint64_t thrust; // N
+	uint32_t thrustTime;
+	uint32_t emptyMass; // kg
+	uint32_t fuelMass; // kg
 	
-	//TODO port
-	virtual void calculateCachedValues() override;
+	uint64_t getMaxAcceleration() { return thrust / emptyMass; };
+	uint64_t getAverageAcceleration() { return (getMinAcceleration() + getMaxAcceleration()) / 2; };
+	uint64_t getMinAcceleration() { return thrust / (emptyMass + fuelMass); };
+	
+	virtual void calculateValues() override;
 };
 
 #endif /* SRC_GALAXY_MUNITIONHULL_HPP_ */

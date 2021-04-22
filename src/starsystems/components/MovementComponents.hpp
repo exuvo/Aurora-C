@@ -16,6 +16,7 @@
 #include "utils/Math.hpp"
 #include "utils/enum.h"
 
+// In N and radians
 struct ThrustComponent {
 		uint64_t thrust = 0;
 		uint64_t maxThrust = 0;

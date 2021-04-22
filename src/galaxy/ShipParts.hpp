@@ -43,11 +43,12 @@ BETTER_ENUM(PartType, uint8_t, // Used as bit index
 	Powered,
 	Charged,
 	Heating,
-	Ammunnition,
+	Ammunition,
 	Thrusting,
 	Weapon,
-	Reactor
-); // Remember to increase size of "types" below when adding a new PartType
+	Reactor,
+	Warhead
+); // Remember to increase size of "types" below when adding a new PartType beyond 16
 
 struct Part {
 	std::string name;
@@ -64,6 +65,7 @@ struct Part {
 	std::string toString() const;
 	bool is(PartType type) const;
 	
+	virtual ~Part() {}; // For runtime type checks
 };
 
 bool operator &(const Part& part, PartType type);
@@ -174,7 +176,7 @@ struct AmmunitionPart {
 	
 	AmmunitionPart(Part* part, const ResourcePnt ammunitionType, uint8_t magazineSize, uint16_t reloadTime, uint8_t ammunitionSize)
 	: ammunitionType(ammunitionType), magazineSize(magazineSize), reloadTime(reloadTime), ammunitionSize(ammunitionSize) {
-		part->types |= 1 << PartType::Ammunnition;
+		part->types |= 1 << PartType::Ammunition;
 	}
 };
 
@@ -293,10 +295,12 @@ struct MissileLauncher: Part, WeaponPart, AmmunitionPart {
 	  launchForce(launchForce) {}
 };
 
-struct Warhead: Part, WeaponPart {
+struct Warhead: Part {
 	uint32_t damage;
 	
-	Warhead(uint32_t damage): WeaponPart(this), damage(damage) {}
+	Warhead(uint32_t damage): damage(damage) {
+		types |= 1 << PartType::Warhead;
+	}
 };
 
 struct TargetingComputer: Part, PoweredPart {
