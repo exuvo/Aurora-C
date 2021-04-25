@@ -83,9 +83,9 @@ void ShipDebugWindow::render() {
 					
 					if (ImGui::CollapsingHeader("Components", 0)) { // TreeNodeFlag.DefaultOpen.i
 
-//						registry.visit(entityID, [&](const std::type_info type){
-//						  auto storage = registry.storage(type);
-//						});
+						registry.visit(entityID, [&](const entt::type_info type){
+						  auto storage = registry.storage(type);
+						});
 						
 //						components.sort({ o1, o2 ->
 //							o1::class.simpleName!!.compareTo(o2::class.simpleName!!)

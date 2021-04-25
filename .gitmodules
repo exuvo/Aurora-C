@@ -14,6 +14,3 @@
 [submodule "lib/tracy"]
 	path = lib/tracy
 	url = https://github.com/wolfpld/tracy
-[submodule "lib/Refureku"]
-	path = lib/Refureku
-	url = https://github.com/jsoysouvanh/Refureku

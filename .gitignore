@@ -5,3 +5,4 @@ build
 /log.vulcan
 /imgui.ini
 /assets/compiledshaders/*.spv
+/refureku.log

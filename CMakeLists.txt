@@ -65,8 +65,6 @@ add_subdirectory(lib/Vulkan2DRenderer)
 set(BUILD_TESTING OFF)
 add_subdirectory(lib/entt)
 
-#add_subdirectory(lib/Refureku/Refureku)
-
 set(TRACY_ENABLE ON)
 set(TRACY_ON_DEMAND ON)
 set(TRACY_NO_EXIT OFF)
@@ -84,15 +82,17 @@ set(IMGUI_IMPL_VULKAN ON)
 
 add_subdirectory(lib)
 
+add_subdirectory(lib/Refureku/Refureku)
+
 message("========== Aurora-C ==========")
 
 find_package(Boost 1.66 REQUIRED) # COMPONENTS
-#find_package(Eigen3 3.3 REQUIRED NO_MODULE) # 3.4 not released yet
+#find_package(Eigen3 3.4 REQUIRED NO_MODULE) # 3.4 not released yet
 find_package(OpenMP REQUIRED)
 find_package(fmt REQUIRED)
 
 file(GLOB_RECURSE SOURCE_FILES CONFIGURE_DEPENDS src/*.cpp)
-#file(GLOB_RECURSE HEADER_FILES "${CMAKE_CURRENT_SOURCE_DIR}/src/*.h")
+#file(GLOB_RECURSE HEADER_FILES "${CMAKE_CURRENT_SOURCE_DIR}/src/*.h" "${CMAKE_CURRENT_SOURCE_DIR}/src/*.hpp")
 
 add_executable(AuroraC ${SOURCE_FILES})
 target_include_directories(AuroraC PUBLIC src)
@@ -118,6 +118,13 @@ target_include_directories(AuroraC PUBLIC "lib/eigen" "lib/eigen/unsupported") #
 target_link_libraries(AuroraC PUBLIC OpenMP::OpenMP_CXX)
 target_link_libraries(AuroraC PUBLIC imgui-vulkan)
 target_link_libraries(AuroraC PUBLIC glslang glslang-default-resource-limits OGLCompiler OSDependent SPIRV SPVRemapper) #HLSL
+
+target_include_directories(AuroraC PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/lib/tracy)
+target_include_directories(AuroraC PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/lib/tracy/client)
+target_include_directories(AuroraC PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/lib/tracy/common)
+
+target_include_directories(AuroraC PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/lib/Refureku/Refureku/Library/Include)
+target_link_libraries(AuroraC PUBLIC Refureku)
 
 target_precompile_headers(AuroraC PRIVATE "src/PreCompileHeader.h")
 
@@ -157,10 +164,6 @@ if(MINGW)
 	set(CMAKE_EXE_LINKER_FLAGS "-static-libgcc -static-libstdc++")
 	set(CMAKE_EXE_LINKER_FLAGS "-static") # static all?
 endif()
-
-target_include_directories(AuroraC PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/lib/tracy)
-target_include_directories(AuroraC PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/lib/tracy/client)
-target_include_directories(AuroraC PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/lib/tracy/common)
 
 if (UNIX AND CMAKE_CXX_COMPILER_ID MATCHES "GNU")
 	target_link_libraries(AuroraC PUBLIC SegFault)
@@ -254,9 +257,40 @@ ENDIF()
 target_include_directories(AuroraC PRIVATE ${Log4Cxx_INCLUDE_DIRS})
 target_link_libraries(AuroraC PRIVATE ${Log4Cxx_LIBRARIES} ${APRUTIL_LIBRARIES} ${APR_LIBRARIES})
 
+# Refureku runtime reflection
+#set(RefurekuSources ${HEADER_FILES})
+#list(FILTER RefurekuSources EXCLUDE REGEX "src/refureku/.*")
+file(GLOB_RECURSE RefurekuSources "${CMAKE_CURRENT_SOURCE_DIR}/src/starsystems/components/*.hpp")
+
+macro(fixPathsForRefureku list)
+string(PREPEND ${list} "\"")
+string(REPLACE ";" "\",\n\"" ${list} "${${list}}")
+string(APPEND ${list} "\"")
+endmacro()
+
+set(RefurekuInputFiles "${RefurekuSources}")
+fixPathsForRefureku(RefurekuInputFiles)
+#set(RefurekuInputDirs "${CMAKE_CURRENT_SOURCE_DIR}/src")
+#fixPathsForRefureku(RefurekuInputDirs)
+set(RefurekuIgnoreDirs "")
+set(RefurekuIgnoreFiles "")
+set(RefurekuOutputDir "${CMAKE_CURRENT_SOURCE_DIR}/src/refureku")
+get_target_property(RefurekuIncludeDirs AuroraC INCLUDE_DIRECTORIES)
+fixPathsForRefureku(RefurekuIncludeDirs)
+string(APPEND RefurekuIgnoreDirs "${RefurekuOutputDir}")
+fixPathsForRefureku(RefurekuIgnoreDirs)
+configure_file("${PROJECT_SOURCE_DIR}/RefurekuSettings.toml" "${PROJECT_BINARY_DIR}/bin/RefurekuSettings.toml")
+
+add_custom_target(RunRefurekuGenerator
+	COMMAND RefurekuGenerator > refureku.log
+	WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}/"
+	DEPENDS "${PROJECT_BINARY_DIR}/bin/RefurekuSettings.toml;${RefurekuSources}"
+	BYPRODUCTS RefurekuOutputDir
+)
+add_dependencies(AuroraC RunRefurekuGenerator)
 
 ################
-# Assest
+# Assets
 ################
 
 add_custom_command(

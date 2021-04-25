@@ -13,6 +13,8 @@
 
 #include "utils/Utils.hpp"
 
+#include "refureku/SimpleComponents.rfk.h"
+
 struct Empire;
 
 struct TextComponent {
@@ -35,8 +37,10 @@ struct TintComponent {
 		vk2d::Colorf color;
 };
 
-struct RenderComponent {
+struct RFKStruct() RenderComponent {
+//struct RenderComponent {
 		char dummy; //entt requires storage in components
+		RenderComponent_GENERATED
 };
 
 struct CircleComponent {
@@ -80,4 +84,5 @@ struct HeatComponent {
 	uint32_t temperature; // In kelvin
 };
 
+File_GENERATED
 #endif /* SRC_STARSYSTEMS_COMPONENTS_SIMPLECOMPONENTS_HPP_ */
