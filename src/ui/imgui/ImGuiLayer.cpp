@@ -13,7 +13,7 @@
 
 #include <imgui.h>
 #include <imgui_internal.h>
-#include <examples/imgui_impl_vulkan.h>
+#include <backends/imgui_impl_vulkan.h>
 
 #include "Aurora.hpp"
 #include "ui/imgui/ImGuiLayer.hpp"

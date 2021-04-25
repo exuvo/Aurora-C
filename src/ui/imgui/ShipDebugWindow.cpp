@@ -86,6 +86,7 @@ void ShipDebugWindow::render() {
 //						registry.visit(entityID, [&](const std::type_info type){
 //						  auto storage = registry.storage(type);
 //						});
+						
 //						components.sort({ o1, o2 ->
 //							o1::class.simpleName!!.compareTo(o2::class.simpleName!!)
 //						})
