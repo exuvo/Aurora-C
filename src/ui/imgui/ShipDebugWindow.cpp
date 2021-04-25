@@ -5,6 +5,8 @@
  *      Author: exuvo
  */
 
+#include <Refureku/Refureku.h>
+
 #include "ShipDebugWindow.hpp"
 #include "Aurora.hpp"
 #include "galaxy/Player.hpp"
@@ -37,8 +39,10 @@ void ShipDebugWindow::render() {
 				}
 				
 				uint32_t sliderMin = 0;
-				uint32_t sliderMax = selectedEntities.size();
-				ImGui::SliderScalar("Selection", ImGuiDataType_U32, &selectionIndex, &sliderMin, &sliderMax, "${1 + selectionIndex} / ${selectedEntities.size()}", ImGuiSliderFlags_AlwaysClamp);
+				uint32_t sliderMax = selectedEntities.size() - 1;
+				char txt[50];
+				snprintf(txt, 50, "%u / %lu", 1 + selectionIndex, selectedEntities.size());
+				ImGui::SliderScalar("Selection", ImGuiDataType_U32, &selectionIndex, &sliderMin, &sliderMax, txt, ImGuiSliderFlags_AlwaysClamp);
 //				ImGui::SliderScalar("Selection", ImGui::DataType.Int, ::selectionIndex, 0, selectedEntities.size() - 1, "${1 + selectionIndex} / ${selectedEntities.size()}", 2.0f)
 				
 				EntityReference* entityRef = &selectedEntities[selectionIndex];
@@ -72,23 +76,31 @@ void ShipDebugWindow::render() {
 					
 					entt::entity entityID = entityRef->entityID;
 					
-					ShipComponent& ship = registry.get<ShipComponent>(entityID);
+					ShipComponent* ship = registry.try_get<ShipComponent>(entityID);
 //					PartStatesComponent& partStates = registry.get<PartStatesComponent>(entityID);
 //					ShieldComponent& shield = registry.get<ShieldComponent>(entityID);
 //					ArmorComponent& armor = registry.get<ArmorComponent>(entityID);
 //					PartsHPComponent& partsHP = registry.get<PartsHPComponent>(entityID);
 //					CargoComponent& cargoC = registry.get<CargoComponent>(entityID);
+					ImGui::Text("Entity ID %d", entityRef->entityID);
 					
-					ImGui::TextUnformatted("Entity ID ${entityRef.entityID} ${printEntity(entityRef.entityID, world)}");
-					
-					if (ImGui::CollapsingHeader("Components", 0)) { // TreeNodeFlag.DefaultOpen.i
+					if (ImGui::CollapsingHeader("Components", ImGuiTreeNodeFlags_DefaultOpen)) { // ImGuiTreeNodeFlags_DefaultOpen
 
 						registry.visit(entityID, [&](const entt::type_info type){
 						  auto storage = registry.storage(type);
 						});
 						
-						if (registry.all_of<RenderComponent>(entityID)) {
-							
+						{
+							CircleComponent* c = registry.try_get<CircleComponent>(entityID);
+							if (c != nullptr) {
+								rfk::Struct const & s = CircleComponent::staticGetArchetype();
+								ImGui::Text("cricle component, fields %lu, %lu bytes", s.fields.size(), s.memorySize);
+								for (auto it = s.fields.begin(); it != s.fields.end(); it++)  {
+									const rfk::Field& f = *it;
+									ImGui::Text("field %s", f.name.data());
+//									f.getData(c);
+								}
+							}
 						}
 						
 #define INSPECT_COMPONENTS_TEMPLATE(r, unused, component) \

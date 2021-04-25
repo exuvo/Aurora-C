@@ -22,6 +22,7 @@
 #include "ui/imgui/ImGuiDemoWindow.hpp"
 #include "ui/imgui/MainDebugWindow.hpp"
 #include "ui/imgui/EmpireOverviewWindow.hpp"
+#include "ui/imgui/ShipDebugWindow.hpp"
 #include "utils/dbg.h"
 #include "utils/ImGuiUtils.hpp"
 #include "utils/Utils.hpp"
@@ -76,6 +77,7 @@ ImGuiLayer::ImGuiLayer(AuroraWindow& parentWindow): UILayer(parentWindow) {
   addWindow(new MainDebugWindow(*this));
   addWindow(new ImGuiDemoWindow(*this));
   addWindow(new EmpireOverviewWindow(*this));
+  addWindow(new ShipDebugWindow(*this));
 }
 
 void ImGuiLayer::initShared(){
@@ -285,8 +287,7 @@ bool ImGuiLayer::keyAction(KeyActions_ImGuiLayer action) {
 		
 	} else if (action == KeyActions_ImGuiLayer::SHIP_DEBUG) {
 		
-		printf("SHIP_DEBUG\n"); fflush(stdout);
-//		toggleWindow<ShipDebugWindow>();
+		toggleWindow<ShipDebugWindow>();
 		
 	} else if (action == KeyActions_ImGuiLayer::COLONY_MANAGER) {
 		
