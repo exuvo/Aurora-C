@@ -26,7 +26,7 @@ void MovementPreSystem::update(delta_type delta) {
 		TimedMovementComponent& movement = view.get<TimedMovementComponent>(entity);
 		ThrustComponent& thrust = view.get<ThrustComponent>(entity);
 		
-		if (!registry.any<MoveToPositionComponent, MoveToEntityComponent>(entity)) {
+		if (!registry.any_of<MoveToPositionComponent, MoveToEntityComponent>(entity)) {
 			thrust.thrusting = !movement.get(galaxy.time).value.velocity.isZero();
 
 		} else {

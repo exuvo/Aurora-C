@@ -36,7 +36,7 @@ void StarSystemRenderLayer::drawEntities() {
 	for (entt::entity entity : view) {
 		CircleComponent& circle = view.get<CircleComponent>(entity);
 		
-		if (!registry->has<StrategicIconComponent>(entity) || !inStrategicView(entity, circle)) {
+		if (!registry->all_of<StrategicIconComponent>(entity) || !inStrategicView(entity, circle)) {
 
 			TimedMovementComponent& movement = view.get<TimedMovementComponent>(entity);
 			Vector2l position = movement.get(Aurora.galaxy->time).value.position;

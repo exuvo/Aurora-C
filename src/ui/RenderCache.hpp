@@ -18,6 +18,7 @@
 #include "log4cxx/logger.h"
 
 using namespace log4cxx;
+using namespace entt::literals;
 
 class RenderCache {
 public:

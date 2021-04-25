@@ -18,6 +18,7 @@ class ShipDebugWindow : public UIWindow {
 		virtual void render() override;
 		
 	private:
+		uint16_t selectionIndex = 0;
 };
 
 #endif /* SRC_UI_IMGUI_SHIPDEBUGWINDOW_HPP_ */

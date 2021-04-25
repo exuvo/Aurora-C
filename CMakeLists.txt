@@ -3,7 +3,6 @@ cmake_minimum_required (VERSION 3.16)
 project (AuroraC VERSION 0.1 LANGUAGES CXX)
 
 #TODO speedups https://cmake.org/cmake/help/v3.16/prop_tgt/UNITY_BUILD.html https://cmake.org/cmake/help/latest/command/target_precompile_headers.html
-# reflection https://github.com/jsoysouvanh/Refureku
 # c++ SIMD https://github.com/VcDevel/Vc
 # custom allocators https://github.com/mtrebi/memory-allocators
 # print stack trace https://stackoverflow.com/questions/38433701/print-log4cxx-exception-stacktrace
@@ -62,6 +61,8 @@ add_subdirectory(lib/Vulkan2DRenderer)
 
 set(BUILD_TESTING OFF)
 add_subdirectory(lib/entt)
+
+#add_subdirectory(lib/Refureku/Refureku)
 
 set(TRACY_ENABLE ON)
 set(TRACY_ON_DEMAND ON)

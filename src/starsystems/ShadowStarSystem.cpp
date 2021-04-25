@@ -139,7 +139,7 @@ if (tmpComponents[syncedComponentToIndexMap[hana::type_c<component>]][entityID])
 	component* realComp = starSystem.registry.try_get<component>(realEntity); \
 	if (realComp) { \
 		component* shadowComp; \
-		if (registry.has<component>(shadowEntity)) { \
+		if (registry.all_of<component>(shadowEntity)) { \
 			shadowComp = &registry.get<component>(shadowEntity); \
 		} else { \
 			shadowComp = &registry.emplace<component>(shadowEntity); \
@@ -155,7 +155,7 @@ void ShadowStarSystem::updateComponents(uint32_t entityID, entt::entity shadowEn
 	TimedMovementComponent* realComp = starSystem.registry.try_get<TimedMovementComponent>(realEntity);
 	if (realComp) {
 		TimedMovementComponent* shadowComp;
-		if (registry.has<TimedMovementComponent>(shadowEntity)) {
+		if (registry.all_of<TimedMovementComponent>(shadowEntity)) {
 			shadowComp = &registry.get<TimedMovementComponent>(shadowEntity);
 		} else {
 			shadowComp = &registry.emplace<TimedMovementComponent>(shadowEntity);

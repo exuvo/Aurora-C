@@ -56,7 +56,7 @@ void SpatialPartitioningPlanetoidsSystem::update(entt::entity entityID) {
 	
 	uint64_t nextExpectedUpdate = updateNextExpectedUpdate(entityID, movement, circle);
 	
-	if (!registry.has<SpatialPartitioningPlanetoidsComponent>(entityID)) {
+	if (!registry.all_of<SpatialPartitioningPlanetoidsComponent>(entityID)) {
 		registry.emplace<SpatialPartitioningPlanetoidsComponent>(entityID);
 	}
 	

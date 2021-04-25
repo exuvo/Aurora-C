@@ -55,7 +55,7 @@ void SpatialPartitioningSystem::update(entt::entity entityID) {
 	MovementValues movement = registry.get<TimedMovementComponent>(entityID).get(galaxy.time).value;
 	uint64_t nextExpectedUpdate = updateNextExpectedUpdate(entityID, movement);
 	
-	if (!registry.has<SpatialPartitioningComponent>(entityID)) {
+	if (!registry.all_of<SpatialPartitioningComponent>(entityID)) {
 		registry.emplace<SpatialPartitioningComponent>(entityID);
 	}
 	
@@ -111,7 +111,7 @@ uint64_t SpatialPartitioningSystem::updateNextExpectedUpdate(entt::entity entity
 //			nextExpectedUpdate += maxOf(1, t.toLong())
 		nextExpectedUpdate += 10;
 
-	} else if(registry.has<ThrustComponent, MassComponent>(entityID)) {
+	} else if(registry.all_of<ThrustComponent, MassComponent>(entityID)) {
 		nextExpectedUpdate += 60;
 
 	} else {

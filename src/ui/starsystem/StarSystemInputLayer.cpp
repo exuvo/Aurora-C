@@ -59,14 +59,17 @@ void StarSystemInputLayer::render() {
 				
 				if (!ref->isValid(*starSystem->shadow)) {
 					EntityReference cpy = *ref;
-					Player::current->selection.erase(*ref);
+					Player::current->selectionSet.erase(*ref);
 					
 					if (!cpy.resolveReference(*starSystem->shadow)) {
+						vectorEraseUnorderedIter(Player::current->selection, it);
 						std::cout << "Removed invalid entity reference " << cpy << std::endl;
+						it--;
 						continue;
 					}
 					
-					ref = &*Player::current->selection.insert(cpy).first;
+					*it = cpy;
+					ref = &*Player::current->selectionSet.insert(cpy).first;
 				}
 				
 				if (ref->system == starSystem) {
@@ -221,7 +224,7 @@ bool StarSystemInputLayer::eventMouseButton(vk2d::MouseButton button, vk2d::Butt
 					
 					// Exact check first
 					for (entt::entity entity : entities) {
-						if (starSystem->shadow->registry.has<TimedMovementComponent, RenderComponent, CircleComponent>(entity)) {
+						if (starSystem->shadow->registry.all_of<TimedMovementComponent, RenderComponent, CircleComponent>(entity)) {
 							TimedMovementComponent& movementComponent = starSystem->shadow->registry.get<TimedMovementComponent>(entity);
 							CircleComponent& circleComponent = starSystem->shadow->registry.get<CircleComponent>(entity);
 							Vector2l position = movementComponent.get(Aurora.galaxy->time).value.position;
@@ -281,12 +284,12 @@ bool StarSystemInputLayer::eventMouseButton(vk2d::MouseButton button, vk2d::Butt
 							dragSelectionPotentialStart = false;
 
 							if (Player::current->selection.size() > 0 && !window.isKeyPressed(GLFW_KEY_LEFT_SHIFT)) {
-								Player::current->selection.clear();
+								Player::current->clearSelection();
 								printf("cleared selection\n");
 							}
 							
 							std::cout << "added " << entitiesUnderMouse << " to selection" << std::endl;
-							vectorAppend(Player::current->selection, entitiesUnderMouse);
+							Player::current->addSelection(entitiesUnderMouse);
 							
 						} else {
 //
@@ -386,7 +389,7 @@ bool StarSystemInputLayer::eventMouseButton(vk2d::MouseButton button, vk2d::Butt
 		if (button == vk2d::MouseButton::BUTTON_LEFT) {
 			if (dragSelecting) {
 				if (Player::current->selection.size() > 0 && !window.isKeyPressed(GLFW_KEY_LEFT_SHIFT)) {
-					Player::current->selection.clear();
+					Player::current->clearSelection();
 //					printf("cleared selection\n"); fflush(stdout);
 				}
 				
@@ -405,7 +408,7 @@ bool StarSystemInputLayer::eventMouseButton(vk2d::MouseButton button, vk2d::Butt
 //					std::cout << "worldCoordinates " << worldCoordinates << ", entities " << entities << std::endl;
 					
 					for (entt::entity entity : entities) {
-						if (starSystem->shadow->registry.has<TimedMovementComponent, RenderComponent>(entity)) {
+						if (starSystem->shadow->registry.all_of<TimedMovementComponent, RenderComponent>(entity)) {
 							TimedMovementComponent& movement = starSystem->shadow->registry.get<TimedMovementComponent>(entity);
 							Vector2l position = movement.get(Aurora.galaxy->time).value.position;
 			
@@ -417,7 +420,7 @@ bool StarSystemInputLayer::eventMouseButton(vk2d::MouseButton button, vk2d::Butt
 				}
 				
 				if (entitiesInSelection.size() > 0) {
-					vectorAppend(Player::current->selection, entitiesInSelection);
+					Player::current->addSelection(entitiesInSelection);
 					std::cout << "drag selected " << Player::current->selection.size() << " entities" << std::endl;
 				}
 				
@@ -428,7 +431,7 @@ bool StarSystemInputLayer::eventMouseButton(vk2d::MouseButton button, vk2d::Butt
 			if (dragSelectionPotentialStart) {
 				dragSelectionPotentialStart = false;
 				if (Player::current->selection.size() > 0 && !window.isKeyPressed(GLFW_KEY_LEFT_SHIFT)) {
-					Player::current->selection.clear();
+					Player::current->clearSelection();
 	//				println("cleared selection")
 				}
 			}
