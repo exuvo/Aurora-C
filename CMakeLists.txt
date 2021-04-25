@@ -17,6 +17,9 @@ project (AuroraC VERSION 0.1 LANGUAGES CXX)
 # vulcan multi gpu https://www.ea.com/seed/news/khronos-munich-2018-halcyon-vulkan https://github.com/Glavnokoman/vuh
 # dynamic frame pacing https://youtu.be/nkCaQ-x-zyA?t=1789
 # more quad tree optimizations https://www.youtube.com/watch?v=6BIfqfC1i7U
+# imgui extensions
+#  file dialog https://github.com/dfranx/ImFileDialog
+#  cool effects https://github.com/ocornut/imgui/issues/3606
 
 # log4cxx does not build with mingw (due to we allowed linking to libs built for cygwin, that use different std lib?) but tracy works. 
 
