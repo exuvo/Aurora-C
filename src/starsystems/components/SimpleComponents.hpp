@@ -37,14 +37,13 @@ struct TintComponent {
 		vk2d::Colorf color;
 };
 
-struct RFKStruct() RenderComponent {
-//struct RenderComponent {
+struct RenderComponent {
 		char dummy; //entt requires storage in components
-		RenderComponent_GENERATED
 };
 
-struct CircleComponent {
+struct RFKStruct() CircleComponent {
 		float radius = 1; // in m
+		CircleComponent_GENERATED
 };
 
 struct StarSystemComponent {

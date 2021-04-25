@@ -87,6 +87,16 @@ void ShipDebugWindow::render() {
 						  auto storage = registry.storage(type);
 						});
 						
+						if (registry.all_of<RenderComponent>(entityID)) {
+							
+						}
+						
+#define INSPECT_COMPONENTS_TEMPLATE(r, unused, component) \
+						\
+						;
+						
+						BOOST_PP_SEQ_FOR_EACH(INSPECT_COMPONENTS_TEMPLATE, ~, SYNCED_COMPONENTS_SEQ);
+						
 //						components.sort({ o1, o2 ->
 //							o1::class.simpleName!!.compareTo(o2::class.simpleName!!)
 //						})

@@ -258,34 +258,39 @@ target_include_directories(AuroraC PRIVATE ${Log4Cxx_INCLUDE_DIRS})
 target_link_libraries(AuroraC PRIVATE ${Log4Cxx_LIBRARIES} ${APRUTIL_LIBRARIES} ${APR_LIBRARIES})
 
 # Refureku runtime reflection
-#set(RefurekuSources ${HEADER_FILES})
-#list(FILTER RefurekuSources EXCLUDE REGEX "src/refureku/.*")
-file(GLOB_RECURSE RefurekuSources "${CMAKE_CURRENT_SOURCE_DIR}/src/starsystems/components/*.hpp")
-
 macro(fixPathsForRefureku list)
 string(PREPEND ${list} "\"")
 string(REPLACE ";" "\",\n\"" ${list} "${${list}}")
 string(APPEND ${list} "\"")
 endmacro()
 
+#set(RefurekuSources ${HEADER_FILES})
+#list(FILTER RefurekuSources EXCLUDE REGEX "src/refureku/.*")
+file(GLOB_RECURSE RefurekuSources "${CMAKE_CURRENT_SOURCE_DIR}/src/starsystems/components/*.hpp")
+
 set(RefurekuInputFiles "${RefurekuSources}")
 fixPathsForRefureku(RefurekuInputFiles)
+
 #set(RefurekuInputDirs "${CMAKE_CURRENT_SOURCE_DIR}/src")
 #fixPathsForRefureku(RefurekuInputDirs)
+
 set(RefurekuIgnoreDirs "")
 set(RefurekuIgnoreFiles "")
 set(RefurekuOutputDir "${CMAKE_CURRENT_SOURCE_DIR}/src/refureku")
-get_target_property(RefurekuIncludeDirs AuroraC INCLUDE_DIRECTORIES)
-fixPathsForRefureku(RefurekuIncludeDirs)
+
 string(APPEND RefurekuIgnoreDirs "${RefurekuOutputDir}")
 fixPathsForRefureku(RefurekuIgnoreDirs)
+
+get_target_property(RefurekuIncludeDirs AuroraC INCLUDE_DIRECTORIES)
+fixPathsForRefureku(RefurekuIncludeDirs)
+
 configure_file("${PROJECT_SOURCE_DIR}/RefurekuSettings.toml" "${PROJECT_BINARY_DIR}/bin/RefurekuSettings.toml")
 
 add_custom_target(RunRefurekuGenerator
 	COMMAND RefurekuGenerator > refureku.log
 	WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}/"
 	DEPENDS "${PROJECT_BINARY_DIR}/bin/RefurekuSettings.toml;${RefurekuSources}"
-	BYPRODUCTS RefurekuOutputDir
+	BYPRODUCTS ${RefurekuOutputDir}
 )
 add_dependencies(AuroraC RunRefurekuGenerator)
 
