@@ -1,5 +1,5 @@
-// dear imgui: Platform Binding for GLFW
-// This needs to be used along with a Renderer (e.g. OpenGL3, Vulkan..)
+// dear imgui: Platform Backend for GLFW
+// This needs to be used along with a Renderer (e.g. OpenGL3, Vulkan, WebGPU..)
 // (Info: GLFW is a cross-platform general purpose library for handling windows, inputs, OpenGL/Vulkan graphics context creation, etc.)
 // (Requires: GLFW 3.1+)
 
@@ -9,9 +9,9 @@
 //  [X] Platform: Mouse cursor shape and visibility. Disable with 'io.ConfigFlags |= ImGuiConfigFlags_NoMouseCursorChange' (note: the resizing cursors requires GLFW 3.4+).
 //  [X] Platform: Keyboard arrays indexed using GLFW_KEY_* codes, e.g. ImGui::IsKeyPressed(GLFW_KEY_SPACE).
 
-// You can copy and use unmodified imgui_impl_* files in your project. See main.cpp for an example of using this.
-// If you are new to dear imgui, read examples/README.txt and read the documentation at the top of imgui.cpp.
-// https://github.com/ocornut/imgui
+// You can copy and use unmodified imgui_impl_* files in your project. See examples/ folder for examples of using this.
+// If you are new to Dear ImGui, read documentation from the docs/ folder + read the top of imgui.cpp.
+// Read online: https://github.com/ocornut/imgui/tree/master/docs
 
 // CHANGELOG
 // (minor and older changes stripped away, please see git history for details)
@@ -40,8 +40,8 @@
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
 
+// GLFW
 #include <GLFW/glfw3.h>
-
 #ifdef _WIN32
 #undef APIENTRY
 #define GLFW_EXPOSE_NATIVE_WIN32
@@ -100,14 +100,15 @@ void ImGuiGlfw::CharCallback(GLFWwindow* window, unsigned int c) {
 
 ImGuiGlfw::ImGuiGlfw(GLFWwindow* window) {
 	g_Window = window;
+	g_Time = 0.0;
 	
-	// Setup back-end capabilities flags
+	// Setup backend capabilities flags
 	ImGuiIO& io = ImGui::GetIO();
 	io.BackendFlags |= ImGuiBackendFlags_HasMouseCursors;         // We can honor GetMouseCursor() values (optional)
 	io.BackendFlags |= ImGuiBackendFlags_HasSetMousePos; // We can honor io.WantSetMousePos requests (optional, rarely used)
 	io.BackendPlatformName = "imgui_impl_glfw";
 	
-	// Keyboard mapping. ImGui will use those indices to peek into the io.KeysDown[] array.
+	// Keyboard mapping. Dear ImGui will use those indices to peek into the io.KeysDown[] array.
 	io.KeyMap[ImGuiKey_Tab] = GLFW_KEY_TAB;
 	io.KeyMap[ImGuiKey_LeftArrow] = GLFW_KEY_LEFT;
 	io.KeyMap[ImGuiKey_RightArrow] = GLFW_KEY_RIGHT;
@@ -250,7 +251,7 @@ void ImGuiGlfw::UpdateGamepads() {
 
 void ImGuiGlfw::NewFrame() {
 	ImGuiIO& io = ImGui::GetIO();
-	IM_ASSERT(io.Fonts->IsBuilt() && "Font atlas not built! It is generally built by the renderer back-end. Missing call to renderer _NewFrame() function? e.g. ImGui_ImplOpenGL3_NewFrame().");
+	IM_ASSERT(io.Fonts->IsBuilt() && "Font atlas not built! It is generally built by the renderer backend. Missing call to renderer _NewFrame() function? e.g. ImGui_ImplOpenGL3_NewFrame().");
 	
 	// Setup display size (every frame to accommodate for window resizing)
 	int w, h;
