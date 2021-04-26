@@ -90,22 +90,68 @@ void ShipDebugWindow::render() {
 						  auto storage = registry.storage(type);
 						});
 						
-						{
-							CircleComponent* c = registry.try_get<CircleComponent>(entityID);
+						auto printField = [&](const rfk::Field& f, void* data){
+							const rfk::Type& t = f.type;
+							std::ostringstream os;
+							
+							if (t.isValue()) {
+								if (t.archetype == rfk::getArchetype<float>()) {
+									os << f.getData<float>(data);
+								} else if (t.archetype == rfk::getArchetype<double>()) {
+									os << f.getData<double>(data);
+								} else if (t.archetype == rfk::getArchetype<int8_t>()) {
+									os << f.getData<int8_t>(data);
+								} else if (t.archetype == rfk::getArchetype<int16_t>()) {
+									os << f.getData<int16_t>(data);
+								} else if (t.archetype == rfk::getArchetype<int32_t>()) {
+									os << f.getData<int32_t>(data);
+								} else if (t.archetype == rfk::getArchetype<int64_t>()) {
+									os << f.getData<int64_t>(data);
+								} else if (t.archetype == rfk::getArchetype<uint8_t>()) {
+									os << f.getData<uint8_t>(data);
+								} else if (t.archetype == rfk::getArchetype<uint16_t>()) {
+									os << f.getData<uint16_t>(data);
+								} else if (t.archetype == rfk::getArchetype<uint32_t>()) {
+									os << f.getData<uint32_t>(data);
+								} else if (t.archetype == rfk::getArchetype<uint64_t>()) {
+									os << f.getData<uint64_t>(data);
+								} else if (t.archetype == rfk::getArchetype<bool>()) {
+									os << f.getData<bool>(data);
+								} else {
+									os << "unknown type";
+								}
+							} else {
+								os << "not value";
+							}
+							
+							ImGui::Text(" %s %s = %s", f.type.archetype != nullptr ? f.type.archetype->name.data() : "?", f.name.data(), os.str().data());
+						};
+						
+						auto printComponent = [&]<typename T>() {
+							T* c = registry.try_get<T>(entityID);
 							if (c != nullptr) {
-								rfk::Struct const & s = CircleComponent::staticGetArchetype();
-								ImGui::Text("cricle component, fields %lu, %lu bytes", s.fields.size(), s.memorySize);
+								rfk::Struct const & s = T::staticGetArchetype();
+								ImGui::Text("%s, fields %lu, %lu bytes", s.name.data(), s.fields.size(), s.memorySize);
 								for (auto it = s.fields.begin(); it != s.fields.end(); it++)  {
 									const rfk::Field& f = *it;
-									ImGui::Text("field %s", f.name.data());
-//									f.getData(c);
+									printField(f, c);
 								}
 							}
-						}
+						};
 						
-#define INSPECT_COMPONENTS_TEMPLATE(r, unused, component) \
-						\
-						;
+//						printComponent.operator()<CircleComponent>();
+							
+//						CircleComponent* c = registry.try_get<CircleComponent>(entityID);
+//						if (c != nullptr) {
+//							rfk::Struct const & s = CircleComponent::staticGetArchetype();
+//							ImGui::Text("circle component, fields %lu, %lu bytes", s.fields.size(), s.memorySize);
+//							for (auto it = s.fields.begin(); it != s.fields.end(); it++)  {
+//								const rfk::Field& f = *it;
+//								printField(f, c);
+//							}
+//						}
+						
+#define INSPECT_COMPONENTS_TEMPLATE(r, unused, component) printComponent.operator()<component>();
 						
 						BOOST_PP_SEQ_FOR_EACH(INSPECT_COMPONENTS_TEMPLATE, ~, SYNCED_COMPONENTS_SEQ);
 						

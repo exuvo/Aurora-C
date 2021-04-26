@@ -82,6 +82,7 @@ set(IMGUI_IMPL_VULKAN ON)
 
 add_subdirectory(lib)
 
+set(GEN_PROPERTY_RTTI ON)
 add_subdirectory(lib/Refureku/Refureku)
 
 message("========== Aurora-C ==========")

@@ -16,12 +16,17 @@
 #include "utils/Math.hpp"
 #include "utils/enum.h"
 
+#include <Refureku/NativeProperties.h>
+#include "refureku/MovementComponents.rfk.h"
+
 // In N and radians
-struct ThrustComponent {
+struct RFKStruct(ParseAllNested) ThrustComponent {
 		uint64_t thrust = 0;
 		uint64_t maxThrust = 0;
 		float thrustAngle = 0;
 		bool thrusting = false;
+		
+		ThrustComponent_GENERATED
 };
 
 struct OrbitComponent {
@@ -50,4 +55,5 @@ struct MoveToPositionComponent {
 		ApproachType approach;
 };
 
+File_GENERATED
 #endif /* SRC_STARSYSTEMS_COMPONENTS_MOVEMENTCOMPONENTS_HPP_ */

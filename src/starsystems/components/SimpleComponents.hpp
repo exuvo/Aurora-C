@@ -13,11 +13,13 @@
 
 #include "utils/Utils.hpp"
 
+#include <Refureku/NativeProperties.h>
 #include "refureku/SimpleComponents.rfk.h"
 
 struct Empire;
+class StarSystem;
 
-struct TextComponent {
+struct RFKStruct(ParseAllNested) TextComponent {
 		char text[50]; // not NULL terminated when full size is used
 		
 		TextComponent(){
@@ -27,21 +29,25 @@ struct TextComponent {
 		TextComponent(const char* str) {
 			strncpy(text, str, ARRAY_LEN(text));
 		}
+		
+		TextComponent_GENERATED
 };
 
 struct NameComponent {
 		std::string name;
 };
 
-struct TintComponent {
+struct RFKStruct(ParseAllNested) TintComponent {
 		vk2d::Colorf color;
+		TintComponent_GENERATED
 };
 
-struct RenderComponent {
+struct RFKStruct(ParseAllNested) RenderComponent {
 		char dummy; //entt requires storage in components
+		RenderComponent_GENERATED
 };
 
-struct RFKStruct() CircleComponent {
+struct RFKStruct(ParseAllNested) CircleComponent {
 		float radius = 1; // in m
 		CircleComponent_GENERATED
 };
