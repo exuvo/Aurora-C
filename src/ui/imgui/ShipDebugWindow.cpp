@@ -92,39 +92,64 @@ void ShipDebugWindow::render() {
 						
 						auto printField = [&](const rfk::Field& f, void* data){
 							const rfk::Type& t = f.type;
-							std::ostringstream os;
+							std::ostringstream osValue;
 							
 							if (t.isValue()) {
-								if (t.archetype == rfk::getArchetype<float>()) {
-									os << f.getData<float>(data);
-								} else if (t.archetype == rfk::getArchetype<double>()) {
-									os << f.getData<double>(data);
-								} else if (t.archetype == rfk::getArchetype<int8_t>()) {
-									os << f.getData<int8_t>(data);
-								} else if (t.archetype == rfk::getArchetype<int16_t>()) {
-									os << f.getData<int16_t>(data);
-								} else if (t.archetype == rfk::getArchetype<int32_t>()) {
-									os << f.getData<int32_t>(data);
-								} else if (t.archetype == rfk::getArchetype<int64_t>()) {
-									os << f.getData<int64_t>(data);
-								} else if (t.archetype == rfk::getArchetype<uint8_t>()) {
-									os << f.getData<uint8_t>(data);
-								} else if (t.archetype == rfk::getArchetype<uint16_t>()) {
-									os << f.getData<uint16_t>(data);
-								} else if (t.archetype == rfk::getArchetype<uint32_t>()) {
-									os << f.getData<uint32_t>(data);
-								} else if (t.archetype == rfk::getArchetype<uint64_t>()) {
-									os << f.getData<uint64_t>(data);
-								} else if (t.archetype == rfk::getArchetype<bool>()) {
-									os << f.getData<bool>(data);
+								
+								if (t == rfk::Type::getType<float>()) {
+									osValue << f.getData<float>(data);
+								} else if (t == rfk::Type::getType<double>()) {
+									osValue << f.getData<double>(data);
+								} else if (t == rfk::Type::getType<int8_t>()) {
+									osValue << f.getData<int8_t>(data);
+								} else if (t == rfk::Type::getType<int16_t>()) {
+									osValue << f.getData<int16_t>(data);
+								} else if (t == rfk::Type::getType<int32_t>()) {
+									osValue << f.getData<int32_t>(data);
+								} else if (t == rfk::Type::getType<int64_t>()) {
+									osValue << f.getData<int64_t>(data);
+								} else if (t == rfk::Type::getType<uint8_t>()) {
+									osValue << f.getData<uint8_t>(data);
+								} else if (t == rfk::Type::getType<uint16_t>()) {
+									osValue << f.getData<uint16_t>(data);
+								} else if (t == rfk::Type::getType<uint32_t>()) {
+									osValue << f.getData<uint32_t>(data);
+								} else if (t == rfk::Type::getType<uint64_t>()) {
+									osValue << f.getData<uint64_t>(data);
+								} else if (t == rfk::Type::getType<bool>()) {
+									osValue << f.getData<bool>(data);
+								} else if (t == rfk::Type::getType<char>()) {
+									osValue << f.getData<char>(data);
 								} else {
-									os << "unknown type";
+									osValue << "unknown type";
 								}
+								
+							} else if (f.type.isCArray()) {
+								
+								if (t.archetype == rfk::getArchetype<char>()) {
+									osValue << static_cast<char*>(f.getDataAddress(data));
+								} else {
+									osValue << "unknown type";
+								}
+								
 							} else {
-								os << "not value";
+								osValue << "not value";
 							}
 							
-							ImGui::Text(" %s %s = %s", f.type.archetype != nullptr ? f.type.archetype->name.data() : "?", f.name.data(), os.str().data());
+							std::ostringstream osType;
+							
+							if (f.type.archetype != nullptr) {
+								osType << f.type.archetype->name;
+								
+								if (f.type.isCArray()) {
+									osType << "[" << f.type.getArraySize() << "]";
+								}
+								
+							} else {
+								osType << "?";
+							}
+							
+							ImGui::Text(" %s: %s = %s", f.name.data(), osType.str().data(), osValue.str().data());
 						};
 						
 						auto printComponent = [&]<typename T>() {
