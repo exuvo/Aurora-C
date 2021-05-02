@@ -26,9 +26,10 @@ void EmpireOverviewWindow::render() {
 	
 	if (empire != nullptr) {
 		
-		//TODO wrong position with GetWindowViewport
-//		ImVec2 viewportPos = ImGui::GetWindowViewport()->Pos;
-		ImVec2 viewportPos = ImGui::GetMainViewport()->Pos;
+//		ImVec2 viewportPos = ImGui::GetMainViewport()->Pos;
+		ImVec2 viewportPos = ImGui::GetCurrentContext()->CurrentViewport->Pos;
+		
+//		std::cout << "viewportPos " << viewportPos.x << " " << viewportPos.y << std::endl;
 		
 		ImGui::SetNextWindowSize({ 150, layer.getMainWindow().window->GetSize().y - 50 });
 		ImGui::SetNextWindowPos(viewportPos + ImVec2{ 0, 20 });
@@ -112,7 +113,7 @@ void EmpireOverviewWindow::render() {
 						
 //						if (icon.baseTexture->texture == strategicIconsTexture) {
 //							
-//							if (!windowCoveredByOtherWindow) {
+							if (!windowCoveredByOtherWindow) {
 //								// Batched rendering of strategic icons after imgui has been drawn via postDraw
 //								deferredIcons.push_back(DeferredIconDraw{ icon, bb, ImGui::GetColorU32(ImVec4(color.r, color.g, color.g, color.a)) });
 //								
@@ -126,7 +127,7 @@ void EmpireOverviewWindow::render() {
 //									deferredIcon->window->inlineDraw(*deferredIcon);
 //									
 //								}), (void*) &inlineIcons.back());
-//							}
+							}
 //							
 //						} else {
 //							window->DrawList.AddImage(icon.baseTexture->getTexture().textureObjectHandle, bb.Min + 1, bb.Max - 1, ImVec2(icon.baseTexture->u, icon.baseTexture->v), ImVec2(icon.baseTexture->u2, icon.baseTexture->v2), ImGui::GetColorU32(ImVec4(color.r, color.g, color.g, color.a)));

@@ -45,6 +45,7 @@ void VK2D_log(vk2d::ReportSeverity severity, std::string_view message) {
 //		LOG4CXX_FATAL(log, message << endl << getCurrentStacktrace());
 		LOG4CXX_FATAL(log, message << endl);
 	} else if (severity == vk2d::ReportSeverity::NON_CRITICAL_ERROR) {
+//		LOG4CXX_ERROR(log, message << endl << getCurrentStacktrace());
 		LOG4CXX_ERROR(log, message);
 	} else if (severity == vk2d::ReportSeverity::WARNING || severity == vk2d::ReportSeverity::PERFORMANCE_WARNING) {
 		LOG4CXX_WARN(log, message);

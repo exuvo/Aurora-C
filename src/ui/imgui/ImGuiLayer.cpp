@@ -44,6 +44,7 @@ ImGuiLayer::ImGuiLayer(AuroraWindow& parentWindow): UILayer(parentWindow) {
 		ImGuiIO& io = ImGui::GetIO();
 		io.ConfigFlags |= ImGuiConfigFlags_IsSRGB;
 		io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+		io.ConfigViewportsNoTaskBarIcon = true;
 		
 		imGuiGlfw = new ImGuiGlfw(window.window->impl->glfw_window, true);
 		
@@ -191,6 +192,7 @@ void ImGuiLayer::initShared(){
 
 ImGuiLayer::~ImGuiLayer() {
 	if (imGuiGlfw != nullptr) {
+		
 		for (UIWindow* uiWindow : uiWindows) {
 			delete uiWindow;
 		}
@@ -205,6 +207,10 @@ ImGuiLayer::~ImGuiLayer() {
 				vk_descriptorPool = VK_NULL_HANDLE;
 			}
 		}
+		
+//		if (imGuiGlfw->isMainWindow) {
+//			ImGui::SetMainViewport(next window);
+//		}
 		
 		delete imGuiGlfw;
 		

@@ -46,10 +46,6 @@
 #include "imgui_internal.h"
 #include "imgui_impl_glfw.h"
 
-namespace ImGui {
-	ImGuiViewportP*  AddUpdateViewport(ImGuiWindow* window, ImGuiID id, const ImVec2& platform_pos, const ImVec2& size, ImGuiViewportFlags flags);
-}
-
 // GLFW
 #include <GLFW/glfw3.h>
 #ifdef _WIN32
@@ -277,10 +273,6 @@ ImGuiGlfw::ImGuiGlfw(GLFWwindow* window, bool isMainWindow) {
 		
 		viewport = ImGui::AddUpdateViewport(nullptr, id, ImVec2((float) x, (float) y), ImVec2((float) w, (float) h), flags);
 		viewport->PlatformHandle = (void*) g_Window;
-		((ImGuiViewportP*) viewport)->PlatformWindowCreated = true;
-		ImGuiViewportDataGlfw* data = IM_NEW(ImGuiViewportDataGlfw)();
-		data->WindowOwned = false;
-		viewport->PlatformUserData = data;
 	}
 }
 
@@ -288,6 +280,11 @@ ImGuiGlfw::~ImGuiGlfw() {
 	for (ImGuiMouseCursor cursor_n = 0; cursor_n < ImGuiMouseCursor_COUNT; cursor_n++) {
 		glfwDestroyCursor (g_MouseCursors[cursor_n]);
 		g_MouseCursors[cursor_n] = NULL;
+	}
+	
+	if (!isMainWindow) {
+//		ImGui::DestroyPlatformWindow((ImGuiViewportP*) viewport);
+		ImGui::EraseViewport((ImGuiViewportP*) viewport);
 	}
 }
 
@@ -308,6 +305,7 @@ void ImGuiGlfw::UpdateMousePosAndButtons() {
 	for (int n = 0; n < platform_io.Viewports.Size; n++) {
 		ImGuiViewport* viewport = platform_io.Viewports[n];
 		GLFWwindow* window = (GLFWwindow*) viewport->PlatformHandle;
+		
 		IM_ASSERT(window != NULL);
 		
 		const bool focused = glfwGetWindowAttrib(window, GLFW_FOCUSED) != 0;
