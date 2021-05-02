@@ -233,7 +233,7 @@ void ImGuiLayer::render() {
 		
 		ImGui::SetCurrentViewport(nullptr, (ImGuiViewportP*) imGuiGlfw->viewport);
 		
-		ImGui::PushID(layerID);
+		ImGui::PushID(layerID); // does not work when we have no window
 		for (UIWindow* uiWindow : uiWindows) {
 			if (uiWindow->visible) {
 				ImGui::PushID(uiWindow);
