@@ -13,6 +13,81 @@
 #include "starsystems/StarSystem.hpp"
 #include "starsystems/ShadowStarSystem.hpp"
 
+void printField(const rfk::Field& f, void* data) {
+	const rfk::Type& t = f.type;
+	std::ostringstream osValue;
+	
+	if (t.isValue()) {
+		
+		if (t == rfk::Type::getType<float>()) {
+			osValue << f.getData<float>(data);
+		} else if (t == rfk::Type::getType<double>()) {
+			osValue << f.getData<double>(data);
+		} else if (t == rfk::Type::getType<int8_t>()) {
+			osValue << f.getData<int8_t>(data);
+		} else if (t == rfk::Type::getType<int16_t>()) {
+			osValue << f.getData<int16_t>(data);
+		} else if (t == rfk::Type::getType<int32_t>()) {
+			osValue << f.getData<int32_t>(data);
+		} else if (t == rfk::Type::getType<int64_t>()) {
+			osValue << f.getData<int64_t>(data);
+		} else if (t == rfk::Type::getType<uint8_t>()) {
+			osValue << f.getData<uint8_t>(data);
+		} else if (t == rfk::Type::getType<uint16_t>()) {
+			osValue << f.getData<uint16_t>(data);
+		} else if (t == rfk::Type::getType<uint32_t>()) {
+			osValue << f.getData<uint32_t>(data);
+		} else if (t == rfk::Type::getType<uint64_t>()) {
+			osValue << f.getData<uint64_t>(data);
+		} else if (t == rfk::Type::getType<bool>()) {
+			osValue << f.getData<bool>(data);
+		} else if (t == rfk::Type::getType<char>()) {
+			osValue << f.getData<char>(data);
+		} else {
+			osValue << "unknown type";
+		}
+		
+	} else if (f.type.isCArray()) {
+		
+		if (t.archetype == rfk::getArchetype<char>()) {
+			osValue << static_cast<char*>(f.getDataAddress(data));
+		} else {
+			osValue << "unknown type";
+		}
+		
+	} else {
+		osValue << "not value";
+	}
+	
+	std::ostringstream osType;
+	
+	if (f.type.archetype != nullptr) {
+		osType << f.type.archetype->name;
+		
+		if (f.type.isCArray()) {
+			osType << "[" << f.type.getArraySize() << "]";
+		}
+		
+	} else {
+		osType << "?";
+	}
+	
+	ImGui::Text(" %s: %s = %s", f.name.data(), osType.str().data(), osValue.str().data());
+}
+
+template<typename T>
+void printComponent(entt::registry& registry, entt::entity entityID) {
+	T* c = registry.try_get<T>(entityID);
+	if (c != nullptr) {
+		rfk::Struct const& s = T::staticGetArchetype();
+		ImGui::Text("%s, fields %lu, %lu bytes", s.name.data(), s.fields.size(), s.memorySize);
+		for (auto it = s.fields.begin(); it != s.fields.end(); it++) {
+			const rfk::Field& f = *it;
+			printField(f, c);
+		}
+	}
+}
+
 void ShipDebugWindow::render() {
 	if (ImGui::Begin("Ship debug", &visible, ImGuiWindowFlags_AlwaysAutoResize)) {
 						
@@ -87,96 +162,11 @@ void ShipDebugWindow::render() {
 					if (ImGui::CollapsingHeader("Components", ImGuiTreeNodeFlags_DefaultOpen)) { // ImGuiTreeNodeFlags_DefaultOpen
 
 						registry.visit(entityID, [&](const entt::type_info type){
+//							ImGui::Text("%s", type.name().data());
 						  auto storage = registry.storage(type);
 						});
 						
-						auto printField = [&](const rfk::Field& f, void* data){
-							const rfk::Type& t = f.type;
-							std::ostringstream osValue;
-							
-							if (t.isValue()) {
-								
-								if (t == rfk::Type::getType<float>()) {
-									osValue << f.getData<float>(data);
-								} else if (t == rfk::Type::getType<double>()) {
-									osValue << f.getData<double>(data);
-								} else if (t == rfk::Type::getType<int8_t>()) {
-									osValue << f.getData<int8_t>(data);
-								} else if (t == rfk::Type::getType<int16_t>()) {
-									osValue << f.getData<int16_t>(data);
-								} else if (t == rfk::Type::getType<int32_t>()) {
-									osValue << f.getData<int32_t>(data);
-								} else if (t == rfk::Type::getType<int64_t>()) {
-									osValue << f.getData<int64_t>(data);
-								} else if (t == rfk::Type::getType<uint8_t>()) {
-									osValue << f.getData<uint8_t>(data);
-								} else if (t == rfk::Type::getType<uint16_t>()) {
-									osValue << f.getData<uint16_t>(data);
-								} else if (t == rfk::Type::getType<uint32_t>()) {
-									osValue << f.getData<uint32_t>(data);
-								} else if (t == rfk::Type::getType<uint64_t>()) {
-									osValue << f.getData<uint64_t>(data);
-								} else if (t == rfk::Type::getType<bool>()) {
-									osValue << f.getData<bool>(data);
-								} else if (t == rfk::Type::getType<char>()) {
-									osValue << f.getData<char>(data);
-								} else {
-									osValue << "unknown type";
-								}
-								
-							} else if (f.type.isCArray()) {
-								
-								if (t.archetype == rfk::getArchetype<char>()) {
-									osValue << static_cast<char*>(f.getDataAddress(data));
-								} else {
-									osValue << "unknown type";
-								}
-								
-							} else {
-								osValue << "not value";
-							}
-							
-							std::ostringstream osType;
-							
-							if (f.type.archetype != nullptr) {
-								osType << f.type.archetype->name;
-								
-								if (f.type.isCArray()) {
-									osType << "[" << f.type.getArraySize() << "]";
-								}
-								
-							} else {
-								osType << "?";
-							}
-							
-							ImGui::Text(" %s: %s = %s", f.name.data(), osType.str().data(), osValue.str().data());
-						};
-						
-						auto printComponent = [&]<typename T>() {
-							T* c = registry.try_get<T>(entityID);
-							if (c != nullptr) {
-								rfk::Struct const & s = T::staticGetArchetype();
-								ImGui::Text("%s, fields %lu, %lu bytes", s.name.data(), s.fields.size(), s.memorySize);
-								for (auto it = s.fields.begin(); it != s.fields.end(); it++)  {
-									const rfk::Field& f = *it;
-									printField(f, c);
-								}
-							}
-						};
-						
-//						printComponent.operator()<CircleComponent>();
-							
-//						CircleComponent* c = registry.try_get<CircleComponent>(entityID);
-//						if (c != nullptr) {
-//							rfk::Struct const & s = CircleComponent::staticGetArchetype();
-//							ImGui::Text("circle component, fields %lu, %lu bytes", s.fields.size(), s.memorySize);
-//							for (auto it = s.fields.begin(); it != s.fields.end(); it++)  {
-//								const rfk::Field& f = *it;
-//								printField(f, c);
-//							}
-//						}
-						
-#define INSPECT_COMPONENTS_TEMPLATE(r, unused, component) printComponent.operator()<component>();
+#define INSPECT_COMPONENTS_TEMPLATE(r, unused, component) printComponent<component>(registry, entityID);
 						
 						BOOST_PP_SEQ_FOR_EACH(INSPECT_COMPONENTS_TEMPLATE, ~, SYNCED_COMPONENTS_SEQ);
 						
@@ -633,7 +623,7 @@ void ShipDebugWindow::render() {
 //					}
 				}
 			}
-
-		}
-		ImGui::End();
+	}
+	
+	ImGui::End();
 }

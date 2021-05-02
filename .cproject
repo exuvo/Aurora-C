@@ -34,7 +34,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="lib/eigen/doc|lib/eigen/test|lib/Refureku/Refureku/Generator|lib/imgui/examples" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name=""/>
+						<entry excluding="lib/eigen/doc|lib/eigen/test|lib/Refureku/Refureku/Generator|lib/imgui/examples|lib/tracy/imgui" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>

@@ -26,6 +26,9 @@ class ImGuiLayer: public UILayer {
 		virtual ~ImGuiLayer() override;
 		
 		virtual void render() override;
+		void preRender();
+		void postRender();
+		
 		void addWindow(UIWindow* uiWindow);
 		void removeWindow(UIWindow* uiWindow);
 		
@@ -68,7 +71,7 @@ class ImGuiLayer: public UILayer {
 		virtual bool eventScroll(vk2d::Vector2d scroll) override;
 
 	private:
-		ImGuiContext* ctx = nullptr;
+		uint8_t layerID;
 		ImGuiGlfw* imGuiGlfw = nullptr;
 		std::vector<UIWindow*> uiWindows;
 		

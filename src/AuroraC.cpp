@@ -306,7 +306,19 @@ int main(int argc, char **argv) {
 			Aurora.vk2dInstance->Run();
 			
 			for (AuroraWindow* window : Aurora.windows) {
+				window->startRender();
+			}
+			
+			ImGui::NewFrame();
+			
+			for (AuroraWindow* window : Aurora.windows) {
 				window->render();
+			}
+			
+			ImGui::Render();
+			
+			for (AuroraWindow* window : Aurora.windows) {
+				window->endRender();
 				
 				if (hasVK_EXT_display_control) {
 					
@@ -324,6 +336,12 @@ int main(int argc, char **argv) {
 						hasVK_EXT_display_control = false;
 					}
 				}
+			}
+			
+			// Update and Render additional Platform Windows
+			if (ImGui::GetCurrentContext() != nullptr && (ImGui::GetIO().ConfigFlags & ImGuiConfigFlags_ViewportsEnable)) {
+				ImGui::UpdatePlatformWindows();
+				ImGui::RenderPlatformWindowsDefault();
 			}
 			
 			for (size_t i=0; i < Aurora.windows.size(); i++) {

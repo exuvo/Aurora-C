@@ -104,15 +104,16 @@ AuroraWindow::~AuroraWindow() {
 	}
 }
 
-void AuroraWindow::render() {
-	nanoseconds now = getNanos();
-	frameTime = now - lastDrawStart;
-	lastDrawStart = now;
+void AuroraWindow::startRender() {
+	
+	renderStart = getNanos();
+	frameTime = renderStart - lastDrawStart;
+	lastDrawStart = renderStart;
 	
 	frameTimeAverage = exponentialAverage(frameTime.count(), frameTimeAverage, 15.0);
 	
 	ZoneScoped;
-
+	
 	if (!window->IsIconified()) {
 		bool should_reconstruct = window->impl->should_reconstruct;
 		
@@ -135,6 +136,44 @@ void AuroraWindow::render() {
 			}
 		}
 		
+		profilerEvents.clear();
+	}
+	
+	ImGuiLayer& imgui = getLayer<ImGuiLayer>();
+	imgui.preRender();
+}
+
+void AuroraWindow::render() {
+//	nanoseconds now = getNanos();
+//	frameTime = now - lastDrawStart;
+//	lastDrawStart = now;
+//	
+//	frameTimeAverage = exponentialAverage(frameTime.count(), frameTimeAverage, 15.0);
+	
+	ZoneScoped;
+
+	if (!window->IsIconified()) {
+//		bool should_reconstruct = window->impl->should_reconstruct;
+//		
+//		if(!window->BeginRender()) {
+//			LOG4CXX_ERROR(log, "Error rendering: window begin returned false");
+//			return;
+//		}
+//		
+//		vk_command_buffer = window->impl->vk_render_command_buffers[window->impl->next_image];
+//		
+//		if (should_reconstruct) {
+//			vk_extent = window->impl->extent; // Gets updated in WindowImpl::ReCreateSwapchain() with no call to EventWindowSize
+////			vk_render_queue = window->impl->primary_render_queue;
+////			vk_transfer_queue = Aurora.vk2dInstance->impl->GetPrimaryTransferQueue();
+////			vk_pipeline_cache = Aurora.vk2dInstance->impl->GetGraphicsPipelineCache();
+////			vk_command_pool = window->impl->vk_command_pool;
+//	
+//			for (UILayer* layer : layers) {
+//				layer->eventResized();
+//			}
+//		}
+		
 		{
 			ZoneScopedN("Draw");
 			TracyVkZone(tracyVkCtxs[window->impl->next_image], window->impl->vk_render_command_buffers[window->impl->next_image], "Render");
@@ -145,7 +184,7 @@ void AuroraWindow::render() {
 	//			true,
 	//			vk2d::Colorf::RED()
 	//		);
-			profilerEvents.clear();
+//			profilerEvents.clear();
 			profilerEvents.start("layers");
 			for (UILayer* layer : layers) {
 				profilerEvents.start(demangleTypeName(typeid(*layer).name()));
@@ -173,12 +212,32 @@ void AuroraWindow::render() {
 			window->DrawMesh(text_mesh);
 		}
 		
+//		if (!window->EndRender()) {
+//			LOG4CXX_ERROR(log, "Error rendering: window end returned false");
+//			return;
+//		}
+//	
+//		renderTime = getNanos() - now;
+//		renderTimeAverage = exponentialAverage(renderTime.count(), renderTimeAverage, 10.0);
+	}
+	
+}
+
+void AuroraWindow::endRender() {
+	
+	ZoneScoped;
+	
+	if (!window->IsIconified()) {
+		
+		ImGuiLayer& imgui = getLayer<ImGuiLayer>();
+		imgui.postRender();
+		
 		if (!window->EndRender()) {
 			LOG4CXX_ERROR(log, "Error rendering: window end returned false");
 			return;
 		}
 	
-		renderTime = getNanos() - now;
+		renderTime = getNanos() - renderStart;
 		renderTimeAverage = exponentialAverage(renderTime.count(), renderTimeAverage, 10.0);
 	}
 	

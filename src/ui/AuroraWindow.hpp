@@ -37,7 +37,9 @@ class AuroraWindow : vk2d::WindowEventHandler {
 		AuroraWindow(StarSystem* starSystem);
 		virtual ~AuroraWindow();
 		
+		void startRender();
 		void render();
+		void endRender();
 		void addLayer(UILayer* layer);
 		void setMainLayer(UILayer* layer);
 		bool isKeyPressed(int glfwKey);
@@ -78,8 +80,21 @@ class AuroraWindow : vk2d::WindowEventHandler {
 			throw std::invalid_argument("No ui layer of type " + type_name<T>());
 		}
 		
+		template<aUILayer T>
+		T* getLayerPnt() {
+			for (UILayer* layer : layers) {
+				auto casted = dynamic_cast<T*>(layer);
+				if (casted) {
+					return casted;
+				}
+			}
+			
+			return nullptr;
+		}
+		
 	private:
 		LoggerPtr log = Logger::getLogger("aurora.ui.window");
+		nanoseconds renderStart;
 		nanoseconds lastDrawStart = getNanos();
 		nanoseconds frameTime = 0s;
 		nanoseconds renderTime = 0s;

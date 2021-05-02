@@ -6,6 +6,7 @@
  */
 
 #include <imgui.h>
+#include <imgui_internal.h>
 
 #include "Aurora.hpp"
 #include "MainDebugWindow.hpp"
@@ -42,12 +43,14 @@ void MainDebugWindow::render() {
 			ImGui::EndMenuBar();
 		}
 
+		auto ctx = ImGui::GetCurrentContext();
+		
 		ImGui::Text("Hello, world %d", 4);
-		ImGui::Text("ctx.hoveredWindow ${ctx.hoveredWindow}");
-		ImGui::Text("ctx.navWindow ${ctx.navWindow}");
-		ImGui::Text("ctx.navWindow.dc ${ctx.navWindow?.dc}");
-		ImGui::Text("ctx.io.wantCaptureMouse ${ctx.io.wantCaptureMouse}");
-		ImGui::Text("ctx.io.wantCaptureKeyboard ${ctx.io.wantCaptureKeyboard}");
+		ImGui::Text("ctx.hoveredWindow %s", ctx->HoveredWindow != nullptr ? ctx->HoveredWindow->Name : "null");
+		ImGui::Text("ctx.navWindow %s", ctx->NavWindow != nullptr ? ctx->NavWindow->Name : "null");
+//		ImGui::Text("ctx.navWindow.dc %ul" , ctx->NavWindow != nullptr ? ctx->NavWindow->DC : 0);
+		ImGui::Text("ctx.io.wantCaptureMouse %u", ctx->IO.WantCaptureMouse);
+		ImGui::Text("ctx.io.wantCaptureKeyboard %u", ctx->IO.WantCaptureKeyboard);
 		float graphValues[] = { 0, 5, 2, 4 };
 		ImGui::PlotLines("plot", graphValues, ARRAY_LEN(graphValues), 0, nullptr, 0, 5, {}, 1);
 

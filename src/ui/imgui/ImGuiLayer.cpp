@@ -27,57 +27,59 @@
 #include "utils/ImGuiUtils.hpp"
 #include "utils/Utils.hpp"
 
-static int imGuiContexts = 0;
-static ImGuiContext* mainCtx = nullptr;
+static uint8_t imGuiLayers = 0;
 static VkDescriptorPool vk_descriptorPool = VK_NULL_HANDLE;
 
 ImGuiLayer::ImGuiLayer(AuroraWindow& parentWindow): UILayer(parentWindow) {
 	IMGUI_CHECKVERSION();
 	
 	if (ImGui::GetCurrentContext() != nullptr) {
-		ctx = ImGui::CreateContext(ImGui::GetIO().Fonts);
-		imGuiGlfw = new ImGuiGlfw(window.window->impl->glfw_window);
-	
+		imGuiGlfw = new ImGuiGlfw(window.window->impl->glfw_window, false);
+		
+		ImGui_ImplVulkan_InitViewport(imGuiGlfw->viewport);
+  
 	} else {
-		ctx = ImGui::CreateContext();
-		imGuiGlfw = new ImGuiGlfw(window.window->impl->glfw_window);
+		ImGui::CreateContext();
+		
+		ImGuiIO& io = ImGui::GetIO();
+		io.ConfigFlags |= ImGuiConfigFlags_IsSRGB;
+		io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+		
+		imGuiGlfw = new ImGuiGlfw(window.window->impl->glfw_window, true);
 		
 		initShared();
-		mainCtx = ctx;
+		
+		ImGui::StyleColorsDark();
+  
+		ImGuiStyle& style = ImGui::GetStyle();
+		style.ItemSpacing.y = 3;
+		
+		ImVec4* colors = style.Colors;
+		colors[ImGuiCol_FrameBg]          = { 0.43, 0.43, 0.43, 0.39 };
+		colors[ImGuiCol_FrameBgHovered]   = { 0.47, 0.47, 0.69, 0.40 };
+		colors[ImGuiCol_FrameBgActive]    = { 0.42, 0.41, 0.64, 0.69 };
+		colors[ImGuiCol_TitleBg]          = { 0.04, 0.04, 0.04, 0.87 };
+		colors[ImGuiCol_TitleBgActive]    = { 0.32, 0.32, 0.63, 1.00 };
+		colors[ImGuiCol_TitleBgCollapsed] = { 0.00, 0.00, 0.00, 0.51 };
+		colors[ImGuiCol_Header]           = { 0.40, 0.40, 0.90, 0.45 };
+		colors[ImGuiCol_HeaderHovered]    = { 0.45, 0.45, 0.90, 0.80 };
+		colors[ImGuiCol_HeaderActive]     = { 0.53, 0.53, 0.87, 0.80 };
+		colors[ImGuiCol_PlotLines]        = { 0.80, 0.80, 0.80, 1.00 };
+		colors[ImGuiCol_PlotHistogram]    = { 0.90, 0.70, 0.00, 1.00 };
+		
+		// convert style from sRGB to linear https://github.com/ocornut/imgui/issues/578#issuecomment-577222389
+		for (size_t i = 0; i < ImGuiCol_COUNT; i++) {
+			toLinearRGB(&style.Colors[i]);
+		}
 	}
 	
-  ImGuiIO& io = ImGui::GetIO();
-  io.ConfigFlags |= ImGuiConfigFlags_IsSRGB;
-  
-  ImGui::StyleColorsDark();
-  
-	ImGuiStyle& style = ImGui::GetStyle();
-	style.ItemSpacing.y = 3;
+	layerID = imGuiLayers++;
 	
-  ImVec4* colors = style.Colors;
-	colors[ImGuiCol_FrameBg]          = { 0.43, 0.43, 0.43, 0.39 };
-	colors[ImGuiCol_FrameBgHovered]   = { 0.47, 0.47, 0.69, 0.40 };
-	colors[ImGuiCol_FrameBgActive]    = { 0.42, 0.41, 0.64, 0.69 };
-	colors[ImGuiCol_TitleBg]          = { 0.04, 0.04, 0.04, 0.87 };
-	colors[ImGuiCol_TitleBgActive]    = { 0.32, 0.32, 0.63, 1.00 };
-	colors[ImGuiCol_TitleBgCollapsed] = { 0.00, 0.00, 0.00, 0.51 };
-	colors[ImGuiCol_Header]           = { 0.40, 0.40, 0.90, 0.45 };
-	colors[ImGuiCol_HeaderHovered]    = { 0.45, 0.45, 0.90, 0.80 };
-	colors[ImGuiCol_HeaderActive]     = { 0.53, 0.53, 0.87, 0.80 };
-	colors[ImGuiCol_PlotLines]        = { 0.80, 0.80, 0.80, 1.00 };
-	colors[ImGuiCol_PlotHistogram]    = { 0.90, 0.70, 0.00, 1.00 };
-	
-	// convert style from sRGB to linear https://github.com/ocornut/imgui/issues/578#issuecomment-577222389
-	for (size_t i = 0; i < ImGuiCol_COUNT; i++) {
-		toLinearRGB(&style.Colors[i]);
-	}
-	
-  imGuiContexts++;
-  
-  addWindow(new MainDebugWindow(*this));
-  addWindow(new ImGuiDemoWindow(*this));
-  addWindow(new EmpireOverviewWindow(*this));
-  addWindow(new ShipDebugWindow(*this));
+	addWindow(new MainDebugWindow(*this));
+	addWindow(new ImGuiDemoWindow(*this));
+	addWindow(new EmpireOverviewWindow(*this));
+	addWindow(new ShipDebugWindow(*this));
+//	addWindow(new ShipDebugWindow(*this));
 }
 
 void ImGuiLayer::initShared(){
@@ -188,14 +190,14 @@ void ImGuiLayer::initShared(){
 }
 
 ImGuiLayer::~ImGuiLayer() {
-	if (ctx != nullptr) {
-		ImGui::SetCurrentContext(ctx);
-		
+	if (imGuiGlfw != nullptr) {
 		for (UIWindow* uiWindow : uiWindows) {
 			delete uiWindow;
 		}
 		
-		if (--imGuiContexts == 0) {
+		ImGui_ImplVulkan_ShutdownViewport(imGuiGlfw->viewport);
+		
+		if (--imGuiLayers == 0) {
 			ImGui_ImplVulkan_Shutdown();
 			
 			if (vk_descriptorPool != VK_NULL_HANDLE) {
@@ -206,44 +208,49 @@ ImGuiLayer::~ImGuiLayer() {
 		
 		delete imGuiGlfw;
 		
-		if (!ctx->FontAtlasOwnedByContext) {
+		if (imGuiLayers == 0) {
 			ImGui::DestroyContext();
-		}
-		
-		if (imGuiContexts == 0) {
-			ImGui::SetCurrentContext(mainCtx);
-			ImGui::DestroyContext();
-			mainCtx = nullptr;
 		}
 	}
 }
 
-void ImGuiLayer::render() {
-	ImGui::SetCurrentContext(ctx);
+void ImGuiLayer::preRender() {
+	ZoneScopedN("ImGuiPre");
 	ImGui_ImplVulkan_NewFrame();
 	imGuiGlfw->NewFrame();
-	ImGui::NewFrame();
+}
+
+void ImGuiLayer::render() {
+//	if (imGuiGlfw->isMainWindow) {
+//		ImGui::NewFrame();
+//	}
 	
-	VkCommandBuffer command_buffer = window.vk_command_buffer;
+//	VkCommandBuffer command_buffer = window.vk_command_buffer;
 	
 	// Record ImGui primitives into command buffer
 	{
 		ZoneScopedN("ImGui");
 		
+		ImGui::SetCurrentViewport(nullptr, (ImGuiViewportP*) imGuiGlfw->viewport);
+		
+		ImGui::PushID(layerID);
 		for (UIWindow* uiWindow : uiWindows) {
 			if (uiWindow->visible) {
+				ImGui::PushID(uiWindow);
 				uiWindow->render();
+				ImGui::PopID();
 			}
 		}
+		ImGui::PopID();
 		
-		ImGui::Render();
-		ImDrawData* draw_data = ImGui::GetDrawData();
-		
-		TracyVkZone(window.tracyVkCtxs[window.window->impl->next_image], command_buffer, "ImGui Render");
-		ImGui_ImplVulkan_RenderDrawData(draw_data, command_buffer);
+//		ImGui::Render();
+//		ImDrawData* draw_data = ImGui::GetDrawData(imGuiGlfw->viewport);
+//		
+//		TracyVkZone(window.tracyVkCtxs[window.window->impl->next_image], command_buffer, "ImGui Render");
+//		ImGui_ImplVulkan_RenderDrawData(draw_data, command_buffer);
 	}
 	
-	window.restore_VK2D_render(true, true);
+//	window.restore_VK2D_render(true, true);
 	
 	// Restore render pipeline
 //	window.window->impl->previous_pipeline_settings = vk2d::_internal::GraphicsPipelineSettings {};
@@ -268,6 +275,18 @@ void ImGuiLayer::render() {
 //		1, &window.window->impl->frame_data_descriptor_set.descriptorSet,
 //		0, nullptr
 //	);
+}
+
+void ImGuiLayer::postRender() {
+	ZoneScopedN("ImGuiPost");
+	
+	ImDrawData* draw_data = ImGui::GetDrawData(imGuiGlfw->viewport);
+	
+	VkCommandBuffer command_buffer = window.vk_command_buffer;
+	TracyVkZone(window.tracyVkCtxs[window.window->impl->next_image], command_buffer, "ImGui Render");
+	ImGui_ImplVulkan_RenderDrawData(draw_data, command_buffer);
+	
+	window.restore_VK2D_render(true, true);
 }
 
 void ImGuiLayer::addWindow(UIWindow* uiWindow) {
@@ -310,8 +329,7 @@ bool ImGuiLayer::keyAction(KeyActions_ImGuiLayer action) {
 }
 
 bool ImGuiLayer::eventKeyboard(vk2d::KeyboardButton button, int32_t scancode, vk2d::ButtonAction action, vk2d::ModifierKeyFlags modifier_keys) {
-	if (ctx->IO.WantCaptureKeyboard) {
-		ImGui::SetCurrentContext(ctx);
+	if (ImGui::GetCurrentContext()->IO.WantCaptureKeyboard) {
 		imGuiGlfw->KeyCallback(nullptr, static_cast<int>(button), static_cast<int>(scancode), static_cast<int>(action), static_cast<int>(modifier_keys));
 		return true;
 	}
@@ -326,8 +344,7 @@ bool ImGuiLayer::eventKeyboard(vk2d::KeyboardButton button, int32_t scancode, vk
 }
 
 bool ImGuiLayer::eventCharacter(uint32_t character, vk2d::ModifierKeyFlags modifier_keys) {
-	if (ctx->IO.WantCaptureKeyboard) {
-		ImGui::SetCurrentContext(ctx);
+	if (ImGui::GetCurrentContext()->IO.WantCaptureKeyboard) {
 		imGuiGlfw->CharCallback(nullptr, static_cast<unsigned int>(character));
 		return true;
 	}
@@ -342,8 +359,7 @@ bool ImGuiLayer::eventCharacter(uint32_t character, vk2d::ModifierKeyFlags modif
 }
 
 bool ImGuiLayer::eventMouseButton(vk2d::MouseButton button, vk2d::ButtonAction action, vk2d::ModifierKeyFlags modifier_keys) {
-	if (ctx->IO.WantCaptureMouse) {
-		ImGui::SetCurrentContext(ctx);
+	if (ImGui::GetCurrentContext()->IO.WantCaptureMouse) {
 		imGuiGlfw->MouseButtonCallback(nullptr, static_cast<int>(button), static_cast<int>(action), static_cast<int>(modifier_keys));
 		return true;
 	}
@@ -352,8 +368,7 @@ bool ImGuiLayer::eventMouseButton(vk2d::MouseButton button, vk2d::ButtonAction a
 }
 
 bool ImGuiLayer::eventScroll(vk2d::Vector2d scroll) {
-	if (ctx->IO.WantCaptureMouse) {
-		ImGui::SetCurrentContext(ctx);
+	if (ImGui::GetCurrentContext()->IO.WantCaptureMouse) {
 		imGuiGlfw->ScrollCallback(nullptr, scroll.x, scroll.y);
 		return true;
 	}

@@ -26,8 +26,12 @@ void EmpireOverviewWindow::render() {
 	
 	if (empire != nullptr) {
 		
+		//TODO wrong position with GetWindowViewport
+//		ImVec2 viewportPos = ImGui::GetWindowViewport()->Pos;
+		ImVec2 viewportPos = ImGui::GetMainViewport()->Pos;
+		
 		ImGui::SetNextWindowSize({ 150, layer.getMainWindow().window->GetSize().y - 50 });
-		ImGui::SetNextWindowPos({ 0, 20 });
+		ImGui::SetNextWindowPos(viewportPos + ImVec2{ 0, 20 });
 		ImGui::SetNextWindowBgAlpha(0.4f);
 		if (ImGui::Begin("Empire Overview", nullptr, ImGuiWindowFlags_::ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_::ImGuiWindowFlags_NoMove | ImGuiWindowFlags_::ImGuiWindowFlags_NoResize)) {
 			ImGuiWindow* window = ImGui::GetCurrentWindow();
