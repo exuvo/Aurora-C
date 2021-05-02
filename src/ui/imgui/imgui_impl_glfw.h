@@ -87,5 +87,3 @@ class ImGuiGlfw {
 		static void WindowPosCallback(GLFWwindow* window, int, int);
 		static void WindowSizeCallback(GLFWwindow* window, int, int);
 };
-
-extern ImGuiGlfw* imGuiGlfw;
