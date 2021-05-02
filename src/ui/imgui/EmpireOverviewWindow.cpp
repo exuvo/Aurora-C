@@ -34,7 +34,10 @@ void EmpireOverviewWindow::render() {
 		ImGui::SetNextWindowSize({ 150, layer.getMainWindow().window->GetSize().y - 50 });
 		ImGui::SetNextWindowPos(viewportPos + ImVec2{ 0, 20 });
 		ImGui::SetNextWindowBgAlpha(0.4f);
-		if (ImGui::Begin("Empire Overview", nullptr, ImGuiWindowFlags_::ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_::ImGuiWindowFlags_NoMove | ImGuiWindowFlags_::ImGuiWindowFlags_NoResize)) {
+		
+		std::ostringstream ostring;
+		ostring << "Empire Overview##" << this;
+		if (ImGui::Begin(ostring.str().data(), nullptr, ImGuiWindowFlags_::ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_::ImGuiWindowFlags_NoMove | ImGuiWindowFlags_::ImGuiWindowFlags_NoResize)) {
 			ImGuiWindow* window = ImGui::GetCurrentWindow();
 			
 			bool windowCoveredByOtherWindow = false;

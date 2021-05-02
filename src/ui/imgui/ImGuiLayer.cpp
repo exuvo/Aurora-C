@@ -80,7 +80,6 @@ ImGuiLayer::ImGuiLayer(AuroraWindow& parentWindow): UILayer(parentWindow) {
 	addWindow(new ImGuiDemoWindow(*this));
 	addWindow(new EmpireOverviewWindow(*this));
 	addWindow(new ShipDebugWindow(*this));
-//	addWindow(new ShipDebugWindow(*this));
 }
 
 void ImGuiLayer::initShared(){
@@ -227,60 +226,22 @@ void ImGuiLayer::preRender() {
 }
 
 void ImGuiLayer::render() {
-//	if (imGuiGlfw->isMainWindow) {
-//		ImGui::NewFrame();
-//	}
-	
-//	VkCommandBuffer command_buffer = window.vk_command_buffer;
-	
 	// Record ImGui primitives into command buffer
 	{
 		ZoneScopedN("ImGui");
 		
 		ImGui::SetCurrentViewport(nullptr, (ImGuiViewportP*) imGuiGlfw->viewport);
 		
-		ImGui::PushID(layerID); // does not work when we have no window
+//		ImGui::PushID(layerID); //TODO does not work as we have no window
 		for (UIWindow* uiWindow : uiWindows) {
 			if (uiWindow->visible) {
-				ImGui::PushID(uiWindow);
+//				ImGui::PushID(uiWindow);
 				uiWindow->render();
-				ImGui::PopID();
+//				ImGui::PopID();
 			}
 		}
-		ImGui::PopID();
-		
-//		ImGui::Render();
-//		ImDrawData* draw_data = ImGui::GetDrawData(imGuiGlfw->viewport);
-//		
-//		TracyVkZone(window.tracyVkCtxs[window.window->impl->next_image], command_buffer, "ImGui Render");
-//		ImGui_ImplVulkan_RenderDrawData(draw_data, command_buffer);
+//		ImGui::PopID();
 	}
-	
-//	window.restore_VK2D_render(true, true);
-	
-	// Restore render pipeline
-//	window.window->impl->previous_pipeline_settings = vk2d::_internal::GraphicsPipelineSettings {};
-//	window.window->impl->mesh_buffer->bound_index_buffer_block = nullptr;
-//	window.window->impl->mesh_buffer->bound_vertex_buffer_block = nullptr;
-//	
-//	VkRect2D scissor {
-//		{ 0, 0 },
-//		window.window->impl->extent
-//	};
-//	vkCmdSetScissor(
-//		command_buffer,
-//		0, 1, &scissor
-//	);
-//	
-//	// Window frame data.
-//	vkCmdBindDescriptorSets(
-//		command_buffer,
-//		VK_PIPELINE_BIND_POINT_GRAPHICS,
-//		Aurora.vk2dInstance->impl->GetGraphicsPrimaryRenderPipelineLayout(),
-//		vk2d::_internal::GRAPHICS_DESCRIPTOR_SET_ALLOCATION_WINDOW_FRAME_DATA,
-//		1, &window.window->impl->frame_data_descriptor_set.descriptorSet,
-//		0, nullptr
-//	);
 }
 
 void ImGuiLayer::postRender() {
@@ -305,6 +266,8 @@ void ImGuiLayer::removeWindow(UIWindow* uiWindow) {
 }
 
 bool ImGuiLayer::keyAction(KeyActions_ImGuiLayer action) {
+	//TODO add all new permanent windows to main window imgui list
+	// as they will close with this window otherwise even if moved elsewhere.
 	
 	if (action == KeyActions_ImGuiLayer::DEBUG) {
 		
