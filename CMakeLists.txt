@@ -8,7 +8,6 @@ project (AuroraC VERSION 0.1 LANGUAGES CXX)
 # print stack trace https://stackoverflow.com/questions/38433701/print-log4cxx-exception-stacktrace
 # command line parsing cxxopts
 # zlib for packaging resources ?
-# more links https://github.com/MFatihMAR/Game-Networking-Resources
 # polynomial solvers
 #  https://www.alglib.net/equations/polynomial.php
 #  https://www.gnu.org/software/gsl/doc/html/poly.html#general-polynomial-equations
@@ -20,7 +19,10 @@ project (AuroraC VERSION 0.1 LANGUAGES CXX)
 # imgui extensions
 #  file dialog https://github.com/dfranx/ImFileDialog
 #  cool effects https://github.com/ocornut/imgui/issues/3606
-
+# Network encoding Flatbuffers or protocolbuffers https://google.github.io/flatbuffers/flatbuffers_benchmarks.html
+# XML lib pugixml https://github.com/zeux/pugixml
+# more links https://github.com/MFatihMAR/Game-Networking-Resources
+ 
 # log4cxx does not build with mingw (due to we allowed linking to libs built for cygwin, that use different std lib?) but tracy works. 
 
 # does not work with ninja
