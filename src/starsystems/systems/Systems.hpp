@@ -174,9 +174,9 @@ class SpatialPartitioningSystem : public IntervalSystem<SpatialPartitioningSyste
 		static constexpr int32_t MAX = std::numeric_limits<int32_t>::max();
 		static constexpr int64_t DESIRED_MIN_SQUARE_SIZE = 100'000'000; // in m
 		static constexpr double RAW_DEPTH = std::log(SCALE * (double) MAX / DESIRED_MIN_SQUARE_SIZE) / std::log(2.0);
-		static constexpr int32_t DEPTH = std::round(RAW_DEPTH);
+		static constexpr uint8_t DEPTH = std::round(RAW_DEPTH);
 		static constexpr int64_t MIN_SQUARE_SIZE = (SCALE * (long) MAX) / std::pow(2, DEPTH);
-		static constexpr int32_t MAX_ELEMENTS = 8;
+		static constexpr uint16_t MAX_ELEMENTS = 8;
 		
 		QuadtreePoint tree = {MAX, MAX, MAX_ELEMENTS, DEPTH};
 		
@@ -214,9 +214,9 @@ class SpatialPartitioningPlanetoidsSystem : public IntervalSystem<SpatialPartiti
 		static constexpr int32_t MAX = std::numeric_limits<int32_t>::max();
 		static constexpr int64_t DESIRED_MIN_SQUARE_SIZE = 149597870700; // AU in m
 		static constexpr double RAW_DEPTH = std::log(SCALE * (double) MAX / DESIRED_MIN_SQUARE_SIZE) / std::log(2.0);
-		static constexpr int32_t DEPTH = std::round(RAW_DEPTH); // 5
+		static constexpr uint8_t DEPTH = std::round(RAW_DEPTH); // 5
 		static constexpr int64_t MIN_SQUARE_SIZE = (SCALE * (long) MAX) / std::pow(2, DEPTH);
-		static constexpr int32_t MAX_ELEMENTS = 4;
+		static constexpr uint16_t MAX_ELEMENTS = 4;
 		
 		QuadtreeAABB tree = {MAX, MAX, MAX_ELEMENTS, DEPTH};
 		

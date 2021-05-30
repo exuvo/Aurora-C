@@ -27,6 +27,8 @@ void ShipHull::calculateCachedValues() {
 			targetingComputers.push_back(PartIndex<>(i));
 		}
 	}
+	
+	//TODO partStateIndexes
 }
 
 std::string ShipHull::toString() const {
@@ -39,4 +41,44 @@ std::string ShipHull::toString() const {
 
 std::ostream& operator<< (std::ostream& out, const ShipHull& hull) {
 	return out << hull.toString();
+}
+
+template<>
+std::vector<PartStateIndex>& ShipHull::getPartStateIndex<FueledPartState>() {
+	return partStateIndexes[0];
+}
+
+template<>
+std::vector<PartStateIndex>& ShipHull::getPartStateIndex<PoweringPartState>() {
+	return partStateIndexes[1];
+}
+
+template<>
+std::vector<PartStateIndex>& ShipHull::getPartStateIndex<PoweredPartState>() {
+	return partStateIndexes[2];
+}
+
+template<>
+std::vector<PartStateIndex>& ShipHull::getPartStateIndex<PassiveSensorState>() {
+	return partStateIndexes[3];
+}
+
+template<>
+std::vector<PartStateIndex>& ShipHull::getPartStateIndex<ChargedPartState>() {
+	return partStateIndexes[4];
+}
+
+template<>
+std::vector<PartStateIndex>& ShipHull::getPartStateIndex<AmmunitionPartState>() {
+	return partStateIndexes[5];
+}
+
+template<>
+std::vector<PartStateIndex>& ShipHull::getPartStateIndex<WeaponPartState>() {
+	return partStateIndexes[6];
+}
+
+template<>
+std::vector<PartStateIndex>& ShipHull::getPartStateIndex<TargetingComputerState>() {
+	return partStateIndexes[7];
 }

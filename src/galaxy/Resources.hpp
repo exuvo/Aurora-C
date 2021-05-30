@@ -60,7 +60,6 @@ struct Resources {
 	                                         &NUCLEAR_FUSION, &ROCKET_FUEL, &LIFE_SUPPORT };
 	
 	static inline constexpr const size_t size = ARRAY_LENGTH(ALL);
-	// Maybe optimize further by having normal cost materials first and a smaller size for those.
 };
 
 struct ResourcePnt {

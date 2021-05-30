@@ -72,14 +72,14 @@ bool operator &(const Part& part, PartType type);
 
 template<class partType = Part>
 struct PartIndex {
-	uint16_t idx;
+	uint8_t idx;
 	
-	PartIndex(uint16_t idx): idx(idx) {}
+	PartIndex(uint8_t idx): idx(idx) {}
 	
 	template<class other>
 	PartIndex(PartIndex<other> p): idx(p.idx) {}
 	
-	inline uint16_t operator() () const {
+	inline uint8_t operator() () const {
 		return idx;
 	}
 	

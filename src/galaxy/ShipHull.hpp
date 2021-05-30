@@ -19,6 +19,7 @@
 #include "starsystems/components/StrategicIconComponent.hpp"
 #include "starsystems/components/PowerComponent.hpp"
 #include "starsystems/components/ColonyComponents.hpp"
+#include "starsystems/components/PartStatesComponent.hpp"
 
 struct MunitionHull;
 
@@ -56,9 +57,16 @@ struct ShipHull {
 	std::vector<PartIndex<ThrustingPart>> thrusters;
 	std::vector<PartIndex<TargetingComputer>> targetingComputers;
 	
+	
 	void calculateCachedValues();
 	std::string toString() const;
 	static inline constexpr double LengthToDiameterRatio = 2.0;
+	
+	template<typename T>
+	std::vector<PartStateIndex>& getPartStateIndex();
+
+private:
+	std::vector<PartStateIndex> partStateIndexes[PART_STATES_COUNT];
 };
 
 std::ostream& operator<< (std::ostream& out, const ShipHull& hull);
