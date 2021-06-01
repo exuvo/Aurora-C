@@ -57,6 +57,22 @@ struct ShipHull {
 	std::vector<PartIndex<ThrustingPart>> thrusters;
 	std::vector<PartIndex<TargetingComputer>> targetingComputers;
 	
+	uint16_t crewRequirement;
+	uint32_t emptyMass; // kg
+	uint32_t loadedMass;
+	uint32_t preferredCargoMass;
+	uint32_t preferredMunitionMass;
+	uint32_t maxFuelMass;
+	uint32_t maxSuppliesMass;
+	uint32_t maxCargoVolume;
+	uint32_t maxMunitionVolume;
+	uint64_t volume; // cm³
+	uint64_t surfaceArea; // cm²
+	uint8_t armorWidth;
+	uint16_t maxPartHP;
+	uint32_t maxArmorHP;
+	uint32_t maxShieldHP;
+	std::map<Resource, uint32_t> cost;
 	
 	void calculateCachedValues();
 	std::string toString() const;
@@ -64,6 +80,11 @@ struct ShipHull {
 	
 	template<typename T>
 	std::vector<PartStateIndex>& getPartStateIndex();
+	
+	template<typename T>
+	PartStateIndex getPartStateIndex(PartIndex<Part> partIndex) {
+		return getPartStateIndex<T>()[partIndex];
+	}
 
 private:
 	std::vector<PartStateIndex> partStateIndexes[PART_STATES_COUNT];

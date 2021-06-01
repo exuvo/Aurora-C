@@ -6,8 +6,12 @@
  */
 
 #include <fmt/core.h>
+#include <numbers>
 
 #include "ShipHull.hpp"
+#include "MunitionHull.hpp"
+
+#define lengthToDiameterRatio 2
 
 template<>
 std::vector<PartStateIndex>& ShipHull::getPartStateIndex<FueledPartState>() {
@@ -50,6 +54,17 @@ std::vector<PartStateIndex>& ShipHull::getPartStateIndex<TargetingComputerState>
 }
 
 void ShipHull::calculateCachedValues() {
+	
+	crewRequirement = 0;
+	emptyMass = 0;
+	maxFuelMass = 0;
+	maxCargoVolume = 0;
+	maxMunitionVolume = 0;
+	maxSuppliesMass = 0;
+	volume = 0;
+	maxPartHP = 0;
+	maxShieldHP = 0;
+	
 	shields.clear();
 	thrusters.clear();
 	targetingComputers.clear();
@@ -69,6 +84,11 @@ void ShipHull::calculateCachedValues() {
 	
 	for (size_t i=0; i < parts.size(); i++) {
 		Part* part = parts[i];
+		
+		maxPartHP += part->health;
+		emptyMass += part->mass;
+		volume += part->volume;
+		crewRequirement += part->crewRequirement;
 		
 		if (part->is(PartType::Thrusting)) {
 			thrusters.push_back(PartIndex<>(i));
@@ -110,8 +130,10 @@ void ShipHull::calculateCachedValues() {
 			partStateIdxs[i] = nextWeaponIdx++;
 		}
 		
-		if (dynamic_cast<Shield*>(part) != nullptr) {
+		Shield* shield = dynamic_cast<Shield*>(part);
+		if (shield != nullptr) {
 			shields.push_back(PartIndex<>(i));
+			maxShieldHP += shield->capacity;
 		}
 		
 		if (dynamic_cast<TargetingComputer*>(part) != nullptr) {
@@ -127,7 +149,57 @@ void ShipHull::calculateCachedValues() {
 			partStateIdxs.reserve(1 + i);
 			partStateIdxs[i] = nextPassiveSensordIdx++;
 		}
+		
+		if (part->is(PartType::Container)) {
+			ContainerPart* container = static_cast<ContainerPart*>(part);
+			
+			if (container->cargoType == &CargoTypes::FUEL) {
+				maxFuelMass += container->capacity / Resources::ROCKET_FUEL.specificVolume;
+				
+			} else if (container->cargoType == &CargoTypes::NUCLEAR) {
+				maxFuelMass += container->capacity / Resources::NUCLEAR_FISSION.specificVolume;
+				
+			} else if (container->cargoType == &CargoTypes::LIFE_SUPPORT) {
+				maxSuppliesMass += container->capacity / Resources::LIFE_SUPPORT.specificVolume;
+				
+			} else if (container->cargoType == &CargoTypes::AMMUNITION) {
+				maxMunitionVolume += container->capacity;
+				
+			} else if (container->cargoType == &CargoTypes::NORMAL) {
+				maxCargoVolume += container->capacity / Resources::LIFE_SUPPORT.specificVolume;
+			}
+		}
 	}
+	
+	preferredMunitionMass = 0;
+	for(auto const& [muntionHull, amount] : preferredMunitions) {
+		preferredMunitionMass += muntionHull->loadedMass * amount;
+	}
+	
+	preferredCargoMass = 0;
+	for(auto const& [resourcePnt, amount] : preferredCargo) {
+		preferredMunitionMass += amount;
+	}
+	
+	// Surface Area cm² V = πr^2h, http://mathhelpforum.com/geometry/170076-how-find-cylinder-dimensions-volume-aspect-ratio.html
+	double length = std::pow(std::pow(2.0, 2 * lengthToDiameterRatio) * volume / std::numbers::pi, 1.0 / 3);
+	double radius = std::sqrt(volume / std::numbers::pi / length);
+
+	surfaceArea = 2 * std::numbers::pi * radius * length + 2 * std::numbers::pi * radius * radius;
+	
+	//	armorWidth = 10;
+	armorWidth = std::max(1UL, surfaceArea / 1000000);
+	
+	maxArmorHP = 0;
+	for (uint8_t i=0; i < armorLayers.size(); i++) {
+		maxArmorHP += armorLayers[i]->blockHP * armorWidth;
+	}
+	
+//	surfaceArea += armor;
+//	volume += armor;
+//	emptyMass += armor;
+	
+	loadedMass = emptyMass + preferredCargoMass + preferredMunitionMass + maxFuelMass + maxSuppliesMass;
 }
 
 std::string ShipHull::toString() const {

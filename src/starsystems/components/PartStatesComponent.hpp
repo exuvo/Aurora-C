@@ -90,6 +90,7 @@ struct TargetingComputerState {
 	std::priority_queue<PartIndex<WeaponPart>, std::vector<PartIndex<WeaponPart>>, TargetingComputerStateComparator> chargingWeapons;
 	
 //	reloadingWeapons(std::priority_queue(TargetingComputerStateComparator(this), std::vector<PartIndex<WeaponPart>()))
+	//TODO constructor
 };
 
 struct PartStatesComponent {

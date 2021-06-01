@@ -88,34 +88,34 @@ struct PartIndex {
 	}
 };
 
-struct ContainerPart {
+struct ContainerPart: Part {
 	uint32_t capacity;
 	const CargoType* cargoType;
 	
-	ContainerPart(Part* part, uint32_t capacity, const CargoType* cargoType)
+	ContainerPart(uint32_t capacity, const CargoType* cargoType)
 	: capacity(capacity), cargoType(cargoType) {
-		part->types |= 1 << PartType::Container;
+		types |= 1 << PartType::Container;
 	};
 };
 
 struct CargoContainerPart: public ContainerPart {
-	CargoContainerPart(Part* part, uint32_t capacity): ContainerPart(part, capacity, &CargoTypes::NORMAL) {};
+	CargoContainerPart(uint32_t capacity): ContainerPart(capacity, &CargoTypes::NORMAL) {};
 };
 
 struct FuelContainerPart: public ContainerPart {
-	FuelContainerPart(Part* part, uint32_t capacity): ContainerPart(part, capacity, &CargoTypes::FUEL) {};
+	FuelContainerPart(uint32_t capacity): ContainerPart(capacity, &CargoTypes::FUEL) {};
 };
 
 struct LifeSupportContainerPart: public ContainerPart {
-	LifeSupportContainerPart(Part* part, uint32_t capacity): ContainerPart(part, capacity, &CargoTypes::LIFE_SUPPORT) {};
+	LifeSupportContainerPart(uint32_t capacity): ContainerPart(capacity, &CargoTypes::LIFE_SUPPORT) {};
 };
 
 struct AmmoContainerPart: public ContainerPart {
-	AmmoContainerPart(Part* part, uint32_t capacity): ContainerPart(part, capacity, &CargoTypes::AMMUNITION) {};
+	AmmoContainerPart(uint32_t capacity): ContainerPart(capacity, &CargoTypes::AMMUNITION) {};
 };
 
 struct NuclearContainerPart: public ContainerPart {
-	NuclearContainerPart(Part* part, uint32_t capacity): ContainerPart(part, capacity, &CargoTypes::NUCLEAR) {};
+	NuclearContainerPart(uint32_t capacity): ContainerPart(capacity, &CargoTypes::NUCLEAR) {};
 };
 
 struct FueledPart {
