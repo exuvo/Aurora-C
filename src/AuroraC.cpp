@@ -496,7 +496,7 @@ void vsyncWorker(VkDisplayKHR vkDisplay) {
 
 void* operator new(std::size_t count) {
 	auto ptr = malloc(count);
-	TracySecureAlloc(ptr, count);
+//	TracySecureAlloc(ptr, count);
 	return ptr;
 }
 
