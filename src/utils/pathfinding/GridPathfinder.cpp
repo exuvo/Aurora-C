@@ -308,14 +308,12 @@ void HOTPriorityQueue::push(NodeWithCost node) {
 // Must call isEmpty() before using.
 NodeWithCost HOTPriorityQueue::top() const {
 	DBG_PRIO(std::cout << "top " << buckets[hotIdx].nodes[0] << std::endl);
-//		return buckets[hotIdx].nodes[0];
-	return buckets.at(hotIdx)->nodes[0];
+	return buckets[hotIdx]->nodes[0];
 }
 
 // Must call isEmpty() before using.
 void HOTPriorityQueue::pop() {
-//		std::vector<NodeWithCost>& nodes = buckets[hotIdx].nodes;
-	std::vector<NodeWithCost>& nodes = buckets.at(hotIdx)->nodes;
+	std::vector<NodeWithCost>& nodes = buckets[hotIdx]->nodes;
 	DBG_PRIO(std::cout << "pop " << nodes[0] << std::endl);
 	std::pop_heap(nodes.begin(), nodes.end());
 	nodes.pop_back();
