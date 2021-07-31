@@ -49,33 +49,7 @@ struct Node {
 	}
 };
 
-//uint32_t Node::getXY() const {
-//	return *((uint32_t*) &x);
-//}
-//
-//bool Node::operator== (const Node o) const {
-////		return x == o.x && y == o.y;
-//	return getXY() == o.getXY();
-//}
-//
-//bool Node::operator!= (const Node o) const {
-////		return x != o.x || y != o.y;
-//	return getXY() != o.getXY();
-//}
-//
-//Node Node::add(const uint16_t x2, const uint16_t y2) const {
-//	return Node (x + x2, y + y2);
-//}
-//
-//Node Node::operator-(const Node o) const {
-//	return Node (x - o.x, y - o.y);
-//}
-//
-//bool Node::isValid(const uint16_t mapWidth, const uint16_t mapHeight) const {
-//	return x != 0xFFFF && y != 0xFFFF && x != mapWidth && y != mapHeight;
-//}
-
-
+// Used in priority queue
 struct NodeWithCost {
 	uint32_t cost;
 	uint16_t x, y;
@@ -101,22 +75,6 @@ struct NodeWithCost {
 	}
 };
 
-//uint32_t NodeWithCost::getXY() const {
-//	return *((uint32_t*) &x);
-//}
-//
-//bool NodeWithCost::operator== (const Node o) const {
-//	return getXY() == o.getXY();
-//}
-//
-//NodeWithCost::operator Node() const {
-//	return Node(x, y);
-//}
-//
-//bool NodeWithCost::operator< (NodeWithCost& o) {
-//	return cost > o.cost;
-//}
-
 std::ostream& operator<< (std::ostream& stream, const Node n) {
 	stream << n.x << "," << n.y;
 	return stream;
@@ -134,7 +92,7 @@ BooleanList::BooleanList(const uint16_t mapWidth, const uint16_t mapHeight)
 
 BooleanList::~BooleanList() {
 	if (data != nullptr) {
-		delete data;
+		delete[] data;
 		data = nullptr;
 	}
 }
@@ -185,7 +143,7 @@ LinearNodeMap<T>::LinearNodeMap(const uint16_t mapWidth, const uint16_t mapHeigh
 template<typename T>
 LinearNodeMap<T>::~LinearNodeMap() {
 	if (data != nullptr) {
-		delete data;
+		delete[] data;
 		data = nullptr;
 	}
 }
@@ -313,18 +271,23 @@ void HOTPriorityQueue::push(NodeWithCost node) {
 		
 		uint32_t newMax = buckets[buckets.size() - 1]->max + 1;
 		
-		if (hotIdx >= 128) { // If lots of unused buckets, reuse 1 and move everything to the front
+		if (hotIdx >= 64) { // If lots of unused buckets move them to free list and move used to the front
 			DBG_PRIO(std::cout << " consolidate");
 			
-			buckets.emplace_back(std::move(buckets[0]));
-			buckets[buckets.size() - 1]->max = newMax;
-			
+			freeBuckets.insert(freeBuckets.end(), std::make_move_iterator(buckets.begin()), std::make_move_iterator(buckets.begin() + hotIdx));
 			std::ranges::move(buckets.begin() + hotIdx, buckets.end(), buckets.begin());
 			buckets.erase(buckets.end() - hotIdx, buckets.end());
 			hotIdx = 0;
+		}
+		
+		if (freeBuckets.empty()) {
+			buckets.emplace_back(new Bucket(newMax));
 			
 		} else {
-			buckets.emplace_back(new PrioBucket(newMax));
+			DBG_PRIO(std::cout << " reuse");
+			buckets.push_back(std::move(freeBuckets[freeBuckets.size() - 1]));
+			freeBuckets.pop_back();
+			buckets[buckets.size() - 1]->max = newMax;
 		}
 		
 		buckets[buckets.size() - 1]->nodes.push_back(node);
@@ -373,14 +336,16 @@ bool HOTPriorityQueue::isEmpty() {
 }
 
 void HOTPriorityQueue::clear() {
+	hotIdx = 0;
 	buckets[0]->max = 0;
-	buckets[0]->nodes.clear();
+	
+	for (Bucket* bucket : buckets) {
+		bucket->nodes.clear();
+	}
 	
 	if (buckets.size() > 1) {
-		for(auto itr = buckets.begin()++; itr != buckets.end(); itr++){
-			delete *itr;
-		}
-		buckets.erase(buckets.begin()++, buckets.end());
+		freeBuckets.insert(freeBuckets.end(), std::make_move_iterator(buckets.begin() + 1), std::make_move_iterator(buckets.end()));
+		buckets.erase(buckets.begin() + 1, buckets.end());
 	}
 }
 

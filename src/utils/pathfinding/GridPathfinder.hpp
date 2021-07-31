@@ -9,8 +9,6 @@
 #define SRC_UTILS_PATHFINDER_HPP_
 
 struct Node;
-
-// Used in priority queue
 struct NodeWithCost;
 
 std::ostream& operator<< (std::ostream& stream, const Node n);
@@ -88,6 +86,7 @@ public:
 	
 private:
 	std::vector<PrioBucket*> buckets;
+	std::vector<PrioBucket*> freeBuckets;
 	uint8_t hotIdx = 0;
 };
 
