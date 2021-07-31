@@ -545,7 +545,7 @@ void GridAStar::evaluateNeighbour(const Node node, const uint32_t nodeCost, uint
 			
 #ifdef DBG
 			if (neighbourCost - nodeCost > 1 + TIE_BREAK_SPAN) {
-				DBG(std::cout << " skipped " << (neighbourCost - nodeCost - 1 - TIE_BREAK_SPAN) << " > " << neighbour);
+				DBG(std::cout << " skipped " << ((neighbourCost - nodeCost) / (1 + TIE_BREAK_SPAN)) << " > " << neighbour);
 			}
 #endif
 			
@@ -573,8 +573,8 @@ uint32_t GridAStar::heuristic(const Node n, const Node target, const Node start)
 	int32_t dx2 = (int32_t) start.x - target.x;
 	int32_t dy2 = (int32_t) start.y - target.y;
 	uint32_t cross = abs(dx1 * dy2 - dx2 * dy1);
-//	uint32_t tieBreaker = std::clamp(cross / 25000U, 0U, TIE_BREAK_SPAN);
-		uint32_t tieBreaker = std::clamp(cross / 10000U, 0U, TIE_BREAK_SPAN); // Better performance but fails kattis
+//	uint32_t tieBreaker = std::clamp(cross / 25000U, 0U, TIE_BREAK_SPAN); // Less performance but less chance of non-optimal path
+		uint32_t tieBreaker = std::clamp(cross / 10000U, 0U, TIE_BREAK_SPAN); // Better performance but might return non-optimal path
 	
 	// manhattan distance
 	int32_t dx = (int32_t) target.x - n.x;
