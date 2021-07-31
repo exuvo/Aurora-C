@@ -70,6 +70,7 @@ struct PrioBucket;
 class HOTPriorityQueue {
 public:
 	HOTPriorityQueue();
+	~HOTPriorityQueue();
 	
 public:
 	void push(NodeWithCost node);

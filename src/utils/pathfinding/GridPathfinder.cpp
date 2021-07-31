@@ -226,6 +226,16 @@ HOTPriorityQueue::HOTPriorityQueue() {
 	buckets.emplace_back(new PrioBucket());
 }
 
+HOTPriorityQueue::~HOTPriorityQueue() {
+	for (Bucket* bucket : buckets) {
+		delete bucket;
+	}
+	
+	for (Bucket* bucket : freeBuckets) {
+		delete bucket;
+	}
+}
+
 void HOTPriorityQueue::push(NodeWithCost node) {
 	DBG_PRIO(std::cout << "push" << node);
 	PrioBucket& hotBucket = *buckets[hotIdx];
