@@ -21,12 +21,11 @@ constexpr uint32_t densityToVolume(float density) {
 }
 
 // Weight should be stored in kg, Volume in cm³
-// specificVolume in cm³/kg
 struct Resource {
-	const uint32_t specificVolume;
+	const uint32_t specificVolume; // cm³/kg
 	
 	constexpr Resource(int specificVolume) : specificVolume(specificVolume) {};
-	constexpr Resource(double specificVolume) : specificVolume(densityToVolume(specificVolume)) {};
+	constexpr Resource(double density) : specificVolume(densityToVolume(density)) {};
 	
 	bool operator==(const Resource& o) const {
 		return this == &o;
@@ -36,28 +35,40 @@ struct Resource {
 // Always store these in pointers, otherwise comparisons will fail. TODO private constructor?
 struct Resources {
 	// No storage requirements
-	//TODO types for buildings, stations, spaceship hull, laser, railguns, missile explosives, armor
-	static inline constexpr Resource GENERIC { 5.0 }; // Steel(11.7 g/cm³), Concrete(2.4 g/cm³), Carbonfiber, Glass(2.5 g/cm³), Ceramics(4 g/cm³)
-	static inline constexpr Resource METAL_LIGHT { 3.6 }; // Aluminium(2.7 g/cm³), Titanium(4.5 g/cm³)
-	static inline constexpr Resource METAL_CONDUCTIVE { 12.0 }; // Copper(9 g/cm³), Gold(19 g/cm³)
-	static inline constexpr Resource SEMICONDUCTORS { 2.3 }; // Silicon(2.3 g/cm³), germanium
-	static inline constexpr Resource RARE_EARTH { 7.0 }; // Neodymium(7.0 g/cm³). https://en.wikipedia.org/wiki/Rare-earth_element
-	static inline constexpr Resource MAINTENANCE_SUPPLIES { 1.0 };
+	// Ores https://www.aqua-calc.com/page/density-table
+	static inline constexpr Resource IRON { 5.2 }; // Hematite (iron ore) 5.15 g/cm³
+	static inline constexpr Resource ALUMINA { 4.0 }; // Alumina 3.97 g/cm³
+	static inline constexpr Resource TITANIUM_OXIDE { 3.9 }; // Titanium (anatase) 3.90 g/cm³
+	static inline constexpr Resource SILICA { 1.5}; // Silica (sand) 1.54 g/cm³, Silica (pure) 2.32 g/cm³
+	static inline constexpr Resource COPPER { 8.9 }; // Copper 8.94 g/cm³, Gold 19 g/cm³
+	static inline constexpr Resource RARE_EARTH_METALS { 7.0 }; // Neodymium 7.0 g/cm³. https://en.wikipedia.org/wiki/Rare-earth_element
+	// Refined
+	static inline constexpr Resource STEEL { 11.7 }; // Steel 11.7 g/cm³, Concrete 2.4 g/cm³, Carbonfiber, , Ceramics 4 g/cm³
+	static inline constexpr Resource ALUMINIUM { 2.7 }; // Aluminium 2.7 g/cm³
+	static inline constexpr Resource TITANIUM { 4.5 }; // Titanium 4.54 g/cm³
+	static inline constexpr Resource GLASS { 2.6 }; // Glass 2.58 g/cm³
+	static inline constexpr Resource SEMICONDUCTORS { 0.21 }; // Mixed Computer-related Electronics 0.21 g/cm³
+	// Goods
+	static inline constexpr Resource MAINTENANCE_SUPPLIES { 0.8 };
+	static inline constexpr Resource PARTS { 1 };
 	static inline constexpr Resource MISSILES { 0 };
 	static inline constexpr Resource SABOTS { 0 };
 	// Requires radiation shielding
-	static inline constexpr Resource NUCLEAR_FISSION { 15.0 }; // Uranium(19.1 g/cm³), Thorium(11.7 g/cm³)
+	static inline constexpr Resource NUCLEAR_FISSION { 15.0 }; // Uranium 19.1 g/cm³, Thorium 11.7 g/cm³
 	static inline constexpr Resource NUCLEAR_WASTE { 10.0 };
 	// Requires temperature control
-	// Liquid deuterium (162 kg/m³) https://en.wikipedia.org/wiki/Deuterium#Data_for_elemental_deuterium
-	static inline constexpr Resource NUCLEAR_FUSION { 0.1624 }; // Deuterium-Tritium, Helium3. See 'Fusion Reactor Fuel Modes' at http://forum.kerbalspaceprogram.com/index.php?/topic/155255-12213-kspi-extended-11414-05-7-2017-support-release-thread/
-	static inline constexpr Resource ROCKET_FUEL { 1.5 }; // ca 1.5 g/cm³, LOX + kerosene, LOX + H, nitrogen tetroxide + hydrazine. https://en.wikipedia.org/wiki/Rocket_propellant#Liquid_propellants
-	// Requires temperature control and atmosphere
-	static inline constexpr Resource LIFE_SUPPORT { 0.8 }; // Food, Water, Air
+	// Liquid deuterium (0.162 g/cm³) https://en.wikipedia.org/wiki/Deuterium#Data_for_elemental_deuterium
+	static inline constexpr Resource NUCLEAR_FUSION { 0.1624 }; // Deuterium-Tritium, Helium-3. See 'Fusion Reactor Fuel Modes' at http://forum.kerbalspaceprogram.com/index.php?/topic/155255-12213-kspi-extended-11414-05-7-2017-support-release-thread/
+	static inline constexpr Resource ROCKET_FUEL { 1.5 }; // ~1.5 g/cm³, LOX + kerosene, LOX + H, nitrogen tetroxide + hydrazine. https://en.wikipedia.org/wiki/Rocket_propellant#Liquid_propellants
+	// Requires temperature and atmosphere control
+	static inline constexpr Resource LIFE_SUPPORT { 1.0 }; // Food, Water, Air
 	
-	static inline constexpr const Resource* ALL[] { &GENERIC, &METAL_LIGHT, &METAL_CONDUCTIVE, &SEMICONDUCTORS, &RARE_EARTH,
-	                                         &MAINTENANCE_SUPPLIES, &MISSILES, &SABOTS, &NUCLEAR_FISSION, &NUCLEAR_WASTE,
-	                                         &NUCLEAR_FUSION, &ROCKET_FUEL, &LIFE_SUPPORT };
+	static inline constexpr const Resource* ALL[] { &IRON, &ALUMINA, &TITANIUM_OXIDE, &SILICA, &COPPER, &RARE_EARTH_METALS,
+	                                                &STEEL, &ALUMINIUM, &TITANIUM, &GLASS, &SEMICONDUCTORS, 
+	                                                &MAINTENANCE_SUPPLIES, &MISSILES, &SABOTS,
+	                                                &NUCLEAR_FISSION, &NUCLEAR_WASTE,
+	                                                &NUCLEAR_FUSION, &ROCKET_FUEL,
+	                                                &LIFE_SUPPORT };
 	
 	static inline constexpr const size_t size = ARRAY_LENGTH(ALL);
 };
@@ -97,7 +108,9 @@ struct CargoType {
 
 // Always store these in pointers, otherwise comparisons will fail
 struct CargoTypes {
-	static inline const CargoType NORMAL {{Resources::MAINTENANCE_SUPPLIES, Resources::GENERIC, Resources::METAL_LIGHT, Resources::METAL_CONDUCTIVE, Resources::SEMICONDUCTORS, Resources::RARE_EARTH}};
+	static inline const CargoType ORE {{Resources::IRON, Resources::ALUMINA, Resources::TITANIUM_OXIDE, Resources::SILICA, Resources::COPPER, Resources::RARE_EARTH_METALS}};
+	static inline const CargoType REFINED {{Resources::STEEL, Resources::ALUMINIUM, Resources::TITANIUM, Resources::GLASS, Resources::SEMICONDUCTORS}};
+	static inline const CargoType NORMAL {{Resources::MAINTENANCE_SUPPLIES, Resources::PARTS, Resources::STEEL, Resources::ALUMINIUM, Resources::TITANIUM, Resources::GLASS, Resources::SEMICONDUCTORS}};
 	static inline const CargoType AMMUNITION {{Resources::MISSILES, Resources::SABOTS}};
 	static inline const CargoType FUEL {{Resources::ROCKET_FUEL}};
 	static inline const CargoType LIFE_SUPPORT {{Resources::LIFE_SUPPORT}};
