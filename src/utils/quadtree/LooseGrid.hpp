@@ -7,7 +7,7 @@
 
 #include <immintrin.h>
 
-#include "SmallList.hpp"
+#include "utils/SmallList.hpp"
 
 union SimdVec4f {
 	float data[4];

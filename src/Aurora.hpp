@@ -12,6 +12,8 @@
 
 class Galaxy;
 class AuroraWindow;
+class Network;
+
 namespace vk2d {
 	class Instance;
 	class FontResource;
@@ -55,7 +57,7 @@ struct AuroraGlobal {
 	bool shutdown = false;
 	vk2d::Instance* vk2dInstance;
 	uint16_t fps;
-//		struct ImGui_ImplVulkan_InitInfo imGuiImpl; // For docking branch
+	Network* network;
 };
 
 extern AuroraGlobal Aurora;

@@ -2,29 +2,6 @@ cmake_minimum_required (VERSION 3.16)
 
 project (AuroraC VERSION 0.1 LANGUAGES CXX)
 
-#TODO speedups https://cmake.org/cmake/help/v3.16/prop_tgt/UNITY_BUILD.html https://cmake.org/cmake/help/latest/command/target_precompile_headers.html
-# c++ SIMD https://github.com/VcDevel/Vc
-# custom allocators https://github.com/mtrebi/memory-allocators
-# print stack trace https://stackoverflow.com/questions/38433701/print-log4cxx-exception-stacktrace
-# command line parsing cxxopts
-# zlib for packaging resources ?
-# polynomial solvers
-#  https://www.alglib.net/equations/polynomial.php
-#  https://www.gnu.org/software/gsl/doc/html/poly.html#general-polynomial-equations
-#  https://www.boost.org/doc/libs/1_53_0/libs/math/doc/sf_and_dist/html/math_toolkit/toolkit/internals1/roots2.html
-#  https://eigen.tuxfamily.org/dox/unsupported/classEigen_1_1PolynomialSolver.html
-# vulcan multi gpu https://www.ea.com/seed/news/khronos-munich-2018-halcyon-vulkan https://github.com/Glavnokoman/vuh
-# dynamic frame pacing https://youtu.be/nkCaQ-x-zyA?t=1789
-# more quad tree optimizations https://www.youtube.com/watch?v=6BIfqfC1i7U
-# imgui extensions
-#  file dialog https://github.com/dfranx/ImFileDialog
-#  cool effects https://github.com/ocornut/imgui/issues/3606
-# Network encoding Flatbuffers or protocolbuffers https://google.github.io/flatbuffers/flatbuffers_benchmarks.html
-# XML lib pugixml https://github.com/zeux/pugixml
-# more links https://github.com/MFatihMAR/Game-Networking-Resources
- 
-# log4cxx does not build with mingw (due to we allowed linking to libs built for cygwin, that use different std lib?) but tracy works. 
-
 # does not work with ninja
 #set(CMAKE_VERBOSE_MAKEFILE ON CACHE BOOL "" FORCE)
 
@@ -87,6 +64,11 @@ add_subdirectory(lib)
 set(GEN_PROPERTY_RTTI ON)
 add_subdirectory(lib/Refureku/Refureku)
 
+set(SLIKENET_ENABLE_SAMPLES OFF)
+set(SLIKENET_ENABLE_DLL OFF)
+set(SLIKENET_ENABLE_STATIC ON)
+add_subdirectory(lib/SLikeNet)
+
 message("========== Aurora-C ==========")
 
 #find_package(Boost 1.66 REQUIRED) # COMPONENTS
@@ -128,6 +110,9 @@ target_include_directories(AuroraC PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/lib/tracy
 
 target_include_directories(AuroraC PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/lib/Refureku/Refureku/Library/Include)
 target_link_libraries(AuroraC PUBLIC Refureku)
+
+target_include_directories(AuroraC PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/lib/SLikeNet/Source/include)
+target_link_libraries(AuroraC PUBLIC SLikeNetLibStatic)
 
 target_precompile_headers(AuroraC PRIVATE "src/PreCompileHeader.h")
 

@@ -16,6 +16,7 @@
 #include "ui/KeyMappings.hpp"
 #include "Aurora.hpp"
 #include "ui/ShaderTestLayer.hpp"
+#include "network/Network.hpp"
 
 #define GLFW_EXPOSE_NATIVE_X11 true
 #include <GLFW/glfw3native.h>
@@ -109,7 +110,11 @@ int main(int argc, char **argv) {
 	log4cxx::xml::DOMConfigurator::configure("assets/log4j.xml");
 	LoggerPtr log = Logger::getLogger("aurora");
 	LOG4CXX_FATAL(log, "### Starting ###");
-
+	
+//	cout <<  "starting network" << endl << flush;
+//	
+//	Aurora.network = new Network();
+	
 	cout <<  "starting galaxy" << endl << flush;
 
 	vector<StarSystem*> starSystems { new StarSystem("test")};
@@ -304,6 +309,8 @@ int main(int argc, char **argv) {
 		}
 		
 		try {
+			Aurora.network->receive();
+			
 			Aurora.vk2dInstance->Run();
 			
 			for (AuroraWindow* window : Aurora.windows) {

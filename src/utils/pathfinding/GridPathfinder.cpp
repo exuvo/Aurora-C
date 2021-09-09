@@ -227,11 +227,11 @@ HOTPriorityQueue::HOTPriorityQueue() {
 }
 
 HOTPriorityQueue::~HOTPriorityQueue() {
-	for (Bucket* bucket : buckets) {
+	for (PrioBucket* bucket : buckets) {
 		delete bucket;
 	}
 	
-	for (Bucket* bucket : freeBuckets) {
+	for (PrioBucket* bucket : freeBuckets) {
 		delete bucket;
 	}
 }
@@ -291,7 +291,7 @@ void HOTPriorityQueue::push(NodeWithCost node) {
 		}
 		
 		if (freeBuckets.empty()) {
-			buckets.emplace_back(new Bucket(newMax));
+			buckets.emplace_back(new PrioBucket(newMax));
 			
 		} else {
 			DBG_PRIO(std::cout << " reuse");
@@ -347,7 +347,7 @@ void HOTPriorityQueue::clear() {
 	hotIdx = 0;
 	buckets[0]->max = 0;
 	
-	for (Bucket* bucket : buckets) {
+	for (PrioBucket* bucket : buckets) {
 		bucket->nodes.clear();
 	}
 	

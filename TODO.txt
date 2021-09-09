@@ -1,0 +1,86 @@
+Make ships automatically enter simple circular orbit around nearest gravity well when stopped.
+ Direction depending on last moves direction.
+
+timedcomponent history
+ on timedcomponent replace old: push old value to history
+ timedcomponent.get older than old: get from history
+
+Galaxy::speedLimited
+ galaxy set slow bool
+ ui thread get and clear slow bool
+ 
+networking
+ terminology:
+  STUN detect public IP and UDP ports and create connections bypassing NAT (except full symmetic NAT) https://en.wikipedia.org/wiki/STUN
+  TURN extension to STUN with relayed UDP packages https://en.wikipedia.org/wiki/Traversal_Using_Relays_around_NAT
+  ICE: Rules for attempting peer to peer connections. Direct, then STUN, then TURN
+ requirements:
+  UDP with reliable and optionally ordered channels.
+  Peer to peer with support for routing packets through other clients.
+  LAN and direct connect support.
+  UDP master server for listing lobbies and to facilitate UDP hole punching https://en.wikipedia.org/wiki/UDP_hole_punching / STUN
+  Clients start by connecting to host who hopefully has port open else use master server and UPD hole punching.
+   Then open connections to all other clients.
+   Constantly test ping and packet loss on all local connections. Regularly report results to other clients.
+   Reroute data through other clients if that would lead to lower latency or less packet loss.
+    In case of multiple reroutes through a client wrap data in reroute packet with list of clients that it should be rerouted to.
+  encrypted chat
+
+ SLikeNet formely RakNet https://github.com/SLikeSoft/SLikeNet
+  config https://github.com/SLikeSoft/SLikeNet/blob/master/Source/include/slikenet/NativeFeatureIncludes.h
+  channels, ordered, reliable, channel priorities
+  peer to peer
+  NAT punch through & uPNP
+  LAN broadcast discovery
+  lobbies
+  encryption
+  threaded
+  lots of features but a bit unclear what they actually are
+ valves GameNetworkingSockets https://github.com/ValveSoftware/GameNetworkingSockets
+  steam not required
+  Reliable & unreliable messages over UDP.
+   Only 1 reliable and ordered channel, aggregated
+   No ordered unreliable channels.
+  Robust message fragmentation & reassembly.
+  P2P networking with NAT traversal.
+   Master server needs to implement "signaling service" https://github.com/ValveSoftware/GameNetworkingSockets/blob/master/README_P2P.md
+    https://github.com/ValveSoftware/GameNetworkingSockets/blob/master/include/steam/steamnetworkingcustomsignaling.h
+   Use public STUN server or implement into master server.
+  Basic Encryption and support for certificate encryption.
+  No built in serialisation.
+  No LAN broadcast discovery.
+  No throttling or bandwidth limits.
+ ENet http://enet.bespin.org/Features.html
+  Reliable & unreliable ordered channels
+  fragmentation & reassembly
+  aggregates tiny packages into fewer larger ones.
+  Static bandwidth limits and dynamic throttling.
+  peer to peer supported. No UDP hole punching.
+ yojimbo complete client/server UDP networking https://github.com/networkprotocol/yojimbo
+  no peer to peer.
+  basic serialisation framework
+  not CMAKE
+ boost asio - mostly raw UDP with async support, SSL
+ packet acknowlegement system for UDP (used in yojimbo) https://github.com/networkprotocol/reliable
+ Game packet encoding Flatbuffers or protocolbuffers https://google.github.io/flatbuffers/flatbuffers_benchmarks.html
+
+command line parsing cxxopts
+zlib for packaging resources ?
+
+# Useful links #
+c++ SIMD https://github.com/VcDevel/Vc
+custom allocators https://github.com/mtrebi/memory-allocators
+print stack trace https://stackoverflow.com/questions/38433701/print-log4cxx-exception-stacktrace
+polynomial solvers
+ https://www.alglib.net/equations/polynomial.php
+ https://www.gnu.org/software/gsl/doc/html/poly.html#general-polynomial-equations
+ https://www.boost.org/doc/libs/1_53_0/libs/math/doc/sf_and_dist/html/math_toolkit/toolkit/internals1/roots2.html
+ https://eigen.tuxfamily.org/dox/unsupported/classEigen_1_1PolynomialSolver.html
+vulcan multi gpu https://www.ea.com/seed/news/khronos-munich-2018-halcyon-vulkan https://github.com/Glavnokoman/vuh
+dynamic frame pacing https://youtu.be/nkCaQ-x-zyA?t=1789
+more quad tree optimizations https://www.youtube.com/watch?v=6BIfqfC1i7U
+imgui extensions
+ file dialog https://github.com/dfranx/ImFileDialog
+ cool effects https://github.com/ocornut/imgui/issues/3606
+XML lib pugixml https://github.com/zeux/pugixml
+more links https://github.com/MFatihMAR/Game-Networking-Resources

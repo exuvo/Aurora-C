@@ -28,6 +28,9 @@ struct HullClass {
 	std::string code;
 };
 
+//TODO specialised armor types with damage reduction against one damage type
+// armor type that converts some of incoming energy dmg to power
+// self-regenerating armor (slowly drains ship power)
 struct ArmorLayer {
 	std::string name;
 	uint8_t blockHP;

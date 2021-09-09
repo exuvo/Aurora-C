@@ -1,3 +1,7 @@
 eclipse.preferences.version=1
+encoding//lib/SLikeNet/Source/include/slikenet/crypto/cryptomanager.h=ISO-8859-1
+encoding//lib/SLikeNet/Source/include/slikenet/crypto/fileencrypter.h=ISO-8859-1
+encoding//lib/SLikeNet/Source/src/crypto/cryptomanager.cpp=ISO-8859-1
+encoding//lib/SLikeNet/Source/src/crypto/fileencrypter.cpp=ISO-8859-1
 encoding//src/utils/Math.cpp=UTF-8
 encoding/<project>=UTF-8

@@ -13,14 +13,11 @@
 #include <numeric>
 
 #include "galaxy/Resources.hpp"
+#include "utils/enum.h"
+#include "utils/SmallList.hpp"
 
 struct Shipyard;
 struct ShipHull;
-
-struct Building {
-	std::string name;
-	uint64_t cost[Resources::size];
-};
 
 struct ShipyardSlipway {
 	ShipHull* hull;
@@ -123,18 +120,35 @@ class ShipyardModificationAddSlipway: public ShipyardModification {
 	virtual std::string getDescription();
 };
 
+struct Building {
+	std::string name;
+	uint64_t cost[Resources::size];
+	uint32_t requestedPower;
+	uint32_t givenPower;
+};
+
+struct TerrestialBuilding: public Building {
+	
+};
+
+struct OrbitalBuilding: public Building {
+	
+};
+
 struct Shipyard {
-	ShipyardLocation* location;
-	ShipyardType* type;
+	ShipyardLocation* location = nullptr;
+	ShipyardType* type = nullptr;
 	uint64_t capacity = 1000; // In cm³
 	float fuelCostPerMass = 0.0; //kg fuel per kg of hull to launch into space
-	uint64_t buildRate; // kg per hour
+	uint64_t buildRate = 0; // kg per hour
 	ShipHull* tooledHull = nullptr;
 	std::vector<ShipyardSlipway> slipways;
 	
 	ShipyardModification* modificationActivity = nullptr;
 	uint32_t modificationRate = 1000; // kg per hour
 	uint64_t modificationProgress = 0;
+	
+	Shipyard() {};
 	
 	Shipyard(ShipyardLocation* location, ShipyardType* type): location(location), type(type) {
 		buildRate = location->baseBuildrate;
@@ -145,8 +159,13 @@ struct Shipyard {
 	};
 };
 
+BETTER_ENUM(MiningLayer, uint8_t,
+	Surface, Crust, Mantle, MoltenCore
+)
+
 struct PlanetComponent {
-	uint64_t cleanWater = 0;
+	uint64_t freshWater = 0;
+	uint64_t seaWater = 0;
 	uint64_t pollutedWater = 0;
 	uint64_t usableLandArea = 0; // km²
 	uint64_t arableLandArea = 0; // km² (subtracts from usable when used)
@@ -155,8 +174,11 @@ struct PlanetComponent {
 	uint16_t atmosphericDensity = 1225; // g/m³ at 1013.25 hPa (abs) and 15°C
 	uint8_t atmospheBreathability = 100; // percentage
 	uint16_t temperature = 20; // celcius
-	uint64_t minableResources[Resources::size];
-	uint32_t resourceAccessibility[Resources::size];
+//	SmallList<uint64_t[Resources::size], 32> minableResources[MiningLayer::_size_constant];
+	
+	uint64_t cleanWater() {
+		return freshWater + seaWater;
+	}
 };
 
 struct ColonyComponent {
@@ -165,8 +187,9 @@ struct ColonyComponent {
 	uint64_t farmingLandArea = 0;
 	uint64_t industrialLandArea = 0; // pollutes water
 	uint64_t miningLandArea = 0; // pollutes water
-	std::vector<Building> buildings;
-	std::vector<Shipyard> shipyards;
+	SmallList<TerrestialBuilding, 32> buildings;
+	SmallList<OrbitalBuilding, 32> orbitalBuildings;
+	SmallList<Shipyard, 8> shipyards;
 };
 
 #endif /* SRC_STARSYSTEMS_COMPONENTS_COLONYCOMPONENTS_HPP_ */

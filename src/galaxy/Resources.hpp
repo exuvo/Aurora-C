@@ -33,10 +33,10 @@ struct Resource {
 	}
 };
 
-// Always store these in pointers, otherwise comparisons will fail
+// Always store these in pointers, otherwise comparisons will fail. TODO private constructor?
 struct Resources {
 	// No storage requirements
-	//TODO types for buildings, spaceship hull, laser, railguns, missile explosives, armor
+	//TODO types for buildings, stations, spaceship hull, laser, railguns, missile explosives, armor
 	static inline constexpr Resource GENERIC { 5.0 }; // Steel(11.7 g/cm³), Concrete(2.4 g/cm³), Carbonfiber, Glass(2.5 g/cm³), Ceramics(4 g/cm³)
 	static inline constexpr Resource METAL_LIGHT { 3.6 }; // Aluminium(2.7 g/cm³), Titanium(4.5 g/cm³)
 	static inline constexpr Resource METAL_CONDUCTIVE { 12.0 }; // Copper(9 g/cm³), Gold(19 g/cm³)

@@ -14,3 +14,6 @@
 [submodule "lib/tracy"]
 	path = lib/tracy
 	url = https://github.com/wolfpld/tracy
+[submodule "lib/SLikeNet"]
+	path = lib/SLikeNet
+	url = git@github.com:exuvo/SLikeNet.git

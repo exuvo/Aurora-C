@@ -13,7 +13,7 @@
 #include <deque>
 #include <entt/entt.hpp>
 
-#include "utils/quadtree/SmallList.hpp"
+#include "utils/SmallList.hpp"
 #include "IDComponents.hpp"
 
 #include <Refureku/NativeProperties.h>
