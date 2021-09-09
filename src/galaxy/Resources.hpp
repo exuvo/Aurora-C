@@ -42,12 +42,17 @@ struct Resources {
 	static inline constexpr Resource SILICA { 1.5}; // Silica (sand) 1.54 g/cm³, Silica (pure) 2.32 g/cm³
 	static inline constexpr Resource COPPER { 8.9 }; // Copper 8.94 g/cm³, Gold 19 g/cm³
 	static inline constexpr Resource RARE_EARTH_METALS { 7.0 }; // Neodymium 7.0 g/cm³. https://en.wikipedia.org/wiki/Rare-earth_element
+	static inline constexpr Resource LITHIUM_CARBONATE { 2.1 }; // Lithium carbonate 2.11 g/cm³
+	static inline constexpr Resource SULFUR { 2.1 }; // Sulfur solid 2.07 g/cm³
+	static inline constexpr Resource OIL { 0.9 }; // Medium crude oil 0.90 g/cm³
 	// Refined
 	static inline constexpr Resource STEEL { 11.7 }; // Steel 11.7 g/cm³, Concrete 2.4 g/cm³, Carbonfiber, , Ceramics 4 g/cm³
 	static inline constexpr Resource ALUMINIUM { 2.7 }; // Aluminium 2.7 g/cm³
 	static inline constexpr Resource TITANIUM { 4.5 }; // Titanium 4.54 g/cm³
 	static inline constexpr Resource GLASS { 2.6 }; // Glass 2.58 g/cm³
 	static inline constexpr Resource SEMICONDUCTORS { 0.21 }; // Mixed Computer-related Electronics 0.21 g/cm³
+	static inline constexpr Resource LITHIUM { 0.53 }; // Lithium 0.53 g/cm³
+	static inline constexpr Resource EXPLOSIVES { 1.6 }; // Nitroglycering 1.6 g/cm³
 	// Goods
 	static inline constexpr Resource MAINTENANCE_SUPPLIES { 0.8 };
 	static inline constexpr Resource PARTS { 1 };
@@ -63,14 +68,23 @@ struct Resources {
 	// Requires temperature and atmosphere control
 	static inline constexpr Resource LIFE_SUPPORT { 1.0 }; // Food, Water, Air
 	
-	static inline constexpr const Resource* ALL[] { &IRON, &ALUMINA, &TITANIUM_OXIDE, &SILICA, &COPPER, &RARE_EARTH_METALS,
+	static inline constexpr const Resource* ALL[] { &IRON, &ALUMINA, &TITANIUM_OXIDE, &SILICA, &COPPER,
+	                                                &RARE_EARTH_METALS, &LITHIUM_CARBONATE, &SULFUR, &OIL,
 	                                                &STEEL, &ALUMINIUM, &TITANIUM, &GLASS, &SEMICONDUCTORS, 
+	                                                &LITHIUM, &EXPLOSIVES,
 	                                                &MAINTENANCE_SUPPLIES, &MISSILES, &SABOTS,
 	                                                &NUCLEAR_FISSION, &NUCLEAR_WASTE,
 	                                                &NUCLEAR_FUSION, &ROCKET_FUEL,
 	                                                &LIFE_SUPPORT };
 	
+	static inline constexpr const Resource* ALL_ORES[] { &IRON, &ALUMINA, &TITANIUM_OXIDE, &SILICA, &COPPER, &RARE_EARTH_METALS };
+	
+	static inline constexpr const Resource* ALL_CONSTRUCTION[] { &IRON, &ALUMINA, &TITANIUM_OXIDE, &SILICA, &COPPER, &RARE_EARTH_METALS,
+	                                                &STEEL, &ALUMINIUM, &TITANIUM, &GLASS, &SEMICONDUCTORS } ;
+	
 	static inline constexpr const size_t size = ARRAY_LENGTH(ALL);
+	static inline constexpr const size_t size_ores = ARRAY_LENGTH(ALL_ORES);
+	static inline constexpr const size_t size_construction = ARRAY_LENGTH(ALL_CONSTRUCTION);
 };
 
 struct ResourcePnt {

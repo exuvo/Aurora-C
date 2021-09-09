@@ -53,7 +53,7 @@ BETTER_ENUM(PartType, uint8_t, // Used as bit index
 struct Part {
 	std::string name;
 	uint32_t designDay;
-	uint64_t cost[Resources::size];
+	uint64_t cost[Resources::size_construction];
 	uint32_t mass; // In kg
 	uint32_t volume; // In cm3
 	uint16_t types;
@@ -100,6 +100,10 @@ struct ContainerPart: Part {
 
 struct CargoContainerPart: public ContainerPart {
 	CargoContainerPart(uint32_t capacity): ContainerPart(capacity, &CargoTypes::NORMAL) {};
+};
+
+struct OreContainerPart: public ContainerPart {
+	OreContainerPart(uint32_t capacity): ContainerPart(capacity, &CargoTypes::ORE) {};
 };
 
 struct FuelContainerPart: public ContainerPart {

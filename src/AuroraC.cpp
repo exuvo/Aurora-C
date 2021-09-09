@@ -17,6 +17,7 @@
 #include "Aurora.hpp"
 #include "ui/ShaderTestLayer.hpp"
 #include "network/Network.hpp"
+#include "galaxy/Buildings.hpp"
 
 #define GLFW_EXPOSE_NATIVE_X11 true
 #include <GLFW/glfw3native.h>
