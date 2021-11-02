@@ -130,7 +130,7 @@ endif()
 if (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
 #	target_compile_options(AuroraC PRIVATE -ftime-report) # debug compile time
 	target_compile_options(AuroraC PRIVATE -Wall -Wextra -Wno-unused-parameter -Wno-unused-variable -Wno-stringop-truncation -Wno-narrowing -Wno-frame-address -Wno-invalid-offsetof)
-	target_compile_options(AuroraC PRIVATE -fno-extern-tls-init) # avoid thread_local support for dynamic init overhead
+	target_compile_options(AuroraC PRIVATE -fno-extern-tls-init) # avoid thread_local support for dynamic init overhead, alternative compiler specific __thread
 	target_compile_options(AuroraC PRIVATE $<$<CONFIG:DEBUG>: -fno-signed-zeros -funsafe-math-optimizations -ffinite-math-only -fno-rounding-math -fcx-limited-range >)
 	target_compile_options(AuroraC PRIVATE $<$<CONFIG:RELEASE>: -ffast-math >)
 	if (MINGW)

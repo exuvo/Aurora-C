@@ -23,6 +23,10 @@
 #include "ui/imgui/MainDebugWindow.hpp"
 #include "ui/imgui/EmpireOverviewWindow.hpp"
 #include "ui/imgui/ShipDebugWindow.hpp"
+#include "ui/imgui/ColonyManagerWindow.hpp"
+#include "ui/imgui/ResearchWindow.hpp"
+#include "ui/imgui/ShipDesignerWindow.hpp"
+#include "ui/imgui/TopBarWindow.hpp"
 #include "utils/dbg.h"
 #include "utils/ImGuiUtils.hpp"
 #include "utils/Utils.hpp"
@@ -80,6 +84,10 @@ ImGuiLayer::ImGuiLayer(AuroraWindow& parentWindow): UILayer(parentWindow) {
 	addWindow(new ImGuiDemoWindow(*this));
 	addWindow(new EmpireOverviewWindow(*this));
 	addWindow(new ShipDebugWindow(*this));
+	addWindow(new ShipDesignerWindow(*this));
+	addWindow(new ResearchWindow(*this));
+	addWindow(new ColonyManagerWindow(*this));
+	addWindow(new TopBarWindow(*this));
 }
 
 void ImGuiLayer::initShared(){
@@ -279,15 +287,15 @@ bool ImGuiLayer::keyAction(KeyActions_ImGuiLayer action) {
 		
 	} else if (action == KeyActions_ImGuiLayer::COLONY_MANAGER) {
 		
-		printf("COLONY_MANAGER\n"); fflush(stdout);
+		toggleWindow<ColonyManagerWindow>();
 		
 	} else if (action == KeyActions_ImGuiLayer::SHIP_DESIGNER) {
 		
-		printf("SHIP_DESIGNER\n"); fflush(stdout);
+		toggleWindow<ShipDesignerWindow>();
 		
 	} else if (action == KeyActions_ImGuiLayer::RESEARCH) {
 		
-		printf("RESEARCH\n"); fflush(stdout);
+		toggleWindow<ResearchWindow>();
 		
 	} else if (action == KeyActions_ImGuiLayer::PROFILER) {
 		

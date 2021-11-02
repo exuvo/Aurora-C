@@ -12,7 +12,7 @@
 
 class TopBarWindow : public UIWindow {
 	public:
-		TopBarWindow(ImGuiLayer& layer): UIWindow(layer) {};
+		TopBarWindow(ImGuiLayer& layer): UIWindow(layer) { visible = true; };
 		virtual ~TopBarWindow() = default;
 		
 		virtual void render() override;

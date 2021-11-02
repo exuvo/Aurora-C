@@ -23,26 +23,24 @@ struct DeferredIconDraw {
 	float colorBits;
 };
 
-struct InlineIconDraw : DeferredIconDraw {
+struct InlineIconDraw: DeferredIconDraw {
 	EmpireOverviewWindow* window;
 };
 
-class EmpireOverviewWindow : public UIWindow {
-	public:
-		EmpireOverviewWindow(ImGuiLayer& layer): UIWindow(layer) {
-			visible = true;
-		};
-		virtual ~EmpireOverviewWindow() = default;
-		
-		virtual void render() override;
-		
-	private:
-		std::vector<InlineIconDraw> inlineIcons;
-		std::vector<DeferredIconDraw> deferredIcons;
-		friend EmpireOverviewPostLayer;
-		
-		void inlineDraw(DeferredIconDraw& deferredIcon);
-		void postDraw();
+class EmpireOverviewWindow: public UIWindow {
+public:
+	EmpireOverviewWindow(ImGuiLayer& layer) : UIWindow(layer) { visible = true; };
+	virtual ~EmpireOverviewWindow() = default;
+	
+	virtual void render() override;
+
+private:
+	std::vector<InlineIconDraw> inlineIcons;
+	std::vector<DeferredIconDraw> deferredIcons;
+	friend EmpireOverviewPostLayer;
+
+	void inlineDraw(DeferredIconDraw& deferredIcon);
+	void postDraw();
 };
 
 #endif /* SRC_UI_IMGUI_EMPIREOVERVIEWWINDOW_HPP_ */

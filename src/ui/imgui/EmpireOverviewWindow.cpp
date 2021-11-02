@@ -295,7 +295,6 @@ void EmpireOverviewWindow::render() {
 	}
 }
 
-
 void EmpireOverviewWindow::inlineDraw(DeferredIconDraw& deferredIcon) {
 //	val projectionMatrix = imguiCamera.combined
 //	
