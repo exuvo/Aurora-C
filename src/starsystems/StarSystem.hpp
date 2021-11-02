@@ -31,6 +31,8 @@ class Empire;
 
 class StarSystem {
 	public:
+		static thread_local StarSystem* current; // thread_local has access penalty https://stackoverflow.com/questions/13106049/what-is-the-performance-penalty-of-c11-thread-local-variables-in-gcc-4-8
+	
 		std::string name;
 		entt::entity galacticEntityID = entt::null;
 		nanoseconds updateTime = 0ns;

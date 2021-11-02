@@ -202,7 +202,7 @@ void SpatialPartitioningSystem::update(delta_type delta) {
 SmallList<entt::entity> SpatialPartitioningSystem::query(QuadtreePoint& quadTree, Matrix2l worldCoordinates) {
 	Matrix2i scaled = (worldCoordinates / SCALE).cast<int32_t>();
 	SmallList<uint32_t> entityIDs = quadTree.query(std::array<int32_t, 4>{ scaled(0, 0), scaled(0, 1), scaled(1, 0), scaled(1, 1) }, -1);
-	SmallList<entt::id_type> sameTypes = static_cast<SmallList<entt::id_type>>(entityIDs);
+	SmallList<entt::id_type>* sameTypes = &entityIDs;
 	
-	return *reinterpret_cast<SmallList<entt::entity>*>(&sameTypes);
+	return *reinterpret_cast<SmallList<entt::entity>*>(sameTypes);
 }

@@ -296,13 +296,10 @@ int main(int argc, char **argv) {
 					
 					milliseconds sleepTime = duration_cast<milliseconds>(targetFrameDelay - accumulator);
 					
-					if (sleepTime >= 10ms) {
-						std::this_thread::sleep_for(8ms);
+					if (sleepTime > 0ms) { // More consistent frame timing with 1 but wastes more CPU cycles
+						std::this_thread::sleep_for(sleepTime - 0ms);
 						
-					} else if (sleepTime > 1ms) {
-						std::this_thread::sleep_for(sleepTime - 1ms);
-						
-					} else {
+					} else if ((targetFrameDelay - accumulator) / 1us > 10) {
 						std::this_thread::yield();
 					}
 				}
@@ -310,7 +307,9 @@ int main(int argc, char **argv) {
 		}
 		
 		try {
-			Aurora.network->receive();
+			if (Aurora.network) {
+				Aurora.network->receive();
+			}
 			
 			Aurora.vk2dInstance->Run();
 			

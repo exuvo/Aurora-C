@@ -16,7 +16,10 @@
 #include "starsystems/systems/Systems.hpp"
 #include "galaxy/Empire.hpp"
 #include "utils/Math.hpp"
+#include "utils/Format.hpp"
 #include "utils/Utils.hpp"
+
+thread_local StarSystem* StarSystem::current = nullptr;
 
 template<typename Component>
 void registerComponentListener(entt::registry& registry, StarSystem* starSystem) {
@@ -31,6 +34,7 @@ void registerComponentListeners(entt::registry& registry, StarSystem* starSystem
 
 void StarSystem::init(Galaxy* galaxy) {
 	StarSystem::galaxy = galaxy;
+	StarSystem::current = this;
 	
 	systems = new Systems();
 	
@@ -180,6 +184,7 @@ void StarSystem::update(uint32_t deltaGameTime) {
 //	std::cout << "starsystem " << name << " (" << galacticEntityID << ")" << std::endl;
 	
 	ZoneScoped;
+	StarSystem::current = this;
 	
 	ProfilerEvents &profilerEvents = workingShadow->profilerEvents;
 	profilerEvents.clear();

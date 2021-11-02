@@ -14,6 +14,7 @@
 #include "starsystems/components/Components.hpp"
 #include "galaxy/Galaxy.hpp"
 #include "ui/KeyMappings.hpp"
+#include "utils/Format.hpp"
 
 StarSystemInputLayer::StarSystemInputLayer(AuroraWindow& parentWindow): StarSystemLayer(parentWindow) {
 	zoomLevel = std::log(zoom) / std::log(Aurora.settings.render.zoomSensitivity);

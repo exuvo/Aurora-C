@@ -29,14 +29,12 @@ public:
 	// Creates an empty list.
 	SmallList();
 
-	// Creates a copy of the specified list.
-	template<int STACK_SIZE2>
-	SmallList(const SmallList<T, STACK_SIZE2>& other);
+	SmallList(const SmallList<T, STACK_SIZE>& other);
+	SmallList(SmallList<T, STACK_SIZE>&& other);
 
-	template<int STACK_SIZE2>
-	SmallList(SmallList<T, STACK_SIZE2>&& other);
-
-	// Copies the specified list.
+	SmallList& operator=(const SmallList<T, STACK_SIZE>& other);
+	SmallList& operator=(SmallList<T, STACK_SIZE>&& other);
+	
 	template<int STACK_SIZE2>
 	SmallList& operator=(const SmallList<T, STACK_SIZE2>& other);
 
@@ -244,8 +242,7 @@ SmallList<T, STACK_SIZE>::SmallList() {
 }
 
 template<class T, int STACK_SIZE>
-template<int STACK_SIZE2>
-SmallList<T, STACK_SIZE>::SmallList(const SmallList<T, STACK_SIZE2>& other) {
+SmallList<T, STACK_SIZE>::SmallList(const SmallList<T, STACK_SIZE>& other) {
 	if (other.ld.num > STACK_SIZE) {
 		reserve(other.ld.num);
 	}
@@ -255,37 +252,35 @@ SmallList<T, STACK_SIZE>::SmallList(const SmallList<T, STACK_SIZE2>& other) {
 }
 
 template<class T, int STACK_SIZE>
-template<int STACK_SIZE2>
-SmallList<T, STACK_SIZE>::SmallList(SmallList<T, STACK_SIZE2>&& other) {
+SmallList<T, STACK_SIZE>::SmallList(SmallList<T, STACK_SIZE>&& other) {
 	if (other.ld.num > STACK_SIZE) {
 		if (other.ld.data != other.ld.buf) {
 			ld.data = other.ld.data;
 			ld.cap = other.ld.cap;
+			ld.num = other.ld.num;
+			
+			other.ld.data = other.ld.buf;
+			other.ld.cap = STACK_SIZE;
+			other.ld.num = 0;
+			return;
+			
 		} else {
 			reserve(other.ld.num);
-			std::move(other.ld.data, other.ld.data + other.ld.num, ld.data);
 		}
-	} else {
-		std::move(other.ld.data, other.ld.data + other.ld.num, ld.data);
 	}
 	
+	std::move(other.ld.data, other.ld.data + other.ld.num, ld.data);
 	ld.num = other.ld.num;
-	
-	if constexpr (!std::is_trivially_destructible<T>::value) {
-		for (size_t i = 0; i < other.ld.num; i++) {
-			other.ld.data[i].~T();
-		}
-	}
-	
-	other.ld.num = 0;
-	other.ld.data = other.ld.buf;
-	other.ld.cap = STACK_SIZE2;
+}
+
+template<class T, int STACK_SIZE>
+SmallList<T, STACK_SIZE>& SmallList<T, STACK_SIZE>::operator=(const SmallList<T, STACK_SIZE>& other) {
+	return this->operator=<STACK_SIZE>(other);
 }
 
 template<class T, int STACK_SIZE>
 template<int STACK_SIZE2>
 SmallList<T, STACK_SIZE>& SmallList<T, STACK_SIZE>::operator=(const SmallList<T, STACK_SIZE2>& other) {
-	
 	if constexpr (!std::is_trivially_destructible<T>::value) {
 		for (size_t i = 0; i < ld.num; i++) {
 			ld.data[i].~T();
@@ -307,9 +302,14 @@ SmallList<T, STACK_SIZE>& SmallList<T, STACK_SIZE>::operator=(const SmallList<T,
 }
 
 template<class T, int STACK_SIZE>
+SmallList<T, STACK_SIZE>& SmallList<T, STACK_SIZE>::operator=(SmallList<T, STACK_SIZE>&& other) {
+	return this->operator=<STACK_SIZE>(other);
+}
+
+template<class T, int STACK_SIZE>
 template<int STACK_SIZE2>
 SmallList<T, STACK_SIZE>& SmallList<T, STACK_SIZE>::operator=(SmallList<T, STACK_SIZE2>&& other) {
-	
+	printf("=(&&)\n");
 	if constexpr (!std::is_trivially_destructible<T>::value) {
 		for (size_t i = 0; i < ld.num; i++) {
 			ld.data[i].~T();
@@ -327,6 +327,10 @@ SmallList<T, STACK_SIZE>& SmallList<T, STACK_SIZE>::operator=(SmallList<T, STACK
 			ld.data = other.ld.data;
 			ld.cap = other.ld.cap;
 			
+			other.ld.data = other.ld.buf;
+			other.ld.cap = STACK_SIZE2;
+			other.ld.num = 0;
+			
 		} else {
 			reserve(other.ld.num);
 			std::move(other.ld.data, other.ld.data + other.ld.num, ld.data);
@@ -343,21 +347,17 @@ SmallList<T, STACK_SIZE>& SmallList<T, STACK_SIZE>::operator=(SmallList<T, STACK
 	}
 	
 	ld.num = other.ld.num;
-	
-	if constexpr (!std::is_trivially_destructible<T>::value) {
-		for (size_t i = 0; i < other.ld.num; i++) {
-			other.ld.data[i].~T();
-		}
-	}
-	
-	other.ld.num = 0;
-	other.ld.data = other.ld.buf;
-	other.ld.cap = STACK_SIZE2;
 	return *this;
 }
 
 template<class T, int STACK_SIZE>
 SmallList<T, STACK_SIZE>::~SmallList() {
+	if constexpr (!std::is_trivially_destructible<T>::value) {
+		for (size_t i = 0; i < ld.num; i++) {
+			ld.data[i].~T();
+		}
+	}
+	
 	if (ld.data != ld.buf) {
 		free(ld.data);
 	}

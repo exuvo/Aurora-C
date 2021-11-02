@@ -242,19 +242,19 @@ using Units::NANO_MICRO;
 using Units::NANO_MILLI;
 using Units::NANO_SECOND;
 
-std::string nanoToString(uint64_t time) {
-	uint32_t nanos = time % NANO_MILLI;
-	uint32_t milli = time / NANO_MILLI;
-	
-	return fmt::format("{}.{:06}ms", milli, nanos);
-}
-
-std::string nanoToMicroString(uint64_t time) {
-	uint32_t nanos = time % NANO_MICRO;
-	uint32_t micro = time / NANO_MICRO;
-	
-	return fmt::format("{}.{:03}us", micro, nanos);
-}
+//std::string nanoToString(uint64_t time) {
+//	uint32_t nanos = time % NANO_MILLI;
+//	uint32_t milli = time / NANO_MILLI;
+//	
+//	return fmt::format("{}.{:06}ms", milli, nanos);
+//}
+//
+//std::string nanoToMicroString(uint64_t time) {
+//	uint32_t nanos = time % NANO_MICRO;
+//	uint32_t micro = time / NANO_MICRO;
+//	
+//	return fmt::format("{}.{:03}us", micro, nanos);
+//}
 
 std::string milliToString(uint64_t time) {
 	uint32_t micros = time % 1000;

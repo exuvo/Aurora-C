@@ -69,6 +69,7 @@ struct InterpolatedComponent : public TimedComponent<T> {
 		Tval next;
 		
 		InterpolatedComponent(Tval initial) {
+//			StarSystem::current->name = "a";
 			previous = initial;
 			interpolated.time = 0; // 0 = invalid as only previous could ever have 0
 			next.time = 0;

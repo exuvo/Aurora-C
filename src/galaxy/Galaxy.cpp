@@ -12,6 +12,7 @@
 
 #include "Galaxy.hpp"
 #include "utils/Math.hpp"
+#include "utils/Format.hpp"
 
 void Galaxy::init() {
 	LOG4CXX_INFO(log, "initializing galaxy");
@@ -42,7 +43,7 @@ void Galaxy::init() {
 void Galaxy::galaxyWorker() {
 	tracy::SetThreadName("galaxy-worker");
 	
-	while(galaxyThread == nullptr) { // We must wait for the 
+	while(galaxyThread == nullptr) { // We must wait for the main galaxy thread to be fully initialized
 		std::this_thread::yield();
 	}
 	
@@ -69,7 +70,7 @@ void Galaxy::galaxyWorker() {
 					//TODO automatically adjust based on computer speed
 					tickSize = speed >= duration_cast<nanoseconds>(1ms) ? 1 : duration_cast<nanoseconds>(1ms) / speed;
 
-					// max sensible tick size is 1 minute, unless there is combat..
+					// max sensible tick size is 1 minute, unless there is combat.
 //						if (tickSize > 60) {
 //							tickSize = 60
 //						}
@@ -78,7 +79,7 @@ void Galaxy::galaxyWorker() {
 					
 					accumulator -= tickSpeed;
 
-//						println("tickSize $tickSize, speed $speed, diff ${now - lastProcess}, accumulator $accumulator")
+//					LOG4CXX_INFO(log, fmt::format("tickSize {}, speed {:r}, diff {}, accumulator {:u}", tickSize, speed, now - lastProcess, accumulator));
 
 					time += tickSize;
 					LOG4CXX_TRACE(log, "tick " << time);
@@ -125,12 +126,15 @@ void Galaxy::galaxyWorker() {
 					workingShadow->update();
 					profilerEvents.end();
 					
-					setThreadPriority(*galaxyThread, ThreadPriority::LOW);
+//					setThreadPriority(*galaxyThread, ThreadPriority::LOW);
 					while (completedWorkCounter.load(std::memory_order_relaxed) < systems.size() && !shutdown) {
-						std::this_thread::yield();
+//						std::this_thread::yield();
+						std::unique_lock<std::mutex> lock(galaxyThreadMutex);
+//						galaxyThreadCondvar.wait(lock);
+						galaxyThreadCondvar.wait_for(lock, 1000ms);
 					}
 					profilerEvents.end();
-					setThreadPriority(*galaxyThread, ThreadPriority::NORMAL);
+//					setThreadPriority(*galaxyThread, ThreadPriority::NORMAL);
 					
 					profilerEvents.start("shadows lock");
 					{
@@ -189,9 +193,9 @@ void Galaxy::galaxyWorker() {
 
 					nanoseconds sleepTime = speed - accumulator;
 
-					if (sleepTime > 1ms) {
+					if (sleepTime > 0ms) {
 						std::unique_lock<std::mutex> lock(galaxyThreadMutex);
-						galaxyThreadCondvar.wait_for(lock, sleepTime - 1ms);
+						galaxyThreadCondvar.wait_for(lock, sleepTime - 0ms);
 						
 					} else if ((speed - accumulator) / 1us > 10) {
 						std::this_thread::yield();
@@ -223,8 +227,8 @@ void Galaxy::galaxyWorker() {
 }
 
 void Galaxy::starsystemWorker() {
-	static std::atomic<uint32_t> workerID;
-	tracy::SetThreadName(fmt::format("starsystem-worker-{}", workerID++).c_str());
+	static std::atomic<uint32_t> workerIDs;
+	tracy::SetThreadName(fmt::format("starsystem-worker-{}", workerIDs++).c_str());
 	
 	while (!shutdown) {
 		{
@@ -240,7 +244,7 @@ void Galaxy::starsystemWorker() {
 
 		uint32_t systemIndex = takenWorkCounter++;
 
-		//					println("index ${Thread.currentThread().name} = $systemIndex")
+//		println("index ${Thread.currentThread().name} = $systemIndex")
 
 		while (systemIndex < systems.size()) {
 
@@ -259,8 +263,9 @@ void Galaxy::starsystemWorker() {
 				speed = 0s;
 			}
 
-			if (completedWorkCounter++ == systems.size()) {
-//								galaxy.thread!!.interrupt()
+			if (++completedWorkCounter == systems.size()) {
+				std::unique_lock<std::mutex> lock(galaxyThreadMutex);
+				galaxyThreadCondvar.notify_one();
 				break;
 			}
 
