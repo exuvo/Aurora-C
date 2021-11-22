@@ -72,18 +72,16 @@ void SpatialPartitioningSystem::update(entt::entity entityID) {
 	
 //		println("insert at $x $y ${movement.getXinKM()} ${movement.getYinKM()}")
 	
-	ProfilerEvents& profilerEvents = starSystem.workingShadow->profilerEvents;
-	
 	if (partitioning.elementID != -1) {
-		profilerEvents.start("remove");
+		PROFILE("remove");
 		tree.remove(partitioning.elementID);
-		profilerEvents.end();
+		PROFILE_End();
 	}
 	
-	profilerEvents.start("insert");
+	PROFILE("insert");
 	partitioning.elementID = tree.insert(static_cast<uint32_t>(entityID), x, y);
 	starSystem.workingShadow->quadtreeShipsChanged = true;
-	profilerEvents.end();
+	PROFILE_End();
 }
 
 uint64_t SpatialPartitioningSystem::updateNextExpectedUpdate(entt::entity entityID, MovementValues& movement) {
@@ -128,8 +126,6 @@ uint64_t SpatialPartitioningSystem::updateNextExpectedUpdate(entt::entity entity
 }
 
 void SpatialPartitioningSystem::update(delta_type delta) {
-	ProfilerEvents& profilerEvents = starSystem.workingShadow->profilerEvents;
-	
 	for (entt::entity entityID : addedEntites) {
 //		std::cout << "inserted " << entityID << std::endl;
 		update(entityID);
@@ -179,9 +175,9 @@ void SpatialPartitioningSystem::update(delta_type delta) {
 					
 					updateQueue.pop();
 					
-					profilerEvents.start("update $entityID");
+					PROFILE("update $entityID");
 					update(entityID);
-					profilerEvents.end();
+					PROFILE_End();
 					
 				} else {
 					break;
@@ -192,11 +188,11 @@ void SpatialPartitioningSystem::update(delta_type delta) {
 			}
 	}
 	
-	profilerEvents.start("cleanup");
+	PROFILE("cleanup");
 	if (tree.cleanupFull()) {
 		starSystem.workingShadow->quadtreeShipsChanged = true;
 	}
-	profilerEvents.end();
+	PROFILE_End();
 }
 
 SmallList<entt::entity> SpatialPartitioningSystem::query(QuadtreePoint& quadTree, Matrix2l worldCoordinates) {

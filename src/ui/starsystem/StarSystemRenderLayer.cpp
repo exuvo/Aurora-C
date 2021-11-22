@@ -15,6 +15,11 @@
 #include "galaxy/Galaxy.hpp"
 #include "ui/KeyMappings.hpp"
 
+#undef PROFILE
+#undef PROFILE_End
+#define PROFILE(x) if (window.profiling) profilerEvents.start((x));
+#define PROFILE_End() if (window.profiling) profilerEvents.end();
+
 StarSystemRenderLayer::StarSystemRenderLayer(AuroraWindow& parentWindow): StarSystemLayer(parentWindow) {
 }
 
@@ -61,92 +66,95 @@ void StarSystemRenderLayer::drawEntities() {
 void StarSystemRenderLayer::render() {
 		std::unique_lock<LockableBase(std::mutex)> lock(Aurora.galaxy->shadowLock);
 		
-		profilerEvents.clear();
-		profilerEvents.start("render");
+		if (window.profiling) {
+			profilerEvents.clear();
+		}
 		
-		profilerEvents.start("setup");
+		PROFILE("render");
+		
+		PROFILE("setup");
 		
 	//	val selectedEntityIDs = Player::current->selection.filter { it.starSystem == starSystem && world.entityManager.isActive(it.entityID) && familyAspect.isInterested(it.entityID) }.map { it.entityID };
 	
 		int displaySize = hypot(window.window->GetSize().x, window.window->GetSize().y);
 		
-		profilerEvents.end();
+		PROFILE_End();
 		
 	//		gravSystem.render(viewport, cameraOffset);
 		
 		//TODO dont interpolate new positions if timeDiff * velocity is not noticable at current zoom level
 		
-		profilerEvents.start("drawDetections");
+		PROFILE("drawDetections");
 	//	drawDetections(entityIDs);
-		profilerEvents.end();
+		PROFILE_End();
 	
 		if (window.isKeyPressed(GLFW_KEY_C)) {
-			profilerEvents.start("drawSelectionDetectionZones");
+			PROFILE("drawSelectionDetectionZones");
 	//		drawSelectionDetectionZones(selectedEntityIDs);
-			profilerEvents.end();
+			PROFILE_End();
 		}
 		
 		if (window.isKeyPressed(GLFW_KEY_LEFT_SHIFT)) {
-			profilerEvents.start("drawOrders");
+			PROFILE("drawOrders");
 	//		drawOrders();
-			profilerEvents.end();
+			PROFILE_End();
 		}
 		
-		profilerEvents.start("renderOrbits");
+		PROFILE("renderOrbits");
 	//	renderOrbits(cameraOffset);
-		profilerEvents.end();
+		PROFILE_End();
 		
-		profilerEvents.start("drawWeaponRanges");
+		PROFILE("drawWeaponRanges");
 	//	drawWeaponRanges(entityIDs, selectedEntityIDs);
-		profilerEvents.end();
+		PROFILE_End();
 		
-		profilerEvents.start("drawEntities");
+		PROFILE("drawEntities");
 		drawEntities();
-		profilerEvents.end();
+		PROFILE_End();
 		
-		profilerEvents.start("drawEntityCenters");
+		PROFILE("drawEntityCenters");
 	//	drawEntityCenters(entityIDs);
-		profilerEvents.end();
+		PROFILE_End();
 		
-		profilerEvents.start("drawProjectiles");
+		PROFILE("drawProjectiles");
 	//	drawProjectiles();
-		profilerEvents.end();
+		PROFILE_End();
 		
-		profilerEvents.start("drawTimedMovement");
+		PROFILE("drawTimedMovement");
 	//	drawTimedMovement(entityIDs, selectedEntityIDs);
-		profilerEvents.end();
+		PROFILE_End();
 		
-		profilerEvents.start("drawSelections");
+		PROFILE("drawSelections");
 	//	drawSelections(selectedEntityIDs);
-		profilerEvents.end();
+		PROFILE_End();
 		
-		profilerEvents.start("drawSelectionMoveTargets");
+		PROFILE("drawSelectionMoveTargets");
 	//	drawSelectionMoveTargets(selectedEntityIDs);
-		profilerEvents.end();
+		PROFILE_End();
 		
 		//TODO draw selection weapon ranges
-		profilerEvents.start("drawAttackTargets");
+		PROFILE("drawAttackTargets");
 	//	drawAttackTargets(selectedEntityIDs);
-		profilerEvents.end();
+		PROFILE_End();
 	
 	//	spriteBatch.projectionMatrix = viewport.camera.combined;
 		
-		profilerEvents.start("drawStrategicEntities");
+		PROFILE("drawStrategicEntities");
 	//	drawStrategicEntities(entityIDs);
-		profilerEvents.end();
+		PROFILE_End();
 		
-		profilerEvents.start("drawSelectionDetectionStrength");
+		PROFILE("drawSelectionDetectionStrength");
 	//	drawSelectionDetectionStrength(selectedEntityIDs);
-		profilerEvents.end();
+		PROFILE_End();
 		
-		profilerEvents.start("drawNames");
+		PROFILE("drawNames");
 	//	drawNames(entityIDs);
-		profilerEvents.end();
+		PROFILE_End();
 		
-		profilerEvents.start("drawMovementTimes");
+		PROFILE("drawMovementTimes");
 	//	drawMovementTimes(entityIDs, selectedEntityIDs);
-		profilerEvents.end();
+		PROFILE_End();
 		
-		profilerEvents.end();
+		PROFILE_End();
 }
 

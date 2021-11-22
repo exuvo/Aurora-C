@@ -104,6 +104,8 @@ target_link_libraries(AuroraC PUBLIC OpenMP::OpenMP_CXX)
 target_link_libraries(AuroraC PUBLIC imgui-vulkan)
 target_link_libraries(AuroraC PUBLIC glslang glslang-default-resource-limits OGLCompiler OSDependent SPIRV SPVRemapper) #HLSL
 
+target_include_directories(AuroraC PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/lib/imgui_sugar)
+
 target_include_directories(AuroraC PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/lib/tracy)
 target_include_directories(AuroraC PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/lib/tracy/client)
 target_include_directories(AuroraC PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/lib/tracy/common)
@@ -144,7 +146,9 @@ elseif (CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
 	target_compile_options(AuroraC PRIVATE /arch:SSE4.2 /arch:AVX2)
 endif()
 
-#target_link_options(AuroraC PRIVATE -)
+# gprof profiling
+#target_compile_options(AuroraC PRIVATE -pg)
+#target_link_options(AuroraC PRIVATE -pg)
 
 #	set_target_properties(AuroraC PROPERTIES LINK_SEARCH_START_STATIC ON) # manually specified libs
 #	set_target_properties(AuroraC PROPERTIES LINK_SEARCH_END_STATIC ON) # automatic system libs

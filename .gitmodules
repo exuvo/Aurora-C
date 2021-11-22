@@ -17,3 +17,6 @@
 [submodule "lib/SLikeNet"]
 	path = lib/SLikeNet
 	url = git@github.com:exuvo/SLikeNet.git
+[submodule "lib/imgui_sugar"]
+	path = lib/imgui_sugar
+	url = https://github.com/mnesarco/imgui_sugar.git

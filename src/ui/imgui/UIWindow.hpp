@@ -9,6 +9,7 @@
 #define SRC_UI_UIWINDOW_HPP_
 
 #include <imgui.h>
+#include <imgui_sugar.hpp>
 
 class ImGuiLayer;
 

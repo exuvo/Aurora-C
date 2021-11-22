@@ -17,7 +17,7 @@ class StarSystemRenderLayer: public StarSystemLayer {
 		virtual ~StarSystemRenderLayer() override;
 		
 		static constexpr float maxZoom = 1E8;
-		int zoomLevel;
+		int zoomLevel = 0;
 		
 		virtual void render() override;
 		

@@ -8,19 +8,31 @@
 #include "utils/Profiling.hpp"
 
 void ProfilerEvents::start(nanoseconds time, std::string name) {
-	events.push_back(ProfilerEvent().start(time, name));
+	events.emplace_back(time, name);
 }
 
 void ProfilerEvents::start(const char* name) {
-	events.push_back(ProfilerEvent().start(name));
+	events.emplace_back(name);
+}
+
+void ProfilerEvents::start(const char* name, size_t length) {
+	events.emplace_back(name, length);
 }
 
 void ProfilerEvents::start(std::string name) {
-	events.push_back(ProfilerEvent().start(name));
+	events.emplace_back(name);
 }
 
 void ProfilerEvents::end(nanoseconds time) {
-	events.push_back(ProfilerEvent().end(time));
+	events.emplace_back(time);
+}
+
+const ProfilerEvent& ProfilerEvents::operator[](size_t idx) const {
+	return events[idx];
+}
+
+size_t ProfilerEvents::size() const {
+	return events.size();
 }
 
 void ProfilerEvents::clear() {

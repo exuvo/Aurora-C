@@ -54,6 +54,7 @@ class AuroraWindow : vk2d::WindowEventHandler {
 		Vector2l viewOffset {0,0}; // in m
 		
 		StarSystem* starSystem;
+		bool profiling = false;
 		ProfilerEvents profilerEvents;
 		Shaders shaders;
 		
@@ -100,6 +101,8 @@ class AuroraWindow : vk2d::WindowEventHandler {
 		nanoseconds renderTime = 0s;
 		double frameTimeAverage = 0;
 		double renderTimeAverage = 0;
+		
+		void centerWindow();
 		
 		void EventMouseButton(vk2d::Window*	window, vk2d::MouseButton	button, vk2d::ButtonAction action,
 		                                    vk2d::ModifierKeyFlags modifier_keys) override;

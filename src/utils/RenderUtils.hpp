@@ -9,7 +9,6 @@
 #define SRC_UTILS_RENDERUTILS_HPP_
 
 #include <VK2D.h>
-#include <imgui.h>
 
 #include "utils/Math.hpp"
 

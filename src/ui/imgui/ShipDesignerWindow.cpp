@@ -8,7 +8,7 @@
 
 void ShipDesignerWindow::render() {
 	if (ImGui::Begin("Ship designer", &visible, ImGuiWindowFlags_::ImGuiWindowFlags_MenuBar)) {
-
+		
 		
 	}
 	ImGui::End();

@@ -19,6 +19,17 @@
 #include "utils/Format.hpp"
 #include "utils/Utils.hpp"
 
+#undef PROFILE
+#undef PROFILE_End
+#define PROFILE(x) if (workingShadow->profiling) workingShadow->profilerEvents.start((x));
+#define PROFILE2(x, ...) \
+if (workingShadow->profiling) { \
+	strBuf.clear(); \
+	fmt::format_to(std::back_inserter(strBuf), (x), ##__VA_ARGS__); \
+	workingShadow->profilerEvents.start(strBuf.data(), strBuf.size()); \
+};
+#define PROFILE_End() if (workingShadow->profiling) workingShadow->profilerEvents.end();
+
 thread_local StarSystem* StarSystem::current = nullptr;
 
 template<typename Component>
@@ -186,10 +197,17 @@ void StarSystem::update(uint32_t deltaGameTime) {
 	ZoneScoped;
 	StarSystem::current = this;
 	
-	ProfilerEvents &profilerEvents = workingShadow->profilerEvents;
-	profilerEvents.clear();
+	workingShadow->profiling = shadow->profiling;
+	workingShadow->profilerEvents.clear();
+	auto strBuf = fmt::memory_buffer();
 	
-	profilerEvents.start("shadow clear");
+	if (workingShadow->profiling) {
+		scheduler.profilerEvents = &workingShadow->profilerEvents;
+	} else {
+		scheduler.profilerEvents = nullptr;
+	}
+	
+	PROFILE("shadow clear");
 	workingShadow->added.clear();
 	workingShadow->deleted.clear();
 	
@@ -205,9 +223,9 @@ void StarSystem::update(uint32_t deltaGameTime) {
 	
 	workingShadow->quadtreeShipsChanged = false;
 	workingShadow->quadtreePlanetoidsChanged = false;
-	profilerEvents.end();
+	PROFILE_End();
 	
-	profilerEvents.start("commands");
+	PROFILE("commands");
 	for (Command *command : commandQueue) {
 		try {
 			command->apply();
@@ -215,16 +233,16 @@ void StarSystem::update(uint32_t deltaGameTime) {
 			LOG4CXX_ERROR(log, "Exception running command command" << command << e.what());
 		}
 	}
-	profilerEvents.end();
+	PROFILE_End();
 	
-	profilerEvents.start("processing");
+	PROFILE("processing");
 	
 	if (deltaGameTime <= 100) { //  || combatSubscription.entityCount > 0
 	
 		for (uint32_t i = 0; i < deltaGameTime; i++) {
-			profilerEvents.start("process 1");
+			PROFILE("process 1");
 			scheduler.update(1);
-			profilerEvents.end();
+			PROFILE_End();
 		}
 		
 	} else {
@@ -232,24 +250,24 @@ void StarSystem::update(uint32_t deltaGameTime) {
 		uint32_t delta = 1 + deltaGameTime / 100;
 		
 		for (uint32_t i = 0; i < deltaGameTime / delta; i++) {
-			profilerEvents.start("process $delta");
+			PROFILE2("process {}", delta);
 			scheduler.update(delta);
-			profilerEvents.end();
+			PROFILE_End();
 		}
 		
 		for (uint32_t i = 0; i < deltaGameTime - delta * (deltaGameTime / delta); i++) {
-			profilerEvents.start("process 1");
+			PROFILE("process 1");
 			scheduler.update(1);
-			profilerEvents.end();
+			PROFILE_End();
 		}
 		
 //			std::cout << "processing deltaGameTime  " << deltaGameTime << " = " << delta << " x " << deltaGameTime / delta << " + " << deltaGameTime - delta * (deltaGameTime / delta) << std::endl;
 	}
-	profilerEvents.end();
+	PROFILE_End();
 	
-	profilerEvents.start("shadow update");
+	PROFILE("shadow update");
 	workingShadow->update();
-	profilerEvents.end();
+	PROFILE_End();
 }
 
 std::ostream& operator<<(std::ostream& os, const StarSystem& s) {

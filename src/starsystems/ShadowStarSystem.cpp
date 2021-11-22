@@ -6,10 +6,22 @@
  */
 
 #include <fmt/core.h>
+#include <fmt/format.h>
 #include <starsystems/ShadowStarSystem.hpp>
 
 #include "starsystems/components/Components.hpp"
 #include "starsystems/StarSystem.hpp"
+
+#undef PROFILE
+#undef PROFILE_End
+#define PROFILE(x) if (profiling) profilerEvents.start((x));
+#define PROFILE2(x, ...) \
+if (profiling) { \
+	strBuf.clear(); \
+	fmt::format_to(std::back_inserter(strBuf), (x), ##__VA_ARGS__); \
+	profilerEvents.start(strBuf.data(), strBuf.size()); \
+};
+#define PROFILE_End() if (profiling) profilerEvents.end();
 
 static entt::entity getCurrentEntity(entt::registry& registry, uint32_t entityID) {
 	entt::entity entity = static_cast<entt::entity>(entityID);
@@ -23,6 +35,7 @@ static entt::entity getEntity(uint32_t entityID) { // No version number
 
 void ShadowStarSystem::update() {
 	ShadowStarSystem* otherShadow = starSystem.shadow;
+	
 	{
 		uint32_t size = std::max({added.size(), changed.size(), deleted.size(), otherShadow->added.size(), otherShadow->changed.size(), otherShadow->deleted.size()});
 		tmp.reserve(size);
@@ -35,6 +48,8 @@ void ShadowStarSystem::update() {
 		}
 	}
 	
+	auto strBuf = fmt::memory_buffer();
+	
 	// Skip added and deleted in same tick
 	tmp = added;
 	tmp &= deleted;
@@ -44,14 +59,14 @@ void ShadowStarSystem::update() {
 	
 	changed %= added; // Skip created and modified in same tick
 	
-	profilerEvents.start("deleted");
+	PROFILE("deleted");
 	tmp = deleted;
 	tmp |= otherShadow->deleted;
 	for (auto entityID : tmp) {
 		entt::entity entity = getCurrentEntity(registry, entityID);
 		registry.destroy(entity);
 	}
-	profilerEvents.end();
+	PROFILE_End();
 	
 	tmp = changed;
 	tmp |= otherShadow->changed;
@@ -64,45 +79,45 @@ void ShadowStarSystem::update() {
 		tmpComponents[i] |= otherShadow->changedComponents[i];
 	}
 	
-	profilerEvents.start("changed");
+	PROFILE("changed");
 	for (auto entityID : tmp) {
-		profilerEvents.start(fmt::format("{}", entityID));
+		PROFILE2("{}", entityID);
 		entt::entity entity = getCurrentEntity(registry, entityID);
 		updateComponents(entityID, entity);
-		profilerEvents.end();
+		PROFILE_End();
 	}
-	profilerEvents.end();
+	PROFILE_End();
 	
 	tmp = added;
 	tmp |= otherShadow->added;
 	tmp %= deleted; // Skip other added that are now deleted
 	
-	profilerEvents.start("added");
+	PROFILE("added");
 	for (auto entityID : tmp) {
-		profilerEvents.start(fmt::format("{}", entityID));
+		PROFILE2("{}", entityID);
 		entt::entity entity = registry.create(getEntity(entityID));
 		assert(entityID == static_cast<uint32_t>(registry.entity(entity)));
 		addComponents(entityID, entity);
-		profilerEvents.end();
+		PROFILE_End();
 	}
-	profilerEvents.end();
+	PROFILE_End();
 	
 	if (quadtreeShipsChanged || starSystem.shadow->quadtreeShipsChanged) {
-		profilerEvents.start("copy quadtree ships");
+		PROFILE("copy quadtree ships");
 		quadtreeShips = starSystem.systems->spatialPartitioningSystem->tree;
-		profilerEvents.end();
+		PROFILE_End();
 	}
 	
 	if (quadtreePlanetoidsChanged || starSystem.shadow->quadtreePlanetoidsChanged) {
-		profilerEvents.start("copy quadtree planetoids");
+		PROFILE("copy quadtree planetoids");
 		quadtreePlanetoids = starSystem.systems->spatialPartitioningPlanetoidsSystem->tree;
-		profilerEvents.end();
+		PROFILE_End();
 	}
 	
 	if (uuidsChanged || starSystem.shadow->uuidsChanged) {
-		profilerEvents.start("copy uuids map");
+		PROFILE("copy uuids map");
 		uuids = starSystem.uuids;
-		profilerEvents.end();
+		PROFILE_End();
 	}
 }
 

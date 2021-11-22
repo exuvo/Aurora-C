@@ -18,6 +18,7 @@
 #include "utils/quadtree/QuadTreeAABB.hpp"
 #include "utils/quadtree/QuadTreePoint.hpp"
 #include "utils/BitVector.hpp"
+#include "utils/Profiling.hpp"
 
 namespace hana = boost::hana;
 
@@ -57,6 +58,7 @@ class ShadowStarSystem {
 		QuadtreePoint quadtreeShips = {SpatialPartitioningSystem::MAX, SpatialPartitioningSystem::MAX, SpatialPartitioningSystem::MAX_ELEMENTS, SpatialPartitioningSystem::DEPTH};
 		QuadtreeAABB quadtreePlanetoids = {SpatialPartitioningPlanetoidsSystem::MAX, SpatialPartitioningPlanetoidsSystem::MAX, SpatialPartitioningPlanetoidsSystem::MAX_ELEMENTS, SpatialPartitioningPlanetoidsSystem::DEPTH};
 
+		bool profiling = false;
 		ProfilerEvents profilerEvents;
 
 		void update();

@@ -24,6 +24,7 @@
 #include "ui/imgui/EmpireOverviewWindow.hpp"
 #include "ui/imgui/ShipDebugWindow.hpp"
 #include "ui/imgui/ColonyManagerWindow.hpp"
+#include "ui/imgui/ProfilerWindow.hpp"
 #include "ui/imgui/ResearchWindow.hpp"
 #include "ui/imgui/ShipDesignerWindow.hpp"
 #include "ui/imgui/TopBarWindow.hpp"
@@ -85,6 +86,7 @@ ImGuiLayer::ImGuiLayer(AuroraWindow& parentWindow): UILayer(parentWindow) {
 	addWindow(new EmpireOverviewWindow(*this));
 	addWindow(new ShipDebugWindow(*this));
 	addWindow(new ShipDesignerWindow(*this));
+	addWindow(new ProfilerWindow(*this));
 	addWindow(new ResearchWindow(*this));
 	addWindow(new ColonyManagerWindow(*this));
 	addWindow(new TopBarWindow(*this));
@@ -299,8 +301,10 @@ bool ImGuiLayer::keyAction(KeyActions_ImGuiLayer action) {
 		
 	} else if (action == KeyActions_ImGuiLayer::PROFILER) {
 		
-		printf("PROFILER\n"); fflush(stdout);
+		toggleWindow<ProfilerWindow>();
 	}
+	
+//	printf("PROFILER\n"); fflush(stdout);
 	
 	return false;
 }

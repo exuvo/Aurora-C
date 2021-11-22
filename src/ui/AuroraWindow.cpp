@@ -26,7 +26,36 @@
 #include "utils/Utils.hpp"
 #include "utils/Math.hpp"
 
+#define PROFILE(x) if (profiling) profilerEvents.start((x));
+#define PROFILE_End() if (profiling) profilerEvents.end();
+
 using namespace std::chrono;
+
+// window centering https://github.com/glfw/glfw/issues/310
+void AuroraWindow::centerWindow() {
+	GLFWmonitor* primaryMonitor = glfwGetPrimaryMonitor();
+	check(primaryMonitor, "primary monitor not found");
+	
+	int monitor_x, monitor_y;
+	glfwGetMonitorPos(primaryMonitor, &monitor_x, &monitor_y);
+	
+	GLFWvidmode* monitor_vidmode;
+	monitor_vidmode = (GLFWvidmode*) glfwGetVideoMode(primaryMonitor);
+	check(monitor_vidmode, "monitor video mode not found");
+	int monitor_width, monitor_height;
+	monitor_width = monitor_vidmode->width;
+	monitor_height = monitor_vidmode->height;
+	
+	int window_width, window_height;
+	glfwGetWindowSize(window->impl->glfw_window, &window_width, &window_height);
+	
+	glfwSetWindowPos(window->impl->glfw_window,
+	                 monitor_x + monitor_width/2 - window_width/2,
+	                 monitor_y + monitor_height/2 - window_height/2);
+	
+	error:
+		return;
+}
 
 AuroraWindow::AuroraWindow(StarSystem* starSystem)
 : shaders(this)
@@ -39,11 +68,14 @@ AuroraWindow::AuroraWindow(StarSystem* starSystem)
 	window_create_info.size = { 1024, 768 };
 	window_create_info.coordinate_space = vk2d::RenderCoordinateSpace::TEXEL_SPACE;
 	window_create_info.event_handler = this;
+	window_create_info.focused = true;
 //		window_create_info.fullscreen_monitor = ?
 //		window_create_info.fullscreen_refresh_rate = ?
 	window_create_info.vsync = Aurora.settings.render.vsync;
 	window = Aurora.vk2dInstance->CreateOutputWindow(window_create_info);
 	check(window, "failed to create window");
+	
+	centerWindow();
 	
 	vk_instance = window->impl->instance->GetVulkanInstance();
 	vk_device = window->impl->vk_device;
@@ -136,7 +168,9 @@ void AuroraWindow::startRender() {
 			}
 		}
 		
-		profilerEvents.clear();
+		if (profiling) {
+			profilerEvents.clear();
+		}
 	}
 	
 	ImGuiLayer& imgui = getLayer<ImGuiLayer>();
@@ -185,18 +219,18 @@ void AuroraWindow::render() {
 	//			vk2d::Colorf::RED()
 	//		);
 //			profilerEvents.clear();
-			profilerEvents.start("layers");
+			PROFILE("layers");
 			for (UILayer* layer : layers) {
-				profilerEvents.start(demangleTypeName(typeid(*layer).name()));
+				PROFILE(demangleTypeName(typeid(*layer).name()));
 				try {
 					layer->render();
 				} catch (const std::exception& e) {
 					std::string stackTrace = getLastExceptionStacktrace();
 					LOG4CXX_ERROR(log, "Exception in rendering layer " << demangleTypeName(typeid(*layer).name()) << ": " << e.what() << "\n" << stackTrace);
 				}
-				profilerEvents.end();
+				PROFILE_End();
 			}
-			profilerEvents.end();
+			PROFILE_End();
 			
 			uint32_t centinanosFrameStartTime = (frameTime.count() / 10000) % 100;
 			uint32_t milliFrameStartTime = frameTime.count() / Units::NANO_MILLI;

@@ -62,8 +62,8 @@ class Scheduler {
 		}
 		
 		template<typename Proc>
-		static const char* name() {
-			return typeid(Proc).name();
+		static const std::string name() {
+			return type_name<Proc>();
 		}
 	
 	public:
@@ -72,7 +72,7 @@ class Scheduler {
 				using isActive_fn_type = bool (process_handler&);
 				using update_fn_type = void (process_handler&, Delta);
 				using init_fn_type = void (process_handler&, void*);
-				using name_fn_type = const char* (void);
+				using name_fn_type = const std::string (void);
 
 				instance_type instance;
 				isActive_fn_type* isActive;
@@ -86,8 +86,7 @@ class Scheduler {
 		Scheduler& operator=(Scheduler&&) = default; // move assignment operator
 		
 		std::vector<process_handler> handlers { };
-		bool profiling = false;
-		ProfilerEvents profilerEvents;
+		ProfilerEvents* profilerEvents = nullptr;
 
 		/**
 		 * @brief Number of processes currently scheduled.
@@ -174,7 +173,7 @@ class Scheduler {
 				active[i] = handler.isActive(handler);
 			}
 			
-			if (!profiling) {
+			if (!profilerEvents) {
 				
 				for (size_t i = 0; i < size; i++) {
 					if (active[i]) {
@@ -186,20 +185,20 @@ class Scheduler {
 			} else {
 				
 				ZoneScoped;
-				profilerEvents.clear();
 				
-				profilerEvents.start("update");
+				profilerEvents->start("update");
 				for (size_t i = 0; i < size; i++) {
 					if (active[i]) {
 						process_handler& handler = handlers[i];
 						ZoneScoped;
-						ZoneText(handler.name(), strlen(handler.name()));
-						profilerEvents.start(handler.name());
+						std::string name = handler.name();
+						ZoneText(name.c_str(), name.size());
+						profilerEvents->start(name);
 						handler.update(handler, delta);
-						profilerEvents.end();
+						profilerEvents->end();
 					}
 				}
-				profilerEvents.end();
+				profilerEvents->end();
 				
 			}
 		}

@@ -5,6 +5,13 @@ timedcomponent history
  on timedcomponent replace old: push old value to history
  timedcomponent.get older than old: get from history
 
+UI
+ use timed locking tooltips like xenonauts 2
+ imgui extensions
+  file dialog https://github.com/dfranx/ImFileDialog
+  cool effects https://github.com/ocornut/imgui/issues/3606
+  https://github.com/ocornut/imgui/wiki/Useful-Extensions
+
 Galaxy::speedLimited
  galaxy set slow bool
  ui thread get and clear slow bool
@@ -61,8 +68,23 @@ networking
   basic serialisation framework
   not CMAKE
  boost asio - mostly raw UDP with async support, SSL
- packet acknowlegement system for UDP (used in yojimbo) https://github.com/networkprotocol/reliable
- Game packet encoding Flatbuffers or protocolbuffers https://google.github.io/flatbuffers/flatbuffers_benchmarks.html
+ packet acknowlegement system for UDP (used in yojimbo) https://github.com/networkprotocol/reliable https://gafferongames.com/post/reliable_ordered_messages/
+ 
+ Serialization
+  SlikeNet BitStream.h
+  Game packet encoding Flatbuffers or protocolbuffers https://google.github.io/flatbuffers/flatbuffers_benchmarks.html
+  tips https://gafferongames.com/post/serialization_strategies/ https://gafferongames.com/post/state_synchronization/ https://gafferongames.com/post/snapshot_compression/
+
+Audio
+ Support klystrack
+  https://github.com/kometbomb/klystron/wiki/libksnd https://github.com/kometbomb/klystron/tree/master/src/lib
+  https://github.com/kometbomb/klystrack/blob/master/player/player.c https://github.com/kometbomb/klystron/wiki/MakingNoise
+ mixer
+
+Profiling
+ valgrind --cachegrind & kcachegrind
+ Eclipse gprof: compile with -pg, run, open gmon.out in eclipse (slow)
+ https://github.com/plasma-umass/coz
 
 command line parsing cxxopts
 zlib for packaging resources ?
@@ -79,8 +101,6 @@ polynomial solvers
 vulcan multi gpu https://www.ea.com/seed/news/khronos-munich-2018-halcyon-vulkan https://github.com/Glavnokoman/vuh
 dynamic frame pacing https://youtu.be/nkCaQ-x-zyA?t=1789
 more quad tree optimizations https://www.youtube.com/watch?v=6BIfqfC1i7U
-imgui extensions
- file dialog https://github.com/dfranx/ImFileDialog
- cool effects https://github.com/ocornut/imgui/issues/3606
 XML lib pugixml https://github.com/zeux/pugixml
+ binary XML http://openexi.sourceforge.net/
 more links https://github.com/MFatihMAR/Game-Networking-Resources

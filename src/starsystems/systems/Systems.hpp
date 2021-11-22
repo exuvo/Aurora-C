@@ -24,6 +24,9 @@
 #include "utils/quadtree/QuadTreeAABB.hpp"
 #include "utils/quadtree/QuadTreePoint.hpp"
 
+#define PROFILE(x) if (starSystem.workingShadow->profiling) starSystem.workingShadow->profilerEvents.start((x));
+#define PROFILE_End() if (starSystem.workingShadow->profiling) starSystem.workingShadow->profilerEvents.end();
+
 using namespace log4cxx;
 
 struct Systems;

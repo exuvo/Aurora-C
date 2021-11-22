@@ -1,14 +1,7 @@
-#include <starsystems/ShadowStarSystem.hpp>
-
-/*
- * SpatialPartitioningPlanetoidsSystem.cpp
- *
- *  Created on: Dec 24, 2020
- *      Author: exuvo
- */
-
 #include <algorithm>
 #include <fmt/core.h>
+
+#include <starsystems/ShadowStarSystem.hpp>
 
 #include "starsystems/systems/Systems.hpp"
 #include "utils/Utils.hpp"
@@ -75,18 +68,16 @@ void SpatialPartitioningPlanetoidsSystem::update(entt::entity entityID) {
 	
 //		println("insert at $x $y ${movement.getXinKM()} ${movement.getYinKM()}")
 	
-	ProfilerEvents& profilerEvents = starSystem.workingShadow->profilerEvents;
-	
 	if (partitioning.elementID != -1) {
-		profilerEvents.start("remove");
+		PROFILE("remove");
 		tree.remove(partitioning.elementID);
-		profilerEvents.end();
+		PROFILE_End();
 	}
 	
-	profilerEvents.start("insert");
+	PROFILE("insert");
 	partitioning.elementID = tree.insert(static_cast<uint32_t>(entityID), x - radius, y - radius, x + radius, y + radius);
 	starSystem.workingShadow->quadtreePlanetoidsChanged = true;
-	profilerEvents.end();
+	PROFILE_End();
 }
 
 uint64_t SpatialPartitioningPlanetoidsSystem::updateNextExpectedUpdate(entt::entity entityID, MovementValues& movement, CircleComponent circle) {
@@ -118,8 +109,6 @@ uint64_t SpatialPartitioningPlanetoidsSystem::updateNextExpectedUpdate(entt::ent
 }
 
 void SpatialPartitioningPlanetoidsSystem::update(delta_type delta) {
-	ProfilerEvents& profilerEvents = starSystem.workingShadow->profilerEvents;
-	
 	for (entt::entity entityID : addedEntites) {
 //		std::cout << "inserted " << entityID << std::endl;
 		update(entityID);
@@ -158,9 +147,9 @@ void SpatialPartitioningPlanetoidsSystem::update(delta_type delta) {
 					
 					updateQueue.pop();
 					
-					profilerEvents.start(fmt::format("update {}", entityID));
+					PROFILE(fmt::format("update {}", entityID));
 					update(entityID);
-					profilerEvents.end();
+					PROFILE_End();
 					
 				} else {
 					break;
@@ -171,11 +160,11 @@ void SpatialPartitioningPlanetoidsSystem::update(delta_type delta) {
 			}
 	}
 	
-	profilerEvents.start("cleanup");
+	PROFILE("cleanup");
 	if (tree.cleanupFull()) {
 		starSystem.workingShadow->quadtreePlanetoidsChanged = true;
 	}
-	profilerEvents.end();
+	PROFILE_End();
 }
 
 SmallList<entt::entity> SpatialPartitioningPlanetoidsSystem::query(QuadtreeAABB& quadTree, Matrix2l worldCoordinates) {

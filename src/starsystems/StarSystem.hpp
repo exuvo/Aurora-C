@@ -17,7 +17,6 @@
 
 #include "starsystems/systems/Scheduler.hpp"
 #include "starsystems/components/IDComponents.hpp"
-#include "utils/Profiling.hpp"
 
 using namespace std::chrono;
 using namespace log4cxx;
@@ -76,7 +75,6 @@ class StarSystem {
 		
 		std::unordered_map<EntityUUID, entt::entity, EntityUUID::hasher> uuids;
 		EntityReference getEntityReference(entt::entity entity);
-		
 		
 	private:
 		LoggerPtr log = Logger::getLogger("aurora.starsystem");
