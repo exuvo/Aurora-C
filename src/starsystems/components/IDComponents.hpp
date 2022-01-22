@@ -41,6 +41,7 @@ struct EntityReference {
 	: system(system), entityID(entityID), entityUUID(entityUUID) {}
 	
 	bool operator==(const EntityReference& o) const;
+	bool operator()() const;
 	
 	struct hasher {
 		size_t operator()(const EntityReference& e) const;

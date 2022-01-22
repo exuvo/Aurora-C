@@ -58,6 +58,10 @@ struct StarSystemComponent {
 
 struct EmpireComponent {
 		Empire* empire;
+		
+		EmpireComponent(): empire(nullptr){};
+		EmpireComponent(Empire* empire): empire(empire){};
+		EmpireComponent(Empire& empire): empire(&empire){};
 };
 
 struct MassComponent {

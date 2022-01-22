@@ -308,7 +308,7 @@ int main(int argc, char **argv) {
 		
 		try {
 			if (Aurora.network) {
-				Aurora.network->receive();
+				Aurora.network->receive(); //TODO move to its own thread inside network
 			}
 			
 			Aurora.vk2dInstance->Run();

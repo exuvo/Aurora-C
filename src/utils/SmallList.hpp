@@ -23,7 +23,6 @@
 // http://eel.is/c++draft/container.requirements.general
 
 template<class T, int STACK_SIZE = 128>
-//requires (std::is_trivially_constructible<T>::value)
 class SmallList {
 public:
 	// Creates an empty list.
@@ -93,10 +92,10 @@ public:
 	
 	class const_iterator {
 	public:
-		const_iterator(T* ptr): _ptr(ptr){}
+		const_iterator(const T* ptr): _ptr(ptr){}
 		
 		// iterator traits
-		using difference_type = size_t;
+		using difference_type = std::ptrdiff_t;
 		using value_type = T;
 		using pointer = const T*;
 		using reference = const T&;
@@ -116,6 +115,8 @@ public:
 		//Arithmetic
 		inline const_iterator& operator+=(difference_type off) {_ptr += off; return *this;}
 		inline const_iterator& operator-=(difference_type off) {_ptr -= off; return *this;}
+		friend inline const_iterator operator+(const const_iterator& x, const const_iterator& y) {return const_iterator(x._ptr + y._ptr);}
+		friend inline difference_type operator-(const const_iterator& x, const const_iterator& y) {return x._ptr - y._ptr;}
 		friend inline const_iterator operator+(const const_iterator& x, difference_type off) {return const_iterator(x._ptr + off);}
 		friend inline const_iterator operator-(const const_iterator& x, difference_type off) {return const_iterator(x._ptr - off);}
 		friend inline const_iterator operator+(difference_type off, const_iterator rhs) {rhs._ptr += off; return rhs;}
@@ -130,7 +131,7 @@ public:
 		inline bool operator<=(const const_iterator& rhs) const {return _ptr <= rhs._ptr;}
 		
 	protected:
-		T* _ptr;
+		const T* _ptr;
 	};
 	
 	class iterator : public const_iterator {
@@ -138,14 +139,14 @@ public:
 		iterator(T* ptr): const_iterator(ptr){}
 		
 		// iterator traits
-		using difference_type = size_t;
+		using difference_type = std::ptrdiff_t;
 		using value_type = T;
 		using pointer = T*;
 		using reference = T&;
 		using iterator_category = std::contiguous_iterator_tag;
 		
 		//Pointer like operators
-		inline T& operator*() const { return *this->_ptr; }
+		inline T& operator*() const { return *const_cast<T*>(this->_ptr); }
 		inline T* operator->() const { return this->_ptr; }
 		inline T& operator[](difference_type off) const {return this->_ptr[off];}
 		
@@ -158,6 +159,8 @@ public:
 		//Arithmetic
 		inline iterator& operator+=(difference_type off) {this->_ptr += off; return *this;}
 		inline iterator& operator-=(difference_type off) {this->_ptr -= off; return *this;}
+		friend inline iterator operator+(const iterator& x, const iterator& y) {return iterator(x._ptr + y._ptr);}
+		friend inline difference_type operator-(const iterator& x, const iterator& y) {return x._ptr - y._ptr;}
 		friend inline iterator operator+(const iterator& x, difference_type off) {return iterator(x._ptr + off);}
 		friend inline iterator operator-(const iterator& x, difference_type off) {return iterator(x._ptr - off);}
 		friend inline iterator operator+(difference_type off, iterator rhs) {rhs._ptr += off; return rhs;}
@@ -237,9 +240,7 @@ SmallList<T, STACK_SIZE>::ListData::ListData()
 : data(buf), num(0), cap(STACK_SIZE) {}
 
 template<class T, int STACK_SIZE>
-SmallList<T, STACK_SIZE>::SmallList() {
-	static_assert(std::is_trivially_constructible<T>::value);
-}
+SmallList<T, STACK_SIZE>::SmallList() {}
 
 template<class T, int STACK_SIZE>
 SmallList<T, STACK_SIZE>::SmallList(const SmallList<T, STACK_SIZE>& other) {

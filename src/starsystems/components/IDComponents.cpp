@@ -48,6 +48,10 @@ bool EntityReference::operator==(const EntityReference& o) const {
 	return system == o.system && entityID == o.entityID && entityUUID == o.entityUUID;
 }
 
+bool EntityReference::operator()() const {
+	return system != nullptr && entityID != entt::null;
+}
+
 bool EntityReference::isValid(const StarSystem& starSystem) const {
 	if (system != &starSystem || !starSystem.registry.valid(entityID)) {
 		return false;

@@ -9,15 +9,17 @@
 #define SRC_UI_IMGUI_COLONYMANAGERWINDOW_HPP_
 
 #include "UIWindow.hpp"
+#include "starsystems/components/IDComponents.hpp"
 
 class ColonyManagerWindow : public UIWindow {
 	public:
-		ColonyManagerWindow(ImGuiLayer& layer): UIWindow(layer) {};
+		ColonyManagerWindow(ImGuiLayer& layer): UIWindow(layer) { visible = true; };
 		virtual ~ColonyManagerWindow() = default;
 		
 		virtual void render() override;
 		
 	private:
+		EntityReference selectedColony;
 };
 
 #endif /* SRC_UI_IMGUI_COLONYMANAGERWINDOW_HPP_ */

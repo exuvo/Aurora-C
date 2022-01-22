@@ -86,6 +86,10 @@ struct PartIndex {
 	inline operator uint16_t () const {
 		return idx;
 	}
+	
+	inline bool operator== (PartIndex& other) const {
+		return idx == other.idx;
+	}
 };
 
 struct ContainerPart: Part {

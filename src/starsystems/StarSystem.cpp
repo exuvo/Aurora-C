@@ -95,6 +95,10 @@ void StarSystem::init(Galaxy* galaxy) {
 	registry.emplace<CircleComponent>(e2, 6371000.0f);
 	registry.emplace<MassComponent>(e2, 5.972e24);
 	registry.emplace<OrbitComponent>(e2, e1, 1.0f, 0.0f, -45, 0);
+	registry.emplace<ColonyComponent>(e2, 1000000, 2000, 5000, 3000, 5000);
+	registry.emplace<NameComponent>(e2, "Earth");
+	registry.emplace<EmpireComponent>(e2, empire1);
+	empire1.colonies.push_back(getEntityReference(e2));
 	
 	entt::entity e3 = createEnttiy(gaia);
 	registry.emplace<TextComponent>(e3, "Moon");
@@ -103,6 +107,10 @@ void StarSystem::init(Galaxy* galaxy) {
 	registry.emplace<TintComponent>(e3, vk2d::Colorf::BLUE());
 	registry.emplace<CircleComponent>(e3, 1737100.0f);
 	registry.emplace<OrbitComponent>(e3, e2, static_cast<float>(384400.0 / Units::AU), 0.2f, 0, 30);
+	registry.emplace<ColonyComponent>(e3, 1000, 100, 0, 50, 1000);
+	registry.emplace<NameComponent>(e3, "Lunara");
+	registry.emplace<EmpireComponent>(e3, empire1);
+	empire1.colonies.push_back(getEntityReference(e3));
 	
 	entt::entity e4 = createEnttiy(empire1);
 	registry.emplace<TextComponent>(e4, "Ship");
@@ -268,6 +276,10 @@ void StarSystem::update(uint32_t deltaGameTime) {
 	PROFILE("shadow update");
 	workingShadow->update();
 	PROFILE_End();
+}
+
+bool StarSystem::operator<(const StarSystem& other) const {
+	return other.name < name;
 }
 
 std::ostream& operator<<(std::ostream& os, const StarSystem& s) {

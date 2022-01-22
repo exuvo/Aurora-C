@@ -8,7 +8,7 @@ class ProfilerEvents;
 
 class ProfilerWindow : public UIWindow {
 	public:
-		ProfilerWindow(ImGuiLayer& layer): UIWindow(layer) { visible = true; };
+		ProfilerWindow(ImGuiLayer& layer): UIWindow(layer) {};
 		virtual ~ProfilerWindow() = default;
 		
 		virtual void render() override;

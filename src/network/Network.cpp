@@ -76,9 +76,12 @@ void Network::receive() {
 				printf("Data is %i bytes long.\n", dataLength);
 				
 				if (dataLength > 0) printf("Data is %s\n", p->data + sizeof(unsigned char) + sizeof(SLNet::TimeMS));
-			}
+				
 				break;
+			}
 		}
+		
+		server->DeallocatePacket(p);
 	}
 }
 

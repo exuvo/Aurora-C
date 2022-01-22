@@ -11,6 +11,13 @@ UI
   file dialog https://github.com/dfranx/ImFileDialog
   cool effects https://github.com/ocornut/imgui/issues/3606
   https://github.com/ocornut/imgui/wiki/Useful-Extensions
+ megaman style intro behind main menu
+  unification war
+  rebuilding
+  spaceships boosting up from terrestial shipyards
+  colonising moon
+  orbital stations
+  spaceships leaving orbital shipyards via hyperdrive towards space
 
 Galaxy::speedLimited
  galaxy set slow bool
@@ -43,31 +50,6 @@ networking
   encryption
   threaded
   lots of features but a bit unclear what they actually are
- valves GameNetworkingSockets https://github.com/ValveSoftware/GameNetworkingSockets
-  steam not required
-  Reliable & unreliable messages over UDP.
-   Only 1 reliable and ordered channel, aggregated
-   No ordered unreliable channels.
-  Robust message fragmentation & reassembly.
-  P2P networking with NAT traversal.
-   Master server needs to implement "signaling service" https://github.com/ValveSoftware/GameNetworkingSockets/blob/master/README_P2P.md
-    https://github.com/ValveSoftware/GameNetworkingSockets/blob/master/include/steam/steamnetworkingcustomsignaling.h
-   Use public STUN server or implement into master server.
-  Basic Encryption and support for certificate encryption.
-  No built in serialisation.
-  No LAN broadcast discovery.
-  No throttling or bandwidth limits.
- ENet http://enet.bespin.org/Features.html
-  Reliable & unreliable ordered channels
-  fragmentation & reassembly
-  aggregates tiny packages into fewer larger ones.
-  Static bandwidth limits and dynamic throttling.
-  peer to peer supported. No UDP hole punching.
- yojimbo complete client/server UDP networking https://github.com/networkprotocol/yojimbo
-  no peer to peer.
-  basic serialisation framework
-  not CMAKE
- boost asio - mostly raw UDP with async support, SSL
  packet acknowlegement system for UDP (used in yojimbo) https://github.com/networkprotocol/reliable https://gafferongames.com/post/reliable_ordered_messages/
  
  Serialization
@@ -79,6 +61,7 @@ Audio
  Support klystrack
   https://github.com/kometbomb/klystron/wiki/libksnd https://github.com/kometbomb/klystron/tree/master/src/lib
   https://github.com/kometbomb/klystrack/blob/master/player/player.c https://github.com/kometbomb/klystron/wiki/MakingNoise
+  Tutorial http://n00bstar.blogspot.com/p/klystrack-tutorials.html https://github.com/kometbomb/klystrack/wiki/KeyboardShortcuts
  mixer
 
 Profiling
@@ -87,7 +70,7 @@ Profiling
  https://github.com/plasma-umass/coz
 
 command line parsing cxxopts
-zlib for packaging resources ?
+zstd for compressing resources https://clearlinux.org/news-blogs/linux-os-data-compression-options-comparing-behavior
 
 # Useful links #
 c++ SIMD https://github.com/VcDevel/Vc

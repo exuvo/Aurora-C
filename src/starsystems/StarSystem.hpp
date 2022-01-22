@@ -59,6 +59,8 @@ class StarSystem {
 		void update(uint32_t deltaGameTime);
 		Scheduler<std::uint32_t> scheduler;
 		
+		bool operator<(const StarSystem& other) const;
+		
 		template<typename Component>
 		void added(entt::registry&, entt::entity);
 		
