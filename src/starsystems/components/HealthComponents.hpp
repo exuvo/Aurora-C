@@ -129,9 +129,12 @@ struct PartsHPComponent {
 			
 			size_t i = damagablePartWithIndex.idx;
 			
-			while (i < damageableParts.size()) {
-				damageableParts[i++].volumeSum -= volume;
+			while (i < damageableParts.size() - 1) {
+				damageableParts[i].volumeSum = damageableParts[i+1].volumeSum - volume;
+				i++;
 			}
+			
+			damageableParts.pop_back();
 			
 		} else if (oldHP == 0) { // Repaired
 			rebuildDamagableParts(hull);
@@ -152,9 +155,12 @@ struct PartsHPComponent {
 				assert(i < damageableParts.size());
 			}
 			
-			while (i < damageableParts.size()) {
-				damageableParts[i++].volumeSum -= volume;
+			while (i < damageableParts.size() - 1) {
+				damageableParts[i].volumeSum = damageableParts[i+1].volumeSum - volume;
+				i++;
 			}
+			
+			damageableParts.pop_back();
 			
 		} else if (oldHP == 0) { // Repaired
 			rebuildDamagableParts(hull);

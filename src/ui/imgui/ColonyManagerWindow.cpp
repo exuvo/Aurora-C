@@ -13,6 +13,7 @@
 
 #include "starsystems/components/SimpleComponents.hpp"
 #include "starsystems/components/ColonyComponents.hpp"
+#include "starsystems/components/CargoComponent.hpp"
 #include "starsystems/components/HealthComponents.hpp"
 
 static bool StarSystemCompare(const StarSystem* s1, const StarSystem* s2) {
@@ -76,6 +77,31 @@ void ColonyManagerWindow::render() {
 						}
 					}
 				}
+			}
+			
+			if (ImGui::CollapsingHeader("Stations 0", ImGuiTreeNodeFlags_DefaultOpen)) {
+				
+			}
+		}
+		ImGui::EndChild();
+		
+		ImGui::SameLine();
+		
+		if (ImGui::BeginChild("Tabs", ImVec2(0, 0), false, ImGuiWindowFlags_None)) {
+			if (!selectedColony()) {
+				ImGui::TextUnformatted("No colony selected");
+				
+			} else if (ImGui::BeginTabBar("Tabs", ImGuiTabBarFlags_Reorderable | ImGuiTabBarFlags_TabListPopupButton | ImGuiTabBarFlags_FittingPolicyResizeDown)) {
+				
+				StarSystem& system = *selectedColony.system;
+				entt::entity entityID = selectedColony.entityID;
+				
+				ColonyComponent& colony = system.registry.get<ColonyComponent>(entityID);
+//				CargoComponent& cargo = system.registry.get<CargoComponent>(entityID);
+				
+				
+				
+				ImGui::EndTabBar();
 			}
 		}
 		ImGui::EndChild();
