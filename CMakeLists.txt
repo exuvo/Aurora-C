@@ -72,7 +72,7 @@ add_subdirectory(lib/SLikeNet)
 message("========== Aurora-C ==========")
 
 #find_package(Boost 1.66 REQUIRED) # COMPONENTS
-#find_package(Eigen3 3.4 REQUIRED NO_MODULE) # 3.4 not released yet
+find_package(Eigen3 3.4 REQUIRED NO_MODULE)
 find_package(OpenMP REQUIRED)
 find_package(fmt REQUIRED)
 
@@ -97,9 +97,7 @@ target_link_libraries(AuroraC PUBLIC VK2D)
 target_link_libraries(AuroraC PUBLIC fmt)
 #target_link_libraries(AuroraC PUBLIC ${Boost_LIBRARIES})
 #target_include_directories(AuroraC PUBLIC ${Boost_INCLUDE_DIRS})
-#target_link_libraries(AuroraC PUBLIC Eigen3::Eigen)
-#TODO makes wrong path?, expects root folder named eigen3 ex /usr/include/eigen3/Eigen /usr/include/eigen3/unsupported/Eigen, somehow still works for parts of it?
-target_include_directories(AuroraC PUBLIC "lib/eigen" "lib/eigen/unsupported") # 3.4 is not released yet so we have to include it ourselves
+target_link_libraries(AuroraC PUBLIC Eigen3::Eigen)
 target_link_libraries(AuroraC PUBLIC OpenMP::OpenMP_CXX)
 target_link_libraries(AuroraC PUBLIC imgui-vulkan)
 target_link_libraries(AuroraC PUBLIC glslang glslang-default-resource-limits OGLCompiler OSDependent SPIRV SPVRemapper) #HLSL

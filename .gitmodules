@@ -8,9 +8,6 @@
 [submodule "lib/imgui"]
 	path = lib/imgui
 	url = https://github.com/ocornut/imgui
-[submodule "lib/eigen"]
-	path = lib/eigen
-	url = https://gitlab.com/libeigen/eigen.git
 [submodule "lib/tracy"]
 	path = lib/tracy
 	url = https://github.com/wolfpld/tracy

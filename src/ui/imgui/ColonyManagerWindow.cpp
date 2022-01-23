@@ -256,6 +256,16 @@ void ColonyManagerWindow::render() {
 					ImGui::EndTabItem();
 				}
 				
+				if (ImGui::BeginTabItem("Industry")) {
+					
+					ImGui::EndTabItem();
+				}
+				
+				if (ImGui::BeginTabItem("Mining")) {
+					
+					ImGui::EndTabItem();
+				}
+				
 				ImGui::EndTabBar();
 			}
 		}
