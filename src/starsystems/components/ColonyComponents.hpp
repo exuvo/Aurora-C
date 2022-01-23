@@ -52,7 +52,7 @@ struct Shipyard;
 struct ShipHull;
 
 struct ShipyardSlipway {
-	ShipHull* hull;
+	const ShipHull* hull;
 	uint64_t hullCost[Resources::size_construction];
 	uint64_t usedResources[Resources::size_construction];
 	
@@ -73,6 +73,8 @@ struct ShipyardSlipway {
 		
 		return (100L * usedResources) / totalCost();
 	}
+	
+	void build(const ShipHull& newHull);
 };
 
 struct ShipyardLocation {
@@ -121,9 +123,9 @@ struct ShipyardModifications {
 struct ShipyardModification {
 	virtual ~ShipyardModification() = default;
 	
-	virtual uint64_t getCost(Shipyard& shipyard) = 0;
+	virtual uint64_t getCost(Shipyard& shipyard) const = 0;
 	virtual void complete(Shipyard& shipyard) = 0;
-	virtual std::string getDescription() = 0;
+	virtual std::string getDescription() const = 0;
 };
 
 class ShipyardModificationExpandCapacity: public ShipyardModification {
@@ -131,9 +133,9 @@ class ShipyardModificationExpandCapacity: public ShipyardModification {
 	
 	ShipyardModificationExpandCapacity(uint64_t addedCapacity): addedCapacity(addedCapacity) {};
 	
-	virtual uint64_t getCost(Shipyard& shipyard);
+	virtual uint64_t getCost(Shipyard& shipyard) const;
 	virtual void complete(Shipyard& shipyard);
-	virtual std::string getDescription();
+	virtual std::string getDescription() const;
 };
 
 class ShipyardModificationRetool: public ShipyardModification {
@@ -141,33 +143,33 @@ class ShipyardModificationRetool: public ShipyardModification {
 	
 	ShipyardModificationRetool(ShipHull& assignedHull): assignedHull(assignedHull) {};
 	
-	virtual uint64_t getCost(Shipyard& shipyard);
+	virtual uint64_t getCost(Shipyard& shipyard) const;
 	virtual void complete(Shipyard& shipyard);
-	virtual std::string getDescription();
+	virtual std::string getDescription() const;
 };
 
 class ShipyardModificationAddSlipway: public ShipyardModification {
-	virtual uint64_t getCost(Shipyard& shipyard);
+	virtual uint64_t getCost(Shipyard& shipyard) const;
 	virtual void complete(Shipyard& shipyard);
-	virtual std::string getDescription();
+	virtual std::string getDescription() const;
 };
 
 struct Shipyard {
-	ShipyardLocation* location = nullptr;
-	ShipyardType* type = nullptr;
+	const ShipyardLocation* location = nullptr;
+	const ShipyardType* type = nullptr;
 	uint64_t capacity = 1000; // In cm³
 	float fuelCostPerMass = 0.0; //kg fuel per kg of hull to launch into space
 	uint64_t buildRate = 0; // kg per hour
-	ShipHull* tooledHull = nullptr;
-	std::vector<ShipyardSlipway> slipways;
+	const ShipHull* tooledHull = nullptr;
+	SmallList<ShipyardSlipway, 4> slipways;
 	
-	ShipyardModification* modificationActivity = nullptr;
+	const ShipyardModification* modificationActivity = nullptr;
 	uint32_t modificationRate = 1000; // kg per hour
 	uint64_t modificationProgress = 0;
 	
 	Shipyard() {};
 	
-	Shipyard(ShipyardLocation* location, ShipyardType* type): location(location), type(type) {
+	Shipyard(const ShipyardLocation* location, const ShipyardType* type): location(location), type(type) {
 		buildRate = location->baseBuildrate;
 		
 		if (location == &ShipyardLocations::TERRESTIAL) {

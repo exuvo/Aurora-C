@@ -21,4 +21,6 @@ ImRect operator-(const ImRect a, int b);
 void toLinearRGB(ImVec4*);
 __attribute__((warn_unused_result)) ImVec4 toLinearRGB(ImVec4);
 
+void rightAlignedTableText(const char* text);
+
 #endif /* SRC_UTILS_IMGUI_UTILS_HPP_ */

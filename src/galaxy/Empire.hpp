@@ -12,6 +12,10 @@
 #include <VK2D.h>
 
 #include "galaxy/Commands.hpp"
+#include "galaxy/ShipHullClass.hpp"
+
+class Part;
+class ShipHull;
 
 class Empire {
 	public:
@@ -22,9 +26,11 @@ class Empire {
 		std::vector<EntityReference> colonies;
 		std::vector<EntityReference> stations;
 		
-		Empire(std::string aName) {
-			name = aName;
-		}
+		std::vector<Part*> parts;
+		std::vector<ShipHull*> shipHulls;
+		std::vector<HullClass> hullClasses;
+		
+		Empire(std::string aName);
 		
 //		static const Empire gaia = { "GAIA" };
 		

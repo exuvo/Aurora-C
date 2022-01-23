@@ -15,6 +15,7 @@
 #include <fmt/format.h>
 
 #include "galaxy/ShipParts.hpp"
+#include "galaxy/ShipHullClass.hpp"
 #include "galaxy/Resources.hpp"
 #include "starsystems/components/StrategicIconComponent.hpp"
 #include "starsystems/components/PowerComponent.hpp"
@@ -22,11 +23,6 @@
 #include "starsystems/components/PartStatesComponent.hpp"
 
 struct MunitionHull;
-
-struct HullClass {
-	std::string name;
-	std::string code;
-};
 
 //TODO specialised armor types with damage reduction against one damage type
 // armor type that converts some of incoming energy dmg to power

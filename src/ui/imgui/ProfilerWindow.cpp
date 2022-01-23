@@ -93,8 +93,7 @@ void ProfilerWindow::render() {
 			
 			if (eventBar(startEvent.time.count() - timeOffset, endEvent->time.count() - timeOffset, startEvent.name)) {
 				strBuf.clear();
-				fmt::format_to(std::back_inserter(strBuf), "{} {:u}", startEvent.name, endEvent->time - startEvent.time);
-				strBuf.push_back('\0');
+				fmt::format_to(std::back_inserter(strBuf), "{} {:u}{}", startEvent.name, endEvent->time - startEvent.time, '\0');
 				ImGui::SetTooltip(strBuf.data());
 			}
 			

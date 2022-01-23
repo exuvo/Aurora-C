@@ -30,6 +30,10 @@ struct Resource {
 	bool operator==(const Resource& o) const {
 		return this == &o;
 	}
+	
+	bool operator<(const Resource& o) const {
+		return this < &o;
+	}
 };
 
 // Always store these in pointers, otherwise comparisons will fail. TODO private constructor?
@@ -156,5 +160,35 @@ struct CargoPnt {
 		return idx;
 	}
 };
+
+namespace std {
+	template<>
+	struct hash<Resource> {
+		size_t operator()(const Resource& e) const {
+			return reinterpret_cast<size_t>(&e);
+		}
+	};
+	
+	template<>
+	struct hash<CargoType> {
+		size_t operator()(const CargoType& e) const {
+			return reinterpret_cast<size_t>(&e);
+		}
+	};
+	
+	template<>
+	struct hash<ResourcePnt> {
+		size_t operator()(const ResourcePnt& e) const {
+			return e.idx;
+		}
+	};
+	
+	template<>
+	struct hash<CargoPnt> {
+		size_t operator()(const CargoPnt& e) const {
+			return e.idx;
+		}
+	};
+}
 
 #endif /* SRC_GALAXY_RESOURCES_HPP_ */

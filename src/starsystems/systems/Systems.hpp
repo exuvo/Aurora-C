@@ -62,6 +62,9 @@ class DailySystem : public BaseSystem<Derived> {
 			}
 			return false;
 		}
+		uint32_t getInterval() const {
+			return interval;
+		}
 	protected:
 		uint32_t lastDay;
 		uint32_t interval;
@@ -80,6 +83,9 @@ class IntervalSystem : public BaseSystem<Derived> {
 				return true;
 			}
 			return false;
+		}
+		uint32_t getInterval() const {
+			return interval;
 		}
 	protected:
 		uint64_t lastTime;
@@ -244,12 +250,25 @@ class SpatialPartitioningPlanetoidsSystem : public IntervalSystem<SpatialPartiti
 		uint64_t updateNextExpectedUpdate(entt::entity, MovementValues&, CircleComponent circle);
 };
 
+class ColonySystem : public IntervalSystem<ColonySystem> {
+	public:
+		ColonySystem(StarSystem* starSystem) : ColonySystem::IntervalSystem(60 * 60s, starSystem) {};
+		
+		void init(void*);
+		void update(delta_type delta);
+		
+	private:
+		LoggerPtr log = Logger::getLogger("aurora.starsystems.systems.colony");
+};
+
 struct Systems {
 		WeaponSystem* weaponSystem = nullptr;
 		MovementPreSystem* movementPreSystem = nullptr;
 		MovementSystem* movementSystem = nullptr;
 		SpatialPartitioningSystem* spatialPartitioningSystem = nullptr;
 		SpatialPartitioningPlanetoidsSystem* spatialPartitioningPlanetoidsSystem = nullptr;
+		ColonySystem* colonySystem = nullptr;
+		OrbitSystem* orbitSystem = nullptr;
 };
 
 #endif /* SRC_STARSYSTEMS_SYSTEMS_SYSTEMS_HPP_ */

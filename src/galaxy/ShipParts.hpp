@@ -323,7 +323,7 @@ struct TargetingComputer: Part, PoweredPart {
 };
 
 struct PassiveSensor: Part, PoweredPart {
-	Spectrum* spectrum;
+	const Spectrum* spectrum;
 	float sensitivity;
 	uint8_t arcSegments;
 	float distanceResolution; // km
@@ -331,7 +331,7 @@ struct PassiveSensor: Part, PoweredPart {
 	float accuracy; // 1 = 100%
 	uint16_t refreshDelay; // seconds
 	
-	PassiveSensor(Spectrum* spectrum, float sensitivity, uint8_t arcSegments, float distanceResolution,
+	PassiveSensor(const Spectrum* spectrum, float sensitivity, uint8_t arcSegments, float distanceResolution,
 	              int8_t angleOffset, float accuracy, uint16_t refreshDelay, uint32_t powerConsumtion)
 	: PoweredPart(this, powerConsumtion), spectrum(spectrum), sensitivity(sensitivity), arcSegments(arcSegments),
 	  distanceResolution(distanceResolution), angleOffset(angleOffset), accuracy(accuracy), refreshDelay(refreshDelay) {}
@@ -357,5 +357,28 @@ struct fmt::formatter<Part> {
 		return format_to(ctx.out(), "{}", part.toString());
 	}
 };
+
+namespace std {
+	template<>
+	struct hash<PartIndex<Part>> {
+		size_t operator()(const PartIndex<Part>& e) const {
+			return e.idx;
+		}
+	};
+	
+	template<>
+	struct hash<PartIndex<WeaponPart>> {
+		size_t operator()(const PartIndex<WeaponPart>& e) const {
+			return e.idx;
+		}
+	};
+	
+	template<>
+	struct hash<PartIndex<TargetingComputer>> {
+		size_t operator()(const PartIndex<TargetingComputer>& e) const {
+			return e.idx;
+		}
+	};
+}
 
 #endif /* SRC_GALAXY_SHIPPARTS_HPP_ */

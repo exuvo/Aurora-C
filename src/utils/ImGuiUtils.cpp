@@ -42,3 +42,9 @@ ImVec4 toLinearRGB(ImVec4 vec) {
 	return { sRGBtoLinearRGB(vec.x), sRGBtoLinearRGB(vec.y), sRGBtoLinearRGB(vec.z), vec.w };
 }
 
+void rightAlignedTableText(const char* text) {
+	ImGui::GetCurrentWindow()->DC.CursorPos.x = ImGui::GetCurrentWindow()->DC.CursorPos.x
+	                                          + ImGui::GetCurrentTable()->Columns[ImGui::TableGetColumnIndex()].WidthGiven
+	                                          - ImGui::CalcTextSize(text).x;
+	ImGui::Text(text);
+}

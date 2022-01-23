@@ -1,10 +1,3 @@
-/*
- * IDComponents.cpp
- *
- *  Created on: Dec 30, 2020
- *      Author: exuvo
- */
-
 #include <boost/functional/hash.hpp>
 #include <starsystems/ShadowStarSystem.hpp>
 #include <functional>

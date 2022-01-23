@@ -13,6 +13,11 @@
 
 #define lengthToDiameterRatio 2
 
+//ShipHull::ShipHull(): parts(), armorLayers(), preferredCargo(), preferredMunitions(),
+//	preferredPartMunitions(), defaultWeaponAssignments()
+//{
+//}
+
 template<>
 std::vector<PartStateIndex>& ShipHull::getPartStateIndex<FueledPartState>() {
 	return partStateIndexes[0];
