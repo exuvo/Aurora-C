@@ -69,7 +69,7 @@ struct DamagablePart {
 
 struct DamagablePartWithIndex {
 	PartIndex<Part> partIdx;
-	uint8_t idx;
+	uint8_t damageablePartsIdx;
 };
 
 struct PartsHPComponent {
@@ -98,6 +98,7 @@ struct PartsHPComponent {
 		damageableParts.clear();
 		damageablePartsMaxVolumeSum = 0;
 		
+		//TODO sort by large parts last to improve performance
 		for (size_t i = 0; i < hull.parts.size(); i++) {
 			Part* part = hull.parts[i];
 			damageableParts.push_back(damageablePartsMaxVolumeSum += part->volume, i);
@@ -115,7 +116,7 @@ struct PartsHPComponent {
 			return { found->partIdx, found - damageableParts.begin() };
 		}
 		
-		throw std::range_error("No part found");
+		throw std::invalid_argument("No part found");
 	}
 	
 	void setPartHP(DamagablePartWithIndex damagablePartWithIndex, uint8_t hp, const ShipHull& hull) {
@@ -127,7 +128,7 @@ struct PartsHPComponent {
 			uint32_t volume = hull.parts[partIdx]->volume;
 			damageablePartsMaxVolumeSum -= volume;
 			
-			size_t i = damagablePartWithIndex.idx;
+			size_t i = damagablePartWithIndex.damageablePartsIdx;
 			
 			while (i < damageableParts.size() - 1) {
 				damageableParts[i].volumeSum = damageableParts[i+1].volumeSum - volume;

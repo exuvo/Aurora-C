@@ -128,21 +128,22 @@ struct CargoType {
 struct CargoTypes {
 	static inline const CargoType ORE {{Resources::IRON, Resources::ALUMINA, Resources::TITANIUM_OXIDE, Resources::SILICA, Resources::COPPER, Resources::RARE_EARTH_METALS}};
 	static inline const CargoType REFINED {{Resources::STEEL, Resources::ALUMINIUM, Resources::TITANIUM, Resources::GLASS, Resources::SEMICONDUCTORS}};
-	static inline const CargoType NORMAL {{Resources::MAINTENANCE_SUPPLIES, Resources::PARTS, Resources::STEEL, Resources::ALUMINIUM, Resources::TITANIUM, Resources::GLASS, Resources::SEMICONDUCTORS}};
+	static inline const CargoType GOODS {{Resources::MAINTENANCE_SUPPLIES, Resources::PARTS}};
+	static inline const CargoType NORMAL {{Resources::MAINTENANCE_SUPPLIES, Resources::PARTS, Resources::MISSILES, Resources::SABOTS, Resources::STEEL, Resources::ALUMINIUM, Resources::TITANIUM, Resources::GLASS, Resources::SEMICONDUCTORS}};
 	static inline const CargoType AMMUNITION {{Resources::MISSILES, Resources::SABOTS}};
 	static inline const CargoType FUEL {{Resources::ROCKET_FUEL}};
 	static inline const CargoType LIFE_SUPPORT {{Resources::LIFE_SUPPORT}};
 	static inline const CargoType NUCLEAR {{Resources::NUCLEAR_FISSION, Resources::NUCLEAR_WASTE, Resources::NUCLEAR_FUSION}};
 	
-	static inline const CargoType* ALL[] { &NORMAL, &AMMUNITION, &FUEL, &LIFE_SUPPORT, &NUCLEAR };
+	static inline const CargoType* ALL[] { &ORE, &REFINED, &NORMAL, &AMMUNITION, &FUEL, &LIFE_SUPPORT, &NUCLEAR };
 	static inline constexpr const size_t size = ARRAY_LENGTH(ALL);
 };
 
-struct CargoPnt {
+struct CargoTypePnt {
 	uint8_t idx = 0;
 	
-	constexpr CargoPnt(uint8_t idx): idx(idx) {};
-	constexpr CargoPnt(const CargoType* cargoType) {
+	constexpr CargoTypePnt(uint8_t idx): idx(idx) {};
+	constexpr CargoTypePnt(const CargoType* cargoType) {
 		auto itr = std::find(CargoTypes::ALL, CargoTypes::ALL + ARRAY_LENGTH(CargoTypes::ALL), cargoType);
 		
 		if (itr != std::end(CargoTypes::ALL)) {
@@ -163,20 +164,6 @@ struct CargoPnt {
 
 namespace std {
 	template<>
-	struct hash<Resource> {
-		size_t operator()(const Resource& e) const {
-			return reinterpret_cast<size_t>(&e);
-		}
-	};
-	
-	template<>
-	struct hash<CargoType> {
-		size_t operator()(const CargoType& e) const {
-			return reinterpret_cast<size_t>(&e);
-		}
-	};
-	
-	template<>
 	struct hash<ResourcePnt> {
 		size_t operator()(const ResourcePnt& e) const {
 			return e.idx;
@@ -184,8 +171,8 @@ namespace std {
 	};
 	
 	template<>
-	struct hash<CargoPnt> {
-		size_t operator()(const CargoPnt& e) const {
+	struct hash<CargoTypePnt> {
+		size_t operator()(const CargoTypePnt& e) const {
 			return e.idx;
 		}
 	};

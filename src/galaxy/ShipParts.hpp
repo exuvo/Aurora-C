@@ -118,6 +118,7 @@ struct LifeSupportContainerPart: public ContainerPart {
 	LifeSupportContainerPart(uint32_t capacity): ContainerPart(capacity, &CargoTypes::LIFE_SUPPORT) {};
 };
 
+// Stored ammunition does not explode if this container is destroyed
 struct AmmoContainerPart: public ContainerPart {
 	AmmoContainerPart(uint32_t capacity): ContainerPart(capacity, &CargoTypes::AMMUNITION) {};
 };

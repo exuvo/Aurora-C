@@ -101,5 +101,8 @@ std::string type_name(const void* ptr);
 
 std::string getLastExceptionStacktrace();
 std::string getCurrentStacktrace();
+void printCurrentStacktrace(std::ostream& out);
+void printCurrentStacktraceGDB();
+void setupSignalHandler();
 
 #endif /* SRC_UTILS_UTILS_HPP_ */

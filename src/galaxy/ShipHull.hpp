@@ -24,13 +24,15 @@
 
 struct MunitionHull;
 
-//TODO specialised armor types with damage reduction against one damage type
-// armor type that converts some of incoming energy dmg to power
-// self-regenerating armor (slowly drains ship power)
+// self-regenerating organic armor, slowly drains ship life-support
 struct ArmorLayer {
 	std::string name;
-	uint8_t blockHP;
 	uint16_t energyPerDamage;
+	uint8_t blockHP;
+	uint8_t kineticResistance = 100; // 0-255%
+	uint8_t thermalResistance = 100;
+	uint8_t explosiveResistance = 100;
+	uint8_t absorption = 0; // % of thermal damage converted to power
 };
 
 struct ShipHull {

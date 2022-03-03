@@ -10,6 +10,7 @@
 
 #include <fmt/format.h>
 #include <chrono>
+#include <entt/entt.hpp>
 
 #include "Math.hpp"
 
@@ -75,6 +76,25 @@ template<> struct fmt::formatter<nanoseconds> {
 		} else { // r
 			return format_to(ctx.out(), "{}", time);
 		}
+	}
+};
+
+template<> struct fmt::formatter<entt::entity> {
+
+	// Parses format specifications from {format options}
+	constexpr auto parse(format_parse_context& ctx) -> decltype(ctx.begin()) {
+		auto it = ctx.begin(), end = ctx.end();
+		
+		if (it != end && *it != '}') {
+			throw format_error("invalid format");
+		}
+		
+		return it;
+	}
+	
+	template<typename FormatContext>
+	auto format(const entt::entity& e, FormatContext& ctx) -> decltype(ctx.out()) {
+		return format_to(ctx.out(), "{}:{}", (uint32_t) entt::registry::entity(e), (uint32_t) entt::registry::version(e));
 	}
 };
 

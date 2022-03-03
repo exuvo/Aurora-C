@@ -1,6 +1,3 @@
-// *********************************************************************************
-// SmallList.hpp
-// *********************************************************************************
 #ifndef SMALL_LIST_HPP
 #define SMALL_LIST_HPP
 
@@ -11,9 +8,6 @@
 #include <type_traits>
 #include <stdint.h>
 
-// ---------------------------------------------------------------------------------
-// SmallList
-// ---------------------------------------------------------------------------------
 /// Stores a random-access sequence of elements similar to vector, but avoids
 /// heap allocations for small lists by using an SBO. T must be trivially
 /// constructible and destructible (for people using C++11 and newer, you
@@ -23,6 +17,7 @@
 // http://eel.is/c++draft/container.requirements.general
 
 template<class T, int STACK_SIZE = 128>
+//requires (std::is_trivially_constructible<T>::value)
 class SmallList {
 public:
 	// Creates an empty list.
@@ -187,54 +182,6 @@ private:
 	ListData ld;
 };
 
-// ---------------------------------------------------------------------------------
-// SmallList
-// ---------------------------------------------------------------------------------
-/// Provides an indexed free list with constant-time removals from anywhere
-/// in the list without invalidating indices. T must be trivially constructible
-/// and destructible.
-template<class T>
-class FreeList {
-public:
-	/// Creates a new free list.
-	FreeList();
-
-	/// Inserts an element to the free list and returns an index to it.
-	int insert(const T& element);
-
-	// Removes the nth element from the free list.
-	void erase(uint32_t n);
-
-	// Removes all elements from the free list.
-	void clear();
-
-	// Returns the range of valid indices.
-	int range() const;
-
-	// Returns the nth element.
-	T& operator[](uint32_t n);
-
-	// Returns the nth element.
-	const T& operator[](uint32_t n) const;
-
-	// Reserves space for n elements.
-	void reserve(uint32_t n);
-
-	// Swaps the contents of the two lists.
-	void swap(FreeList& other);
-
-private:
-	union FreeElement {
-		T element;
-		int next;
-	};
-	SmallList<FreeElement> data;
-	int first_free;
-};
-
-// ---------------------------------------------------------------------------------
-// SmallList Implementation
-// ---------------------------------------------------------------------------------
 template<class T, int STACK_SIZE>
 SmallList<T, STACK_SIZE>::ListData::ListData()
 : data(buf), num(0), cap(STACK_SIZE) {}
@@ -566,70 +513,6 @@ SmallList<T, STACK_SIZE>::const_iterator SmallList<T, STACK_SIZE>::cbegin() cons
 template<class T, int STACK_SIZE>
 SmallList<T, STACK_SIZE>::const_iterator SmallList<T, STACK_SIZE>::cend() const {
 	return { ld.data + ld.num };
-}
-
-// ---------------------------------------------------------------------------------
-// FreeList Implementation
-// ---------------------------------------------------------------------------------
-template<class T>
-FreeList<T>::FreeList()
-: first_free(-1) {
-}
-
-template<class T>
-int FreeList<T>::insert(const T& element) {
-	if (first_free != -1) {
-		const int index = first_free;
-		first_free = data[first_free].next;
-		data[index].element = element;
-		return index;
-	} else {
-		FreeElement fe;
-		fe.element = element;
-		data.push_back(fe);
-		return data.size() - 1;
-	}
-}
-
-template<class T>
-void FreeList<T>::erase(uint32_t n) {
-	assert(n < data.size());
-	data[n].next = first_free;
-	first_free = n;
-}
-
-template<class T>
-void FreeList<T>::clear() {
-	data.clear();
-	first_free = -1;
-}
-
-template<class T>
-int FreeList<T>::range() const {
-	return data.size();
-}
-
-template<class T>
-T& FreeList<T>::operator[](uint32_t n) {
-	return data[n].element;
-}
-
-template<class T>
-const T& FreeList<T>::operator[](uint32_t n) const {
-	return data[n].element;
-}
-
-template<class T>
-void FreeList<T>::reserve(uint32_t n) {
-	data.reserve(n);
-}
-
-template<class T>
-void FreeList<T>::swap(FreeList& other) {
-	const int temp = first_free;
-	data.swap(other.data);
-	first_free = other.first_free;
-	other.first_free = temp;
 }
 
 template<class T>

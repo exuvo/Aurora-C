@@ -5,6 +5,7 @@
 
 #include "starsystems/systems/Systems.hpp"
 #include "utils/Utils.hpp"
+#include "utils/Format.hpp"
 #include "utils/quadtree/QuadTreeAABB.hpp"
 
 bool SpatialPartitioningPlanetoidsSystem::comparator::operator() (entt::entity a, entt::entity b) const {

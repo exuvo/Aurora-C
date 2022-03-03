@@ -247,6 +247,7 @@ void StarSystem::init(Galaxy* galaxy) {
 	ColonyComponent& earthColony = registry.emplace<ColonyComponent>(e2, 1000000, 2000, 5000, 3000, 5000);
 	registry.emplace<NameComponent>(e2, "Earth");
 	registry.emplace<EmpireComponent>(e2, empire1);
+	registry.emplace<CargoComponent>(e2, earthColony);
 	empire1.colonies.push_back(getEntityReference(e2));
 	
 	earthColony.shipyards.push_back(&ShipyardLocations::TERRESTIAL, &ShipyardTypes::CIVILIAN);
@@ -265,9 +266,10 @@ void StarSystem::init(Galaxy* galaxy) {
 	registry.emplace<TintComponent>(e3, vk2d::Colorf::BLUE());
 	registry.emplace<CircleComponent>(e3, 1737100.0f);
 	registry.emplace<OrbitComponent>(e3, e2, static_cast<float>(384400.0 / Units::AU), 0.2f, 0, 30);
-	registry.emplace<ColonyComponent>(e3, 1000, 100, 0, 50, 1000);
+	ColonyComponent& moonColony = registry.emplace<ColonyComponent>(e3, 1000, 100, 0, 50, 1000);
 	registry.emplace<NameComponent>(e3, "Lunara");
 	registry.emplace<EmpireComponent>(e3, empire1);
+	registry.emplace<CargoComponent>(e3, moonColony);
 	empire1.colonies.push_back(getEntityReference(e3));
 	
 	entt::entity e4 = createEnttiy(empire1);

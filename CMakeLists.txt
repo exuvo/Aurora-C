@@ -1,5 +1,6 @@
 cmake_minimum_required (VERSION 3.16)
 
+cmake_policy(SET CMP0048 NEW) # set version in project
 project (AuroraC VERSION 0.1 LANGUAGES CXX)
 
 # does not work with ninja
@@ -40,7 +41,7 @@ set(VK2D_BUILD_TESTS OFF)
 set(VK2D_BUILD_EXAMPLES OFF)
 set(VK2D_BUILD_STATIC_LIBRARY ON)
 add_subdirectory(lib/Vulkan2DRenderer)
-
+ 
 set(BUILD_TESTING OFF)
 add_subdirectory(lib/entt)
 
@@ -71,7 +72,7 @@ add_subdirectory(lib/SLikeNet)
 
 message("========== Aurora-C ==========")
 
-#find_package(Boost 1.66 REQUIRED) # COMPONENTS
+find_package(Boost 1.66 REQUIRED) # COMPONENTS
 find_package(Eigen3 3.4 REQUIRED NO_MODULE)
 find_package(OpenMP REQUIRED)
 find_package(fmt REQUIRED)
@@ -95,8 +96,8 @@ target_link_libraries(AuroraC PUBLIC tracy_client)
 target_link_libraries(AuroraC PUBLIC EnTT)
 target_link_libraries(AuroraC PUBLIC VK2D)
 target_link_libraries(AuroraC PUBLIC fmt)
-#target_link_libraries(AuroraC PUBLIC ${Boost_LIBRARIES})
-#target_include_directories(AuroraC PUBLIC ${Boost_INCLUDE_DIRS})
+target_link_libraries(AuroraC PUBLIC ${Boost_LIBRARIES})
+target_include_directories(AuroraC PUBLIC ${Boost_INCLUDE_DIRS})
 target_link_libraries(AuroraC PUBLIC Eigen3::Eigen)
 target_link_libraries(AuroraC PUBLIC OpenMP::OpenMP_CXX)
 target_link_libraries(AuroraC PUBLIC imgui-vulkan)
@@ -126,6 +127,16 @@ if (CMAKE_CXX_COMPILER_ID MATCHES "Clang|GNU")
 	#target_compile_options(AuroraC PRIVATE -msse4.2 -mavx2)
 #	target_compile_options(AuroraC PRIVATE $<$<CONFIG:DEBUG>: -O1>)
 	target_compile_options(AuroraC PRIVATE $<$<CONFIG:RELEASE>: -O3>)
+	
+	find_library(backtrace_FOUND backtrace)
+	if (backtrace_FOUND MATCHES "backtrace_FOUND-NOTFOUND")
+		message(WARNING "library backtrace not found, stacktraces might not show filenames. ${backtrace_FOUND}")
+		target_compile_options(AuroraC PRIVATE -rdynamic -DBOOST_STACKTRACE_USE_ADDR2LINE=/usr/bin/addr2line)
+		target_link_libraries(AuroraC PUBLIC dl)
+	else()
+		target_compile_options(AuroraC PRIVATE -rdynamic -DBOOST_STACKTRACE_USE_BACKTRACE)
+		target_link_libraries(AuroraC PUBLIC backtrace) 
+	endif()
 endif()
 if (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
 #	target_compile_options(AuroraC PRIVATE -ftime-report) # debug compile time
@@ -154,10 +165,6 @@ endif()
 if(MINGW)
 	set(CMAKE_EXE_LINKER_FLAGS "-static-libgcc -static-libstdc++")
 	set(CMAKE_EXE_LINKER_FLAGS "-static") # static all?
-endif()
-
-if (UNIX AND CMAKE_CXX_COMPILER_ID MATCHES "GNU")
-	target_link_libraries(AuroraC PUBLIC SegFault)
 endif()
 
 set(THREADS_PREFER_PTHREAD_FLAG ON)

@@ -424,7 +424,7 @@ std::string type_name(const void* ptr) {
 }
 
 // https://stackoverflow.com/questions/11665829/how-can-i-print-stack-trace-for-caught-exceptions-in-c-code-injection-in-c/11674810#11674810
-#if not defined NDEBUG && __unix__ && defined __GNUC__ 
+#if not defined NDEBUG && __unix__
 #include <dlfcn.h>
 #include <boost/stacktrace.hpp>
 
@@ -457,21 +457,114 @@ std::string getLastExceptionStacktrace() {
   return ss.str();
 }
 
-std::string getCurrentStacktrace() {
-	void* frames[10];
-  size_t size = backtrace(frames, ARRAY_LEN(frames));
+void printCurrentStacktrace(std::ostream& out) {
+	void* frames[20];
+	size_t size = backtrace(frames, ARRAY_LEN(frames));
 	
+	for (size_t i=0; i < size; i++) {
+		out << ' ' << i << "# " << boost::stacktrace::to_string(boost::stacktrace::frame(frames[i])) << std::endl;
+	}
+}
+
+std::string getCurrentStacktrace() {
   std::stringstream ss;
-  
-  for (size_t i=0; i < size; i++) {
-  	ss << boost::stacktrace::to_string(boost::stacktrace::frame(frames[i])) << std::endl;
-  }
-  
+  printCurrentStacktrace(ss);
   return ss.str();
+}
+
+// Replacement for glibc libSegFault which was removed in 2.35: https://github.com/jonathanpoelen/libsegfault
+// Alternative GNU libsigsegv
+#include <csignal>
+#include <unistd.h>
+
+__sighandler_t oldSignalHandlerSegv;
+__sighandler_t oldSignalHandlerBus;
+__sighandler_t oldSignalHandlerIll;
+__sighandler_t oldSignalHandlerAbrt;
+__sighandler_t oldSignalHandlerFpe;
+__sighandler_t oldSignalHandlerSys;
+
+void signal_handler(int signum) {
+	if (signum == SIGSEGV) {
+		fprintf(stderr, "Segmentation fault, Invalid memory access:\n");
+	} else if (signum == SIGBUS) {
+		fprintf(stderr, "Bus error:\n");
+	} else if (signum == SIGILL) {
+		fprintf(stderr, "Illegal instruction:\n");
+	} else if (signum == SIGABRT) {
+		fprintf(stderr, "Abnormal termination:\n");
+	} else if (signum == SIGFPE) {
+		fprintf(stderr, "Erroneous arithmetic operation:\n");
+	} else if (signum == SIGSYS) {
+		fprintf(stderr, "Bad system call:\n");
+	} else {
+		fprintf(stderr, "Unknown signal %d:\n", signum);
+	}
+	
+	printCurrentStacktrace(std::cerr);
+	
+//	::signal(signum, SIG_DFL);
+//	::raise(signum);
+	
+	exit(1);
+}
+
+#include <sys/resource.h> // Enable core dumps
+
+void setupSignalHandler(void) {
+	oldSignalHandlerSegv = signal(SIGSEGV, signal_handler);
+	oldSignalHandlerBus = signal(SIGBUS,  signal_handler);
+	oldSignalHandlerIll = signal(SIGILL,  signal_handler);
+	oldSignalHandlerAbrt = signal(SIGABRT, signal_handler);
+	oldSignalHandlerFpe = signal(SIGFPE,  signal_handler);
+	oldSignalHandlerSys = signal(SIGSYS,  signal_handler);
+	
+	// Enable core dumps
+//	struct rlimit core_limit = { RLIM_INFINITY, RLIM_INFINITY };
+//	setrlimit(RLIMIT_CORE, &core_limit);
+}
+
+#include <sys/wait.h>
+#include <sys/prctl.h>
+
+// Can not be called from a signal context
+void printCurrentStacktraceGDB() {
+	char pid_buf[30];
+	sprintf(pid_buf, "%d", getpid());
+	
+	char name_buf[256];
+	name_buf[readlink("/proc/self/exe", name_buf, 255)] = 0;
+	
+	prctl(PR_SET_PTRACER, PR_SET_PTRACER_ANY, 0, 0, 0);
+	int child_pid = fork();
+	if (!child_pid) {
+		auto dummyHandler = [](int signum){
+			fprintf(stderr, "dummy signal handler: %d\n", signum);
+			exit(1);
+		};
+		
+		signal(SIGSEGV, dummyHandler);
+		signal(SIGBUS,  dummyHandler);
+		signal(SIGILL,  dummyHandler);
+		signal(SIGABRT, dummyHandler);
+		signal(SIGFPE,  dummyHandler);
+		signal(SIGSYS,  dummyHandler);
+		
+		fprintf(stderr, "starting gdb\n");
+		dup2(2, 1); // redirect output to stderr
+		execl("/usr/bin/gdb", "gdb", "--batch", "-n", "-ex", "thread", "-ex", "bt", name_buf, pid_buf, NULL);
+		fprintf(stderr, "aborting\n");
+		abort(); /* If gdb failed to start */
+	} else {
+		waitpid(child_pid, NULL, 0);
+	}
 }
 
 #else
 std::string getLastExceptionStacktrace() {
 	return {};
+}
+int setupSignalHandler(void) {
+	return 0;
 }
 #endif

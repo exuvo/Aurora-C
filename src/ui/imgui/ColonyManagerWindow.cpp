@@ -9,6 +9,7 @@
 #include "ui/imgui/ImGuiLayer.hpp"
 #include "utils/Utils.hpp"
 #include "utils/ImGuiUtils.hpp"
+#include "utils/Format.hpp"
 #include "galaxy/Galaxy.hpp"
 #include "galaxy/Player.hpp"
 #include "galaxy/Empire.hpp"
@@ -100,7 +101,7 @@ void ColonyManagerWindow::render() {
 				entt::entity entityID = selectedColony.entityID;
 				
 				ColonyComponent& colony = system.registry.get<ColonyComponent>(entityID);
-//				CargoComponent& cargo = system.registry.get<CargoComponent>(entityID);
+				CargoComponent& cargo = system.registry.get<CargoComponent>(entityID);
 				ColonySystem& colonySystem = *system.systems->colonySystem;
 				
 				if (ImGui::BeginTabItem("Shipyards")) {
@@ -229,6 +230,7 @@ void ColonyManagerWindow::render() {
 											}
 											ImGui::TableNextColumn();
 											ImGui::TextUnformatted(daysToDate(Aurora.galaxy->day + daysToCompletion).data());
+											
 										} else {
 											rightAlignedTableText("-");
 											ImGui::TableNextColumn();
@@ -257,6 +259,12 @@ void ColonyManagerWindow::render() {
 				}
 				
 				if (ImGui::BeginTabItem("Industry")) {
+					ImGui::TextUnformatted("Munitions:");
+					with_Group {
+//						for(auto hull : cargo.munitions) {
+//							ImGui::TextUnformatted(hull.name);
+//						}
+					}
 					
 					ImGui::EndTabItem();
 				}

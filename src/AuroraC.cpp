@@ -107,6 +107,8 @@ void vsyncWorker(VkDisplayKHR vkDisplay);
 int main(int argc, char **argv) {
 	tracy::StartupProfiler();
 	tracy::SetThreadName("startup");
+	
+	setupSignalHandler();
 
 	log4cxx::xml::DOMConfigurator::configure("assets/log4j.xml");
 	LoggerPtr log = Logger::getLogger("aurora");

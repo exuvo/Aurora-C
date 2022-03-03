@@ -7,6 +7,7 @@
 #include <stdint.h>
 
 #include "utils/SmallList.hpp"
+#include "utils/FreeList.hpp"
 
 // Represents a rectangle for the quadtree storing a center and half-size.
 struct QuadPointCRect

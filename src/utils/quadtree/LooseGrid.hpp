@@ -8,6 +8,7 @@
 #include <immintrin.h>
 
 #include "utils/SmallList.hpp"
+#include "utils/FreeList.hpp"
 
 union SimdVec4f {
 	float data[4];
