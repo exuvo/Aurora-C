@@ -170,7 +170,7 @@ void ShipHull::calculateCachedValues() {
 			} else if (container->cargoType == &CargoTypes::AMMUNITION) {
 				maxMunitionVolume += container->capacity;
 				
-			} else if (container->cargoType == &CargoTypes::NORMAL) {
+			} else if (container->cargoType == &CargoTypes::GENERIC) {
 				maxCargoVolume += container->capacity / Resources::LIFE_SUPPORT.specificVolume;
 			}
 		}

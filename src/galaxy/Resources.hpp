@@ -22,7 +22,7 @@ constexpr uint32_t densityToVolume(float density) {
 
 // Weight should be stored in kg, Volume in cm³
 struct Resource {
-	const uint32_t specificVolume; // cm³/kg
+	const uint16_t specificVolume; // cm³/kg
 	
 	constexpr Resource(int specificVolume) : specificVolume(specificVolume) {};
 	constexpr Resource(double density) : specificVolume(densityToVolume(density)) {};
@@ -76,7 +76,7 @@ struct Resources {
 	                                                &RARE_EARTH_METALS, &LITHIUM_CARBONATE, &SULFUR, &OIL,
 	                                                &STEEL, &ALUMINIUM, &TITANIUM, &GLASS, &SEMICONDUCTORS, 
 	                                                &LITHIUM, &EXPLOSIVES,
-	                                                &MAINTENANCE_SUPPLIES, &MISSILES, &SABOTS,
+	                                                &MAINTENANCE_SUPPLIES, &PARTS, &MISSILES, &SABOTS,
 	                                                &NUCLEAR_FISSION, &NUCLEAR_WASTE,
 	                                                &NUCLEAR_FUSION, &ROCKET_FUEL,
 	                                                &LIFE_SUPPORT };
@@ -109,15 +109,19 @@ struct ResourcePnt {
 		return Resources::ALL[idx];
 	}
 	
+	const Resource* operator * () const {
+		return Resources::ALL[idx];
+	}
+	
 	inline operator uint8_t () const {
 		return idx;
 	}
 };
 
 struct CargoType {
-	const std::vector<Resource> resources;
+	const std::vector<ResourcePnt> resources;
 	
-	CargoType(const std::vector<Resource> resources) : resources(resources) {};
+	CargoType(const std::vector<ResourcePnt> resources) : resources(resources) {};
 	
 	bool operator==(const CargoType& o) const {
 		return this == &o;
@@ -126,16 +130,25 @@ struct CargoType {
 
 // Always store these in pointers, otherwise comparisons will fail
 struct CargoTypes {
-	static inline const CargoType ORE {{Resources::IRON, Resources::ALUMINA, Resources::TITANIUM_OXIDE, Resources::SILICA, Resources::COPPER, Resources::RARE_EARTH_METALS}};
-	static inline const CargoType REFINED {{Resources::STEEL, Resources::ALUMINIUM, Resources::TITANIUM, Resources::GLASS, Resources::SEMICONDUCTORS}};
-	static inline const CargoType GOODS {{Resources::MAINTENANCE_SUPPLIES, Resources::PARTS}};
-	static inline const CargoType NORMAL {{Resources::MAINTENANCE_SUPPLIES, Resources::PARTS, Resources::MISSILES, Resources::SABOTS, Resources::STEEL, Resources::ALUMINIUM, Resources::TITANIUM, Resources::GLASS, Resources::SEMICONDUCTORS}};
-	static inline const CargoType AMMUNITION {{Resources::MISSILES, Resources::SABOTS}};
-	static inline const CargoType FUEL {{Resources::ROCKET_FUEL}};
-	static inline const CargoType LIFE_SUPPORT {{Resources::LIFE_SUPPORT}};
-	static inline const CargoType NUCLEAR {{Resources::NUCLEAR_FISSION, Resources::NUCLEAR_WASTE, Resources::NUCLEAR_FUSION}};
+	static inline const Resource* ORE_[] {&Resources::IRON, &Resources::ALUMINA, &Resources::TITANIUM_OXIDE, &Resources::SILICA, &Resources::COPPER, &Resources::RARE_EARTH_METALS};
+	static inline const Resource* REFINED_[] {&Resources::STEEL, &Resources::ALUMINIUM, &Resources::TITANIUM, &Resources::GLASS, &Resources::SEMICONDUCTORS};
+	static inline const Resource* GOODS_[] {&Resources::MAINTENANCE_SUPPLIES, &Resources::PARTS};
+	static inline const Resource* GENERIC_[] {&Resources::MAINTENANCE_SUPPLIES, &Resources::PARTS, &Resources::MISSILES, &Resources::SABOTS, &Resources::STEEL, &Resources::ALUMINIUM, &Resources::TITANIUM, &Resources::GLASS, &Resources::SEMICONDUCTORS};
+	static inline const Resource* AMMUNITION_[] {&Resources::MISSILES, &Resources::SABOTS};
+	static inline const Resource* FUEL_[] {&Resources::ROCKET_FUEL};
+	static inline const Resource* LIFE_SUPPORT_[] {&Resources::LIFE_SUPPORT};
+	static inline const Resource* NUCLEAR_[] {&Resources::NUCLEAR_FISSION, &Resources::NUCLEAR_WASTE, &Resources::NUCLEAR_FUSION};
 	
-	static inline const CargoType* ALL[] { &ORE, &REFINED, &NORMAL, &AMMUNITION, &FUEL, &LIFE_SUPPORT, &NUCLEAR };
+	static inline const CargoType ORE {{&Resources::IRON, &Resources::ALUMINA, &Resources::TITANIUM_OXIDE, &Resources::SILICA, &Resources::COPPER, &Resources::RARE_EARTH_METALS}};
+	static inline const CargoType REFINED {{&Resources::STEEL, &Resources::ALUMINIUM, &Resources::TITANIUM, &Resources::GLASS, &Resources::SEMICONDUCTORS}};
+	static inline const CargoType GOODS {{&Resources::MAINTENANCE_SUPPLIES, &Resources::PARTS}};
+	static inline const CargoType GENERIC {{&Resources::MAINTENANCE_SUPPLIES, &Resources::PARTS, &Resources::MISSILES, &Resources::SABOTS, &Resources::STEEL, &Resources::ALUMINIUM, &Resources::TITANIUM, &Resources::GLASS, &Resources::SEMICONDUCTORS}};
+	static inline const CargoType AMMUNITION {{&Resources::MISSILES, &Resources::SABOTS}};
+	static inline const CargoType FUEL {{&Resources::ROCKET_FUEL}};
+	static inline const CargoType LIFE_SUPPORT {{&Resources::LIFE_SUPPORT}};
+	static inline const CargoType NUCLEAR {{&Resources::NUCLEAR_FISSION, &Resources::NUCLEAR_WASTE, &Resources::NUCLEAR_FUSION}};
+	
+	static inline constexpr const CargoType* ALL[] { &ORE, &REFINED, &GENERIC, &AMMUNITION, &FUEL, &LIFE_SUPPORT, &NUCLEAR };
 	static inline constexpr const size_t size = ARRAY_LENGTH(ALL);
 };
 
@@ -161,6 +174,29 @@ struct CargoTypePnt {
 		return idx;
 	}
 };
+
+//struct OreResourcePnt {
+//	uint8_t idx = 0;
+//	
+//	constexpr OreResourcePnt(uint8_t idx): idx(idx) {};
+//	constexpr OreResourcePnt(const Resource* resource) {
+//		auto itr = std::find(CargoTypes::ORE.resources.cbegin(), CargoTypes::ORE.resources.cend(), resource);
+//		
+//		if (itr != CargoTypes::ORE.resources.cend()) {
+//			idx = itr - CargoTypes::ORE.resources.cbegin();
+//		} else {
+//			throw std::invalid_argument("Invalid resource pointer");
+//		}
+//	}
+//	
+//	const Resource* operator -> () const {
+//		return CargoTypes::ORE.resources[idx];
+//	}
+//	
+//	inline operator uint8_t () const {
+//		return idx;
+//	}
+//};
 
 namespace std {
 	template<>

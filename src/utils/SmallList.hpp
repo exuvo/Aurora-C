@@ -20,8 +20,8 @@ template<class T, int STACK_SIZE = 128>
 //requires (std::is_trivially_constructible<T>::value)
 class SmallList {
 public:
-	// Creates an empty list.
 	SmallList();
+	SmallList(std::initializer_list<T> values);
 
 	SmallList(const SmallList<T, STACK_SIZE>& other);
 	SmallList(SmallList<T, STACK_SIZE>&& other);
@@ -142,7 +142,7 @@ public:
 		
 		//Pointer like operators
 		inline T& operator*() const { return *const_cast<T*>(this->_ptr); }
-		inline T* operator->() const { return this->_ptr; }
+		inline T* operator->() const { return const_cast<T*>(this->_ptr); }
 		inline T& operator[](difference_type off) const {return this->_ptr[off];}
 		
 		//Increment / Decrement
@@ -188,6 +188,13 @@ SmallList<T, STACK_SIZE>::ListData::ListData()
 
 template<class T, int STACK_SIZE>
 SmallList<T, STACK_SIZE>::SmallList() {}
+
+template<class T, int STACK_SIZE>
+SmallList<T, STACK_SIZE>::SmallList(std::initializer_list<T> values) {
+	for (auto t : values) {
+		push_back(std::move(t));
+	}
+}
 
 template<class T, int STACK_SIZE>
 SmallList<T, STACK_SIZE>::SmallList(const SmallList<T, STACK_SIZE>& other) {
