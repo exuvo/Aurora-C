@@ -33,11 +33,7 @@ struct CargoContainer {
 	uint32_t* getResources() { return &static_cast<Derived>(this).resources; };  // In kg
 	size_t getLength() { return ARRAY_LENGTH(static_cast<Derived>(this).resources); };
 	
-	explicit operator RawCargoContainer*() { return reinterpret_cast<RawCargoContainer*>(this); }
-	
-	virtual ~CargoContainer() {
-		static_assert(std::is_base_of_v<CargoContainer, Derived>, "Incorrect use of the class template");
-	}
+	inline RawCargoContainer* operator *() { return reinterpret_cast<RawCargoContainer*>(this); }
 };
 
 // 48 bytes

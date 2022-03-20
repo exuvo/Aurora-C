@@ -3,12 +3,22 @@
 
 #include "CargoComponent.hpp"
 
+// Handles alignment padding
+#define RES_DIFF(a, b) ((reinterpret_cast<intptr_t>(a) - reinterpret_cast<intptr_t>(b)) / (reinterpret_cast<intptr_t>(&Resources::ALUMINA) - reinterpret_cast<intptr_t>(&Resources::IRON)))
+
 CargoComponent::CargoComponent(const ShipHull& hull) {
 	// merge all of same cargo type
 }
 
 CargoComponent::CargoComponent(const ColonyComponent& colony) {
-	
+	ore.maxVolume = UINT64_MAX;
+	refined.maxVolume = UINT64_MAX;
+	goods.maxVolume = UINT64_MAX;
+	generic.maxVolume = UINT64_MAX;
+	ammunition.maxVolume = UINT64_MAX;
+	fuel.maxVolume = UINT64_MAX;
+	lifeSupport.maxVolume = UINT64_MAX;
+	nuclear.maxVolume = UINT64_MAX;
 }
 
 uint32_t CargoComponent::addCargo(SmallList<std::pair<RawCargoContainer*, uint8_t>, 2> list, const Resource* resource, uint32_t amount) {
@@ -39,8 +49,8 @@ uint32_t CargoComponent::addCargo(SmallList<std::pair<RawCargoContainer*, uint8_
 			}
 		}
 		
-		if (listItr != list.end()) {
-			container = (++listItr)->first;
+		if (++listItr != list.end()) {
+			container = listItr->first;
 		} else {
 			break;
 		}
@@ -59,8 +69,8 @@ uint32_t CargoComponent::addCargo(ResourcePnt resource, uint32_t amount) {
 
 uint32_t CargoComponent::addCargo(MunitionHull* munition, uint32_t amount) {
 	SmallList<std::pair<RawCargoContainer*, uint8_t>, 2> list;
-	list.push_back(ammunition, *munition->storageType - &Resources::MISSILES);
-	list.push_back(generic, 2 + *munition->storageType - &Resources::MISSILES);
+	list.push_back(*ammunition, RES_DIFF(*munition->storageType, &Resources::MISSILES));
+	list.push_back(*generic, 2 + RES_DIFF(*munition->storageType, &Resources::MISSILES));
 	
 	uint32_t amountToStore = amount;
 	uint16_t munitionVolume = munition->volume;
@@ -88,8 +98,8 @@ uint32_t CargoComponent::addCargo(MunitionHull* munition, uint32_t amount) {
 			}
 		}
 		
-		if (listItr != list.end()) {
-			container = (++listItr)->first;
+		if (++listItr != list.end()) {
+			container = listItr->first;
 		} else {
 			break;
 		}
@@ -123,8 +133,8 @@ uint32_t CargoComponent::retrieveCargo(SmallList<std::pair<RawCargoContainer*, u
 			}
 		}
 		
-		if (listItr != list.end()) {
-			container = (++listItr)->first;
+		if (++listItr != list.end()) {
+			container = listItr->first;
 		} else {
 			break;
 		}
@@ -148,8 +158,8 @@ uint32_t CargoComponent::retrieveCargo(MunitionHull* munition, uint32_t amount) 
 	if (found != munitions.end()) {
 	
 		SmallList<std::pair<RawCargoContainer*, uint8_t>, 2> list;
-		list.push_back(ammunition, *munition->storageType - &Resources::MISSILES);
-		list.push_back(generic, 2 + *munition->storageType - &Resources::MISSILES);
+		list.push_back(*ammunition, RES_DIFF(*munition->storageType, &Resources::MISSILES));
+		list.push_back(*generic, 2 + RES_DIFF(*munition->storageType, &Resources::MISSILES));
 		
 		uint32_t amountToRetrieve = std::min(amount, found->second);
 		uint16_t munitionMass = munition->loadedMass;
@@ -174,8 +184,8 @@ uint32_t CargoComponent::retrieveCargo(MunitionHull* munition, uint32_t amount) 
 				}
 			}
 			
-			if (listItr != list.end()) {
-				container = (++listItr)->first;
+			if (++listItr != list.end()) {
+				container = listItr->first;
 			} else {
 				break;
 			}
@@ -198,8 +208,8 @@ uint32_t CargoComponent::getCargoAmount(ResourcePnt resource) {
 	while(true) {
 		amountStored += container->resources[listItr->second];
 		
-		if (listItr != list.end()) {
-			container = (++listItr)->first;
+		if (++listItr != list.end()) {
+			container = listItr->first;
 		} else {
 			break;
 		}
@@ -219,8 +229,8 @@ uint32_t CargoComponent::getUsedCargoVolume(ResourcePnt resource) {
 	while(true) {
 		usedVolume += container->usedVolume;
 		
-		if (listItr != list.end()) {
-			container = (++listItr)->first;
+		if (++listItr != list.end()) {
+			container = listItr->first;
 		} else {
 			break;
 		}
@@ -240,8 +250,8 @@ uint32_t CargoComponent::getMaxCargoVolume(ResourcePnt resource) {
 	while(true) {
 		maxVolume += container->maxVolume;
 		
-		if (listItr != list.end()) {
-			container = (++listItr)->first;
+		if (++listItr != list.end()) {
+			container = listItr->first;
 		} else {
 			break;
 		}
@@ -273,37 +283,67 @@ uint32_t CargoComponent::getUsedCargoMass(MunitionHull* munition) {
 }
 
 SmallList<std::pair<RawCargoContainer*, uint8_t>, 2> CargoComponent::getContainerList(const Resource* resource) {
+#ifndef NDEBUG
+	{
+		RawCargoContainer a; long A = (long) a.resources - (long) &a;
+		OreCargoContainer b;
+		RefinedCargoContainer c;
+		GoodsCargoContainer d;
+		NormalCargoContainer e;
+		AmmunitionCargoContainer f;
+		FuelCargoContainer g;
+		LifeSupportCargoContainer h;
+		NuclearCargoContainer i;
+		assert(A == (long) b.resources - (long) &b);
+		assert(A == (long) c.resources - (long) &c);
+		assert(A == (long) d.resources - (long) &d);
+		assert(A == (long) e.resources - (long) &e);
+		assert(A == (long) f.resources - (long) &f);
+		assert(A == (long) g.resources - (long) &g);
+		assert(A == (long) h.resources - (long) &h);
+		assert(A == (long) i.resources - (long) &i);
+		
+		intptr_t iron = reinterpret_cast<intptr_t>(&Resources::IRON);
+		intptr_t alu = reinterpret_cast<intptr_t>(&Resources::ALUMINA);
+//		printf("%lu %lu %lu %lu \n", iron, alu, alu - iron, sizeof(Resource));
+//		printf("%p %p %lu \n", &Resources::IRON, &Resources::ALUMINA, &Resources::ALUMINA - &Resources::IRON);
+		assert(RES_DIFF(&Resources::ALUMINA, &Resources::IRON) == 1);
+//		assert((alu - iron) == sizeof(Resource));
+//		assert(&Resources::ALUMINA - &Resources::IRON == 1); // fails due to alignment padding if Resource size is not a power of 2
+	}
+#endif
+	
 	// Ores
 	if (resource <= &Resources::OIL) {
-		return {std::pair<RawCargoContainer*, uint8_t>{ ore, static_cast<uint8_t>(resource - &Resources::IRON)} };
+		return {std::pair<RawCargoContainer*, uint8_t>{ *ore, RES_DIFF(resource, &Resources::IRON)} };
 	}
 	
 	// Refined
 	if (resource <= &Resources::EXPLOSIVES) {
-		return {std::pair<RawCargoContainer*, uint8_t>{ refined, resource - &Resources::STEEL}, 
-		        std::pair<RawCargoContainer*, uint8_t>{ generic, resource - &Resources::STEEL + 4}};
+		return {std::pair<RawCargoContainer*, uint8_t>{ *refined, RES_DIFF(resource, &Resources::STEEL)},
+		        std::pair<RawCargoContainer*, uint8_t>{ *generic, RES_DIFF(resource, &Resources::STEEL) + 4}};
 	}
 	
 	if (resource <= &Resources::PARTS) {
-		return {std::pair<RawCargoContainer*, uint8_t>{ goods, resource - &Resources::MAINTENANCE_SUPPLIES},
-		        std::pair<RawCargoContainer*, uint8_t>{ generic, resource - &Resources::MAINTENANCE_SUPPLIES}};
+		return {std::pair<RawCargoContainer*, uint8_t>{ *goods, RES_DIFF(resource, &Resources::MAINTENANCE_SUPPLIES)},
+		        std::pair<RawCargoContainer*, uint8_t>{ *generic, RES_DIFF(resource, &Resources::MAINTENANCE_SUPPLIES)}};
 	}
 	
 	if (resource <= &Resources::SABOTS) {
-		return {std::pair<RawCargoContainer*, uint8_t>{ ammunition, resource - &Resources::MISSILES},
-		        std::pair<RawCargoContainer*, uint8_t>{ generic, resource - &Resources::MISSILES + 2}};
-	}
-	
-	if (resource <= &Resources::ROCKET_FUEL) {
-		return {std::pair<RawCargoContainer*, uint8_t>{ fuel, resource - &Resources::ROCKET_FUEL}};
+		return {std::pair<RawCargoContainer*, uint8_t>{ *ammunition, RES_DIFF(resource, &Resources::MISSILES)},
+		        std::pair<RawCargoContainer*, uint8_t>{ *generic, RES_DIFF(resource, &Resources::MISSILES) + 2}};
 	}
 	
 	if (resource <= &Resources::NUCLEAR_FUSION) {
-		return {std::pair<RawCargoContainer*, uint8_t>{ nuclear, resource - &Resources::NUCLEAR_FISSION}};
+		return {std::pair<RawCargoContainer*, uint8_t>{ *nuclear, RES_DIFF(resource, &Resources::NUCLEAR_FISSION)}};
+	}
+	
+	if (resource <= &Resources::ROCKET_FUEL) {
+		return {std::pair<RawCargoContainer*, uint8_t>{ *fuel, RES_DIFF(resource, &Resources::ROCKET_FUEL)}};
 	}
 	
 	if (resource <= &Resources::LIFE_SUPPORT) {
-		return {std::pair<RawCargoContainer*, uint8_t>{ lifeSupport, resource - &Resources::LIFE_SUPPORT}};
+		return {std::pair<RawCargoContainer*, uint8_t>{ *lifeSupport, RES_DIFF(resource, &Resources::LIFE_SUPPORT)}};
 	}
 	
 //	switch (resource) {

@@ -261,15 +261,33 @@ void ColonyManagerWindow::render() {
 				if (ImGui::BeginTabItem("Industry")) {
 					ImGui::TextUnformatted("Munitions:");
 					with_Group {
-//						for(auto hull : cargo.munitions) {
-//							ImGui::TextUnformatted(hull.name);
-//						}
+						for(auto hull : cargo.munitions) {
+							ImGui::TextUnformatted(hull.first->name.c_str());
+						}
+					}
+					ImGui::SameLine();
+					with_Group {
+						for(auto hull : cargo.munitions) {
+							ImGui::Text("%d", hull.second);
+						}
 					}
 					
 					ImGui::EndTabItem();
 				}
 				
-				if (ImGui::BeginTabItem("Mining")) {
+				if (ImGui::BeginTabItem("Mining", nullptr, ImGuiTabItemFlags_SetSelected)) {
+					ImGui::TextUnformatted("Resources:");
+					with_Group {
+						for (auto resource : Resources::ALL) {
+							ImGui::TextUnformatted(resource->name.cbegin(), resource->name.cend());
+						}
+					}
+					ImGui::SameLine();
+					with_Group {
+						for (auto resource : Resources::ALL) {
+							ImGui::Text("%d", cargo.getCargoAmount(resource));
+						}
+					}
 					
 					ImGui::EndTabItem();
 				}

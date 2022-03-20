@@ -192,7 +192,8 @@ SmallList<T, STACK_SIZE>::SmallList() {}
 template<class T, int STACK_SIZE>
 SmallList<T, STACK_SIZE>::SmallList(std::initializer_list<T> values) {
 	for (auto t : values) {
-		push_back(std::move(t));
+		push_back(t);
+//		push_back(std::move(t));
 	}
 }
 

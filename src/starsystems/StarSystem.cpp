@@ -247,7 +247,7 @@ void StarSystem::init(Galaxy* galaxy) {
 	ColonyComponent& earthColony = registry.emplace<ColonyComponent>(e2, 1000000, 2000, 5000, 3000, 5000);
 	registry.emplace<NameComponent>(e2, "Earth");
 	registry.emplace<EmpireComponent>(e2, empire1);
-	registry.emplace<CargoComponent>(e2, earthColony);
+	CargoComponent& earthCargo = registry.emplace<CargoComponent>(e2, earthColony);
 	empire1.colonies.push_back(getEntityReference(e2));
 	
 	earthColony.shipyards.push_back(&ShipyardLocations::TERRESTIAL, &ShipyardTypes::CIVILIAN);
@@ -258,6 +258,33 @@ void StarSystem::init(Galaxy* galaxy) {
 	
 	earthColony.shipyards.push_back(&ShipyardLocations::ORBITAL, &ShipyardTypes::MILITARY);
 	earthColony.shipyards[1].slipways.push_back();
+	
+	earthCargo.addCargo(&Resources::IRON, 10);
+	earthCargo.addCargo(&Resources::ALUMINA, 20);
+	earthCargo.addCargo(&Resources::TITANIUM_OXIDE, 30);
+	earthCargo.addCargo(&Resources::SILICA, 40);
+	earthCargo.addCargo(&Resources::COPPER, 50);
+	earthCargo.addCargo(&Resources::RARE_EARTH_METALS, 60);
+	earthCargo.addCargo(&Resources::LITHIUM_CARBONATE, 70);
+	earthCargo.addCargo(&Resources::SULFUR, 80);
+	earthCargo.addCargo(&Resources::OIL, 90);
+	
+	earthCargo.addCargo(&Resources::STEEL, 100);
+	earthCargo.addCargo(&Resources::ALUMINIUM, 110);
+	earthCargo.addCargo(&Resources::TITANIUM, 120);
+	earthCargo.addCargo(&Resources::GLASS, 130);
+	earthCargo.addCargo(&Resources::SEMICONDUCTORS, 140);
+	earthCargo.addCargo(&Resources::LITHIUM, 150);
+	earthCargo.addCargo(&Resources::EXPLOSIVES, 160);
+	
+	earthCargo.addCargo(&Resources::MAINTENANCE_SUPPLIES, 170);
+	
+	earthCargo.addCargo(&Resources::NUCLEAR_FISSION, 180);
+	earthCargo.addCargo(&Resources::NUCLEAR_WASTE, 190);
+	earthCargo.addCargo(&Resources::NUCLEAR_FUSION, 200);
+	
+	earthCargo.addCargo(&Resources::ROCKET_FUEL, 210);
+	earthCargo.addCargo(&Resources::LIFE_SUPPORT, 220);
 	
 	entt::entity e3 = createEnttiy(gaia);
 	registry.emplace<TextComponent>(e3, "Moon");
