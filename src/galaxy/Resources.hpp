@@ -24,9 +24,12 @@ constexpr uint32_t densityToVolume(float density) {
 struct Resource {
 	const uint16_t specificVolume; // cm³/kg
 	const std::string_view name;
+	const std::string_view symbol;
 	
-	constexpr Resource(const char* inName, int specificVolume): specificVolume(specificVolume), name(inName) {};
-	constexpr Resource(const char* inName, double density): specificVolume(densityToVolume(density)), name(inName) {};
+	constexpr Resource(const char* name, int specificVolume): specificVolume(specificVolume), name(name), symbol("") {};
+	constexpr Resource(const char* name, const char* symbol, int specificVolume): specificVolume(specificVolume), name(name), symbol(symbol) {};
+	constexpr Resource(const char* name, double density): specificVolume(densityToVolume(density)), name(name), symbol("") {};
+	constexpr Resource(const char* name, const char* symbol, double density): specificVolume(densityToVolume(density)), name(name), symbol(symbol) {};
 	
 	bool operator==(const Resource& o) const {
 		return this == &o;
@@ -41,15 +44,15 @@ struct Resource {
 struct Resources {
 	// No storage requirements
 	// Ores https://www.aqua-calc.com/page/density-table
-	static inline constexpr Resource IRON { "Iron", 5.2 }; // Hematite (iron ore) 5.15 g/cm³
-	static inline constexpr Resource ALUMINA { "Alumina", 4.0 }; // Alumina 3.97 g/cm³
-	static inline constexpr Resource TITANIUM_OXIDE { "Titanium Oxide", 3.9 }; // Titanium (anatase) 3.90 g/cm³
-	static inline constexpr Resource SILICA { "Silica", 1.5}; // Silica (sand) 1.54 g/cm³, Silica (pure) 2.32 g/cm³
-	static inline constexpr Resource COPPER { "Copper", 8.9 }; // Copper 8.94 g/cm³, Gold 19 g/cm³
-	static inline constexpr Resource RARE_EARTH_METALS { "Rare Earth Metals", 7.0 }; // Neodymium 7.0 g/cm³. https://en.wikipedia.org/wiki/Rare-earth_element
-	static inline constexpr Resource LITHIUM_CARBONATE { "Lithium Carbonate", 2.1 }; // Lithium carbonate 2.11 g/cm³
-	static inline constexpr Resource SULFUR { "Sulfur", 2.1 }; // Sulfur solid 2.07 g/cm³
-	static inline constexpr Resource OIL { "Crude Oil", 0.9 }; // Medium crude oil 0.90 g/cm³
+	static inline constexpr Resource IRON { "Iron", "Fe", 5.2 }; // Hematite (iron ore) 5.15 g/cm³
+	static inline constexpr Resource ALUMINA { "Alumina", "Al", 4.0 }; // Alumina 3.97 g/cm³
+	static inline constexpr Resource TITANIUM_OXIDE { "Titanium Oxide", "Ti", 3.9 }; // Titanium (anatase) 3.90 g/cm³
+	static inline constexpr Resource SILICA { "Silica", "Si", 1.5}; // Silica (sand) 1.54 g/cm³, Silica (pure) 2.32 g/cm³
+	static inline constexpr Resource COPPER { "Copper", "Cu", 8.9 }; // Copper 8.94 g/cm³, Gold 19 g/cm³
+	static inline constexpr Resource RARE_EARTH_METALS { "Rare Earth Metals", "La", 7.0 }; // Neodymium 7.0 g/cm³. https://en.wikipedia.org/wiki/Rare-earth_element, https://en.wikipedia.org/wiki/Lanthanide
+	static inline constexpr Resource LITHIUM_CARBONATE { "Lithium Carbonate", "Li", 2.1 }; // Lithium carbonate 2.11 g/cm³
+	static inline constexpr Resource SULFUR { "Sulfur", "S", 2.1 }; // Sulfur solid 2.07 g/cm³
+	static inline constexpr Resource OIL { "Crude Oil", "Oil", 0.9 }; // Medium crude oil 0.90 g/cm³
 	// Refined
 	static inline constexpr Resource STEEL { "Steel", 11.7 }; // Steel 11.7 g/cm³, Concrete 2.4 g/cm³, Carbonfiber, , Ceramics 4 g/cm³
 	static inline constexpr Resource ALUMINIUM { "Aluminium", 2.7 }; // Aluminium 2.7 g/cm³
@@ -82,14 +85,21 @@ struct Resources {
 	                                                &NUCLEAR_FUSION, &ROCKET_FUEL,
 	                                                &LIFE_SUPPORT };
 	
-	static inline constexpr const Resource* ALL_ORES[] { &IRON, &ALUMINA, &TITANIUM_OXIDE, &SILICA, &COPPER, &RARE_EARTH_METALS };
+	static inline constexpr const Resource* ALL_ORE[] {&Resources::IRON, &Resources::ALUMINA, &Resources::TITANIUM_OXIDE,
+	                                                   &Resources::SILICA, &Resources::COPPER, &Resources::RARE_EARTH_METALS,
+	                                                   &Resources::LITHIUM_CARBONATE, &Resources::SULFUR, &Resources::OIL};
 	
 	static inline constexpr const Resource* ALL_CONSTRUCTION[] { &IRON, &ALUMINA, &TITANIUM_OXIDE, &SILICA, &COPPER, &RARE_EARTH_METALS,
-	                                                &STEEL, &ALUMINIUM, &TITANIUM, &GLASS, &SEMICONDUCTORS } ;
+	                                                             &STEEL, &ALUMINIUM, &TITANIUM, &GLASS, &SEMICONDUCTORS, &LITHIUM, &EXPLOSIVES };
 	
-	static inline constexpr const size_t size = ARRAY_LENGTH(ALL);
-	static inline constexpr const size_t size_ores = ARRAY_LENGTH(ALL_ORES);
-	static inline constexpr const size_t size_construction = ARRAY_LENGTH(ALL_CONSTRUCTION);
+	static inline constexpr const Resource* ALL_GOODS_UI[] { &MAINTENANCE_SUPPLIES, &LIFE_SUPPORT, &PARTS };
+	static inline constexpr const Resource* ALL_FUEL_UI[] { &ROCKET_FUEL, &NUCLEAR_FUSION, &NUCLEAR_FISSION, &NUCLEAR_WASTE };
+	
+	static inline constexpr const size_t ALL_size = ARRAY_LENGTH(ALL);
+	static inline constexpr const size_t ALL_ORE_size = ARRAY_LENGTH(ALL_ORE);
+	static inline constexpr const size_t ALL_CONSTRUCTION_size = ARRAY_LENGTH(ALL_CONSTRUCTION);
+	static inline constexpr const size_t ALL_GOODS_UI_size = ARRAY_LENGTH(ALL_GOODS_UI);
+	static inline constexpr const size_t ALL_FUEL_UI_size = ARRAY_LENGTH(ALL_FUEL_UI);
 };
 
 struct ResourcePnt {
@@ -97,7 +107,7 @@ struct ResourcePnt {
 	
 	constexpr ResourcePnt(uint8_t idx): idx(idx) {};
 	constexpr ResourcePnt(const Resource* resource) {
-		auto itr = std::find(Resources::ALL, Resources::ALL + ARRAY_LENGTH(Resources::ALL), resource);
+		auto itr = std::find(Resources::ALL, Resources::ALL + Resources::ALL_size, resource);
 		
 		if (itr != std::end(Resources::ALL)) {
 			idx = itr - Resources::ALL;
@@ -128,6 +138,33 @@ struct ResourcePnt {
 	friend inline ResourcePnt operator-(uint8_t off, ResourcePnt rhs) {rhs.idx -= off; return rhs;}
 };
 
+struct ResourceConstructionPnt {
+	uint8_t idx = 0;
+	
+	constexpr ResourceConstructionPnt(uint8_t idx): idx(idx) {};
+	constexpr ResourceConstructionPnt(const Resource* resource) {
+		auto itr = std::find(Resources::ALL_CONSTRUCTION, Resources::ALL_CONSTRUCTION + Resources::ALL_CONSTRUCTION_size, resource);
+		
+		if (itr != std::end(Resources::ALL_CONSTRUCTION)) {
+			idx = itr - Resources::ALL_CONSTRUCTION;
+		} else {
+			throw std::invalid_argument("Invalid resource construction pointer");
+		}
+	}
+	
+	const Resource* operator -> () const {
+		return Resources::ALL[idx];
+	}
+	
+	const Resource* operator * () const {
+		return Resources::ALL[idx];
+	}
+	
+	inline operator uint8_t () const {
+		return idx;
+	}
+};
+
 struct CargoType {
 	const std::vector<ResourcePnt> resources;
 	
@@ -140,14 +177,14 @@ struct CargoType {
 
 // Always store these in pointers, otherwise comparisons will fail
 struct CargoTypes {
-	static inline const Resource* ORE_[] {&Resources::IRON, &Resources::ALUMINA, &Resources::TITANIUM_OXIDE, &Resources::SILICA, &Resources::COPPER, &Resources::RARE_EARTH_METALS, &Resources::LITHIUM_CARBONATE, &Resources::SULFUR, &Resources::OIL};
-	static inline const Resource* REFINED_[] {&Resources::STEEL, &Resources::ALUMINIUM, &Resources::TITANIUM, &Resources::GLASS, &Resources::SEMICONDUCTORS, &Resources::LITHIUM, &Resources::EXPLOSIVES};
-	static inline const Resource* GOODS_[] {&Resources::MAINTENANCE_SUPPLIES, &Resources::PARTS};
-	static inline const Resource* GENERIC_[] {&Resources::MAINTENANCE_SUPPLIES, &Resources::PARTS, &Resources::MISSILES, &Resources::SABOTS, &Resources::STEEL, &Resources::ALUMINIUM, &Resources::TITANIUM, &Resources::GLASS, &Resources::SEMICONDUCTORS, &Resources::LITHIUM, &Resources::EXPLOSIVES};
-	static inline const Resource* AMMUNITION_[] {&Resources::MISSILES, &Resources::SABOTS};
-	static inline const Resource* FUEL_[] {&Resources::ROCKET_FUEL};
-	static inline const Resource* LIFE_SUPPORT_[] {&Resources::LIFE_SUPPORT};
-	static inline const Resource* NUCLEAR_[] {&Resources::NUCLEAR_FISSION, &Resources::NUCLEAR_WASTE, &Resources::NUCLEAR_FUSION};
+	static inline constexpr const Resource* ORE_[] {&Resources::IRON, &Resources::ALUMINA, &Resources::TITANIUM_OXIDE, &Resources::SILICA, &Resources::COPPER, &Resources::RARE_EARTH_METALS, &Resources::LITHIUM_CARBONATE, &Resources::SULFUR, &Resources::OIL};
+	static inline constexpr const Resource* REFINED_[] {&Resources::STEEL, &Resources::ALUMINIUM, &Resources::TITANIUM, &Resources::GLASS, &Resources::SEMICONDUCTORS, &Resources::LITHIUM, &Resources::EXPLOSIVES};
+	static inline constexpr const Resource* GOODS_[] {&Resources::MAINTENANCE_SUPPLIES, &Resources::PARTS};
+	static inline constexpr const Resource* GENERIC_[] {&Resources::MAINTENANCE_SUPPLIES, &Resources::PARTS, &Resources::MISSILES, &Resources::SABOTS, &Resources::STEEL, &Resources::ALUMINIUM, &Resources::TITANIUM, &Resources::GLASS, &Resources::SEMICONDUCTORS, &Resources::LITHIUM, &Resources::EXPLOSIVES};
+	static inline constexpr const Resource* AMMUNITION_[] {&Resources::MISSILES, &Resources::SABOTS};
+	static inline constexpr const Resource* FUEL_[] {&Resources::ROCKET_FUEL};
+	static inline constexpr const Resource* LIFE_SUPPORT_[] {&Resources::LIFE_SUPPORT};
+	static inline constexpr const Resource* NUCLEAR_[] {&Resources::NUCLEAR_FISSION, &Resources::NUCLEAR_WASTE, &Resources::NUCLEAR_FUSION};
 	
 	static inline const CargoType ORE {{&Resources::IRON, &Resources::ALUMINA, &Resources::TITANIUM_OXIDE, &Resources::SILICA, &Resources::COPPER, &Resources::RARE_EARTH_METALS, &Resources::LITHIUM_CARBONATE, &Resources::SULFUR, &Resources::OIL}};
 	static inline const CargoType REFINED {{&Resources::STEEL, &Resources::ALUMINIUM, &Resources::TITANIUM, &Resources::GLASS, &Resources::SEMICONDUCTORS, &Resources::LITHIUM, &Resources::EXPLOSIVES}};
@@ -159,7 +196,15 @@ struct CargoTypes {
 	static inline const CargoType NUCLEAR {{&Resources::NUCLEAR_FISSION, &Resources::NUCLEAR_WASTE, &Resources::NUCLEAR_FUSION}};
 	
 	static inline constexpr const CargoType* ALL[] { &ORE, &REFINED, &GENERIC, &AMMUNITION, &FUEL, &LIFE_SUPPORT, &NUCLEAR };
-	static inline constexpr const size_t size = ARRAY_LENGTH(ALL);
+	static inline constexpr const size_t ALL_size = ARRAY_LENGTH(ALL);
+	static inline constexpr const size_t ORE_size = ARRAY_LENGTH(ORE_);
+	static inline constexpr const size_t REFINED_size = ARRAY_LENGTH(REFINED_);
+	static inline constexpr const size_t GOODS_size = ARRAY_LENGTH(GOODS_);
+	static inline constexpr const size_t GENERIC_size = ARRAY_LENGTH(GENERIC_);
+	static inline constexpr const size_t AMMUNITION_size = ARRAY_LENGTH(AMMUNITION_);
+	static inline constexpr const size_t FUEL_size = ARRAY_LENGTH(FUEL_);
+	static inline constexpr const size_t LIFE_SUPPORT_size = ARRAY_LENGTH(LIFE_SUPPORT_);
+	static inline constexpr const size_t NUCLEAR_size = ARRAY_LENGTH(NUCLEAR_);
 };
 
 struct CargoTypePnt {
@@ -167,7 +212,7 @@ struct CargoTypePnt {
 	
 	constexpr CargoTypePnt(uint8_t idx): idx(idx) {};
 	constexpr CargoTypePnt(const CargoType* cargoType) {
-		auto itr = std::find(CargoTypes::ALL, CargoTypes::ALL + ARRAY_LENGTH(CargoTypes::ALL), cargoType);
+		auto itr = std::find(CargoTypes::ALL, CargoTypes::ALL + CargoTypes::ALL_size, cargoType);
 		
 		if (itr != std::end(CargoTypes::ALL)) {
 			idx = itr - CargoTypes::ALL;

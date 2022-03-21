@@ -42,9 +42,30 @@ ImVec4 toLinearRGB(ImVec4 vec) {
 	return { sRGBtoLinearRGB(vec.x), sRGBtoLinearRGB(vec.y), sRGBtoLinearRGB(vec.z), vec.w };
 }
 
-void rightAlignedTableText(const char* text) {
-	ImGui::GetCurrentWindow()->DC.CursorPos.x = ImGui::GetCurrentWindow()->DC.CursorPos.x
+void rightAlignedText(int maxWidth, const char* text, ...) {
+	va_list args;
+	va_start(args, text);
+	char buf[128];
+	const char* bufEnd = buf + ImFormatStringV(buf, IM_ARRAYSIZE(buf), text, args);
+	va_end(args);
+	
+	ImGui::GetCurrentWindow()->DC.CursorPos.x = std::max(ImGui::GetCurrentWindow()->DC.CursorPos.x, 
+	                                            ImGui::GetCurrentWindow()->DC.CursorPos.x
+	                                          + maxWidth
+	                                          - ImGui::CalcTextSize(buf, bufEnd).x);
+	ImGui::TextEx(buf, bufEnd);
+}
+
+void rightAlignedTableText(const char* text, ...) {
+	va_list args;
+	va_start(args, text);
+	char buf[128];
+	const char* bufEnd = buf + ImFormatStringV(buf, IM_ARRAYSIZE(buf), text, args);
+	va_end(args);
+	
+	ImGui::GetCurrentWindow()->DC.CursorPos.x = std::max(ImGui::GetCurrentWindow()->DC.CursorPos.x,
+	                                            ImGui::GetCurrentWindow()->DC.CursorPos.x
 	                                          + ImGui::GetCurrentTable()->Columns[ImGui::TableGetColumnIndex()].WidthGiven
-	                                          - ImGui::CalcTextSize(text).x;
-	ImGui::Text(text);
+	                                          - ImGui::CalcTextSize(buf, bufEnd).x);
+	ImGui::TextEx(buf, bufEnd);
 }

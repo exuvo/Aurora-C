@@ -84,6 +84,7 @@ void StarSystem::init(Galaxy* galaxy) {
 	PassiveSensor* sensor1 = new PassiveSensor(&Spectra::Electromagnetic, 1e-7, 14, Units::AU * 0.3, 20, 0.97, 1, 300000);
 	sensor1->name = "EM 1e-4";
 	sensor1->designDay = 1;
+	sensor1->calculateCachedValues();
 	
 //	val sensor2 = PassiveSensor(800000, Spectrum.Thermal, 1e-8, 8, Units.AU * 1, 0, 0.9, 5);
 //	sensor2.name = "TH 1e-10"
@@ -146,29 +147,56 @@ void StarSystem::init(Galaxy* galaxy) {
 //	battery.name = "Battery"
 //	shipHull.addPart(battery)
 //
-//	val sabot = SimpleMunitionHull(Resource.SABOTS)
-//	sabot.name = "A sabot"
-//	sabot.loadedMass = 10
-//	sabot.radius = 5
-//	sabot.health = 2
-//	sabot.damagePattern = DamagePattern.KINETIC
+	SimpleMunitionHull* sabot = new SimpleMunitionHull();
+	sabot->name = "A sabot";
+	sabot->storageType = &Resources::SABOTS;
+	sabot->loadedMass = 10;
+	sabot->radius = 5;
+	sabot->health = 2;
+	sabot->damagePattern = DamagePattern::KINETIC;
+	sabot->calculateValues();
+	
+	SimpleMunitionHull* sabot2 = new SimpleMunitionHull();
+	sabot2->name = "APDS-8";
+	sabot2->storageType = &Resources::SABOTS;
+	sabot2->loadedMass = 20;
+	sabot2->radius = 8;
+	sabot2->health = 2;
+	sabot2->damagePattern = DamagePattern::KINETIC;
+	sabot2->calculateValues();
+	
+	SimpleMunitionHull* sabot3 = new SimpleMunitionHull();
+	sabot3->name = "APHE-10";
+	sabot3->storageType = &Resources::SABOTS;
+	sabot3->loadedMass = 30;
+	sabot3->radius = 10;
+	sabot3->health = 2;
+	sabot3->damagePattern = DamagePattern::EXPLOSIVE;
+	sabot3->calculateValues();
 //
-//	val missileBattery = Battery(10 * Units.KILO, 50 * Units.KILO, 80, 1 * Units.GIGA)
-//	missileBattery.cost[Resource.GENERIC] = 50
+	Battery* missileBattery = new Battery(10 * Units::KILO, 50 * Units::KILO, 1 * Units::GIGA, 80);
+	missileBattery->cost[ResourceConstructionPnt(&Resources::LITHIUM)] = 50;
 //	
-//	val missileIonThruster = ElectricalThruster(290 * 1000, 0) // 1 * Units.KILO
-////		val missileChemicalThruster = FueledThruster(29000 * 1000, 0)
+	ElectricalThruster* missileIonThruster = new ElectricalThruster(290 * 1000, 0); // 1 * Units.KILO
+	FueledThruster* missileChemicalThruster = new FueledThruster(29000 * 1000, 0, &Resources::ROCKET_FUEL);
 //	
-//	val missileFuelPart = FuelContainerPart(5000L * Resource.ROCKET_FUEL.specificVolume)
-//	val missileWarhead = Warhead(100_000)
+	FuelContainerPart* missileFuelPart = new FuelContainerPart(5000L * Resources::ROCKET_FUEL.specificVolume);
+	Warhead* missileWarhead = new Warhead(100000);
+	
+	missileBattery->calculateCachedValues();
+	missileIonThruster->calculateCachedValues();
+	missileChemicalThruster->calculateCachedValues();
+	missileFuelPart->calculateCachedValues();
+	missileWarhead->calculateCachedValues();
 //	
-//	val missile = AdvancedMunitionHull(Resource.MISSILES)
-//	missile.name = "Sprint missile"
-//	missile.addPart(missileBattery)
-//	missile.addPart(missileIonThruster)
-//	missile.addPart(missileFuelPart)
-//	missile.addPart(missileWarhead)
-//	missile.finalize()
+	AdvancedMunitionHull* missile = new AdvancedMunitionHull();
+	missile->name = "Sprint missile";
+	missile->storageType = &Resources::MISSILES;
+	missile->parts.push_back(missileBattery);
+	missile->parts.push_back(missileChemicalThruster);
+	missile->parts.push_back(missileFuelPart);
+	missile->parts.push_back(missileWarhead);
+	missile->calculateValues();
 //
 //	val railgun = Railgun(2 * Units.MEGA, 5, 5 * Units.MEGA, 5, 3, 20)
 //	shipHull.addPart(railgun)
@@ -247,8 +275,26 @@ void StarSystem::init(Galaxy* galaxy) {
 	ColonyComponent& earthColony = registry.emplace<ColonyComponent>(e2, 1000000, 2000, 5000, 3000, 5000);
 	registry.emplace<NameComponent>(e2, "Earth");
 	registry.emplace<EmpireComponent>(e2, empire1);
+	PlanetComponent& earth = registry.emplace<PlanetComponent>(e2);
 	CargoComponent& earthCargo = registry.emplace<CargoComponent>(e2, earthColony);
 	empire1.colonies.push_back(getEntityReference(e2));
+	
+	earth.freshWater = 1000;
+	earth.seaWater = 10000;
+	earth.pollutedWater = 100;
+	earth.usableLandArea = 1000;
+	earth.arableLandArea = 500;
+	earth.blockedLandArea = 200;
+	
+	earth.oreDeposits[MiningLayer::Surface].push_back(1000, &Resources::IRON);
+	earth.oreDeposits[MiningLayer::Surface].push_back(1000, &Resources::ALUMINA);
+	earth.oreDeposits[MiningLayer::Surface].push_back(1000, &Resources::COPPER);
+	earth.oreDeposits[MiningLayer::Crust].push_back(2000, &Resources::IRON);
+	earth.oreDeposits[MiningLayer::Crust].push_back(2000, &Resources::TITANIUM_OXIDE);
+	earth.oreDeposits[MiningLayer::Mantle].push_back(3000, &Resources::IRON);
+	earth.oreDeposits[MiningLayer::Mantle].push_back(3000, &Resources::COPPER);
+	earth.oreDeposits[MiningLayer::MoltenCore].push_back(4000, &Resources::ALUMINA);
+	earth.oreDeposits[MiningLayer::MoltenCore].push_back(4000, &Resources::RARE_EARTH_METALS);
 	
 	earthColony.shipyards.push_back(&ShipyardLocations::TERRESTIAL, &ShipyardTypes::CIVILIAN);
 	earthColony.shipyards[0].slipways.push_back();
@@ -285,6 +331,11 @@ void StarSystem::init(Galaxy* galaxy) {
 	
 	earthCargo.addCargo(&Resources::ROCKET_FUEL, 210);
 	earthCargo.addCargo(&Resources::LIFE_SUPPORT, 220);
+	
+	earthCargo.addCargo(sabot, 123);
+	earthCargo.addCargo(sabot2, 72);
+	earthCargo.addCargo(sabot3, 40);
+	earthCargo.addCargo(missile, 100);
 	
 	entt::entity e3 = createEnttiy(gaia);
 	registry.emplace<TextComponent>(e3, "Moon");

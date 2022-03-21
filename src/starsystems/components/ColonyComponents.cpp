@@ -18,7 +18,7 @@ void ShipyardSlipway::build(const ShipHull& newHull) {
 	
 	hull = &newHull;
 	
-	for (size_t i = 0; i < Resources::size_construction; i++) {
+	for (size_t i = 0; i < Resources::ALL_CONSTRUCTION_size; i++) {
 		usedResources[i] = 0;
 		
 		auto find = newHull.cost.find(*Resources::ALL_CONSTRUCTION[i]);

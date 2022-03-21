@@ -39,7 +39,7 @@ struct MunitionPartIndex {
 };
 
 struct MunitionHull {
-	ResourcePnt storageType;
+	ResourcePnt storageType = &Resources::SABOTS;
 	std::string name;
 	uint32_t designDay = 0;
 	bool locked;

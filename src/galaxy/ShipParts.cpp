@@ -21,15 +21,15 @@ bool operator &(const Part& part, PartType type) {
 }
 
 void Part::calculateCachedValues() {
-	mass =  std::accumulate(cost, cost + Resources::size_construction, 0l);
+	mass =  std::accumulate(cost, cost + Resources::ALL_CONSTRUCTION_size, 0l);
 	
 	if (mass == 0) {
 		mass = 1;
 	}
 	
 	volume = 0;
-	for (size_t i=0; i < (size_t)(cost + Resources::size_construction); i++) {
-		volume += cost[i] * ResourcePnt(i)->specificVolume;
+	for (size_t i=0; i < Resources::ALL_CONSTRUCTION_size; i++) {
+		volume += cost[i] * ResourceConstructionPnt(i)->specificVolume;
 	}
 	
 	if (volume == 0) {

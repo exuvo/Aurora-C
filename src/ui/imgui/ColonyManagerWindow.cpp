@@ -100,6 +100,7 @@ void ColonyManagerWindow::render() {
 				StarSystem& system = *selectedColony.system;
 				entt::entity entityID = selectedColony.entityID;
 				
+				PlanetComponent& planet = system.registry.get<PlanetComponent>(entityID);
 				ColonyComponent& colony = system.registry.get<ColonyComponent>(entityID);
 				CargoComponent& cargo = system.registry.get<CargoComponent>(entityID);
 				ColonySystem& colonySystem = *system.systems->colonySystem;
@@ -107,7 +108,7 @@ void ColonyManagerWindow::render() {
 				if (ImGui::BeginTabItem("Shipyards")) {
 					
 					if (ImGui::BeginChild("List", ImVec2(0, -200), true, ImGuiWindowFlags_None)) {
-						if (ImGui::BeginTable("table", 8, ImGuiTableFlags_Resizable | ImGuiTableFlags_Reorderable | ImGuiTableFlags_SizingFixedFit | ImGuiTableFlags_NoSavedSettings)) {
+						if (ImGui::BeginTable("shipyards", 8, ImGuiTableFlags_Resizable | ImGuiTableFlags_Reorderable | ImGuiTableFlags_SizingFixedFit | ImGuiTableFlags_NoSavedSettings)) {
 							ImGui::TableSetupColumn("",	ImGuiTableColumnFlags_NoReorder);
 							ImGui::TableSetupColumn("Type",	ImGuiTableColumnFlags_None);
 							ImGui::TableSetupColumn("Capacity",	ImGuiTableColumnFlags_None);
@@ -259,34 +260,145 @@ void ColonyManagerWindow::render() {
 				}
 				
 				if (ImGui::BeginTabItem("Industry")) {
-					ImGui::TextUnformatted("Munitions:");
-					with_Group {
-						for(auto hull : cargo.munitions) {
-							ImGui::TextUnformatted(hull.first->name.c_str());
+					
+					ImGui::EndTabItem();
+				}
+				
+				static bool first = true;
+				if (ImGui::BeginTabItem("Mining", nullptr, first ? ImGuiTabItemFlags_SetSelected : 0)) {
+					first = false;
+					
+					for (uint32_t layer = 0; layer < MiningLayer::_size_constant; layer++){
+						SmallList<OreDeposit, 32>& deposits = planet.oreDeposits[layer];
+						BitVector& discovered = planet.discoveredOreDeposits[layer];
+						
+//						ImGui::SetNextItemWidth(200);
+						ImGui::TextUnformatted(MiningLayer::_from_index(layer)._to_string());
+//						ImGui::GetCurrentWindow()->DC.CursorPos.x = 200;
+						ImGui::SameLine(90);
+						
+						for (uint32_t i = 0; i < deposits.size(); i++) {
+							OreDeposit& deposit = deposits[i];
+							
+							if (i > 0) ImGui::SameLine();
+							
+							const char* text = discovered[i] ? deposit.type->symbol.data() : "?";
+							ImGui::PushID(i + layer * 128);
+							if (ImGui::Button(text, ImVec2(20, 20))) {
+								discovered[i] = true;
+							}
+							if (discovered[i] && ImGui::IsItemHovered()) {
+								with_Tooltip {
+									ImGui::TextUnformatted(deposit.type->name.cbegin(), deposit.type->name.cend());
+									ImGui::Text("%lu", deposit.amount);
+								}
+							}
+							ImGui::PopID();
 						}
 					}
-					ImGui::SameLine();
-					with_Group {
-						for(auto hull : cargo.munitions) {
-							ImGui::Text("%d", hull.second);
+					
+					if (ImGui::BeginTable("discovered_ores", 6, ImGuiTableFlags_Resizable | ImGuiTableFlags_SizingFixedFit | ImGuiTableFlags_NoSavedSettings | ImGuiTableFlags_NoBordersInBodyUntilResize)) {
+						ImGui::TableSetupColumn("", ImGuiTableColumnFlags_None);
+						ImGui::TableSetupColumn("", ImGuiTableColumnFlags_NoResize);
+						ImGui::TableSetupColumn("", ImGuiTableColumnFlags_None);
+						ImGui::TableSetupColumn("", ImGuiTableColumnFlags_NoResize);
+						ImGui::TableSetupColumn("", ImGuiTableColumnFlags_None);
+						ImGui::TableSetupColumn("", ImGuiTableColumnFlags_NoResize);
+						
+						ImGui::TableNextRow();
+						ImGui::TableNextColumn();
+						ImGui::TextUnformatted("Discovered ores");
+						
+						uint32_t columns = 3;
+						uint32_t rows = (Resources::ALL_ORE_size + columns - 1) / columns;
+						for (uint32_t row = 0; row < rows; row++) {
+							ImGui::TableNextRow();
+							for (uint32_t col = 0; col < columns; col++) {
+								size_t idx = row + col * rows;
+								if (idx >= Resources::ALL_ORE_size) break;
+								
+								const Resource* res = Resources::ALL_ORE[idx];
+								ImGui::TableNextColumn();
+								rightAlignedTableText("%6d", planet.minableResources);
+								ImGui::TableNextColumn();
+								ImGui::TextUnformatted(res->name.cbegin(), res->name.cend());
+							}
 						}
+						ImGui::EndTable();
 					}
 					
 					ImGui::EndTabItem();
 				}
 				
-				if (ImGui::BeginTabItem("Mining", nullptr, ImGuiTabItemFlags_SetSelected)) {
-					ImGui::TextUnformatted("Resources:");
-					with_Group {
-						for (auto resource : Resources::ALL) {
-							ImGui::TextUnformatted(resource->name.cbegin(), resource->name.cend());
-						}
+				if (ImGui::BeginTabItem("Resources")) {
+					if (ImGui::BeginTable("resources", 6, ImGuiTableFlags_Resizable | ImGuiTableFlags_SizingFixedFit | ImGuiTableFlags_NoSavedSettings | ImGuiTableFlags_NoBordersInBodyUntilResize)) {
+						ImGui::TableSetupColumn("",	ImGuiTableColumnFlags_None);
+						ImGui::TableSetupColumn("",	ImGuiTableColumnFlags_NoResize);
+						ImGui::TableSetupColumn("",	ImGuiTableColumnFlags_None);
+						ImGui::TableSetupColumn("",	ImGuiTableColumnFlags_NoResize);
+						ImGui::TableSetupColumn("",	ImGuiTableColumnFlags_None);
+						ImGui::TableSetupColumn("",	ImGuiTableColumnFlags_NoResize);
+						
+						auto printResources = [&](std::string_view name, uint32_t columns, const Resource* const* cargoType, size_t size){
+							if (ImGui::TableGetRowIndex() > 0) {
+								ImGui::TableNextRow(0, 5);
+							}
+							
+							ImGui::TableNextRow();
+							ImGui::TableNextColumn();
+							ImGui::TextUnformatted(name.begin());
+						
+							uint32_t rows = (size + columns - 1) / columns;
+							for (uint32_t row = 0; row < rows; row++) {
+								ImGui::TableNextRow();
+								for (uint32_t col = 0; col < columns; col++) {
+									size_t idx = row + col * rows;
+									if (idx >= size) break;
+									
+									const Resource* res = cargoType[idx];
+									ImGui::TableNextColumn();
+									rightAlignedTableText("%6d", cargo.getCargoAmount(res));
+									ImGui::TableNextColumn();
+									ImGui::TextUnformatted(res->name.cbegin(), res->name.cend());
+								}
+							}
+						};
+						
+						printResources("Ores:", 3, CargoTypes::ORE_, CargoTypes::ORE_size);
+						printResources("Refined:", 3, CargoTypes::REFINED_, CargoTypes::REFINED_size);
+						printResources("Goods:", 3, Resources::ALL_GOODS_UI, Resources::ALL_GOODS_UI_size);
+						printResources("Fuel:", 3, Resources::ALL_FUEL_UI, Resources::ALL_FUEL_UI_size);
+						printResources("Munitions:", 3, CargoTypes::AMMUNITION_, CargoTypes::AMMUNITION_size);
+						
+						ImGui::EndTable();
 					}
-					ImGui::SameLine();
-					with_Group {
-						for (auto resource : Resources::ALL) {
-							ImGui::Text("%d", cargo.getCargoAmount(resource));
+					
+					if (ImGui::BeginTable("munitions", 8, ImGuiTableFlags_Resizable | ImGuiTableFlags_SizingFixedFit | ImGuiTableFlags_NoSavedSettings | ImGuiTableFlags_NoBordersInBodyUntilResize)) {
+						ImGui::TableSetupColumn("",	ImGuiTableColumnFlags_None);
+						ImGui::TableSetupColumn("",	ImGuiTableColumnFlags_NoResize);
+						ImGui::TableSetupColumn("",	ImGuiTableColumnFlags_None);
+						ImGui::TableSetupColumn("",	ImGuiTableColumnFlags_NoResize);
+						ImGui::TableSetupColumn("",	ImGuiTableColumnFlags_None);
+						ImGui::TableSetupColumn("",	ImGuiTableColumnFlags_NoResize);
+						ImGui::TableSetupColumn("",	ImGuiTableColumnFlags_None);
+						ImGui::TableSetupColumn("",	ImGuiTableColumnFlags_NoResize);
+						
+						ImGui::TableNextRow();
+						uint32_t i = 0;
+						for (auto hull : cargo.munitions) {
+							ImGui::TableNextColumn();
+							
+							rightAlignedTableText("%4d", hull.second);
+							ImGui::TableNextColumn();
+							ImGui::TextUnformatted(hull.first->name.c_str());
+							
+							if (++i >= 4) {
+								i = 0;
+								ImGui::TableNextRow();
+							}
 						}
+						
+						ImGui::EndTable();
 					}
 					
 					ImGui::EndTabItem();

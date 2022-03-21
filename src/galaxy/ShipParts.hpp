@@ -53,7 +53,7 @@ BETTER_ENUM(PartType, uint8_t, // Used as bit index
 struct Part {
 	std::string name;
 	uint32_t designDay;
-	uint64_t cost[Resources::size_construction];
+	uint64_t cost[Resources::ALL_CONSTRUCTION_size];
 	uint32_t mass; // In kg
 	uint32_t volume; // In cm3
 	uint16_t types;

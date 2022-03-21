@@ -105,7 +105,9 @@ uint32_t CargoComponent::addCargo(MunitionHull* munition, uint32_t amount) {
 		}
 	}
 	
-	return amount - amountToStore;
+	uint32_t added = amount - amountToStore;
+	munitions[munition] += added;
+	return added;
 }
 
 uint32_t CargoComponent::retrieveCargo(SmallList<std::pair<RawCargoContainer*, uint8_t>, 2> list, const Resource* resource, uint32_t amount) {
@@ -153,7 +155,7 @@ uint32_t CargoComponent::retrieveCargo(ResourcePnt resource, uint32_t amount) {
 
 uint32_t CargoComponent::retrieveCargo(MunitionHull* munition, uint32_t amount) {
 	
-	decltype(munitions)::const_iterator found = munitions.find(munition);
+	decltype(munitions)::iterator found = munitions.find(munition);
 	
 	if (found != munitions.end()) {
 	
@@ -191,7 +193,9 @@ uint32_t CargoComponent::retrieveCargo(MunitionHull* munition, uint32_t amount) 
 			}
 		}
 		
-		return amount - amountToRetrieve;
+		uint32_t removed = amount - amountToRetrieve;
+		found->second -= removed;
+		return removed;
 	}
 	
 	return 0;
@@ -285,7 +289,7 @@ uint32_t CargoComponent::getUsedCargoMass(MunitionHull* munition) {
 SmallList<std::pair<RawCargoContainer*, uint8_t>, 2> CargoComponent::getContainerList(const Resource* resource) {
 #ifndef NDEBUG
 	{
-		RawCargoContainer a; long A = (long) a.resources - (long) &a;
+		RawCargoContainer a; intptr_t A = (intptr_t) a.resources - (intptr_t) &a;
 		OreCargoContainer b;
 		RefinedCargoContainer c;
 		GoodsCargoContainer d;
@@ -294,14 +298,14 @@ SmallList<std::pair<RawCargoContainer*, uint8_t>, 2> CargoComponent::getContaine
 		FuelCargoContainer g;
 		LifeSupportCargoContainer h;
 		NuclearCargoContainer i;
-		assert(A == (long) b.resources - (long) &b);
-		assert(A == (long) c.resources - (long) &c);
-		assert(A == (long) d.resources - (long) &d);
-		assert(A == (long) e.resources - (long) &e);
-		assert(A == (long) f.resources - (long) &f);
-		assert(A == (long) g.resources - (long) &g);
-		assert(A == (long) h.resources - (long) &h);
-		assert(A == (long) i.resources - (long) &i);
+		assert(A == (intptr_t) b.resources - (intptr_t) &b);
+		assert(A == (intptr_t) c.resources - (intptr_t) &c);
+		assert(A == (intptr_t) d.resources - (intptr_t) &d);
+		assert(A == (intptr_t) e.resources - (intptr_t) &e);
+		assert(A == (intptr_t) f.resources - (intptr_t) &f);
+		assert(A == (intptr_t) g.resources - (intptr_t) &g);
+		assert(A == (intptr_t) h.resources - (intptr_t) &h);
+		assert(A == (intptr_t) i.resources - (intptr_t) &i);
 		
 		intptr_t iron = reinterpret_cast<intptr_t>(&Resources::IRON);
 		intptr_t alu = reinterpret_cast<intptr_t>(&Resources::ALUMINA);

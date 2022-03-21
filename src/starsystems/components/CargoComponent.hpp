@@ -30,8 +30,8 @@ struct CargoContainer {
 	uint64_t maxVolume = 0;
 	uint64_t usedVolume = 0;
 	
-	uint32_t* getResources() { return &static_cast<Derived>(this).resources; };  // In kg
-	size_t getLength() { return ARRAY_LENGTH(static_cast<Derived>(this).resources); };
+	uint32_t* getResources() { return &static_cast<Derived*>(this)->resources; };  // In kg
+	size_t getLength() const { return ARRAY_LENGTH(static_cast<Derived*>(this)->resources); };
 	
 	inline RawCargoContainer* operator *() { return reinterpret_cast<RawCargoContainer*>(this); }
 };
@@ -86,7 +86,7 @@ struct CargoComponent {
 	LifeSupportCargoContainer lifeSupport;
 	NuclearCargoContainer nuclear;
 	
-	std::unordered_map<MunitionHull*, uint32_t> munitions;
+	std::map<MunitionHull*, uint32_t> munitions;
 	uint32_t mass = 0;
 	bool cargoChanged = false;
 	

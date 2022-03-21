@@ -18,6 +18,7 @@ void SimpleMunitionHull::calculateValues() {
 	double length = lengthToDiameterRatio * 2 * radius;
 	double volumeD = std::numbers::pi * radius * radius * length;
 	volume = volumeD;
+	assert(volume > 0);
 }
 
 void AdvancedMunitionHull::calculateValues() {
@@ -56,6 +57,8 @@ void AdvancedMunitionHull::calculateValues() {
 		emptyMass += part->mass;
 		volume += part->volume; //TODO add armor
 	}
+	
+	assert(volume > 0);
 	
 	loadedMass = emptyMass + fuelMass;
 	
