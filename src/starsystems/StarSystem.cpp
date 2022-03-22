@@ -317,6 +317,24 @@ void StarSystem::init(Galaxy* galaxy) {
 	earthColony.shipyards.push_back(&ShipyardLocations::ORBITAL, &ShipyardTypes::MILITARY);
 	earthColony.shipyards[1].slipways.push_back();
 	
+	earthColony.districtAmounts[DistrictPnt(&Districts::HousingLowDensity)] = 200;
+	earthColony.districtAmounts[DistrictPnt(&Districts::Farm)] = 500;
+	
+	earthColony.districtAmounts[DistrictPnt(&Districts::GeneralIndustry)] = 10;
+	earthColony.districtAmounts[DistrictPnt(&Districts::RefineryBlastFurnace)] = 1;
+	earthColony.districtAmounts[DistrictPnt(&Districts::RefineryArcFurnace)] = 1;
+	earthColony.districtAmounts[DistrictPnt(&Districts::RefinerySmeltery)] = 1;
+	earthColony.districtAmounts[DistrictPnt(&Districts::RefinerySemiconductorFab)] = 1;
+	earthColony.districtAmounts[DistrictPnt(&Districts::RefineryEnricher)] = 1;
+	earthColony.districtAmounts[DistrictPnt(&Districts::RefineryChemicalPlant)] = 1;
+	earthColony.districtAmounts[DistrictPnt(&Districts::RefineryFuelRefinery)] = 1;
+	earthColony.districtAmounts[DistrictPnt(&Districts::RefineryLithium)] = 1;
+	
+	earthColony.districtAmounts[DistrictPnt(&Districts::PowerSolar)] = 50;
+	earthColony.districtAmounts[DistrictPnt(&Districts::PowerCoal)] = 2;
+	
+	earthColony.districtAmounts[DistrictPnt(&Districts::MineSurface)] = 1;
+	
 	earthCargo.addCargo(&Resources::IRON, 10);
 	earthCargo.addCargo(&Resources::ALUMINA, 20);
 	earthCargo.addCargo(&Resources::TITANIUM_OXIDE, 30);

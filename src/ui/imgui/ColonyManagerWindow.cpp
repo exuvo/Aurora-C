@@ -259,14 +259,86 @@ void ColonyManagerWindow::render() {
 					ImGui::EndTabItem();
 				}
 				
-				if (ImGui::BeginTabItem("Industry")) {
+				static bool first = true;
+				if (ImGui::BeginTabItem("Industry", nullptr, first ? ImGuiTabItemFlags_SetSelected : 0)) {
+					first = false;
+					
+					uint8_t lastDistrictType = DistrictType::_size_constant;
+					
+					auto districtButton = [&](std::string_view symbol, const District& district){
+						if (lastDistrictType != DistrictType::_size_constant) {
+							if (district.type == lastDistrictType) {
+								ImGui::SameLine(0, 2);
+							} else {
+								ImGui::SameLine(0, 10);
+							}
+						}
+						lastDistrictType = district.type;
+						
+						ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(2, 2));
+						ImGui::PushID(reinterpret_cast<intptr_t>(&district));
+						
+						if (ImGui::Button("##district", ImVec2(30, 32))) {
+							colony.districtAmounts[DistrictPnt(&district)]++;
+						}
+						
+						if (ImGui::IsItemVisible()) {
+							uint16_t amount = colony.districtAmounts[DistrictPnt(&district)];
+							
+							const ImGuiStyle& style = ImGui::GetStyle();
+							const ImVec2 min = ImGui::GetItemRectMin();
+							const ImVec2 max = ImGui::GetItemRectMax();
+							const ImRect bb(min, max);
+							ImVec2 label_size = ImGui::CalcTextSize(symbol.cbegin(), symbol.cend(), true);
+							ImGui::RenderTextClipped(min + style.FramePadding, max - style.FramePadding, symbol.cbegin(), symbol.cend(), &label_size, ImVec2(0.5f, 0), &bb);
+							
+							strBuf.clear();
+							fmt::format_to(std::back_inserter(strBuf), "{}{}", amount, '\0');
+							label_size = ImGui::CalcTextSize(strBuf.begin(), strBuf.end(), true);
+							ImGui::RenderTextClipped(min + style.FramePadding, max - style.FramePadding, strBuf.begin(), strBuf.end(), &label_size, ImVec2(0.5f, 1.0f), &bb);
+							
+							if (ImGui::IsItemHovered()) {
+								with_Tooltip {
+									ImGui::TextUnformatted(district.name.cbegin(), district.name.cend());
+									ImGui::Text("Type: %s", district.type._to_string());
+									ImGui::Text("Amount: %u km²", amount);
+								}
+							}
+						}
+						
+						ImGui::PopID();
+						ImGui::PopStyleVar();
+					};
+					
+					districtButton("Low", Districts::HousingLowDensity);
+					districtButton("Hi", Districts::HousingHighDensity);
+					
+					districtButton("F", Districts::Farm);
+					
+					districtButton("Ind", Districts::GeneralIndustry);
+					districtButton("BF", Districts::RefineryBlastFurnace);
+					districtButton("AF", Districts::RefineryArcFurnace);
+					districtButton("GS", Districts::RefinerySmeltery);
+					districtButton("ScF", Districts::RefinerySemiconductorFab);
+					districtButton("UE", Districts::RefineryEnricher);
+					districtButton("CP", Districts::RefineryChemicalPlant);
+					districtButton("FR", Districts::RefineryFuelRefinery);
+					districtButton("Li", Districts::RefineryLithium);
+					
+					districtButton("Sol", Districts::PowerSolar);
+					districtButton("Coa", Districts::PowerCoal);
+					districtButton("Fis", Districts::PowerFission);
+					districtButton("Fus", Districts::PowerFusion);
+					
+					districtButton("MS", Districts::MineSurface);
+					districtButton("MC", Districts::MineCrust);
+					districtButton("MM", Districts::MineMantle);
+					districtButton("MMC", Districts::MineMoltenCore);
 					
 					ImGui::EndTabItem();
 				}
 				
-				static bool first = true;
-				if (ImGui::BeginTabItem("Mining", nullptr, first ? ImGuiTabItemFlags_SetSelected : 0)) {
-					first = false;
+				if (ImGui::BeginTabItem("Mining")) {
 					
 					for (uint_fast8_t layer = 0; layer < MiningLayer::_size_constant; layer++){
 						SmallList<OreDeposit, 32>& deposits = planet.oreDeposits[layer];

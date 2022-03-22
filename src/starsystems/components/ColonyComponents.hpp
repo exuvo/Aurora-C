@@ -180,17 +180,17 @@ struct Shipyard {
 };
 
 struct Building {
-	std::string name;
+	std::string_view name;
 	uint64_t cost[Resources::ALL_CONSTRUCTION_size];
 	
-	Building(const std::string name): name(name) {};
+	Building(const char* name): name(name) {};
 };
 
 struct TerrestrialBuilding: public Building {
-	TerrestrialBuilding(const std::string name): Building(name) {};
+	TerrestrialBuilding(const char* name): Building(name) {};
 };
 struct OrbitalBuilding: public Building {
-	OrbitalBuilding(const std::string name): Building(name) {};
+	OrbitalBuilding(const char* name): Building(name) {};
 };
 
 struct BuildingState {
@@ -205,37 +205,37 @@ BETTER_ENUM(DistrictType, uint8_t,
 )
 
 struct District {
-	std::string name;
+	std::string_view name;
 	DistrictType type;
 	
-	District(const std::string name, DistrictType type): name(name), type(type) {};
+	constexpr District(const char* name, DistrictType type): name(name), type(type) {};
 };
 
 struct Districts {
-	static inline District HousingLowDensity { "Low density housing", DistrictType::Housing };
-	static inline District HousingHighDensity { "High density housing", DistrictType::Housing };
+	static inline constexpr District HousingLowDensity { "Low density housing", DistrictType::Housing };
+	static inline constexpr District HousingHighDensity { "High density housing", DistrictType::Housing };
 	
-	static inline District Farm { "Farm", DistrictType::Farming };
+	static inline constexpr District Farm { "Farm", DistrictType::Farming };
 	
-	static inline District GeneralIndustry { "General industry", DistrictType::Industry };
-	static inline District RefineryBlastFurnace { "Blast furnace", DistrictType::Industry };
-	static inline District RefineryArcFurnace { "Arc furnace", DistrictType::Industry };
-	static inline District RefinerySmeltery { "Glass smeltery", DistrictType::Industry };
-	static inline District RefinerySemiconductorFab { "Semiconductor fabrication plant", DistrictType::Industry };
-	static inline District RefineryEnricher { "Uranium enricher", DistrictType::Industry };
-	static inline District RefineryChemicalPlant { "Chemical plant", DistrictType::Industry };
-	static inline District RefineryFuelRefinery { "Fuel refinery", DistrictType::Industry };
-	static inline District RefineryLithium { "Lithium refinery", DistrictType::Industry };
+	static inline constexpr District GeneralIndustry { "General industry", DistrictType::Industry };
+	static inline constexpr District RefineryBlastFurnace { "Blast furnace", DistrictType::Industry };
+	static inline constexpr District RefineryArcFurnace { "Arc furnace", DistrictType::Industry };
+	static inline constexpr District RefinerySmeltery { "Glass smeltery", DistrictType::Industry };
+	static inline constexpr District RefinerySemiconductorFab { "Semiconductor fabrication plant", DistrictType::Industry };
+	static inline constexpr District RefineryEnricher { "Uranium enricher", DistrictType::Industry };
+	static inline constexpr District RefineryChemicalPlant { "Chemical plant", DistrictType::Industry };
+	static inline constexpr District RefineryFuelRefinery { "Fuel refinery", DistrictType::Industry };
+	static inline constexpr District RefineryLithium { "Lithium refinery", DistrictType::Industry };
 	
-	static inline District PowerSolar { "Solar power plant", DistrictType::Power };
-	static inline District PowerCoal { "Coal power plant", DistrictType::Power };
-	static inline District PowerFission { "Nuclear fission power plant", DistrictType::Power };
-	static inline District PowerFusion { "Fusion power plant", DistrictType::Power };
+	static inline constexpr District PowerSolar { "Solar power plant", DistrictType::Power };
+	static inline constexpr District PowerCoal { "Coal power plant", DistrictType::Power };
+	static inline constexpr District PowerFission { "Nuclear fission power plant", DistrictType::Power };
+	static inline constexpr District PowerFusion { "Fusion power plant", DistrictType::Power };
 	
-	static inline District MineSurface { "Surface mine", DistrictType::Mining };
-	static inline District MineCrust { "Mine", DistrictType::Mining };
-	static inline District MineMantle { "Mantle extractor", DistrictType::Mining };
-	static inline District MineMoltenCore { "Molten core pump", DistrictType::Mining };
+	static inline constexpr District MineSurface { "Surface mine", DistrictType::Mining };
+	static inline constexpr District MineCrust { "Mine", DistrictType::Mining };
+	static inline constexpr District MineMantle { "Mantle extractor", DistrictType::Mining };
+	static inline constexpr District MineMoltenCore { "Molten core pump", DistrictType::Mining };
 	
 	static inline constexpr const District* ALL[] { &HousingLowDensity, &HousingHighDensity, &Farm,
 	                                                &GeneralIndustry, &RefineryBlastFurnace, &RefineryArcFurnace,
@@ -244,7 +244,34 @@ struct Districts {
 	                                                &PowerSolar, &PowerCoal, &PowerFission, &PowerFusion,
 	                                                &MineSurface, &MineCrust, &MineMantle, &MineMoltenCore };
 	
-	static inline constexpr const size_t size = ARRAY_LENGTH(ALL);
+	static inline constexpr const size_t ALL_size = ARRAY_LENGTH(ALL);
+};
+
+struct DistrictPnt {
+	uint8_t idx = 0;
+	
+	constexpr DistrictPnt(uint8_t idx): idx(idx) {};
+	constexpr DistrictPnt(const District* district) {
+		auto itr = std::find(Districts::ALL, Districts::ALL + Districts::ALL_size, district);
+		
+		if (itr != std::end(Districts::ALL)) {
+			idx = itr - Districts::ALL;
+		} else {
+			throw std::invalid_argument("Invalid district pointer");
+		}
+	}
+	
+	const District* operator -> () const {
+		return Districts::ALL[idx];
+	}
+	
+	const District* operator * () const {
+		return Districts::ALL[idx];
+	}
+	
+	inline operator uint8_t () const {
+		return idx;
+	}
 };
 
 struct ColonyComponent {
@@ -253,7 +280,7 @@ struct ColonyComponent {
 	uint64_t farmingLandArea = 0;
 	uint64_t industrialLandArea = 0; // pollutes water
 	uint64_t miningLandArea = 0; // pollutes water
-	uint16_t districtAmounts[Districts::size];
+	uint16_t districtAmounts[Districts::ALL_size];
 	SmallList<TerrestrialBuilding*, 32> buildings;
 	SmallList<OrbitalBuilding*, 32> orbitalBuildings;
 	SmallList<BuildingState*, 32> buildingStates;

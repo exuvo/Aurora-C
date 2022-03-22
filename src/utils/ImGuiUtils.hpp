@@ -11,12 +11,15 @@
 #include <imgui.h>
 #include <imgui_internal.h>
 
-ImVec2 operator+(const ImVec2 a, const ImVec2 b);
-ImVec2 operator+(const ImVec2 a, int b);
-ImVec2 operator-(const ImVec2 a, int b);
-ImRect operator+(const ImRect a, const ImRect b);
-ImRect operator+(const ImRect a, int b);
-ImRect operator-(const ImRect a, int b);
+ImVec2 operator+(const ImVec2& a, const ImVec2& b);
+ImVec2 operator-(const ImVec2& a, const ImVec2& b);
+ImVec2 operator+(const ImVec2& a, float b);
+ImVec2 operator-(const ImVec2& a, float b);
+ImVec2 operator*(const ImVec2& a, float b);
+ImRect operator+(const ImRect& a, const ImRect& b);
+ImRect operator+(const ImRect& a, float b);
+ImRect operator-(const ImRect& a, float b);
+ImRect operator*(const ImRect& a, float b);
 
 void toLinearRGB(ImVec4*);
 __attribute__((warn_unused_result)) ImVec4 toLinearRGB(ImVec4);

@@ -8,28 +8,40 @@
 #include "ImGuiUtils.hpp"
 #include "utils/RenderUtils.hpp"
 
-ImVec2 operator+(const ImVec2 a, const ImVec2 b) {
+ImVec2 operator+(const ImVec2& a, const ImVec2& b) {
 	return {a.x + b.x, a.y + b.y};
 }
 
-ImVec2 operator+(const ImVec2 a, int b) {
+ImVec2 operator-(const ImVec2& a, const ImVec2& b) {
+	return {a.x - b.x, a.y - b.y};
+}
+
+ImVec2 operator+(const ImVec2& a, float b) {
 	return {a.x + b, a.y + b};
 }
 
-ImVec2 operator-(const ImVec2 a, int b) {
+ImVec2 operator-(const ImVec2& a, float b) {
 	return {a.x - b, a.y - b};
 }
 
-ImRect operator+(const ImRect a, const ImRect b) {
+ImVec2 operator*(const ImVec2& a, float b) {
+	return {a.x * b, a.y * b};
+}
+
+ImRect operator+(const ImRect& a, const ImRect& b) {
 	return {a.Min + b.Min, a.Max + b.Max};
 }
 
-ImRect operator+(const ImRect a, int b) {
+ImRect operator+(const ImRect& a, float b) {
 	return {a.Min + b, a.Max + b};
 }
 
-ImRect operator-(const ImRect a, int b) {
+ImRect operator-(const ImRect& a, float b) {
 	return {a.Min - b, a.Max - b};
+}
+
+ImRect operator*(const ImRect& a, float b) {
+	return {a.Min * b, a.Max * b};
 }
 
 void toLinearRGB(ImVec4* vec) {
