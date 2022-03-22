@@ -93,13 +93,13 @@ int64_t vectorDistanceFast(const Vector2l& a, const Vector2l& b) {
 // counter clock wise rotation
 Vector2l vectorRotate(const Vector2l& a, const double angleRad) {
 	Eigen::Rotation2D rotation { angleRad };
-	Vector2d b = static_cast<Vector2d>(rotation * a.cast<double>()); // cast only for eclipse indexer
+	Vector2ld b = static_cast<Vector2ld>(rotation.cast<long double>() * a.cast<long double>()); // static cast only for eclipse indexer
 	return b.cast<int64_t>();
 }
 
 Vector2d vectorRotate(const Vector2d& a, const double angleRad) {
 	Eigen::Rotation2D rotation { angleRad };
-	return static_cast<Vector2d>(rotation * a); // cast only for eclipse indexer
+	return static_cast<Vector2d>(rotation * a); // static cast only for eclipse indexer
 }
 
 Vector2l vectorRotateDeg(const Vector2l& a, const double angleDegrees) {
