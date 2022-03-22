@@ -151,3 +151,87 @@ uint32_t BitVector::cardinality() {
 	
 	return setBits;
 }
+
+
+BitVector32::_bitReference::operator bool() const {
+	return !!(*ptr & mask);
+}
+
+BitVector32::_bitReference& BitVector32::_bitReference::operator=(bool value) {
+	if (value) {
+		*ptr |= mask;
+	} else {
+		*ptr &= ~mask;
+	}
+	return *this;
+}
+
+BitVector32::_bitReference& BitVector32::_bitReference::operator=(const _bitReference& value) {
+	return *this = bool(value);
+}
+
+bool BitVector32::_bitReference::operator==(const _bitReference& value) const {
+	return bool(*this) == bool(value);
+}
+
+void BitVector32::clear() {
+	data = 0;
+}
+
+bool BitVector32::operator [](const uint8_t index) const {
+	return data & BV(index);
+}
+
+BitVector32::_bitReference BitVector32::operator [](const uint8_t index) {
+	return _bitReference(&data, BV(index));
+}
+
+uint32_t& BitVector32::operator ()() {
+	return data;
+}
+
+uint32_t BitVector32::cardinality() {
+	return __builtin_popcount(data);
+}
+
+
+BitVector64::_bitReference::operator bool() const {
+	return !!(*ptr & mask);
+}
+
+BitVector64::_bitReference& BitVector64::_bitReference::operator=(bool value) {
+	if (value) {
+		*ptr |= mask;
+	} else {
+		*ptr &= ~mask;
+	}
+	return *this;
+}
+
+BitVector64::_bitReference& BitVector64::_bitReference::operator=(const _bitReference& value) {
+	return *this = bool(value);
+}
+
+bool BitVector64::_bitReference::operator==(const _bitReference& value) const {
+	return bool(*this) == bool(value);
+}
+
+void BitVector64::clear() {
+	data = 0;
+}
+
+bool BitVector64::operator [](const uint8_t index) const {
+	return data & BV(index);
+}
+
+BitVector64::_bitReference BitVector64::operator [](const uint8_t index) {
+	return _bitReference(&data, BV(index));
+}
+
+uint64_t& BitVector64::operator ()() {
+	return data;
+}
+
+uint32_t BitVector64::cardinality() {
+	return __builtin_popcountll(data);
+}

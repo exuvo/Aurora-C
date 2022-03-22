@@ -65,12 +65,12 @@ class BitVector {
 				using value_type = _bitReference;
 				using iterator_category = std::forward_iterator_tag;
 					
-				//Pointer like operators
+				// Pointer like operators
 				inline uint32_t operator*() const { return bitIdx; }
 				inline uint32_t operator->() const { return bitIdx; }
 //				inline _bitReference operator[](difference_type off) const {return bv[bitIdx + off];}
 				
-				//Increment / Decrement
+				// Increment / Decrement
 				iterator& operator++() {
 					val >>= 1;
 					bitIdx++;
@@ -95,7 +95,7 @@ class BitVector {
 //				inline iterator& operator--() { --idx; return *this; }
 //				inline iterator operator--(int) { return iterator(bv, --idx); }
 				
-				//Arithmetic
+				// Arithmetic
 //				inline iterator& operator+=(difference_type off) {idx += off; return *this;}
 //				inline iterator& operator-=(difference_type off) {idx -= off; return *this;}
 //				friend inline iterator operator+(const iterator& x, difference_type off) {return iterator(x.bv, x.idx + off);}
@@ -103,7 +103,7 @@ class BitVector {
 //				friend inline iterator operator+(difference_type off, iterator rhs) {rhs.idx += off; return rhs;}
 //				friend inline iterator operator-(difference_type off, iterator rhs) {rhs.idx -= off; return rhs;}
 				
-				//Comparison operators
+				// Comparison operators
 				inline bool operator==(const iterator& rhs) const {return bitIdx == rhs.bitIdx;}
 				inline bool operator!=(const iterator& rhs) const {return bitIdx != rhs.bitIdx;}
 				inline bool operator>(const iterator& rhs) const {return bitIdx > rhs.bitIdx;}
@@ -132,7 +132,7 @@ class BitVector {
 			}
 			
 			uint32_t bitIdx = longIdx * 64;
-			bitIdx += __builtin_ffsl(val) - 1;
+			bitIdx += __builtin_ffsll(val) - 1;
 			
 			return iterator(*this, bitIdx);
 		}
@@ -140,9 +140,172 @@ class BitVector {
 		
 	private:
 		std::vector<uint64_t> data;
-		static constexpr uint64_t LONG_MASK = 0xFFFFFFFFFFFFFFFF;
-		static constexpr uint64_t BV(uint32_t index) {
-			return 1 << (index & LONG_MASK);
+		static constexpr uint64_t BV(uint8_t index) {
+			return 1 << (index & 0x3F);
+		};
+};
+
+class BitVector32 {
+	public:
+		BitVector32() = default;
+		BitVector32(const BitVector32&) = default;
+		BitVector32(BitVector32&&) = default;
+		
+		void clear();
+		
+		class _bitReference {
+			public:
+				_bitReference(uint32_t* ptr, uint32_t mask): ptr(ptr), mask(mask) {};
+				_bitReference(const _bitReference&) = default;
+				operator bool() const;
+				_bitReference& operator =(bool value);
+				_bitReference& operator =(const _bitReference& value);
+				bool operator ==(const _bitReference& value) const;
+			private:
+				uint32_t* ptr;
+				uint32_t mask;
+		};
+		
+		bool operator [](const uint8_t index) const;
+		_bitReference operator [](const uint8_t index);
+		uint32_t& operator ()();
+		
+		uint32_t cardinality();
+		
+		class iterator {
+			public:
+				iterator(BitVector32& bv, uint8_t idx): bv(bv), val(bv.data >> idx), bitIdx(idx) {}
+				
+				// iterator traits
+				using difference_type = uint8_t;
+				using value_type = _bitReference;
+				using iterator_category = std::forward_iterator_tag;
+					
+				// Pointer like operators
+				inline uint8_t operator*() const { return bitIdx; }
+				inline uint8_t operator->() const { return bitIdx; }
+//				inline _bitReference operator[](difference_type off) const {return bv[bitIdx + off];}
+				
+				iterator& operator++() {
+					val >>= 1;
+					bitIdx++;
+					 
+					return *this; 
+				}
+				
+				// Comparison operators
+				inline bool operator==(const iterator& rhs) const {return bitIdx == rhs.bitIdx;}
+				inline bool operator!=(const iterator& rhs) const {return bitIdx != rhs.bitIdx;}
+				inline bool operator>(const iterator& rhs) const {return bitIdx > rhs.bitIdx;}
+				inline bool operator<(const iterator& rhs) const {return bitIdx < rhs.bitIdx;}
+				inline bool operator>=(const iterator& rhs) const {return bitIdx >= rhs.bitIdx;}
+				inline bool operator<=(const iterator& rhs) const {return bitIdx <= rhs.bitIdx;}
+				
+				private:
+					BitVector32& bv;
+					uint32_t val;
+					uint8_t bitIdx;
+		};
+		
+		iterator begin() {
+			uint32_t val = data;
+			
+			if (val == 0) {
+				return end();
+			}
+			
+			uint32_t bitIdx = __builtin_ffs(val) - 1;
+			
+			return iterator(*this, bitIdx);
+		}
+		iterator end() { return iterator(*this, 31); }
+		
+	private:
+		uint32_t data = 0;
+		static constexpr uint64_t BV(uint8_t index) {
+			return 1 << (index & 0x1F);
+		};
+};
+
+class BitVector64 {
+	public:
+		BitVector64() = default;
+		BitVector64(const BitVector64&) = default;
+		BitVector64(BitVector64&&) = default;
+		
+		void clear();
+		
+		class _bitReference {
+			public:
+				_bitReference(uint64_t* ptr, uint64_t mask): ptr(ptr), mask(mask) {};
+				_bitReference(const _bitReference&) = default;
+				operator bool() const;
+				_bitReference& operator =(bool value);
+				_bitReference& operator =(const _bitReference& value);
+				bool operator ==(const _bitReference& value) const;
+			private:
+				uint64_t* ptr;
+				uint64_t mask;
+		};
+		
+		bool operator [](const uint8_t index) const;
+		_bitReference operator [](const uint8_t index);
+		uint64_t& operator ()();
+		
+		uint32_t cardinality();
+		
+		class iterator {
+			public:
+				iterator(BitVector64& bv, uint8_t idx): bv(bv), val(bv.data >> idx), bitIdx(idx) {}
+				
+				// iterator traits
+				using difference_type = uint8_t;
+				using value_type = _bitReference;
+				using iterator_category = std::forward_iterator_tag;
+					
+				// Pointer like operators
+				inline uint8_t operator*() const { return bitIdx; }
+				inline uint8_t operator->() const { return bitIdx; }
+//				inline _bitReference operator[](difference_type off) const {return bv[bitIdx + off];}
+				
+				iterator& operator++() {
+					val >>= 1;
+					bitIdx++;
+					 
+					return *this; 
+				}
+				
+				// Comparison operators
+				inline bool operator==(const iterator& rhs) const {return bitIdx == rhs.bitIdx;}
+				inline bool operator!=(const iterator& rhs) const {return bitIdx != rhs.bitIdx;}
+				inline bool operator>(const iterator& rhs) const {return bitIdx > rhs.bitIdx;}
+				inline bool operator<(const iterator& rhs) const {return bitIdx < rhs.bitIdx;}
+				inline bool operator>=(const iterator& rhs) const {return bitIdx >= rhs.bitIdx;}
+				inline bool operator<=(const iterator& rhs) const {return bitIdx <= rhs.bitIdx;}
+				
+				private:
+					BitVector64& bv;
+					uint64_t val;
+					uint8_t bitIdx;
+		};
+		
+		iterator begin() {
+			uint64_t val = data;
+			
+			if (val == 0) {
+				return end();
+			}
+			
+			uint32_t bitIdx = __builtin_ffsll(val) - 1;
+			
+			return iterator(*this, bitIdx);
+		}
+		iterator end() { return iterator(*this, 31); }
+		
+	private:
+		uint64_t data = 0;
+		static constexpr uint64_t BV(uint8_t index) {
+			return 1 << (index & 0x3F);
 		};
 };
 
