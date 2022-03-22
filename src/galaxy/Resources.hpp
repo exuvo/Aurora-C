@@ -52,7 +52,7 @@ struct Resources {
 	static inline constexpr Resource RARE_EARTH_METALS { "Rare Earth Metals", "La", 7.0 }; // Neodymium 7.0 g/cm³. https://en.wikipedia.org/wiki/Rare-earth_element, https://en.wikipedia.org/wiki/Lanthanide
 	static inline constexpr Resource LITHIUM_CARBONATE { "Lithium Carbonate", "Li", 2.1 }; // Lithium carbonate 2.11 g/cm³
 	static inline constexpr Resource SULFUR { "Sulfur", "S", 2.1 }; // Sulfur solid 2.07 g/cm³
-	static inline constexpr Resource OIL { "Crude Oil", "Oil", 0.9 }; // Medium crude oil 0.90 g/cm³
+	static inline constexpr Resource OIL { "Crude Oil", "C", 0.9 }; // Medium crude oil 0.90 g/cm³
 	// Refined
 	static inline constexpr Resource STEEL { "Steel", 11.7 }; // Steel 11.7 g/cm³, Concrete 2.4 g/cm³, Carbonfiber, , Ceramics 4 g/cm³
 	static inline constexpr Resource ALUMINIUM { "Aluminium", 2.7 }; // Aluminium 2.7 g/cm³

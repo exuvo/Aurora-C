@@ -176,6 +176,7 @@ class BitVector32 {
 		_bitReference operator [](const uint8_t index);
 		uint32_t& operator ()();
 		
+		void operator =(uint32_t val);
 		void operator =(const BitVector32& bv);
 		
 		uint32_t cardinality();
@@ -266,6 +267,7 @@ class BitVector64 {
 		_bitReference operator [](const uint8_t index);
 		uint64_t& operator ()();
 		
+		void operator =(uint64_t val);
 		void operator =(const BitVector64& bv);
 		
 		uint32_t cardinality();

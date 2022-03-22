@@ -17,6 +17,7 @@
 
 #include "starsystems/systems/Scheduler.hpp"
 #include "starsystems/components/IDComponents.hpp"
+#include "utils/Random.h"
 
 using namespace std::chrono;
 using namespace log4cxx;
@@ -36,6 +37,7 @@ class StarSystem {
 		entt::entity galacticEntityID = entt::null;
 		nanoseconds updateTime = 0ns;
 		float updateTimeAverage = 0.0f;
+		PCG32 random;
 		
 		boost::circular_buffer<Command*> commandQueue {128};
 		ShadowStarSystem* shadow = nullptr;

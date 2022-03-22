@@ -268,24 +268,24 @@ void ColonyManagerWindow::render() {
 				if (ImGui::BeginTabItem("Mining", nullptr, first ? ImGuiTabItemFlags_SetSelected : 0)) {
 					first = false;
 					
-					for (uint32_t layer = 0; layer < MiningLayer::_size_constant; layer++){
+					for (uint_fast8_t layer = 0; layer < MiningLayer::_size_constant; layer++){
 						SmallList<OreDeposit, 32>& deposits = planet.oreDeposits[layer];
-						BitVector& discovered = planet.discoveredOreDeposits[layer];
+						BitVector32& discovered = planet.discoveredOreDeposits[layer];
 						
-//						ImGui::SetNextItemWidth(200);
 						ImGui::TextUnformatted(MiningLayer::_from_index(layer)._to_string());
-//						ImGui::GetCurrentWindow()->DC.CursorPos.x = 200;
-						ImGui::SameLine(90);
+						ImGui::SameLine(80);
 						
-						for (uint32_t i = 0; i < deposits.size(); i++) {
+						ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(2, 2));
+						for (uint_fast8_t i = 0; i < deposits.size(); i++) {
 							OreDeposit& deposit = deposits[i];
 							
 							if (i > 0) ImGui::SameLine();
 							
 							const char* text = discovered[i] ? deposit.type->symbol.data() : "?";
 							ImGui::PushID(i + layer * 128);
-							if (ImGui::Button(text, ImVec2(20, 20))) {
+							if (ImGui::Button(text, ImVec2(21, 20))) {
 								discovered[i] = true;
+								planet.minableResources[layer][deposit.type] += deposit.amount;
 							}
 							if (discovered[i] && ImGui::IsItemHovered()) {
 								with_Tooltip {
@@ -295,8 +295,10 @@ void ColonyManagerWindow::render() {
 							}
 							ImGui::PopID();
 						}
+						ImGui::PopStyleVar();
 					}
 					
+					ImGui::TextUnformatted("Discovered and remaining ores:");
 					if (ImGui::BeginTable("discovered_ores", 6, ImGuiTableFlags_Resizable | ImGuiTableFlags_SizingFixedFit | ImGuiTableFlags_NoSavedSettings | ImGuiTableFlags_NoBordersInBodyUntilResize)) {
 						ImGui::TableSetupColumn("", ImGuiTableColumnFlags_None);
 						ImGui::TableSetupColumn("", ImGuiTableColumnFlags_NoResize);
@@ -305,25 +307,39 @@ void ColonyManagerWindow::render() {
 						ImGui::TableSetupColumn("", ImGuiTableColumnFlags_None);
 						ImGui::TableSetupColumn("", ImGuiTableColumnFlags_NoResize);
 						
-						ImGui::TableNextRow();
-						ImGui::TableNextColumn();
-						ImGui::TextUnformatted("Discovered ores");
-						
-						uint32_t columns = 3;
-						uint32_t rows = (Resources::ALL_ORE_size + columns - 1) / columns;
-						for (uint32_t row = 0; row < rows; row++) {
+						auto printMinableResources = [&](MiningLayer layer){
+//							if (ImGui::TableGetRowIndex() > 0) {
+//								ImGui::TableNextRow(0, 5);
+//							}
+							
 							ImGui::TableNextRow();
-							for (uint32_t col = 0; col < columns; col++) {
-								size_t idx = row + col * rows;
-								if (idx >= Resources::ALL_ORE_size) break;
-								
-								const Resource* res = Resources::ALL_ORE[idx];
-								ImGui::TableNextColumn();
-								rightAlignedTableText("%6d", planet.minableResources);
-								ImGui::TableNextColumn();
-								ImGui::TextUnformatted(res->name.cbegin(), res->name.cend());
+							ImGui::TableNextColumn();
+							ImGui::TextUnformatted(layer._to_string());
+							ImGui::SameLine(0, 0);
+							ImGui::TextUnformatted(":");
+							
+							uint_fast8_t columns = 3;
+							uint_fast8_t rows = (Resources::ALL_ORE_size + columns - 1) / columns;
+							for (uint_fast8_t row = 0; row < rows; row++) {
+								ImGui::TableNextRow();
+								for (uint_fast8_t col = 0; col < columns; col++) {
+									size_t idx = row + col * rows;
+									if (idx >= Resources::ALL_ORE_size) break;
+									
+									const Resource* res = Resources::ALL_ORE[idx];
+									ImGui::TableNextColumn();
+									rightAlignedTableText("%6d", planet.minableResources[layer][idx]);
+									ImGui::TableNextColumn();
+									ImGui::TextUnformatted(res->name.cbegin(), res->name.cend());
+								}
 							}
-						}
+						};
+						
+						printMinableResources(MiningLayer::Surface);
+						printMinableResources(MiningLayer::Crust);
+						printMinableResources(MiningLayer::Mantle);
+						printMinableResources(MiningLayer::MoltenCore);
+						
 						ImGui::EndTable();
 					}
 					
@@ -348,10 +364,10 @@ void ColonyManagerWindow::render() {
 							ImGui::TableNextColumn();
 							ImGui::TextUnformatted(name.begin());
 						
-							uint32_t rows = (size + columns - 1) / columns;
-							for (uint32_t row = 0; row < rows; row++) {
+							uint_fast8_t rows = (size + columns - 1) / columns;
+							for (uint_fast8_t row = 0; row < rows; row++) {
 								ImGui::TableNextRow();
-								for (uint32_t col = 0; col < columns; col++) {
+								for (uint_fast8_t col = 0; col < columns; col++) {
 									size_t idx = row + col * rows;
 									if (idx >= size) break;
 									
@@ -384,7 +400,7 @@ void ColonyManagerWindow::render() {
 						ImGui::TableSetupColumn("",	ImGuiTableColumnFlags_NoResize);
 						
 						ImGui::TableNextRow();
-						uint32_t i = 0;
+						uint_fast16_t i = 0;
 						for (auto hull : cargo.munitions) {
 							ImGui::TableNextColumn();
 							

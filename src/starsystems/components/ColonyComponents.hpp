@@ -40,18 +40,11 @@ struct PlanetComponent {
 	uint8_t atmospheBreathability = 100; // percentage
 	uint16_t temperature = 20; // celcius
 	SmallList<OreDeposit, 32> oreDeposits[MiningLayer::_size_constant];
-	BitVector discoveredOreDeposits[MiningLayer::_size_constant];
+	BitVector32 discoveredOreDeposits[MiningLayer::_size_constant];
 	// Sum of discovered deposits. [Layer, Ore, Amount]
 	std::array<uint64_t, Resources::ALL_ORE_size> minableResources[MiningLayer::_size_constant];
 	
-	PlanetComponent() {
-		discoveredOreDeposits[MiningLayer::Surface].reserve(32);
-		discoveredOreDeposits[MiningLayer::Crust].reserve(32);
-		discoveredOreDeposits[MiningLayer::Mantle].reserve(32);
-		discoveredOreDeposits[MiningLayer::MoltenCore].reserve(32);
-	}
-	
-	uint64_t cleanWater() {
+	uint64_t cleanWater() const {
 		return freshWater + seaWater;
 	}
 };
@@ -64,15 +57,15 @@ struct ShipyardSlipway {
 	uint64_t hullCost[Resources::ALL_CONSTRUCTION_size];
 	uint64_t usedResources[Resources::ALL_CONSTRUCTION_size];
 	
-	uint64_t totalUsedResources() {
+	uint64_t totalUsedResources() const {
 		return std::accumulate(usedResources, usedResources + Resources::ALL_CONSTRUCTION_size, 0l);
 	}
 	
-	uint64_t totalCost() {
+	uint64_t totalCost() const {
 		return std::accumulate(hullCost, hullCost + Resources::ALL_CONSTRUCTION_size, 0l);
 	}
 	
-	uint32_t progress() {
+	uint32_t progress() const {
 		uint64_t usedResources = totalUsedResources();
 		
 		if (usedResources == 0L) {

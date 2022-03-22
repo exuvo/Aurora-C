@@ -43,7 +43,7 @@ void ShadowStarSystem::update() {
 		changed.reserve(size);
 		deleted.reserve(size);
 		
-		for (uint32_t i=0; i < SYNCED_COMPONENTS_SEQ_SIZE; i++) {
+		for (uint_fast8_t i=0; i < SYNCED_COMPONENTS_SEQ_SIZE; i++) {
 			tmpComponents[i].reserve(size);
 		}
 	}
@@ -74,7 +74,7 @@ void ShadowStarSystem::update() {
 	tmp %= deleted; // Skip now deleted from other changed
 	tmp %= otherShadow->deleted; // Skip other deleted from other changed
 	
-	for (uint32_t i=0; i < SYNCED_COMPONENTS_SEQ_SIZE; i++) {
+	for (uint_fast8_t i=0; i < SYNCED_COMPONENTS_SEQ_SIZE; i++) {
 		tmpComponents[i] = changedComponents[i];
 		tmpComponents[i] |= otherShadow->changedComponents[i];
 	}

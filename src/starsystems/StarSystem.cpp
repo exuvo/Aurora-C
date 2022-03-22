@@ -286,15 +286,27 @@ void StarSystem::init(Galaxy* galaxy) {
 	earth.arableLandArea = 500;
 	earth.blockedLandArea = 200;
 	
+	for (uint_fast8_t i = 0; i < 10; i++) {
+		earth.oreDeposits[MiningLayer::Crust].push_back(random.next32(10000), ResourcePnt(random.next8(Resources::ALL_ORE_size - 1)));
+		earth.oreDeposits[MiningLayer::Mantle].push_back(random.next32(10000), ResourcePnt(random.next8(Resources::ALL_ORE_size - 1)));
+		earth.oreDeposits[MiningLayer::MoltenCore].push_back(random.next32(10000), ResourcePnt(random.next8(Resources::ALL_ORE_size - 1)));
+	}
+	
 	earth.oreDeposits[MiningLayer::Surface].push_back(1000, &Resources::IRON);
 	earth.oreDeposits[MiningLayer::Surface].push_back(1000, &Resources::ALUMINA);
+	earth.oreDeposits[MiningLayer::Surface].push_back(1000, &Resources::TITANIUM_OXIDE);
+	earth.oreDeposits[MiningLayer::Surface].push_back(1000, &Resources::SILICA);
 	earth.oreDeposits[MiningLayer::Surface].push_back(1000, &Resources::COPPER);
-	earth.oreDeposits[MiningLayer::Crust].push_back(2000, &Resources::IRON);
-	earth.oreDeposits[MiningLayer::Crust].push_back(2000, &Resources::TITANIUM_OXIDE);
-	earth.oreDeposits[MiningLayer::Mantle].push_back(3000, &Resources::IRON);
-	earth.oreDeposits[MiningLayer::Mantle].push_back(3000, &Resources::COPPER);
-	earth.oreDeposits[MiningLayer::MoltenCore].push_back(4000, &Resources::ALUMINA);
-	earth.oreDeposits[MiningLayer::MoltenCore].push_back(4000, &Resources::RARE_EARTH_METALS);
+	earth.oreDeposits[MiningLayer::Surface].push_back(1000, &Resources::RARE_EARTH_METALS);
+	earth.oreDeposits[MiningLayer::Surface].push_back(1000, &Resources::LITHIUM_CARBONATE);
+	earth.oreDeposits[MiningLayer::Surface].push_back(1000, &Resources::SULFUR);
+	earth.oreDeposits[MiningLayer::Surface].push_back(1000, &Resources::OIL);
+	earth.discoveredOreDeposits[MiningLayer::Surface] = 0xFFFFFFFF;
+	
+	for (uint_fast8_t i = 0; i < earth.oreDeposits[MiningLayer::Surface].size(); i++) {
+		OreDeposit& deposit = earth.oreDeposits[MiningLayer::Surface][i];
+		earth.minableResources[MiningLayer::Surface][deposit.type] += deposit.amount;
+	}
 	
 	earthColony.shipyards.push_back(&ShipyardLocations::TERRESTIAL, &ShipyardTypes::CIVILIAN);
 	earthColony.shipyards[0].slipways.push_back();

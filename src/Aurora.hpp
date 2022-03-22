@@ -29,6 +29,7 @@ struct Settings {
 		bool debugSpatialPartitioning = false;
 		bool debugSpatialPartitioningPlanetoids = false;
 		bool useShadow = true;
+		bool multiViewports = false;
 	} render;
 	struct {
 			struct {

@@ -48,7 +48,9 @@ ImGuiLayer::ImGuiLayer(AuroraWindow& parentWindow): UILayer(parentWindow) {
 		
 		ImGuiIO& io = ImGui::GetIO();
 		io.ConfigFlags |= ImGuiConfigFlags_IsSRGB;
-		io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+		if (Aurora.settings.render.multiViewports) {
+			io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+		}
 		io.ConfigViewportsNoTaskBarIcon = true;
 		
 		imGuiGlfw = new ImGuiGlfw(window.window->impl->glfw_window, true);
