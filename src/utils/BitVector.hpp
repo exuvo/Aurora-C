@@ -85,11 +85,18 @@ class BitVector {
 						if (val == 0) {
 							bitIdx += 63; // end
 						} else {
-							bitIdx += __builtin_ffsl(val) - 1;
+							uint32_t firstBit = __builtin_ffsll(val) - 1;
+							val >>= firstBit;
+							bitIdx += firstBit;
 						}
+						
+					} else if (!(val & 1)) {
+						uint32_t firstBit = __builtin_ffsll(val) - 1;
+						val >>= firstBit;
+						bitIdx += firstBit;
 					}
 					
-					return *this; 
+					return *this;
 				}
 //				inline iterator operator++(int) { return iterator(bv, ++idx); }
 //				inline iterator& operator--() { --idx; return *this; }
@@ -131,8 +138,7 @@ class BitVector {
 				return end();
 			}
 			
-			uint32_t bitIdx = longIdx * 64;
-			bitIdx += __builtin_ffsll(val) - 1;
+			uint32_t bitIdx = longIdx * 64 + __builtin_ffsll(val) - 1;
 			
 			return iterator(*this, bitIdx);
 		}
@@ -170,6 +176,8 @@ class BitVector32 {
 		_bitReference operator [](const uint8_t index);
 		uint32_t& operator ()();
 		
+		void operator =(const BitVector32& bv);
+		
 		uint32_t cardinality();
 		
 		class iterator {
@@ -189,6 +197,14 @@ class BitVector32 {
 				iterator& operator++() {
 					val >>= 1;
 					bitIdx++;
+					
+					if (val == 0) {
+						bitIdx = 31; // end
+					} else if (!(val & 1)) {
+						uint32_t firstBit = __builtin_ffs(val) - 1;
+						val >>= firstBit;
+						bitIdx += firstBit;
+					}
 					 
 					return *this; 
 				}
@@ -208,13 +224,11 @@ class BitVector32 {
 		};
 		
 		iterator begin() {
-			uint32_t val = data;
-			
-			if (val == 0) {
+			if (data == 0) {
 				return end();
 			}
 			
-			uint32_t bitIdx = __builtin_ffs(val) - 1;
+			uint32_t bitIdx = __builtin_ffs(data) - 1;
 			
 			return iterator(*this, bitIdx);
 		}
@@ -252,6 +266,8 @@ class BitVector64 {
 		_bitReference operator [](const uint8_t index);
 		uint64_t& operator ()();
 		
+		void operator =(const BitVector64& bv);
+		
 		uint32_t cardinality();
 		
 		class iterator {
@@ -271,6 +287,14 @@ class BitVector64 {
 				iterator& operator++() {
 					val >>= 1;
 					bitIdx++;
+					
+					if (val == 0) {
+						bitIdx = 63; // end
+					} else if (!(val & 1)) {
+						uint32_t firstBit = __builtin_ffsll(val) - 1;
+						val >>= firstBit;
+						bitIdx += firstBit;
+					}
 					 
 					return *this; 
 				}
@@ -290,13 +314,11 @@ class BitVector64 {
 		};
 		
 		iterator begin() {
-			uint64_t val = data;
-			
-			if (val == 0) {
+			if (data == 0) {
 				return end();
 			}
 			
-			uint32_t bitIdx = __builtin_ffsll(val) - 1;
+			uint32_t bitIdx = __builtin_ffsll(data) - 1;
 			
 			return iterator(*this, bitIdx);
 		}

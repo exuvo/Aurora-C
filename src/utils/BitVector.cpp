@@ -190,6 +190,10 @@ uint32_t& BitVector32::operator ()() {
 	return data;
 }
 
+void BitVector32::operator =(const BitVector32& bv) {
+	data = bv.data;
+}
+
 uint32_t BitVector32::cardinality() {
 	return __builtin_popcount(data);
 }
@@ -230,6 +234,10 @@ BitVector64::_bitReference BitVector64::operator [](const uint8_t index) {
 
 uint64_t& BitVector64::operator ()() {
 	return data;
+}
+
+void BitVector64::operator =(const BitVector64& bv) {
+	data = bv.data;
 }
 
 uint32_t BitVector64::cardinality() {
