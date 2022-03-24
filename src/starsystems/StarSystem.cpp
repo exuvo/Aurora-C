@@ -177,8 +177,8 @@ void StarSystem::init(Galaxy* galaxy) {
 	Battery* missileBattery = new Battery(10 * Units::KILO, 50 * Units::KILO, 1 * Units::GIGA, 80);
 	missileBattery->cost[ResourceConstructionPnt(&Resources::LITHIUM)] = 50;
 //	
-	ElectricalThruster* missileIonThruster = new ElectricalThruster(290 * 1000, 0); // 1 * Units.KILO
-	FueledThruster* missileChemicalThruster = new FueledThruster(29000 * 1000, 0, &Resources::ROCKET_FUEL);
+	ElectricalThruster* missileIonThruster = new ElectricalThruster(290'000, 0); // 1 * Units.KILO
+	FueledThruster* missileChemicalThruster = new FueledThruster(29'000'000, 0, &Resources::ROCKET_FUEL);
 //	
 	FuelContainerPart* missileFuelPart = new FuelContainerPart(5000L * Resources::ROCKET_FUEL.specificVolume);
 	Warhead* missileWarhead = new Warhead(100000);
@@ -272,19 +272,12 @@ void StarSystem::init(Galaxy* galaxy) {
 	registry.emplace<CircleComponent>(e2, 6371000.0f);
 	registry.emplace<MassComponent>(e2, 5.972e24);
 	registry.emplace<OrbitComponent>(e2, e1, 1.0f, 0.0f, -45, 0);
-	ColonyComponent& earthColony = registry.emplace<ColonyComponent>(e2, 1000000, 2000, 5000, 3000, 5000);
+	ColonyComponent& earthColony = registry.emplace<ColonyComponent>(e2);
 	registry.emplace<NameComponent>(e2, "Earth");
 	registry.emplace<EmpireComponent>(e2, empire1);
 	PlanetComponent& earth = registry.emplace<PlanetComponent>(e2);
 	CargoComponent& earthCargo = registry.emplace<CargoComponent>(e2, earthColony);
 	empire1.colonies.push_back(getEntityReference(e2));
-	
-	earth.freshWater = 1000;
-	earth.seaWater = 10000;
-	earth.pollutedWater = 100;
-	earth.usableLandArea = 1000;
-	earth.arableLandArea = 500;
-	earth.blockedLandArea = 200;
 	
 	for (uint_fast8_t i = 0; i < 10; i++) {
 		earth.oreDeposits[MiningLayer::Crust].push_back(random.next32(10000), ResourcePnt(random.next8(Resources::ALL_ORE_size - 1)));
@@ -308,17 +301,23 @@ void StarSystem::init(Galaxy* galaxy) {
 		earth.minableResources[MiningLayer::Surface][deposit.type] += deposit.amount;
 	}
 	
-	earthColony.shipyards.push_back(&ShipyardLocations::TERRESTIAL, &ShipyardTypes::CIVILIAN);
-	earthColony.shipyards[0].slipways.push_back();
-	earthColony.shipyards[0].slipways.push_back();
-	earthColony.shipyards[0].modificationActivity = new ShipyardModificationAddSlipway();
-	earthColony.shipyards[0].slipways[1].build(*shipHull0);
+	// https://ourworldindata.org/land-use
+	// https://en.wikipedia.org/wiki/Water_distribution_on_Earth
+	earth.usableLandArea = 119'000000UL;
+	earth.arableLandArea = 104'000000UL;
+	earth.blockedLandArea = 28'000000UL;
+	earth.freshWater =      10'621000UL * Units::CUBIC_KILOMETRE; //   10 million km³, fresh groundwater + fresh water lakes
+	earth.glacierWater =    24'364000UL * Units::CUBIC_KILOMETRE; //   24 million km³, permanent snow + glaciers
+	earth.seaWater =      1351'000000UL * Units::CUBIC_KILOMETRE; // 1351 million km³, sea + saline groundwater + saline lakes
+	earth.pollutedWater =    1'000000UL * Units::CUBIC_KILOMETRE;
 	
-	earthColony.shipyards.push_back(&ShipyardLocations::ORBITAL, &ShipyardTypes::MILITARY);
-	earthColony.shipyards[1].slipways.push_back();
+	earthColony.population = 10'000'000'000UL;
 	
 	earthColony.districtAmounts[DistrictPnt(&Districts::HousingLowDensity)] = 200;
-	earthColony.districtAmounts[DistrictPnt(&Districts::Farm)] = 500;
+	earthColony.districtAmounts[DistrictPnt(&Districts::HousingHighDensity)] = 100;
+	
+	earthColony.districtAmounts[DistrictPnt(&Districts::FarmCrops)] =     100; // 23% of agricultural land usage, 82% calorie supply, 63% protein supply
+	earthColony.districtAmounts[DistrictPnt(&Districts::FarmLivestock)] = 100; // 77% of agricultural land usage, 18% calorie supply, 37% protein supply
 	
 	earthColony.districtAmounts[DistrictPnt(&Districts::GeneralIndustry)] = 10;
 	earthColony.districtAmounts[DistrictPnt(&Districts::RefineryBlastFurnace)] = 1;
@@ -333,7 +332,43 @@ void StarSystem::init(Galaxy* galaxy) {
 	earthColony.districtAmounts[DistrictPnt(&Districts::PowerSolar)] = 50;
 	earthColony.districtAmounts[DistrictPnt(&Districts::PowerCoal)] = 2;
 	
-	earthColony.districtAmounts[DistrictPnt(&Districts::MineSurface)] = 1;
+	earthColony.districtAmounts[DistrictPnt(&Districts::MineSurface)] = 10;
+	
+	earthColony.farmingLandArea = 0
+		+ Districts::FarmCrops.landUsage * earthColony.districtAmounts[DistrictPnt(&Districts::FarmCrops)]
+		+ Districts::FarmLivestock.landUsage * earthColony.districtAmounts[DistrictPnt(&Districts::FarmLivestock)];
+	earthColony.housingLandArea = 0
+		+ Districts::HousingLowDensity.landUsage * earthColony.districtAmounts[DistrictPnt(&Districts::HousingLowDensity)]
+		+ Districts::HousingHighDensity.landUsage * earthColony.districtAmounts[DistrictPnt(&Districts::HousingHighDensity)];
+	earthColony.miningLandArea = 0
+		+ Districts::MineSurface.landUsage * earthColony.districtAmounts[DistrictPnt(&Districts::MineSurface)]
+		+ Districts::MineMantle.landUsage * earthColony.districtAmounts[DistrictPnt(&Districts::MineMantle)]
+		+ Districts::MineCrust.landUsage * earthColony.districtAmounts[DistrictPnt(&Districts::MineCrust)]
+		+ Districts::MineMoltenCore.landUsage * earthColony.districtAmounts[DistrictPnt(&Districts::MineMoltenCore)];
+	earthColony.industrialLandArea = 0
+		+ Districts::GeneralIndustry.landUsage * earthColony.districtAmounts[DistrictPnt(&Districts::GeneralIndustry)]
+		+ Districts::RefineryBlastFurnace.landUsage * earthColony.districtAmounts[DistrictPnt(&Districts::RefineryBlastFurnace)]
+		+ Districts::RefineryArcFurnace.landUsage * earthColony.districtAmounts[DistrictPnt(&Districts::RefineryArcFurnace)]
+		+ Districts::RefinerySmeltery.landUsage * earthColony.districtAmounts[DistrictPnt(&Districts::RefinerySmeltery)]
+		+ Districts::RefinerySemiconductorFab.landUsage * earthColony.districtAmounts[DistrictPnt(&Districts::RefinerySemiconductorFab)]
+		+ Districts::RefineryEnricher.landUsage * earthColony.districtAmounts[DistrictPnt(&Districts::RefineryEnricher)]
+		+ Districts::RefineryChemicalPlant.landUsage * earthColony.districtAmounts[DistrictPnt(&Districts::RefineryChemicalPlant)]
+		+ Districts::RefineryFuelRefinery.landUsage * earthColony.districtAmounts[DistrictPnt(&Districts::RefineryFuelRefinery)]
+		+ Districts::RefineryLithium.landUsage * earthColony.districtAmounts[DistrictPnt(&Districts::RefineryLithium)];
+	earthColony.powerLandArea = 0
+		+ Districts::PowerSolar.landUsage * earthColony.districtAmounts[DistrictPnt(&Districts::PowerSolar)]
+		+ Districts::PowerCoal.landUsage * earthColony.districtAmounts[DistrictPnt(&Districts::PowerCoal)]
+		+ Districts::PowerFission.landUsage * earthColony.districtAmounts[DistrictPnt(&Districts::PowerFission)]
+		+ Districts::PowerFusion.landUsage * earthColony.districtAmounts[DistrictPnt(&Districts::PowerFusion)];
+	
+	earthColony.shipyards.push_back(&ShipyardLocations::TERRESTIAL, &ShipyardTypes::CIVILIAN);
+	earthColony.shipyards[0].slipways.push_back();
+	earthColony.shipyards[0].slipways.push_back();
+	earthColony.shipyards[0].modificationActivity = new ShipyardModificationAddSlipway();
+	earthColony.shipyards[0].slipways[1].build(*shipHull0);
+	
+	earthColony.shipyards.push_back(&ShipyardLocations::ORBITAL, &ShipyardTypes::MILITARY);
+	earthColony.shipyards[1].slipways.push_back();
 	
 	earthCargo.addCargo(&Resources::IRON, 10);
 	earthCargo.addCargo(&Resources::ALUMINA, 20);
@@ -360,7 +395,7 @@ void StarSystem::init(Galaxy* galaxy) {
 	earthCargo.addCargo(&Resources::NUCLEAR_FUSION, 200);
 	
 	earthCargo.addCargo(&Resources::ROCKET_FUEL, 210);
-	earthCargo.addCargo(&Resources::LIFE_SUPPORT, 220);
+	earthCargo.addCargo(&Resources::FOOD, 220);
 	
 	earthCargo.addCargo(sabot, 123);
 	earthCargo.addCargo(sabot2, 72);

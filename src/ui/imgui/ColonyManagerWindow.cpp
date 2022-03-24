@@ -265,7 +265,7 @@ void ColonyManagerWindow::render() {
 					
 					uint8_t lastDistrictType = DistrictType::_size_constant;
 					
-					auto districtButton = [&](std::string_view symbol, const District& district){
+					auto districtButton = [&](std::string_view symbol, const District& district) {
 						if (lastDistrictType != DistrictType::_size_constant) {
 							if (district.type == lastDistrictType) {
 								ImGui::SameLine(0, 2);
@@ -280,6 +280,7 @@ void ColonyManagerWindow::render() {
 						
 						if (ImGui::Button("##district", ImVec2(30, 32))) {
 							colony.districtAmounts[DistrictPnt(&district)]++;
+							//TODO left click queue build, right click queue demolish
 						}
 						
 						if (ImGui::IsItemVisible()) {
@@ -313,7 +314,8 @@ void ColonyManagerWindow::render() {
 					districtButton("Low", Districts::HousingLowDensity);
 					districtButton("Hi", Districts::HousingHighDensity);
 					
-					districtButton("F", Districts::Farm);
+					districtButton("FC", Districts::FarmCrops);
+					districtButton("FL", Districts::FarmLivestock);
 					
 					districtButton("Ind", Districts::GeneralIndustry);
 					districtButton("BF", Districts::RefineryBlastFurnace);
@@ -334,6 +336,176 @@ void ColonyManagerWindow::render() {
 					districtButton("MC", Districts::MineCrust);
 					districtButton("MM", Districts::MineMantle);
 					districtButton("MMC", Districts::MineMoltenCore);
+					
+					// två block till vänster med byggnader/orbital, stats till höger
+					
+					with_Group {
+						with_Group {
+							uint8_t count = 0;
+							
+							auto orbitalBuildingButton = [&](const OrbitalBuilding* building, const BuildingState* state) {
+								if ((count & 0x7) != 0) {
+									ImGui::SameLine(0, 2);
+								}
+								
+								ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(2, 2));
+								ImGui::PushID(100 | count);
+								
+								bool enabled = true; //TODO check spaceport built
+								
+								if (ImGui::Button("##building", ImVec2(30, 32))) {
+									if (building != nullptr) {
+										//TODO open modal with disable and demolish buttons
+									}
+								}
+								
+								if (ImGui::IsItemVisible()) {
+									const ImGuiStyle& style = ImGui::GetStyle();
+									const ImVec2 min = ImGui::GetItemRectMin();
+									const ImVec2 max = ImGui::GetItemRectMax();
+									const ImRect bb(min, max);
+									
+									if (building != nullptr) {
+										ImVec2 label_size = ImGui::CalcTextSize(building->symbol.cbegin(), building->symbol.cend(), true);
+										ImGui::RenderTextClipped(min + style.FramePadding, max - style.FramePadding, building->symbol.cbegin(), building->symbol.cend(), &label_size, ImVec2(0.5f, 0), &bb);
+									} else {
+										std::string_view text = enabled ? "-" : "#";
+										ImVec2 label_size = ImGui::CalcTextSize(text.cbegin(), text.cend(), true);
+										ImGui::RenderTextClipped(min + style.FramePadding, max - style.FramePadding, text.cbegin(), text.cend(), &label_size, ImVec2(0.5f, 0.5), &bb);
+									}
+									
+									if (ImGui::IsItemHovered()) {
+										with_Tooltip {
+											if (building != nullptr) {
+												ImGui::TextUnformatted(building->name.cbegin(), building->name.cend());
+											}
+											
+											if (!enabled) {
+												ImGui::TextUnformatted("Orbital building slots are unlocked when a spaceport is built");
+											}
+										}
+									}
+								}
+								
+								ImGui::PopID();
+								ImGui::PopStyleVar();
+								count++;
+							};
+							
+							for (uint_fast8_t i = 0; i < colony.orbitalBuildings.capacity(); i++) {
+								const OrbitalBuilding* building = colony.orbitalBuildings.size() > i ? colony.orbitalBuildings[i] : nullptr;
+								const BuildingState* state = colony.orbitalBuildingStates.size() > i ? colony.orbitalBuildingStates[i] : nullptr;
+								orbitalBuildingButton(building, state);
+							}
+						}
+						
+						with_Group {
+							uint8_t count = 0;
+							
+							auto terrestialBuildingButton = [&](const TerrestrialBuilding* building, const BuildingState* state) {
+								if (lastDistrictType != DistrictType::_size_constant) {
+									if ((count & 0x7) != 0) {
+										ImGui::SameLine(0, 2);
+									}
+								}
+								
+								ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(2, 2));
+								ImGui::PushID(200 | count);
+								
+								bool enabled = std::log10(colony.population) >= count;
+								
+								if (ImGui::Button("##building", ImVec2(30, 32))) {
+									if (building != nullptr) {
+										//TODO open modal with disable and demolish buttons
+									}
+								}
+								
+								if (ImGui::IsItemVisible()) {
+									const ImGuiStyle& style = ImGui::GetStyle();
+									const ImVec2 min = ImGui::GetItemRectMin();
+									const ImVec2 max = ImGui::GetItemRectMax();
+									const ImRect bb(min, max);
+									
+									if (building != nullptr) {
+										ImVec2 label_size = ImGui::CalcTextSize(building->symbol.cbegin(), building->symbol.cend(), true);
+										ImGui::RenderTextClipped(min + style.FramePadding, max - style.FramePadding, building->symbol.cbegin(), building->symbol.cend(), &label_size, ImVec2(0.5f, 0), &bb);
+									} else {
+										std::string_view text = enabled ? "-" : "#";
+										ImVec2 label_size = ImGui::CalcTextSize(text.cbegin(), text.cend(), true);
+										ImGui::RenderTextClipped(min + style.FramePadding, max - style.FramePadding, text.cbegin(), text.cend(), &label_size, ImVec2(0.5f, 0.5), &bb);
+									}
+									
+									if (ImGui::IsItemHovered()) {
+										with_Tooltip {
+											if (building != nullptr) {
+												ImGui::TextUnformatted(building->name.cbegin(), building->name.cend());
+											}
+											
+											ImGui::Text("Building slot unlocked at %lu population", pow64(10, count));
+										}
+									}
+								}
+								
+								ImGui::PopID();
+								ImGui::PopStyleVar();
+								count++;
+							};
+							
+							for (uint_fast8_t i = 0; i < colony.terrestialBuildings.capacity(); i++) {
+								const TerrestrialBuilding* building = colony.terrestialBuildings.size() > i ? colony.terrestialBuildings[i] : nullptr;
+								const BuildingState* state = colony.terrestialBuildingStates.size() > i ? colony.terrestialBuildingStates[i] : nullptr;
+								terrestialBuildingButton(building, state);
+							}
+						}
+					}
+					
+					ImGui::SameLine();
+					with_Group {
+						ImGui::Text("Population: %lu", colony.population);
+						
+						if (ImGui::BeginTable("land-area", 2, ImGuiTableFlags_Resizable | ImGuiTableFlags_SizingFixedFit | ImGuiTableFlags_NoSavedSettings | ImGuiTableFlags_NoBordersInBodyUntilResize)) {
+							ImGui::TableSetupColumn("", ImGuiTableColumnFlags_NoResize);
+							ImGui::TableSetupColumn("", ImGuiTableColumnFlags_None);
+							
+							auto printLandArea = [&](std::string_view name, uint64_t landarea){
+								ImGui::TableNextColumn();
+								ImGui::TextUnformatted(name.cbegin(), name.cend());
+								ImGui::TableNextColumn();
+								rightAlignedTableText("%6llu km²", landarea);
+							};
+							
+							uint64_t freeLand = planet.usableLandArea - colony.housingLandArea - colony.farmingLandArea - colony.industrialLandArea - colony.miningLandArea;
+							printLandArea("Usable land area:", freeLand);
+							printLandArea("Arable land area:", std::min(freeLand, planet.arableLandArea - colony.farmingLandArea));
+							printLandArea("Blocked land area:", planet.blockedLandArea);
+							printLandArea("Farming land area:", colony.farmingLandArea);
+							printLandArea("Housing land area:", colony.housingLandArea);
+							printLandArea("Mining land area:", colony.miningLandArea);
+							printLandArea("Industrial land area:", colony.industrialLandArea);
+							printLandArea("Power land area:", colony.powerLandArea);
+							
+							ImGui::EndTable();
+						}
+						
+						if (ImGui::BeginTable("water", 2, ImGuiTableFlags_Resizable | ImGuiTableFlags_SizingFixedFit | ImGuiTableFlags_NoSavedSettings | ImGuiTableFlags_NoBordersInBodyUntilResize)) {
+							ImGui::TableSetupColumn("", ImGuiTableColumnFlags_NoResize);
+							ImGui::TableSetupColumn("", ImGuiTableColumnFlags_None);
+							
+							auto printWater = [&](std::string_view name, uint64_t water){
+								ImGui::TableNextColumn();
+								ImGui::TextUnformatted(name.cbegin(), name.cend());
+								ImGui::TableNextColumn();
+								rightAlignedTableText("%6llu km³", water);
+							};
+							
+							printWater("Fresh water:", planet.freshWater / Units::CUBIC_KILOMETRE);
+							printWater("Sea water:", planet.seaWater / Units::CUBIC_KILOMETRE);
+							printWater("Glacier water:", planet.glacierWater / Units::CUBIC_KILOMETRE);
+							printWater("Polluted water:", planet.pollutedWater / Units::CUBIC_KILOMETRE);
+							
+							ImGui::EndTable();
+						}
+					}
 					
 					ImGui::EndTabItem();
 				}

@@ -103,7 +103,7 @@ struct ContainerPart: Part {
 };
 
 struct CargoContainerPart: public ContainerPart {
-	CargoContainerPart(uint32_t capacity): ContainerPart(capacity, &CargoTypes::GENERIC) {};
+	CargoContainerPart(uint32_t capacity): ContainerPart(capacity, &CargoTypes::GOODS) {};
 };
 
 struct OreContainerPart: public ContainerPart {

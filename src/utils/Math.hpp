@@ -17,17 +17,18 @@
 namespace Units {
 	const double AU = 149597870.7; // In km
 	const double C = 299792.458; // In km
-	const long KILO = 1000;
-	const long MEGA = 1000 * KILO;
-	const long GIGA = 1000 * MEGA;
-	const long TERA = 1000 * GIGA;
+	const uint32_t KILO = 1000;
+	const uint64_t MEGA = 1000 * KILO;
+	const uint64_t GIGA = 1000 * MEGA;
+	const uint64_t TERA = 1000 * GIGA;
 	
-	const long CUBIC_DECIMETRE = 1000;
-	const long CUBIC_METRE     = 1000 * CUBIC_DECIMETRE;
+	const uint32_t CUBIC_DECIMETRE = 1000U;
+	const uint64_t CUBIC_METRE     = 1000UL * CUBIC_DECIMETRE;
+	const __int128_t CUBIC_KILOMETRE = 1000000000UL * CUBIC_METRE;
 	
-	const long NANO_MICRO = 1000;
-	const long NANO_MILLI = 1000 * NANO_MICRO;
-	const long NANO_SECOND = 1000 * NANO_MILLI;
+	const uint64_t NANO_MICRO = 1000;
+	const uint64_t NANO_MILLI = 1000 * NANO_MICRO;
+	const uint64_t NANO_SECOND = 1000 * NANO_MILLI;
 };
 
 using Eigen::Vector2i;
@@ -127,5 +128,19 @@ double getPositiveRootOfQuadraticEquation(double a, double b, double c);
 std::optional<double> getPositiveRootOfQuadraticEquationSafe(double a, double b, double c);
 
 double exponentialAverage(double newValue, double expAverage, double delay);
+
+constexpr uint64_t pow64(uint64_t base, uint64_t exponent) {
+	uint64_t result = 1;
+	while (true) {
+		if (exponent & 1) {
+			result *= base;
+		}
+		exponent >>= 1;
+		if (!exponent) break;
+		base *= base;
+	}
+	
+	return result;
+}
 
 #endif /* SRC_UTILS_MATH_HPP_ */

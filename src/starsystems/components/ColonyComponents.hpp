@@ -17,6 +17,7 @@
 #include "utils/enum.h"
 #include "utils/SmallList.hpp"
 #include "utils/BitVector.hpp"
+#include "utils/Math.hpp"
 
 BETTER_ENUM(MiningLayer, uint8_t,
 	Surface, Crust, Mantle, MoltenCore
@@ -29,12 +30,13 @@ struct OreDeposit {
 };
 
 struct PlanetComponent {
-	uint64_t freshWater = 0;
-	uint64_t seaWater = 0;
-	uint64_t pollutedWater = 0;
+	__int128_t freshWater = 0; //  fresh groundwater + fresh water lakes, cm³
+	__int128_t glacierWater = 0; // permanent snow + glaciers
+	__int128_t seaWater = 0; // sea + saline groundwater + saline lakes
+	__int128_t pollutedWater = 0;
 	uint64_t usableLandArea = 0; // km²
 	uint64_t arableLandArea = 0; // km² (subtracts from usable when used)
-	uint64_t blockedLandArea = 0;
+	uint64_t blockedLandArea = 0; // when removed add to usable
 	uint8_t gravity = 100; // percentage of earth
 	uint16_t atmosphericDensity = 1225; // g/m³ at 1013.25 hPa (abs) and 15°C
 	uint8_t atmospheBreathability = 100; // percentage
@@ -180,17 +182,22 @@ struct Shipyard {
 };
 
 struct Building {
-	std::string_view name;
+	const std::string_view symbol;
+	const std::string_view name;
 	uint64_t cost[Resources::ALL_CONSTRUCTION_size];
 	
-	Building(const char* name): name(name) {};
+	constexpr Building(const char* symbol, const char* name, const std::array<uint64_t, Resources::ALL_CONSTRUCTION_size> cost2): symbol(symbol), name(name) {
+		for (uint_fast8_t i = 0; i < Resources::ALL_CONSTRUCTION_size; i++) {
+			cost[i] = cost2[i];
+		}
+	};
 };
 
 struct TerrestrialBuilding: public Building {
-	TerrestrialBuilding(const char* name): Building(name) {};
+	constexpr TerrestrialBuilding(const char* symbol, const char* name, const std::array<uint64_t, Resources::ALL_CONSTRUCTION_size> cost): Building(symbol, name, cost) {};
 };
 struct OrbitalBuilding: public Building {
-	OrbitalBuilding(const char* name): Building(name) {};
+	constexpr OrbitalBuilding(const char* symbol, const char* name, const std::array<uint64_t, Resources::ALL_CONSTRUCTION_size> cost): Building(symbol, name, cost) {};
 };
 
 struct BuildingState {
@@ -207,37 +214,41 @@ BETTER_ENUM(DistrictType, uint8_t,
 struct District {
 	std::string_view name;
 	DistrictType type;
+	uint64_t powerUsage;
+	uint32_t landUsage;
 	
-	constexpr District(const char* name, DistrictType type): name(name), type(type) {};
+	constexpr District(const char* name, DistrictType type, uint32_t landUsage, uint64_t powerUsage)
+	: name(name), type(type), powerUsage(powerUsage), landUsage(landUsage) {};
 };
 
 struct Districts {
-	static inline constexpr District HousingLowDensity { "Low density housing", DistrictType::Housing };
-	static inline constexpr District HousingHighDensity { "High density housing", DistrictType::Housing };
+	static inline constexpr District HousingLowDensity { "Low density housing", DistrictType::Housing, 4, 8 * Units::MEGA };
+	static inline constexpr District HousingHighDensity { "High density housing", DistrictType::Housing, 1, 5 * Units::MEGA };
 	
-	static inline constexpr District Farm { "Farm", DistrictType::Farming };
+	static inline constexpr District FarmCrops { "Crops", DistrictType::Farming, 100, 0 }; // High land efficency, low happiness
+	static inline constexpr District FarmLivestock { "Livestock", DistrictType::Farming, 500, 0 }; // Low land efficency, high happiness
 	
-	static inline constexpr District GeneralIndustry { "General industry", DistrictType::Industry };
-	static inline constexpr District RefineryBlastFurnace { "Blast furnace", DistrictType::Industry };
-	static inline constexpr District RefineryArcFurnace { "Arc furnace", DistrictType::Industry };
-	static inline constexpr District RefinerySmeltery { "Glass smeltery", DistrictType::Industry };
-	static inline constexpr District RefinerySemiconductorFab { "Semiconductor fabrication plant", DistrictType::Industry };
-	static inline constexpr District RefineryEnricher { "Uranium enricher", DistrictType::Industry };
-	static inline constexpr District RefineryChemicalPlant { "Chemical plant", DistrictType::Industry };
-	static inline constexpr District RefineryFuelRefinery { "Fuel refinery", DistrictType::Industry };
-	static inline constexpr District RefineryLithium { "Lithium refinery", DistrictType::Industry };
+	static inline constexpr District GeneralIndustry { "General industry", DistrictType::Industry, 10, 10 * Units::MEGA };
+	static inline constexpr District RefineryBlastFurnace { "Blast furnace", DistrictType::Industry, 10, 0 * Units::MEGA };
+	static inline constexpr District RefineryArcFurnace { "Arc furnace", DistrictType::Industry, 10, 50 * Units::MEGA };
+	static inline constexpr District RefinerySmeltery { "Glass smeltery", DistrictType::Industry, 10 , 50 * Units::MEGA};
+	static inline constexpr District RefinerySemiconductorFab { "Semiconductor fabrication plant", DistrictType::Industry, 20, 30 * Units::MEGA };
+	static inline constexpr District RefineryEnricher { "Uranium enricher", DistrictType::Industry, 20, 10 * Units::MEGA };
+	static inline constexpr District RefineryChemicalPlant { "Chemical plant", DistrictType::Industry, 10, 10 * Units::MEGA };
+	static inline constexpr District RefineryFuelRefinery { "Fuel refinery", DistrictType::Industry, 10, 10 * Units::MEGA };
+	static inline constexpr District RefineryLithium { "Lithium refinery", DistrictType::Industry, 10, 10 * Units::MEGA };
 	
-	static inline constexpr District PowerSolar { "Solar power plant", DistrictType::Power };
-	static inline constexpr District PowerCoal { "Coal power plant", DistrictType::Power };
-	static inline constexpr District PowerFission { "Nuclear fission power plant", DistrictType::Power };
-	static inline constexpr District PowerFusion { "Fusion power plant", DistrictType::Power };
+	static inline constexpr District PowerSolar { "Solar power plant", DistrictType::Power, 100, 0 };
+	static inline constexpr District PowerCoal { "Coal power plant", DistrictType::Power, 10, 0 };
+	static inline constexpr District PowerFission { "Nuclear fission power plant", DistrictType::Power, 10, 0 };
+	static inline constexpr District PowerFusion { "Fusion power plant", DistrictType::Power, 10, 0 };
 	
-	static inline constexpr District MineSurface { "Surface mine", DistrictType::Mining };
-	static inline constexpr District MineCrust { "Mine", DistrictType::Mining };
-	static inline constexpr District MineMantle { "Mantle extractor", DistrictType::Mining };
-	static inline constexpr District MineMoltenCore { "Molten core pump", DistrictType::Mining };
+	static inline constexpr District MineSurface { "Surface mine", DistrictType::Mining, 50, 20 * Units::MEGA };
+	static inline constexpr District MineCrust { "Mine", DistrictType::Mining, 30, 30 * Units::MEGA };
+	static inline constexpr District MineMantle { "Mantle extractor", DistrictType::Mining, 30, 40 * Units::MEGA };
+	static inline constexpr District MineMoltenCore { "Molten core pump", DistrictType::Mining, 30, 50 * Units::MEGA };
 	
-	static inline constexpr const District* ALL[] { &HousingLowDensity, &HousingHighDensity, &Farm,
+	static inline constexpr const District* ALL[] { &HousingLowDensity, &HousingHighDensity, &FarmCrops, &FarmLivestock,
 	                                                &GeneralIndustry, &RefineryBlastFurnace, &RefineryArcFurnace,
 	                                                &RefinerySmeltery, &RefinerySemiconductorFab, &RefineryEnricher,
 	                                                &RefineryChemicalPlant, &RefineryFuelRefinery, &RefineryLithium,
@@ -278,13 +289,14 @@ struct ColonyComponent {
 	uint64_t population = 0;
 	uint64_t housingLandArea = 0;
 	uint64_t farmingLandArea = 0;
+	uint64_t powerLandArea = 0;
 	uint64_t industrialLandArea = 0; // pollutes water
 	uint64_t miningLandArea = 0; // pollutes water
 	uint16_t districtAmounts[Districts::ALL_size];
-	SmallList<TerrestrialBuilding*, 32> buildings;
-	SmallList<OrbitalBuilding*, 32> orbitalBuildings;
-	SmallList<BuildingState*, 32> buildingStates;
-	SmallList<BuildingState*, 32> orbitalBuildingStates;
+	SmallList<TerrestrialBuilding*, 24> terrestialBuildings; // 1 Slot per log(pop)
+	SmallList<OrbitalBuilding*, 24> orbitalBuildings;
+	SmallList<BuildingState*, 24> terrestialBuildingStates;
+	SmallList<BuildingState*, 24> orbitalBuildingStates;
 	SmallList<Shipyard, 8> shipyards;
 };
 

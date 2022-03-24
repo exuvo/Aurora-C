@@ -43,6 +43,8 @@ public:
 
 	// Returns the number of elements in the list.
 	uint32_t size() const;
+	
+	uint32_t capacity() const;
 
 	// Returns the nth element.
 	T& operator[](uint32_t n);
@@ -327,6 +329,11 @@ bool SmallList<T, STACK_SIZE>::empty() const {
 template<class T, int STACK_SIZE>
 uint32_t SmallList<T, STACK_SIZE>::size() const {
 	return ld.num;
+}
+
+template<class T, int STACK_SIZE>
+uint32_t SmallList<T, STACK_SIZE>::capacity() const {
+	return ld.cap;
 }
 
 template<class T, int STACK_SIZE>

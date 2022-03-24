@@ -137,6 +137,8 @@ void EmpireOverviewWindow::render() {
 //						}
 					};
 					
+					(void) drawIcon; //TODO remove when drawIcon is used
+					
 					std::unique_lock<LockableBase(std::mutex)> lock(Aurora.galaxy->shadowLock);
 					
 					std::vector<EntityReference> systemColonies(empire->colonies.size());

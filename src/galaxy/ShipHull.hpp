@@ -64,7 +64,7 @@ struct ShipHull {
 	uint32_t preferredCargoMass;
 	uint32_t preferredMunitionMass;
 	uint32_t maxFuelMass;
-	uint32_t maxSuppliesMass;
+	uint32_t maxLifeSupportMass;
 	uint32_t maxCargoVolume;
 	uint32_t maxMunitionVolume;
 	uint64_t volume; // cm³

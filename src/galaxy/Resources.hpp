@@ -52,7 +52,8 @@ struct Resources {
 	static inline constexpr Resource RARE_EARTH_METALS { "Rare Earth Metals", "La", 7.0 }; // Neodymium 7.0 g/cm³. https://en.wikipedia.org/wiki/Rare-earth_element, https://en.wikipedia.org/wiki/Lanthanide
 	static inline constexpr Resource LITHIUM_CARBONATE { "Lithium Carbonate", "Li", 2.1 }; // Lithium carbonate 2.11 g/cm³
 	static inline constexpr Resource SULFUR { "Sulfur", "S", 2.1 }; // Sulfur solid 2.07 g/cm³
-	static inline constexpr Resource OIL { "Crude Oil", "C", 0.9 }; // Medium crude oil 0.90 g/cm³
+	static inline constexpr Resource COAL { "Coal", "C", 1.4 }; // Coal 1.4 g/cm³
+	static inline constexpr Resource OIL { "Crude Oil", "CH", 0.9 }; // Medium crude oil 0.90 g/cm³
 	// Refined
 	static inline constexpr Resource STEEL { "Steel", 11.7 }; // Steel 11.7 g/cm³, Concrete 2.4 g/cm³, Carbonfiber, , Ceramics 4 g/cm³
 	static inline constexpr Resource ALUMINIUM { "Aluminium", 2.7 }; // Aluminium 2.7 g/cm³
@@ -62,8 +63,8 @@ struct Resources {
 	static inline constexpr Resource LITHIUM { "Lithium", 0.53 }; // Lithium 0.53 g/cm³
 	static inline constexpr Resource EXPLOSIVES { "Explosives", 1.6 }; // Nitroglycering 1.6 g/cm³
 	// Goods
-	static inline constexpr Resource MAINTENANCE_SUPPLIES { "Supplies", 0.8 };
-	static inline constexpr Resource PARTS { "Parts", 1 };
+	static inline constexpr Resource MAINTENANCE_SUPPLIES { "Spare Parts", 0.8 };
+	// Munitions
 	static inline constexpr Resource MISSILES { "Missiles", 0 };
 	static inline constexpr Resource SABOTS { "Sabots", 0 };
 	// Requires radiation shielding
@@ -73,33 +74,34 @@ struct Resources {
 	// Liquid deuterium (0.162 g/cm³) https://en.wikipedia.org/wiki/Deuterium#Data_for_elemental_deuterium
 	static inline constexpr Resource NUCLEAR_FUSION { "Helium-3", 0.1624 }; // Deuterium-Tritium, Helium-3. See 'Fusion Reactor Fuel Modes' at http://forum.kerbalspaceprogram.com/index.php?/topic/155255-12213-kspi-extended-11414-05-7-2017-support-release-thread/
 	static inline constexpr Resource ROCKET_FUEL { "Rocket Fuel", 1.5 }; // ~1.5 g/cm³, LOX + kerosene, LOX + H, nitrogen tetroxide + hydrazine. https://en.wikipedia.org/wiki/Rocket_propellant#Liquid_propellants
-	// Requires temperature and atmosphere control
-	static inline constexpr Resource LIFE_SUPPORT { "Life Support", 1.0 }; // Food, Water, Air
+	// Requires temperature control
+	static inline constexpr Resource FOOD { "Food", 0.79 }; // Wheat grain 0.79 g/cm³
+	static inline constexpr Resource WATER { "Water", "W", 1.0 };
 	
 	static inline constexpr const Resource* ALL[] { &IRON, &ALUMINA, &TITANIUM_OXIDE, &SILICA, &COPPER,
-	                                                &RARE_EARTH_METALS, &LITHIUM_CARBONATE, &SULFUR, &OIL,
-	                                                &STEEL, &ALUMINIUM, &TITANIUM, &GLASS, &SEMICONDUCTORS, 
+	                                                &RARE_EARTH_METALS, &LITHIUM_CARBONATE, &SULFUR, &OIL, &COAL,
+	                                                &STEEL, &ALUMINIUM, &TITANIUM, &GLASS, &SEMICONDUCTORS,
 	                                                &LITHIUM, &EXPLOSIVES,
-	                                                &MAINTENANCE_SUPPLIES, &PARTS, &MISSILES, &SABOTS,
+	                                                &MAINTENANCE_SUPPLIES, &MISSILES, &SABOTS,
 	                                                &NUCLEAR_FISSION, &NUCLEAR_WASTE,
 	                                                &NUCLEAR_FUSION, &ROCKET_FUEL,
-	                                                &LIFE_SUPPORT };
+	                                                &FOOD, &WATER };
 	
-	static inline constexpr const Resource* ALL_ORE[] {&Resources::IRON, &Resources::ALUMINA, &Resources::TITANIUM_OXIDE,
-	                                                   &Resources::SILICA, &Resources::COPPER, &Resources::RARE_EARTH_METALS,
-	                                                   &Resources::LITHIUM_CARBONATE, &Resources::SULFUR, &Resources::OIL};
+	static inline constexpr const Resource* ALL_ORE[] {&IRON, &ALUMINA, &TITANIUM_OXIDE,
+	                                                   &SILICA, &COPPER, &RARE_EARTH_METALS,
+	                                                   &LITHIUM_CARBONATE, &SULFUR, &COAL, &OIL};
 	
 	static inline constexpr const Resource* ALL_CONSTRUCTION[] { &IRON, &ALUMINA, &TITANIUM_OXIDE, &SILICA, &COPPER, &RARE_EARTH_METALS,
 	                                                             &STEEL, &ALUMINIUM, &TITANIUM, &GLASS, &SEMICONDUCTORS, &LITHIUM, &EXPLOSIVES };
 	
-	static inline constexpr const Resource* ALL_GOODS_UI[] { &MAINTENANCE_SUPPLIES, &LIFE_SUPPORT, &PARTS };
+	static inline constexpr const Resource* ALL_GOODS_UI[] { &MAINTENANCE_SUPPLIES, &FOOD, &WATER };
 	static inline constexpr const Resource* ALL_FUEL_UI[] { &ROCKET_FUEL, &NUCLEAR_FUSION, &NUCLEAR_FISSION, &NUCLEAR_WASTE };
 	
-	static inline constexpr const size_t ALL_size = ARRAY_LENGTH(ALL);
-	static inline constexpr const size_t ALL_ORE_size = ARRAY_LENGTH(ALL_ORE);
-	static inline constexpr const size_t ALL_CONSTRUCTION_size = ARRAY_LENGTH(ALL_CONSTRUCTION);
-	static inline constexpr const size_t ALL_GOODS_UI_size = ARRAY_LENGTH(ALL_GOODS_UI);
-	static inline constexpr const size_t ALL_FUEL_UI_size = ARRAY_LENGTH(ALL_FUEL_UI);
+	static inline constexpr size_t ALL_size = ARRAY_LENGTH(ALL);
+	static inline constexpr size_t ALL_ORE_size = ARRAY_LENGTH(ALL_ORE);
+	static inline constexpr size_t ALL_CONSTRUCTION_size = ARRAY_LENGTH(ALL_CONSTRUCTION);
+	static inline constexpr size_t ALL_GOODS_UI_size = ARRAY_LENGTH(ALL_GOODS_UI);
+	static inline constexpr size_t ALL_FUEL_UI_size = ARRAY_LENGTH(ALL_FUEL_UI);
 };
 
 struct ResourcePnt {
@@ -177,34 +179,31 @@ struct CargoType {
 
 // Always store these in pointers, otherwise comparisons will fail
 struct CargoTypes {
-	static inline constexpr const Resource* ORE_[] {&Resources::IRON, &Resources::ALUMINA, &Resources::TITANIUM_OXIDE, &Resources::SILICA, &Resources::COPPER, &Resources::RARE_EARTH_METALS, &Resources::LITHIUM_CARBONATE, &Resources::SULFUR, &Resources::OIL};
+	static inline constexpr const Resource* ORE_[] {&Resources::IRON, &Resources::ALUMINA, &Resources::TITANIUM_OXIDE, &Resources::SILICA, &Resources::COPPER, &Resources::RARE_EARTH_METALS, &Resources::LITHIUM_CARBONATE, &Resources::SULFUR, &Resources::COAL, &Resources::OIL};
 	static inline constexpr const Resource* REFINED_[] {&Resources::STEEL, &Resources::ALUMINIUM, &Resources::TITANIUM, &Resources::GLASS, &Resources::SEMICONDUCTORS, &Resources::LITHIUM, &Resources::EXPLOSIVES};
-	static inline constexpr const Resource* GOODS_[] {&Resources::MAINTENANCE_SUPPLIES, &Resources::PARTS};
-	static inline constexpr const Resource* GENERIC_[] {&Resources::MAINTENANCE_SUPPLIES, &Resources::PARTS, &Resources::MISSILES, &Resources::SABOTS, &Resources::STEEL, &Resources::ALUMINIUM, &Resources::TITANIUM, &Resources::GLASS, &Resources::SEMICONDUCTORS, &Resources::LITHIUM, &Resources::EXPLOSIVES};
+	static inline constexpr const Resource* GOODS_[] {&Resources::MAINTENANCE_SUPPLIES, &Resources::MISSILES, &Resources::SABOTS, &Resources::STEEL, &Resources::ALUMINIUM, &Resources::TITANIUM, &Resources::GLASS, &Resources::SEMICONDUCTORS, &Resources::LITHIUM, &Resources::EXPLOSIVES};
 	static inline constexpr const Resource* AMMUNITION_[] {&Resources::MISSILES, &Resources::SABOTS};
 	static inline constexpr const Resource* FUEL_[] {&Resources::ROCKET_FUEL};
-	static inline constexpr const Resource* LIFE_SUPPORT_[] {&Resources::LIFE_SUPPORT};
+	static inline constexpr const Resource* LIFE_SUPPORT_[] { &Resources::WATER, &Resources::FOOD};
 	static inline constexpr const Resource* NUCLEAR_[] {&Resources::NUCLEAR_FISSION, &Resources::NUCLEAR_WASTE, &Resources::NUCLEAR_FUSION};
 	
-	static inline const CargoType ORE {{&Resources::IRON, &Resources::ALUMINA, &Resources::TITANIUM_OXIDE, &Resources::SILICA, &Resources::COPPER, &Resources::RARE_EARTH_METALS, &Resources::LITHIUM_CARBONATE, &Resources::SULFUR, &Resources::OIL}};
+	static inline const CargoType ORE {{&Resources::IRON, &Resources::ALUMINA, &Resources::TITANIUM_OXIDE, &Resources::SILICA, &Resources::COPPER, &Resources::RARE_EARTH_METALS, &Resources::LITHIUM_CARBONATE, &Resources::SULFUR, &Resources::COAL, &Resources::OIL}};
 	static inline const CargoType REFINED {{&Resources::STEEL, &Resources::ALUMINIUM, &Resources::TITANIUM, &Resources::GLASS, &Resources::SEMICONDUCTORS, &Resources::LITHIUM, &Resources::EXPLOSIVES}};
-	static inline const CargoType GOODS {{&Resources::MAINTENANCE_SUPPLIES, &Resources::PARTS}};
-	static inline const CargoType GENERIC {{&Resources::MAINTENANCE_SUPPLIES, &Resources::PARTS, &Resources::MISSILES, &Resources::SABOTS, &Resources::STEEL, &Resources::ALUMINIUM, &Resources::TITANIUM, &Resources::GLASS, &Resources::SEMICONDUCTORS, &Resources::LITHIUM, &Resources::EXPLOSIVES}};
+	static inline const CargoType GOODS {{&Resources::MAINTENANCE_SUPPLIES, &Resources::MISSILES, &Resources::SABOTS, &Resources::STEEL, &Resources::ALUMINIUM, &Resources::TITANIUM, &Resources::GLASS, &Resources::SEMICONDUCTORS, &Resources::LITHIUM, &Resources::EXPLOSIVES}};
 	static inline const CargoType AMMUNITION {{&Resources::MISSILES, &Resources::SABOTS}};
 	static inline const CargoType FUEL {{&Resources::ROCKET_FUEL}};
-	static inline const CargoType LIFE_SUPPORT {{&Resources::LIFE_SUPPORT}};
+	static inline const CargoType LIFE_SUPPORT {{&Resources::WATER, &Resources::FOOD}};
 	static inline const CargoType NUCLEAR {{&Resources::NUCLEAR_FISSION, &Resources::NUCLEAR_WASTE, &Resources::NUCLEAR_FUSION}};
 	
-	static inline constexpr const CargoType* ALL[] { &ORE, &REFINED, &GENERIC, &AMMUNITION, &FUEL, &LIFE_SUPPORT, &NUCLEAR };
-	static inline constexpr const size_t ALL_size = ARRAY_LENGTH(ALL);
-	static inline constexpr const size_t ORE_size = ARRAY_LENGTH(ORE_);
-	static inline constexpr const size_t REFINED_size = ARRAY_LENGTH(REFINED_);
-	static inline constexpr const size_t GOODS_size = ARRAY_LENGTH(GOODS_);
-	static inline constexpr const size_t GENERIC_size = ARRAY_LENGTH(GENERIC_);
-	static inline constexpr const size_t AMMUNITION_size = ARRAY_LENGTH(AMMUNITION_);
-	static inline constexpr const size_t FUEL_size = ARRAY_LENGTH(FUEL_);
-	static inline constexpr const size_t LIFE_SUPPORT_size = ARRAY_LENGTH(LIFE_SUPPORT_);
-	static inline constexpr const size_t NUCLEAR_size = ARRAY_LENGTH(NUCLEAR_);
+	static inline constexpr const CargoType* ALL[] { &ORE, &REFINED, &AMMUNITION, &FUEL, &LIFE_SUPPORT, &NUCLEAR };
+	static inline constexpr size_t ALL_size = ARRAY_LENGTH(ALL);
+	static inline constexpr size_t ORE_size = ARRAY_LENGTH(ORE_);
+	static inline constexpr size_t REFINED_size = ARRAY_LENGTH(REFINED_);
+	static inline constexpr size_t GOODS_size = ARRAY_LENGTH(GOODS_);
+	static inline constexpr size_t AMMUNITION_size = ARRAY_LENGTH(AMMUNITION_);
+	static inline constexpr size_t FUEL_size = ARRAY_LENGTH(FUEL_);
+	static inline constexpr size_t LIFE_SUPPORT_size = ARRAY_LENGTH(LIFE_SUPPORT_);
+	static inline constexpr size_t NUCLEAR_size = ARRAY_LENGTH(NUCLEAR_);
 };
 
 struct CargoTypePnt {

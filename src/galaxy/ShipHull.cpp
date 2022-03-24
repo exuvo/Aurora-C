@@ -65,7 +65,7 @@ void ShipHull::calculateCachedValues() {
 	maxFuelMass = 0;
 	maxCargoVolume = 0;
 	maxMunitionVolume = 0;
-	maxSuppliesMass = 0;
+	maxLifeSupportMass = 0;
 	volume = 0;
 	maxPartHP = 0;
 	maxShieldHP = 0;
@@ -165,13 +165,22 @@ void ShipHull::calculateCachedValues() {
 				maxFuelMass += container->capacity / Resources::NUCLEAR_FISSION.specificVolume;
 				
 			} else if (container->cargoType == &CargoTypes::LIFE_SUPPORT) {
-				maxSuppliesMass += container->capacity / Resources::LIFE_SUPPORT.specificVolume;
+				maxLifeSupportMass += container->capacity / ((Resources::WATER.specificVolume + Resources::FOOD.specificVolume) / 2);
 				
 			} else if (container->cargoType == &CargoTypes::AMMUNITION) {
 				maxMunitionVolume += container->capacity;
 				
-			} else if (container->cargoType == &CargoTypes::GENERIC) {
-				maxCargoVolume += container->capacity / Resources::LIFE_SUPPORT.specificVolume;
+			} else if (container->cargoType == &CargoTypes::GOODS) {
+				maxCargoVolume += container->capacity;
+				
+			} else if (container->cargoType == &CargoTypes::ORE) {
+				maxCargoVolume += container->capacity;
+				
+			}  else if (container->cargoType == &CargoTypes::REFINED) {
+				maxCargoVolume += container->capacity;
+				
+			} else {
+				throw std::invalid_argument("Unknown cargo type");
 			}
 		}
 	}
@@ -204,7 +213,7 @@ void ShipHull::calculateCachedValues() {
 //	volume += armor;
 //	emptyMass += armor;
 	
-	loadedMass = emptyMass + preferredCargoMass + preferredMunitionMass + maxFuelMass + maxSuppliesMass;
+	loadedMass = emptyMass + preferredCargoMass + preferredMunitionMass + maxFuelMass + maxLifeSupportMass;
 }
 
 std::string ShipHull::toString() const {

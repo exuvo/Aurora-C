@@ -10,10 +10,10 @@
 
 #include <map>
 #include <utility>
+#include <array>
 
 #include "galaxy/Resources.hpp"
 #include "galaxy/MunitionHull.hpp"
-#include "utils/SmallList.hpp"
 
 struct ShipHull;
 struct ColonyComponent;
@@ -46,14 +46,9 @@ struct RefinedCargoContainer : public CargoContainer<RefinedCargoContainer> {
 	uint32_t resources[ARRAY_LENGTH(CargoTypes::REFINED_)];
 };
 
-// 8 bytes
+// 72 bytes
 struct GoodsCargoContainer : public CargoContainer<GoodsCargoContainer> {
 	uint32_t resources[ARRAY_LENGTH(CargoTypes::GOODS_)];
-};
-
-// 72 bytes
-struct NormalCargoContainer : public CargoContainer<NormalCargoContainer> {
-	uint32_t resources[ARRAY_LENGTH(CargoTypes::GENERIC_)];
 };
 
 // 8 bytes
@@ -80,7 +75,6 @@ struct CargoComponent {
 	OreCargoContainer ore;
 	RefinedCargoContainer refined;
 	GoodsCargoContainer goods;
-	NormalCargoContainer generic;
 	AmmunitionCargoContainer ammunition;
 	FuelCargoContainer fuel;
 	LifeSupportCargoContainer lifeSupport;
@@ -113,9 +107,9 @@ struct CargoComponent {
 	uint32_t getUsedCargoMass(MunitionHull* munition);
 	
 private:
-	SmallList<std::pair<RawCargoContainer*, uint8_t>, 2> getContainerList(const Resource* resource);
-	uint32_t addCargo(SmallList<std::pair<RawCargoContainer*, uint8_t>, 2> containers, const Resource* resource, uint32_t amount);
-	uint32_t retrieveCargo(SmallList<std::pair<RawCargoContainer*, uint8_t>, 2> containers, const Resource* resource, uint32_t amount);
+	constexpr std::array<std::pair<RawCargoContainer*, uint8_t>, 2> getContainerList(const Resource* resource);
+	uint32_t addCargo(std::array<std::pair<RawCargoContainer*, uint8_t>, 2> containers, const Resource* resource, uint32_t amount);
+	uint32_t retrieveCargo(std::array<std::pair<RawCargoContainer*, uint8_t>, 2> containers, const Resource* resource, uint32_t amount);
 };
 
 #endif /* SRC_STARSYSTEMS_COMPONENTS_CARGOCOMPONENT_HPP_ */
