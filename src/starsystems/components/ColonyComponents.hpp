@@ -216,37 +216,38 @@ struct District {
 	DistrictType type;
 	uint64_t powerUsage;
 	uint32_t landUsage;
+	uint32_t workers;
 	
-	constexpr District(const char* name, DistrictType type, uint32_t landUsage, uint64_t powerUsage)
-	: name(name), type(type), powerUsage(powerUsage), landUsage(landUsage) {};
+	constexpr District(const char* name, DistrictType type, uint32_t landUsage, uint32_t workers, uint64_t powerUsage)
+	: name(name), type(type), powerUsage(powerUsage), landUsage(landUsage), workers(workers) {};
 };
 
 struct Districts {
-	static inline constexpr District HousingLowDensity { "Low density housing", DistrictType::Housing, 4, 8 * Units::MEGA };
-	static inline constexpr District HousingHighDensity { "High density housing", DistrictType::Housing, 1, 5 * Units::MEGA };
+	static inline constexpr District HousingLowDensity { "Low density housing", DistrictType::Housing, 4, 10, 8 * Units::MEGA };
+	static inline constexpr District HousingHighDensity { "High density housing", DistrictType::Housing, 1, 10, 5 * Units::MEGA };
 	
-	static inline constexpr District FarmCrops { "Crops", DistrictType::Farming, 100, 0 }; // High land efficency, low happiness
-	static inline constexpr District FarmLivestock { "Livestock", DistrictType::Farming, 500, 0 }; // Low land efficency, high happiness
+	static inline constexpr District FarmCrops { "Crops", DistrictType::Farming, 100, 10, 0 }; // High land efficency, low happiness
+	static inline constexpr District FarmLivestock { "Livestock", DistrictType::Farming, 500, 10, 0 }; // Low land efficency, high happiness
 	
-	static inline constexpr District GeneralIndustry { "General industry", DistrictType::Industry, 10, 10 * Units::MEGA };
-	static inline constexpr District RefineryBlastFurnace { "Blast furnace", DistrictType::Industry, 10, 0 * Units::MEGA };
-	static inline constexpr District RefineryArcFurnace { "Arc furnace", DistrictType::Industry, 10, 50 * Units::MEGA };
-	static inline constexpr District RefinerySmeltery { "Glass smeltery", DistrictType::Industry, 10 , 50 * Units::MEGA};
-	static inline constexpr District RefinerySemiconductorFab { "Semiconductor fabrication plant", DistrictType::Industry, 20, 30 * Units::MEGA };
-	static inline constexpr District RefineryEnricher { "Uranium enricher", DistrictType::Industry, 20, 10 * Units::MEGA };
-	static inline constexpr District RefineryChemicalPlant { "Chemical plant", DistrictType::Industry, 10, 10 * Units::MEGA };
-	static inline constexpr District RefineryFuelRefinery { "Fuel refinery", DistrictType::Industry, 10, 10 * Units::MEGA };
-	static inline constexpr District RefineryLithium { "Lithium refinery", DistrictType::Industry, 10, 10 * Units::MEGA };
+	static inline constexpr District GeneralIndustry { "General industry", DistrictType::Industry, 10, 1000, 10 * Units::MEGA };
+	static inline constexpr District RefineryBlastFurnace { "Blast furnace", DistrictType::Industry, 10, 1000, 0 * Units::MEGA };
+	static inline constexpr District RefineryArcFurnace { "Arc furnace", DistrictType::Industry, 10, 1000, 50 * Units::MEGA };
+	static inline constexpr District RefinerySmeltery { "Glass smeltery", DistrictType::Industry, 10 , 1000, 50 * Units::MEGA};
+	static inline constexpr District RefinerySemiconductorFab { "Semiconductor fabrication plant", DistrictType::Industry, 20, 1000, 30 * Units::MEGA };
+	static inline constexpr District RefineryEnricher { "Uranium enricher", DistrictType::Industry, 20, 1000, 10 * Units::MEGA };
+	static inline constexpr District RefineryChemicalPlant { "Chemical plant", DistrictType::Industry, 10, 1000, 10 * Units::MEGA };
+	static inline constexpr District RefineryFuelRefinery { "Fuel refinery", DistrictType::Industry, 10, 1000, 10 * Units::MEGA };
+	static inline constexpr District RefineryLithium { "Lithium refinery", DistrictType::Industry, 10, 1000, 10 * Units::MEGA };
 	
-	static inline constexpr District PowerSolar { "Solar power plant", DistrictType::Power, 100, 0 };
-	static inline constexpr District PowerCoal { "Coal power plant", DistrictType::Power, 10, 0 };
-	static inline constexpr District PowerFission { "Nuclear fission power plant", DistrictType::Power, 10, 0 };
-	static inline constexpr District PowerFusion { "Fusion power plant", DistrictType::Power, 10, 0 };
+	static inline constexpr District PowerSolar { "Solar power plant", DistrictType::Power, 100, 10, 0 };
+	static inline constexpr District PowerCoal { "Coal power plant", DistrictType::Power, 10, 20, 0 };
+	static inline constexpr District PowerFission { "Nuclear fission power plant", DistrictType::Power, 10, 20, 0 };
+	static inline constexpr District PowerFusion { "Fusion power plant", DistrictType::Power, 10, 20, 0 };
 	
-	static inline constexpr District MineSurface { "Surface mine", DistrictType::Mining, 50, 20 * Units::MEGA };
-	static inline constexpr District MineCrust { "Mine", DistrictType::Mining, 30, 30 * Units::MEGA };
-	static inline constexpr District MineMantle { "Mantle extractor", DistrictType::Mining, 30, 40 * Units::MEGA };
-	static inline constexpr District MineMoltenCore { "Molten core pump", DistrictType::Mining, 30, 50 * Units::MEGA };
+	static inline constexpr District MineSurface { "Surface mine", DistrictType::Mining, 50, 200, 20 * Units::MEGA };
+	static inline constexpr District MineCrust { "Mine", DistrictType::Mining, 30, 200, 30 * Units::MEGA };
+	static inline constexpr District MineMantle { "Mantle extractor", DistrictType::Mining, 30, 50, 40 * Units::MEGA };
+	static inline constexpr District MineMoltenCore { "Molten core pump", DistrictType::Mining, 30, 50, 50 * Units::MEGA };
 	
 	static inline constexpr const District* ALL[] { &HousingLowDensity, &HousingHighDensity, &FarmCrops, &FarmLivestock,
 	                                                &GeneralIndustry, &RefineryBlastFurnace, &RefineryArcFurnace,
