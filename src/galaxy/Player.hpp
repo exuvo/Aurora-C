@@ -56,5 +56,4 @@ class Player {
 	public:
 };
 
-
 #endif /* SRC_GALAXY_PLAYER_HPP_ */

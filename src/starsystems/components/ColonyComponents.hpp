@@ -19,6 +19,9 @@
 #include "utils/BitVector.hpp"
 #include "utils/Math.hpp"
 
+#include <Refureku/NativeProperties.h>
+#include "refureku/ColonyComponents.rfkh.h"
+
 BETTER_ENUM(MiningLayer, uint8_t,
 	Surface, Crust, Mantle, MoltenCore
 )
@@ -29,7 +32,7 @@ struct OreDeposit {
 	ResourcePnt type = (uint8_t) 0;
 };
 
-struct PlanetComponent {
+struct RFKStruct(kodgen::ParseAllNested) PlanetComponent {
 	__int128_t freshWater = 0; //  fresh groundwater + fresh water lakes, cm³
 	__int128_t glacierWater = 0; // permanent snow + glaciers
 	__int128_t seaWater = 0; // sea + saline groundwater + saline lakes
@@ -49,6 +52,8 @@ struct PlanetComponent {
 	uint64_t cleanWater() const {
 		return freshWater + seaWater;
 	}
+	
+	PlanetComponent_GENERATED
 };
 
 struct Shipyard;
@@ -181,32 +186,6 @@ struct Shipyard {
 	};
 };
 
-struct Building {
-	const std::string_view symbol;
-	const std::string_view name;
-	uint64_t cost[Resources::ALL_CONSTRUCTION_size];
-	
-	constexpr Building(const char* symbol, const char* name, const std::array<uint64_t, Resources::ALL_CONSTRUCTION_size> cost2): symbol(symbol), name(name) {
-		for (uint_fast8_t i = 0; i < Resources::ALL_CONSTRUCTION_size; i++) {
-			cost[i] = cost2[i];
-		}
-	};
-};
-
-struct TerrestrialBuilding: public Building {
-	constexpr TerrestrialBuilding(const char* symbol, const char* name, const std::array<uint64_t, Resources::ALL_CONSTRUCTION_size> cost): Building(symbol, name, cost) {};
-};
-struct OrbitalBuilding: public Building {
-	constexpr OrbitalBuilding(const char* symbol, const char* name, const std::array<uint64_t, Resources::ALL_CONSTRUCTION_size> cost): Building(symbol, name, cost) {};
-};
-
-struct BuildingState {
-	uint32_t requestedPower = 0;
-	uint32_t givenPower = 0;
-	uint32_t upkeep[Resources::ALL_size];
-	uint32_t givenResources[Resources::ALL_size];
-};
-
 BETTER_ENUM(DistrictType, uint8_t,
 	Housing, Farming, Industry, Power, Mining
 )
@@ -286,7 +265,44 @@ struct DistrictPnt {
 	}
 };
 
-struct ColonyComponent {
+struct Building {
+	const std::string_view symbol;
+	const std::string_view name;
+	uint64_t cost[Resources::ALL_CONSTRUCTION_size];
+	
+	constexpr Building(const char* symbol, const char* name, const std::array<uint64_t, Resources::ALL_CONSTRUCTION_size> cost2)
+	: symbol(symbol), name(name) {
+		for (uint_fast8_t i = 0; i < Resources::ALL_CONSTRUCTION_size; i++) {
+			cost[i] = cost2[i];
+		}
+	};
+};
+
+struct TerrestrialBuilding: public Building {
+	constexpr TerrestrialBuilding(const char* symbol, const char* name, const std::array<uint64_t, Resources::ALL_CONSTRUCTION_size> cost)
+	: Building(symbol, name, cost) {};
+};
+struct OrbitalBuilding: public Building {
+	constexpr OrbitalBuilding(const char* symbol, const char* name, const std::array<uint64_t, Resources::ALL_CONSTRUCTION_size> cost)
+	: Building(symbol, name, cost) {};
+};
+
+struct BuildingSlot {
+	uint32_t requestedPower = 0;
+	uint32_t givenPower = 0;
+	uint32_t upkeep[Resources::ALL_size];
+	uint32_t givenResources[Resources::ALL_size];
+};
+
+struct TerrestialBuildingSlot : public BuildingSlot {
+	TerrestrialBuilding* building = nullptr;
+};
+
+struct OrbitalBuildingSlot : public BuildingSlot {
+	OrbitalBuilding* building = nullptr;
+};
+
+struct RFKStruct(kodgen::ParseAllNested) ColonyComponent {
 	uint64_t population = 0;
 	uint64_t housingLandArea = 0;
 	uint64_t farmingLandArea = 0;
@@ -294,11 +310,17 @@ struct ColonyComponent {
 	uint64_t industrialLandArea = 0; // pollutes water
 	uint64_t miningLandArea = 0; // pollutes water
 	uint16_t districtAmounts[Districts::ALL_size];
-	SmallList<TerrestrialBuilding*, 24> terrestialBuildings; // 1 Slot per log(pop)
-	SmallList<OrbitalBuilding*, 24> orbitalBuildings;
-	SmallList<BuildingState*, 24> terrestialBuildingStates;
-	SmallList<BuildingState*, 24> orbitalBuildingStates;
+	SmallList<OrbitalBuildingSlot, 24> orbitalBuildings;
+	SmallList<TerrestialBuildingSlot, 24> terrestialBuildings;
 	SmallList<Shipyard, 8> shipyards;
+	
+	ColonyComponent() {
+		orbitalBuildings.resize(terrestialBuildings.capacity());
+		terrestialBuildings.resize(terrestialBuildings.capacity());
+	}
+	
+	ColonyComponent_GENERATED
 };
 
+File_ColonyComponents_GENERATED
 #endif /* SRC_STARSYSTEMS_COMPONENTS_COLONYCOMPONENTS_HPP_ */

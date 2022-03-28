@@ -14,7 +14,7 @@
 #include "utils/Math.hpp"
 
 #include <Refureku/NativeProperties.h>
-#include "refureku/TimedComponents.rfk.h"
+#include "refureku/TimedComponents.rfkh.h"
 
 // In m, cm/s, cm/s²
 struct MovementValues {
@@ -124,7 +124,7 @@ struct InterpolatedComponent : public TimedComponent<T> {
 		}
 };
 
-struct RFKStruct(ParseAllNested) TimedMovementComponent: InterpolatedComponent<MovementValues> {
+struct RFKStruct(kodgen::ParseAllNested) TimedMovementComponent: InterpolatedComponent<MovementValues> {
 	using Tval = TimedValue<MovementValues>;
 	ApproachType approach = ApproachType::COAST;
 	int64_t startAcceleration = 0; // = null
@@ -322,5 +322,5 @@ struct RFKStruct(ParseAllNested) TimedMovementComponent: InterpolatedComponent<M
 	TimedMovementComponent_GENERATED
 };
 
-File_GENERATED
+File_TimedComponents_GENERATED
 #endif /* SRC_STARSYSTEMS_COMPONENTS_TIMEDCOMPONENTS_HPP_ */

@@ -62,7 +62,6 @@ set(IMGUI_IMPL_VULKAN ON)
 
 add_subdirectory(lib)
 
-set(GEN_PROPERTY_RTTI ON)
 add_subdirectory(lib/Refureku/Refureku)
 
 set(SLIKENET_ENABLE_SAMPLES OFF)
@@ -80,7 +79,7 @@ find_package(fmt REQUIRED)
 file(GLOB_RECURSE SOURCE_FILES CONFIGURE_DEPENDS src/*.cpp)
 #file(GLOB_RECURSE HEADER_FILES "${CMAKE_CURRENT_SOURCE_DIR}/src/*.h" "${CMAKE_CURRENT_SOURCE_DIR}/src/*.hpp")
 
-add_executable(AuroraC ${SOURCE_FILES})
+add_executable(AuroraC ${SOURCE_FILES} "${CMAKE_CURRENT_SOURCE_DIR}/src/refureku/Refureku.cpp")
 target_include_directories(AuroraC PUBLIC src)
 
 if (WIN32 OR CYGWIN)
@@ -94,6 +93,7 @@ target_include_directories(AuroraC PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/lib/asmli
 
 target_link_libraries(AuroraC PUBLIC tracy_client)
 target_link_libraries(AuroraC PUBLIC EnTT)
+target_include_directories(AuroraC PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/lib/entt/src)
 target_link_libraries(AuroraC PUBLIC VK2D)
 target_link_libraries(AuroraC PUBLIC fmt)
 target_link_libraries(AuroraC PUBLIC ${Boost_LIBRARIES})
@@ -109,7 +109,7 @@ target_include_directories(AuroraC PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/lib/tracy
 target_include_directories(AuroraC PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/lib/tracy/client)
 target_include_directories(AuroraC PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/lib/tracy/common)
 
-target_include_directories(AuroraC PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/lib/Refureku/Refureku/Library/Include)
+target_include_directories(AuroraC PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/lib/Refureku/Refureku/Library/Include/Public)
 target_link_libraries(AuroraC PUBLIC Refureku)
 
 target_include_directories(AuroraC PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/lib/SLikeNet/Source/include)
@@ -255,7 +255,10 @@ ENDIF()
 target_include_directories(AuroraC PRIVATE ${Log4Cxx_INCLUDE_DIRS})
 target_link_libraries(AuroraC PRIVATE ${Log4Cxx_LIBRARIES} ${APRUTIL_LIBRARIES} ${APR_LIBRARIES})
 
-# Refureku runtime reflection
+################
+# Refureku
+################
+
 macro(fixPathsForRefureku list)
 string(PREPEND ${list} "\"")
 string(REPLACE ";" "\",\n\"" ${list} "${${list}}")
@@ -265,6 +268,7 @@ endmacro()
 #set(RefurekuSources ${HEADER_FILES})
 #list(FILTER RefurekuSources EXCLUDE REGEX "src/refureku/.*")
 file(GLOB_RECURSE RefurekuSources CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/src/starsystems/components/*.hpp")
+file(GLOB_RECURSE RefurekuGenSources CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/src/refureku/*.rfks.h")
 
 set(RefurekuInputFiles "${RefurekuSources}")
 fixPathsForRefureku(RefurekuInputFiles)
@@ -282,13 +286,18 @@ fixPathsForRefureku(RefurekuIgnoreDirs)
 get_target_property(RefurekuIncludeDirs AuroraC INCLUDE_DIRECTORIES)
 fixPathsForRefureku(RefurekuIncludeDirs)
 
-configure_file("${PROJECT_SOURCE_DIR}/RefurekuSettings.toml" "${PROJECT_BINARY_DIR}/bin/RefurekuSettings.toml")
+list(TRANSFORM RefurekuGenSources PREPEND "#include \"")
+list(TRANSFORM RefurekuGenSources APPEND "\"")
+string(REPLACE ";" "\n" RefurekuGenSources "${RefurekuGenSources}")
+
+configure_file("${PROJECT_SOURCE_DIR}/gensrc/RefurekuSettings.toml" "${PROJECT_BINARY_DIR}/RefurekuSettings.toml")
+configure_file("${PROJECT_SOURCE_DIR}/gensrc/Refureku.cpp" "${RefurekuOutputDir}/Refureku.cpp")
 
 add_custom_target(RunRefurekuGenerator
-	COMMAND RefurekuGenerator > refureku.log
+	COMMAND RefurekuGenerator "${PROJECT_BINARY_DIR}/RefurekuSettings.toml" > refureku.log
 	WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}/"
-	DEPENDS "${PROJECT_BINARY_DIR}/bin/RefurekuSettings.toml;${RefurekuSources}"
-	BYPRODUCTS ${RefurekuOutputDir}
+	DEPENDS "${PROJECT_BINARY_DIR}/RefurekuSettings.toml;${RefurekuSources}"
+	BYPRODUCTS ${RefurekuOutputDir} "${RefurekuOutputDir}/Refureku.cpp"
 )
 add_dependencies(AuroraC RunRefurekuGenerator)
 

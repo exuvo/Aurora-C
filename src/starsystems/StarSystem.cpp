@@ -409,11 +409,13 @@ void StarSystem::init(Galaxy* galaxy) {
 	registry.emplace<TintComponent>(e3, vk2d::Colorf::BLUE());
 	registry.emplace<CircleComponent>(e3, 1737100.0f);
 	registry.emplace<OrbitComponent>(e3, e2, static_cast<float>(384400.0 / Units::AU), 0.2f, 0, 30);
-	ColonyComponent& moonColony = registry.emplace<ColonyComponent>(e3, 1000, 100, 0, 50, 1000);
+	ColonyComponent& moonColony = registry.emplace<ColonyComponent>(e3);
 	registry.emplace<NameComponent>(e3, "Lunara");
 	registry.emplace<EmpireComponent>(e3, empire1);
 	registry.emplace<CargoComponent>(e3, moonColony);
 	empire1.colonies.push_back(getEntityReference(e3));
+	
+	moonColony.population = 1000;
 	
 	entt::entity e4 = createEnttiy(empire1);
 	registry.emplace<TextComponent>(e4, "Ship");

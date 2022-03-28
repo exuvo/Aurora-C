@@ -13,66 +13,93 @@
 #include "starsystems/StarSystem.hpp"
 #include "starsystems/ShadowStarSystem.hpp"
 
-void printField(const rfk::Field& f, void* data) {
-	const rfk::Type& t = f.type;
+template<typename T>
+void printField(const rfk::Field& f, T& instance) {
+	const rfk::Type& t = f.getType();
 	std::ostringstream osValue;
 	
 	if (t.isValue()) {
 		
-		if (t == rfk::Type::getType<float>()) {
-			osValue << f.getData<float>(data);
-		} else if (t == rfk::Type::getType<double>()) {
-			osValue << f.getData<double>(data);
-		} else if (t == rfk::Type::getType<int8_t>()) {
-			osValue << f.getData<int8_t>(data);
-		} else if (t == rfk::Type::getType<int16_t>()) {
-			osValue << f.getData<int16_t>(data);
-		} else if (t == rfk::Type::getType<int32_t>()) {
-			osValue << f.getData<int32_t>(data);
-		} else if (t == rfk::Type::getType<int64_t>()) {
-			osValue << f.getData<int64_t>(data);
-		} else if (t == rfk::Type::getType<uint8_t>()) {
-			osValue << f.getData<uint8_t>(data);
-		} else if (t == rfk::Type::getType<uint16_t>()) {
-			osValue << f.getData<uint16_t>(data);
-		} else if (t == rfk::Type::getType<uint32_t>()) {
-			osValue << f.getData<uint32_t>(data);
-		} else if (t == rfk::Type::getType<uint64_t>()) {
-			osValue << f.getData<uint64_t>(data);
-		} else if (t == rfk::Type::getType<bool>()) {
-			osValue << f.getData<bool>(data);
-		} else if (t == rfk::Type::getType<char>()) {
-			osValue << f.getData<char>(data);
+		if (t == rfk::getType<float>()) {
+			osValue << f.get<float>(instance);
+		} else if (t == rfk::getType<double>()) {
+			osValue << f.get<double>(instance);
+			
+		} else if (t == rfk::getType<int8_t>()) {
+			osValue << f.get<int8_t>(instance);
+		} else if (t == rfk::getType<int16_t>()) {
+			osValue << f.get<int16_t>(instance);
+		} else if (t == rfk::getType<int32_t>()) {
+			osValue << f.get<int32_t>(instance);
+		} else if (t == rfk::getType<int64_t>()) {
+			osValue << f.get<int64_t>(instance);
+			
+		} else if (t == rfk::getType<uint8_t>()) {
+			osValue << f.get<uint8_t>(instance);
+		} else if (t == rfk::getType<uint16_t>()) {
+			osValue << f.get<uint16_t>(instance);
+		} else if (t == rfk::getType<uint32_t>()) {
+			osValue << f.get<uint32_t>(instance);
+		} else if (t == rfk::getType<uint64_t>()) {
+			osValue << f.get<uint64_t>(instance);
+			
+		} else if (t == rfk::getType<bool>()) {
+			osValue << f.get<bool>(instance);
+		} else if (t == rfk::getType<char>()) {
+			osValue << f.get<char>(instance);
 		} else {
-			osValue << "unknown type";
+			osValue << "unknown value type";
 		}
 		
-	} else if (f.type.isCArray()) {
+	} else if (t.isCArray()) {
 		
-		if (t.archetype == rfk::getArchetype<char>()) {
-			osValue << static_cast<char*>(f.getDataAddress(data));
+		if (t.getArchetype() == rfk::getArchetype<char>()) {
+			osValue << static_cast<const char*>(f.getConstPtr(instance));
 		} else {
-			osValue << "unknown type";
+			osValue << "unknown [] type";
 		}
+		
+	} else if (t.isPointer()) {
+		
+		osValue << "unknown * type";
 		
 	} else {
-		osValue << "not value";
+		osValue << "unknown";
 	}
 	
 	std::ostringstream osType;
+	rfk::Archetype const* at = t.getArchetype();
 	
-	if (f.type.archetype != nullptr) {
-		osType << f.type.archetype->name;
+	if (at != nullptr) {
+		osType << at->getName();
 		
-		if (f.type.isCArray()) {
-			osType << "[" << f.type.getArraySize() << "]";
+		if (t.isCArray()) {
+			osType << "[" << t.getCArraySize() << "]";
+		}
+		
+		if (at->getKind() == rfk::EEntityKind::Enum) {
+			osValue << " enum";
+		} else if (at->getKind() == rfk::EEntityKind::EnumValue) {
+			osValue << " enum value";
+		} else if (at->getKind() == rfk::EEntityKind::Class) {
+			osValue << " class";
+		} else if (at->getKind() == rfk::EEntityKind::Struct) {
+			osValue << " struct";
+		} else if (at->getKind() == rfk::EEntityKind::Field) {
+			osValue << " field";
+		} else if (at->getKind() == rfk::EEntityKind::Variable) {
+			osValue << " variable";
+		} else if (at->getKind() == rfk::EEntityKind::Method) {
+			osValue << " method";
+		} else if (at->getKind() == rfk::EEntityKind::Function) {
+			osValue << " function";
 		}
 		
 	} else {
 		osType << "?";
 	}
 	
-	ImGui::Text(" %s: %s = %s", f.name.data(), osType.str().data(), osValue.str().data());
+	ImGui::Text(" %s: %s = %s", f.getName(), osType.str().data(), osValue.str().data());
 }
 
 template<typename T>
@@ -80,11 +107,13 @@ void printComponent(entt::registry& registry, entt::entity entityID) {
 	T* c = registry.try_get<T>(entityID);
 	if (c != nullptr) {
 		rfk::Struct const& s = T::staticGetArchetype();
-		ImGui::Text("%s, fields %lu, %lu bytes", s.name.data(), s.fields.size(), s.memorySize);
-		for (auto it = s.fields.begin(); it != s.fields.end(); it++) {
-			const rfk::Field& f = *it;
-			printField(f, c);
-		}
+		ImGui::Text("%s, fields %lu, %lu bytes", s.getName(), s.getFieldsCount(), s.getMemorySize());
+		
+		auto visitor = [](rfk::Field const& f, void* c) -> bool {
+			printField(f, *static_cast<T*>(c));
+			return true;
+		};
+		s.foreachField(visitor, c, true);
 	}
 }
 
@@ -156,7 +185,7 @@ void ShipDebugWindow::render() {
 //					ShieldComponent& shield = registry.get<ShieldComponent>(entityID);
 //					ArmorComponent& armor = registry.get<ArmorComponent>(entityID);
 //					PartsHPComponent& partsHP = registry.get<PartsHPComponent>(entityID);
-//					CargoComponent& cargoC = registry.get<CargoComponent>(entityID);
+					CargoComponent* cargoC = registry.try_get<CargoComponent>(entityID);
 					ImGui::Text("Entity ID %d", entityRef->entityID);
 					
 					if (ImGui::CollapsingHeader("Components", ImGuiTreeNodeFlags_DefaultOpen)) { // ImGuiTreeNodeFlags_DefaultOpen

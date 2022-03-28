@@ -37,6 +37,4 @@ class Empire {
 	private:
 };
 
-
-
 #endif /* SRC_GALAXY_EMPIRE_HPP_ */

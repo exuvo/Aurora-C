@@ -302,7 +302,8 @@ void ColonyManagerWindow::render() {
 								with_Tooltip {
 									ImGui::TextUnformatted(district.name.cbegin(), district.name.cend());
 									ImGui::Text("Type: %s", district.type._to_string());
-									ImGui::Text("Amount: %u km²", amount);
+									ImGui::Text("Amount: %u", amount);
+									ImGui::Text("Area: %u km²", amount * district.landUsage);
 								}
 							}
 						}
@@ -337,13 +338,11 @@ void ColonyManagerWindow::render() {
 					districtButton("MM", Districts::MineMantle);
 					districtButton("MMC", Districts::MineMoltenCore);
 					
-					// två block till vänster med byggnader/orbital, stats till höger
-					
 					with_Group {
 						with_Group {
 							uint8_t count = 0;
 							
-							auto orbitalBuildingButton = [&](const OrbitalBuilding* building, const BuildingState* state) {
+							auto orbitalBuildingButton = [&](const OrbitalBuildingSlot& slot) {
 								if ((count & 0x7) != 0) {
 									ImGui::SameLine(0, 2);
 								}
@@ -351,6 +350,7 @@ void ColonyManagerWindow::render() {
 								ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(2, 2));
 								ImGui::PushID(100 | count);
 								
+								OrbitalBuilding* building = slot.building;
 								bool enabled = true; //TODO check spaceport built
 								
 								if (ImGui::Button("##building", ImVec2(30, 32))) {
@@ -393,16 +393,16 @@ void ColonyManagerWindow::render() {
 							};
 							
 							for (uint_fast8_t i = 0; i < colony.orbitalBuildings.capacity(); i++) {
-								const OrbitalBuilding* building = colony.orbitalBuildings.size() > i ? colony.orbitalBuildings[i] : nullptr;
-								const BuildingState* state = colony.orbitalBuildingStates.size() > i ? colony.orbitalBuildingStates[i] : nullptr;
-								orbitalBuildingButton(building, state);
+								orbitalBuildingButton(colony.orbitalBuildings[i]);
 							}
 						}
+						
+						ImGui::Spacing();
 						
 						with_Group {
 							uint8_t count = 0;
 							
-							auto terrestialBuildingButton = [&](const TerrestrialBuilding* building, const BuildingState* state) {
+							auto terrestialBuildingButton = [&](const TerrestialBuildingSlot& slot) {
 								if (lastDistrictType != DistrictType::_size_constant) {
 									if ((count & 0x7) != 0) {
 										ImGui::SameLine(0, 2);
@@ -412,6 +412,7 @@ void ColonyManagerWindow::render() {
 								ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(2, 2));
 								ImGui::PushID(200 | count);
 								
+								TerrestrialBuilding* building = slot.building;
 								bool enabled = std::log10(colony.population) >= count;
 								
 								if (ImGui::Button("##building", ImVec2(30, 32))) {
@@ -452,9 +453,7 @@ void ColonyManagerWindow::render() {
 							};
 							
 							for (uint_fast8_t i = 0; i < colony.terrestialBuildings.capacity(); i++) {
-								const TerrestrialBuilding* building = colony.terrestialBuildings.size() > i ? colony.terrestialBuildings[i] : nullptr;
-								const BuildingState* state = colony.terrestialBuildingStates.size() > i ? colony.terrestialBuildingStates[i] : nullptr;
-								terrestialBuildingButton(building, state);
+								terrestialBuildingButton(colony.terrestialBuildings[i]);
 							}
 						}
 					}

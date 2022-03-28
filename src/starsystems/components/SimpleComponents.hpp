@@ -14,12 +14,12 @@
 #include "utils/Utils.hpp"
 
 #include <Refureku/NativeProperties.h>
-#include "refureku/SimpleComponents.rfk.h"
+#include "refureku/SimpleComponents.rfkh.h"
 
 struct Empire;
 class StarSystem;
 
-struct RFKStruct(ParseAllNested) TextComponent {
+struct RFKStruct(kodgen::ParseAllNested) TextComponent {
 		char text[50]; // not NULL terminated when full size is used
 		
 		TextComponent(){
@@ -37,17 +37,17 @@ struct NameComponent {
 		std::string name;
 };
 
-struct RFKStruct(ParseAllNested) TintComponent {
+struct RFKStruct(kodgen::ParseAllNested) TintComponent {
 		vk2d::Colorf color;
 		TintComponent_GENERATED
 };
 
-struct RFKStruct(ParseAllNested) RenderComponent {
+struct RFKStruct(kodgen::ParseAllNested) RenderComponent {
 		char dummy; //entt requires storage in components
 		RenderComponent_GENERATED
 };
 
-struct RFKStruct(ParseAllNested) CircleComponent {
+struct RFKStruct(kodgen::ParseAllNested) CircleComponent {
 		float radius = 1; // in m
 		CircleComponent_GENERATED
 };
@@ -93,5 +93,5 @@ struct HeatComponent {
 	uint32_t temperature; // In kelvin
 };
 
-File_GENERATED
+File_SimpleComponents_GENERATED
 #endif /* SRC_STARSYSTEMS_COMPONENTS_SIMPLECOMPONENTS_HPP_ */

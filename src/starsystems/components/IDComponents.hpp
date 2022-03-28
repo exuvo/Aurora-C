@@ -11,7 +11,7 @@
 #include <entt/entt.hpp>
 
 #include <Refureku/NativeProperties.h>
-#include "refureku/IDComponents.rfk.h"
+#include "refureku/IDComponents.rfkh.h"
 
 class StarSystem;
 class ShadowStarSystem;
@@ -55,11 +55,11 @@ struct EntityReference {
 
 std::ostream& operator<<(std::ostream& os, const EntityReference& ref);
 
-struct RFKStruct(ParseAllNested) UUIDComponent {
+struct RFKStruct(kodgen::ParseAllNested) UUIDComponent {
 		EntityUUID uuid;
 		
 		UUIDComponent_GENERATED
 };
 
-File_GENERATED
+File_IDComponents_GENERATED
 #endif /* SRC_STARSYSTEMS_COMPONENTS_IDCOMPONENTS_HPP_ */

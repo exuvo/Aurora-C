@@ -17,7 +17,7 @@
 #include "utils/SmallList.hpp"
 
 #include <Refureku/NativeProperties.h>
-#include "refureku/HealthComponents.rfk.h"
+#include "refureku/HealthComponents.rfkh.h"
 
 struct ShieldComponent {
 	uint64_t shieldHP = 0;
@@ -180,4 +180,5 @@ struct HPComponent {
 	};
 };
 
+File_HealthComponents_GENERATED
 #endif /* SRC_STARSYSTEMS_COMPONENTS_HEALTHCOMPONENTS_HPP_ */

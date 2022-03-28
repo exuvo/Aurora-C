@@ -1,0 +1,77 @@
+[CodeGenManagerSettings]
+# List of supported extensions
+supportedExtensions = [".h", ".hpp"]
+
+# Files contained in the directories of this list will be parsed
+toProcessDirectories = [
+${RefurekuInputDirs}
+]
+
+# Files to parse which are not included in any directory of toParseDirectories
+toProcessFiles = [
+${RefurekuInputFiles}
+]
+
+# Files contained in the directories of this list will be ignored
+ignoredDirectories = [
+${RefurekuIgnoreDirs}
+]
+
+# Files not to parse which are not included in any directory of ignoredDirectories
+ignoredFiles = [
+${RefurekuIgnoreFiles}
+]
+
+[CodeGenUnitSettings]
+# Generated files will be located here
+outputDirectory = "${RefurekuOutputDir}"
+
+generatedHeaderFileNamePattern = "##FILENAME##.rfkh.h"
+generatedSourceFileNamePattern = "##FILENAME##.rfks.h"
+classFooterMacroPattern = "##CLASSFULLNAME##_GENERATED"
+headerFileFooterMacroPattern = "File_##FILENAME##_GENERATED"
+
+# Uncomment if you use Refureku on a dynamic library (.dll/.so/.dylib)
+# Define the export macro so that Refureku can export relevant generated code
+# exportSymbolMacroName = "EXAMPLE_IMPORT_EXPORT_MACRO"
+
+[ParsingSettings]
+# Include directories of the project
+#	'''Path/To/RefurekuLibrary/Include''',
+projectIncludeDirectories = [
+${RefurekuIncludeDirs}
+]
+
+# Must be one of "msvc", "clang++", "g++"
+compilerExeName = "g++"
+
+# Abort parsing on first encountered error
+shouldAbortParsingOnFirstError = true
+
+# Should all entities be parsed whether they are annotated or not
+shouldParseAllNamespaces = false
+shouldParseAllClasses = false
+shouldParseAllStructs = false
+shouldParseAllVariables = false
+shouldParseAllFields = false
+shouldParseAllFunctions = false
+shouldParseAllMethods = false
+shouldParseAllEnums = false
+shouldParseAllEnumValues = true
+
+shouldLogDiagnostic = false
+
+propertySeparator = ","
+subPropertySeparator = ","
+subPropertyStartEncloser = "("
+subPropertyEndEncloser = ")"
+
+namespaceMacroName = "RFKNamespace"
+classMacroName = "RFKClass"
+structMacroName = "RFKStruct"
+variableMacroName = "RFKVar"
+fieldMacroName = "RFKField"
+functionMacroName = "RFKFunction"
+methodMacroName = "RFKMethod"
+enumMacroName = "RFKEnum"
+enumValueMacroName = "RFKEnumValue"

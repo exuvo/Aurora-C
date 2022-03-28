@@ -11,21 +11,21 @@
 #include "entt/entt.hpp"
 
 #include <Refureku/NativeProperties.h>
-#include "refureku/MiscComponents.rfk.h"
+#include "refureku/MiscComponents.rfkh.h"
 
-struct RFKStruct(ParseAllNested) SpatialPartitioningComponent {
+struct RFKStruct(kodgen::ParseAllNested) SpatialPartitioningComponent {
 		uint64_t nextExpectedUpdate;
 		int32_t elementID = -1;
 		
 		SpatialPartitioningComponent_GENERATED
 };
 
-struct RFKStruct(ParseAllNested) SpatialPartitioningPlanetoidsComponent {
+struct RFKStruct(kodgen::ParseAllNested) SpatialPartitioningPlanetoidsComponent {
 		uint64_t nextExpectedUpdate;
 		int32_t elementID = -1;
 		
 		SpatialPartitioningPlanetoidsComponent_GENERATED
 };
 
-File_GENERATED
+File_MiscComponents_GENERATED
 #endif /* SRC_STARSYSTEMS_COMPONENTS_MISCCOMPONENTS_HPP_ */

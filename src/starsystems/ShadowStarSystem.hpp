@@ -23,7 +23,7 @@
 namespace hana = boost::hana;
 
 // https://www.boost.org/doc/libs/1_74_0/libs/preprocessor/doc/AppendixA-AnIntroductiontoPreprocessorMetaprogramming.html
-#define SYNCED_COMPONENTS_TUPLE (TextComponent, TintComponent, RenderComponent, TimedMovementComponent, CircleComponent, ThrustComponent, SpatialPartitioningComponent, SpatialPartitioningPlanetoidsComponent, UUIDComponent) // max 25, after that write sequence directly (a)(b)(c)
+#define SYNCED_COMPONENTS_TUPLE (TextComponent, TintComponent, RenderComponent, TimedMovementComponent, CircleComponent, ThrustComponent, SpatialPartitioningComponent, SpatialPartitioningPlanetoidsComponent, UUIDComponent, ColonyComponent, PlanetComponent) // max 25, after that write sequence directly (a)(b)(c)
 #define SYNCED_COMPONENTS_SEQ BOOST_PP_TUPLE_TO_SEQ(SYNCED_COMPONENTS_TUPLE)
 #define SYNCED_COMPONENTS_SEQ_SIZE BOOST_PP_SEQ_SIZE(SYNCED_COMPONENTS_SEQ)
 #define SYNCED_COMPONENTS BOOST_PP_SEQ_ENUM(SYNCED_COMPONENTS_SEQ)

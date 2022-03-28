@@ -629,6 +629,10 @@ constexpr const char    *_final_ ## index =                                    \
 #   define BETTER_ENUMS_CLASS_ATTRIBUTE
 #endif
 
+#ifndef BETTER_ENUMS_ENUM_ATTRIBUTE
+#   define BETTER_ENUMS_ENUM_ATTRIBUTE
+#endif
+
 #define BETTER_ENUMS_TYPE(SetUnderlyingType, SwitchType, GenerateSwitchType,   \
                           GenerateStrings, ToStringConstexpr,                  \
                           DeclareInitialize, DefineInitialize, CallInitialize, \
@@ -648,7 +652,7 @@ class BETTER_ENUMS_CLASS_ATTRIBUTE Enum {                                      \
   public:                                                                      \
     typedef Underlying                                      _integral;         \
                                                                                \
-    enum _enumerated SetUnderlyingType(Underlying) { __VA_ARGS__ };            \
+    enum BETTER_ENUMS_ENUM_ATTRIBUTE _enumerated SetUnderlyingType(Underlying) { __VA_ARGS__ }; \
                                                                                \
     BETTER_ENUMS_CONSTEXPR_ Enum(_enumerated value) : _value(value) { }        \
                                                                                \

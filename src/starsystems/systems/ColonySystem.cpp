@@ -17,5 +17,14 @@ void ColonySystem::init(void* data) {
 }
 
 void ColonySystem::update(delta_type delta) {
-	
+	auto view = registry.view<ColonyComponent, PlanetComponent>();
+		
+		for (entt::entity entity : view) {
+			ColonyComponent& colony = view.get<ColonyComponent>(entity);
+			PlanetComponent& planet = view.get<PlanetComponent>(entity);
+			
+			
+			
+//			starSystem.changed<ColonyComponent>(entity);
+		}
 }

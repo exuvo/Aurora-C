@@ -17,7 +17,7 @@
 #include "IDComponents.hpp"
 
 #include <Refureku/NativeProperties.h>
-#include "refureku/PartStatesComponent.rfk.h"
+#include "refureku/PartStatesComponent.rfkh.h"
 
 #define PART_STATES_COUNT 8
 
@@ -104,4 +104,6 @@ struct PartStatesComponent {
 	SmallList<TargetingComputerState, 8> targetingComputer;
 };
 
+
+File_PartStatesComponent_GENERATED
 #endif /* SRC_STARSYSTEMS_COMPONENTS_PARTSTATESCOMPONENT_HPP_ */
